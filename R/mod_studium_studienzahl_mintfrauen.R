@@ -61,7 +61,7 @@ mod_studium_studienzahl_mintfrauen_ui <- function(id){
     p("Bereich:"),
     shinyWidgets::pickerInput(
       inputId =  ns("ebene_mint_fach_frauen"),
-      choices = c("MINT", "Nicht MINT"),
+      choices = c("MINT", "Übersicht"),
       selected = "MINT"
     ),
 

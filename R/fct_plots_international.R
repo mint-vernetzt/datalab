@@ -11,14 +11,89 @@ library(tidyr)
 #' @noRd
 
 
-get_top10_hc_plot_options <- function(hc,
+# get_top10_hc_plot_options <- function(hc,
+#                                       hc_title = "",
+#                                       hc_tooltip = "",
+#                                       max_percent_used = 100,
+#                                       col = "#B16FAB") {
+#
+# browser()
+#   titel <- hc_title
+#
+#   out <- hc %>%
+#     highcharter::hc_plotOptions(
+#       series = list(
+#         boderWidth = 0,
+#         dataLabels = list(enabled = TRUE, format = "{point.wert} %",
+#                           style = list(textOutline = "none"))
+#       )) %>%
+#     highcharter::hc_tooltip(pointFormat = hc_tooltip) %>%
+#     highcharter::hc_yAxis(title = list(text = ""),
+#                           labels = list(format = "{value} %"),
+#                           min = 0,
+#                           max = max_percent_used,
+#                           tickInterval = 10) %>%
+#     highcharter::hc_xAxis(title = list(text = "")) %>%
+#     highcharter::hc_colors(c(col)) %>%
+#     highcharter::hc_title(text = hc_title,
+#                           margin = 45,
+#                           align = "center",
+#                           style = list(color = "black",
+#                                        useHTML = TRUE,
+#                                        fontFamily = "SourceSans3-Regular",
+#                                        fontSize = "20px")) %>%
+#     highcharter::hc_chart(
+#       style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+#     ) %>%
+#     highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+#     highcharter::hc_exporting(enabled = TRUE,
+#                               buttons = list(
+#                                 contextButton = list(
+#                                   menuItems = list("downloadPNG", "downloadCSV")
+#                                   )
+#                                 )
+#                               )
+#
+#   # ,
+#   #                                                  list(
+#   #                                                    text = "Daten für GPT",
+#   #                                                    onclick = htmlwidgets::JS(sprintf(
+#   #                                                      "function () {
+#   #    var date = new Date().toISOString().slice(0,10);
+#   #    var chartTitle = '%s'.replace(/\\s+/g, '_');
+#   #    var filename = chartTitle + '_' + date + '.txt';
+#   #
+#   #    var data = this.getCSV();
+#   #    var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+#   #    if (window.navigator.msSaveBlob) {
+#   #      window.navigator.msSaveBlob(blob, filename);
+#   #    } else {
+#   #      var link = document.createElement('a');
+#   #      link.href = URL.createObjectURL(blob);
+#   #      link.download = filename;
+#   #      link.click();
+#   #    }
+#   #  }", gsub("'", "\\\\'", titel)))))
+#   #                               )
+#   #                             )
+#   #   )
+#
+#   return(out)
+# }
+
+get_top10_hc_plot_options_int <- function(hc,
                                       hc_title = "",
                                       hc_tooltip = "",
                                       max_percent_used = 100,
-                                      col = "#B16FAB") {
+                                      col = "#B16FAB",
+                                      marker = "IEA") {
+  if(marker=="IEA"){
+    its <- "Quelle der Daten: IEA, 2023; OECD, 2023, freier Download, eigene Berechnungen durch MINTvernetzt."
+  } else if (marker=="OECD"){
+    its <- "Quelle der Daten: Eurostat, 2023; OECD, 2023; UNESCO, 2023; freier Download, eigene Berechnungen durch MINTvernetzt."
 
+  }
 
-  titel <- hc_title
 
   out <- hc %>%
     highcharter::hc_plotOptions(
@@ -40,42 +115,24 @@ get_top10_hc_plot_options <- function(hc,
                           align = "center",
                           style = list(color = "black",
                                        useHTML = TRUE,
-                                       fontFamily = "SourceSans3-Regular",
+                                       fontFamily = "Calibri Regular",
                                        fontSize = "20px")) %>%
     highcharter::hc_chart(
-      style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+      style = list(fontFamily = "Calibri Regular", fontSize = "14px")
     ) %>%
     highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+    highcharter::hc_caption(text = its,
+                            style = list(fontSize = "11px", color = "gray")) %>%
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(
                                 contextButton = list(
-                                  menuItems = list("downloadPNG", "downloadCSV",
-                                                   list(
-                                                     text = "Daten für GPT",
-                                                     onclick = htmlwidgets::JS(sprintf(
-                                                       "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
-
-     var data = this.getCSV();
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-   }", gsub("'", "\\\\'", titel)))))
+                                  menuItems = list("downloadPNG", "downloadCSV")
                                 )
                               )
     )
 
   return(out)
 }
-
 
 add_avg_to_hc <- function(hc, hc_mean, type) {
 
@@ -341,7 +398,9 @@ plot_international_map <- function(r) {
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle: Quelle der Daten: Eurostat, 2023; OECD, 2023, freier Download, eigene Berechnungen durch MINTvernetzt';
+
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -351,7 +410,7 @@ plot_international_map <- function(r) {
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", title_m)))))
+   }", gsub("'", "\\\\'", title_m),gsub("'", "\\\\'", title_m)))))
                                 )
                               )
     )
@@ -807,8 +866,8 @@ df <- df %>%
     df %>% dplyr::arrange(desc(wert)) %>% dplyr::slice(1:10),
     'bar',
     highcharter::hcaes(y = wert, x = land)) %>%
-    get_top10_hc_plot_options(
-      hc_title = paste0(t_quelle1, "Länder mit dem größten Anteil an ", t_gruppe, t_fach, " (", timerange, ")",t_quelle),
+    get_top10_hc_plot_options_int(
+      hc_title = paste0(t_quelle1, "Länder mit dem größten Anteil an ", t_gruppe, t_fach, " in ", timerange, t_quelle),
       hc_tooltip = hover,
       max_percent_used = max_percent_used,
       marker="OECD")
@@ -819,8 +878,8 @@ df <- df %>%
     df %>% dplyr::arrange(desc(wert)) %>% dplyr::slice_tail(n = 10),
     'bar',
     highcharter::hcaes(y = wert, x = land)) %>%
-    get_top10_hc_plot_options(
-      hc_title = paste0(t_quelle1, "Länder mit dem niedrigsten Anteil an ", t_gruppe, t_fach, " (", timerange,")", t_quelle),
+    get_top10_hc_plot_options_int(
+      hc_title = paste0(t_quelle1, "Länder mit dem niedrigsten Anteil an ", t_gruppe, t_fach, " in ", timerange, t_quelle),
       hc_tooltip = hover,
       max_percent_used = max_percent_used,
       marker="OECD")
@@ -834,16 +893,14 @@ df <- df %>%
   }
 
 
-out <- list(plot_top, plot_bottom)
+  out <- list(plot_top, plot_bottom)
 
-return(out)
-
+  return(out)
 
 }
 
 
 plot_international_top10_gender <- function(r) {
-
 
   timerange <- r$map_y_g
   label_m <- r$map_l_g
@@ -962,10 +1019,10 @@ plot_international_top10_gender <- function(r) {
       AND land NOT IN ('EU (27), seit 2020', 'Liechtenstein')
       ", .con = con)
 
-      df <- DBI::dbGetQuery(con, df_query)
+    df <- DBI::dbGetQuery(con, df_query)
 
-      df <- df %>%
-        dplyr::select(land, wert)
+    df <- df %>%
+      dplyr::select(land, wert)
 
   }
   if (label_m == "EU" & art == "meisten Frauen wählen MINT") {
@@ -1040,13 +1097,13 @@ plot_international_top10_gender <- function(r) {
     df %>% dplyr::arrange(desc(wert)) %>% dplyr::slice(1:10),
     'bar',
     highcharter::hcaes(y = wert, x = land)) %>%
-    get_top10_hc_plot_options(
+    get_top10_hc_plot_options_int(
       hc_title = titel1,
       hc_tooltip = hover,
       max_percent_used = max_percent_used,
       col = "#154194",
       marker="OECD"
-      )
+    )
 
 
   # Create bottom 10 plot
@@ -1055,13 +1112,13 @@ plot_international_top10_gender <- function(r) {
     df %>% dplyr::arrange(desc(wert)) %>% dplyr::slice_tail(n = 10),
     'bar',
     highcharter::hcaes(y = wert, x = land)) %>%
-    get_top10_hc_plot_options(
+    get_top10_hc_plot_options_int(
       hc_title = titel2,
       hc_tooltip = "Anteil: {point.wert} % <br> Anzahl: {point.wert_absolut}" ,
       max_percent_used = max_percent_used,
       col = "#154194",
       marker="OECD"
-      )
+    )
 
 
   if (show_avg == "Ja") {
@@ -1074,6 +1131,7 @@ plot_international_top10_gender <- function(r) {
   out <- list(plot_top, plot_bottom)
 
   return(out)
+
 
 
 
@@ -1177,29 +1235,33 @@ if (avg_line == "Ja"){
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
-                                    menuItems = list("downloadPNG", "downloadCSV",
-                                                     list(
-                                                       text = "Daten für GPT",
-                                                       onclick = htmlwidgets::JS(sprintf(
-                                                         "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
-
-     var data = this.getCSV();
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-   }", gsub("'", "\\\\'", titel)))))
+                                    menuItems = list("downloadPNG", "downloadCSV")
+                                    )
                                   )
                                 )
-      )
+   #  ,
+   #                                                   list(
+   #                                                     text = "Daten für GPT",
+   #                                                     onclick = htmlwidgets::JS(sprintf(
+   #                                                       "function () {
+   #   var date = new Date().toISOString().slice(0,10);
+   #   var chartTitle = '%s'.replace(/\\s+/g, '_');
+   #   var filename = chartTitle + '_' + date + '.txt';
+   #
+   #   var data = this.getCSV();
+   #   var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+   #   if (window.navigator.msSaveBlob) {
+   #     window.navigator.msSaveBlob(blob, filename);
+   #   } else {
+   #     var link = document.createElement('a');
+   #     link.href = URL.createObjectURL(blob);
+   #     link.download = filename;
+   #     link.click();
+   #   }
+   # }", gsub("'", "\\\\'", titel)))))
+   #                                )
+   #                              )
+   #    )
 
 
   titel <- title_dyn_bot
@@ -1244,29 +1306,34 @@ if (avg_line == "Ja"){
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
-                                    menuItems = list("downloadPNG", "downloadCSV",
-                                                     list(
-                                                       text = "Daten für GPT",
-                                                       onclick = htmlwidgets::JS(sprintf(
-                                                         "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
-
-     var data = this.getCSV();
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-   }", gsub("'", "\\\\'", titel)))))
+                                    menuItems = list("downloadPNG", "downloadCSV")
+                                    )
                                   )
                                 )
-      )
+
+   #  ,
+   #                                                   list(
+   #                                                     text = "Daten für GPT",
+   #                                                     onclick = htmlwidgets::JS(sprintf(
+   #                                                       "function () {
+   #   var date = new Date().toISOString().slice(0,10);
+   #   var chartTitle = '%s'.replace(/\\s+/g, '_');
+   #   var filename = chartTitle + '_' + date + '.txt';
+   #
+   #   var data = this.getCSV();
+   #   var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+   #   if (window.navigator.msSaveBlob) {
+   #     window.navigator.msSaveBlob(blob, filename);
+   #   } else {
+   #     var link = document.createElement('a');
+   #     link.href = URL.createObjectURL(blob);
+   #     link.download = filename;
+   #     link.click();
+   #   }
+   # }", gsub("'", "\\\\'", titel)))))
+   #                                )
+   #                              )
+   #    )
 
 
 
@@ -1275,7 +1342,7 @@ if (avg_line == "Ja"){
 
 
   titel <- title_dyn_top
-  
+
   #dies ist schon als funktion automatisiert, too complex
 
   plot_top <- highcharter::hchart(
@@ -1327,7 +1394,7 @@ if (avg_line == "Ja"){
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel)))))
+   }", gsub("'", "\\\\'", titel),gsub("'", "\\\\'", titel)))))
                                 )
                               )
     )
@@ -1376,7 +1443,10 @@ if (avg_line == "Ja"){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle der Daten: Eurostat, 2023; OECD, 2023; UNESCO, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.';
+
+
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -1386,7 +1456,7 @@ if (avg_line == "Ja"){
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel)))))
+   }", gsub("'", "\\\\'", titel), gsub("'", "\\\\'", titel)))))
                                 )
                               )
     )
@@ -1544,7 +1614,9 @@ plot_international_schule_map <- function(r) {
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle der Daten: IEA, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.';
+
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -1554,7 +1626,7 @@ plot_international_schule_map <- function(r) {
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel)))))
+   }", gsub("'", "\\\\'", titel),gsub("'", "\\\\'", titel)))))
                                 )
                               )
 
@@ -1706,7 +1778,9 @@ plot_international_schule_item <- function(r) {
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle der Daten: IEA, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.';
+
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -1716,7 +1790,7 @@ plot_international_schule_item <- function(r) {
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel)))))
+   }", gsub("'", "\\\\'", titel),gsub("'", "\\\\'", titel)))))
                                 )
                               )
     )
@@ -1940,7 +2014,7 @@ plot_international_schule_migration <- function(r) {
         ) %>%
         # Layout anpassen
         plotly::layout(
-          title = paste0("Vergleich der sozialen Statuswerte im Bereich ", fach_m, " in ausgewählten Ländern (TIMSS, ", timerange, ")"),
+          title = paste0("Mittlere erreichte Punktezahlen im TIMSS-", fach_m, "-Test in den 4. Klassen nach sozialem Status (", timerange, ")"),
           xaxis = list(title = ""),
           yaxis = list(title = ""),
           margin = list(l = 100, r = 50, t = 50, b = 50),
@@ -1954,9 +2028,9 @@ plot_international_schule_migration <- function(r) {
           ),
           annotations = list(
             list(
-              text = "Quelle der Daten: IEA, 2023; OECD, 2023, freier Download, eigene Berechnungen durch MINTvernetzt",
+              text = "Quelle der Daten: IEA, 2023, freier Download, eigene Berechnungen durch MINTvernetzt",
               x = 0,
-              y = -0.7,  # passt die vertikale Position (ggf. justieren!)
+              y = -0.35,  # passt die vertikale Position (ggf. justieren!)
               xref = "paper",
               yref = "paper",
               showarrow = FALSE,
@@ -2017,7 +2091,7 @@ plot_international_schule_migration <- function(r) {
         ) %>%
         # Layout anpassen
         plotly::layout(
-          title = paste0("Vergleich der Geschlechter im Bereich ", fach_m, " in ausgewählten Ländern (TIMSS, ", timerange, ")"),
+          title = paste0("Mittlere erreichte Punktezahlen im TIMSS-", fach_m, "-Test in den 4. Klassen nach Geschlecht (", timerange, ")"),
           xaxis = list(title = ""),
           yaxis = list(title = ""),
           margin = list(l = 100, r = 50, t = 50, b = 50),
@@ -2032,7 +2106,7 @@ plot_international_schule_migration <- function(r) {
 
           annotations = list(
             list(
-              text = "Quelle der Daten: IEA, 2023; OECD, 2023, freier Download, eigene Berechnungen durch MINTvernetzt",
+              text = "Quelle der Daten: IEA, 2023, freier Download, eigene Berechnungen durch MINTvernetzt",
               x = 0,
               y = -0.7,  # passt die vertikale Position (ggf. justieren!)
               xref = "paper",
@@ -2095,7 +2169,7 @@ plot_international_schule_migration <- function(r) {
         ) %>%
         # Layout anpassen
         plotly::layout(
-          title = paste0("Vergleich der Geschlechter im Bereich ", fach_m, " in ausgewählten Ländern (PISA, ", timerange, ")" ),
+          title = paste0("Mittlere erreichte Punktezahlen im PISA-", fach_m, "-Test unter 15-jährigen (ca. 9. Klasse) nach Geschlecht (", timerange, ")" ),
           xaxis = list(title = ""),
           yaxis = list(title = ""),
           margin = list(l = 100, r = 50, t = 50, b = 50),
@@ -2195,7 +2269,7 @@ plot_international_schule_migration <- function(r) {
         ) %>%
         # Layout anpassen
         plotly::layout(
-          title = paste0("Vergleich der Zuwanderungsgeschichte im Bereich ", fach_m, " in ausgewählten Ländern (PISA, ", timerange, ")") ,
+          title = paste0("Mittlere erreichte Punktezahlen im PISA-", fach_m, "-Test der 15-jährigen (ca. 9. Klassen) nach Zuwanderungsgeschichte (", timerange, ")") ,
           xaxis = list(title = ""),
           yaxis = list(title = ""),
           margin = list(l = 100, r = 50, t = 50, b = 50),
@@ -2209,7 +2283,7 @@ plot_international_schule_migration <- function(r) {
           ),
           annotations = list(
             list(
-              text = "Quelle der Daten: IEA, 2023; OECD, 2023, freier Download, eigene Berechnungen durch MINTvernetzt",
+              text = "Quelle der Daten: OECD, 2023, freier Download, eigene Berechnungen durch MINTvernetzt",
               x = 0,
               y = -0.7,  # passt die vertikale Position (ggf. justieren!)
               xref = "paper",
@@ -2295,7 +2369,7 @@ plot_international_schule_migration <- function(r) {
         ) %>%
         # Layout anpassen
         plotly::layout(
-          title = paste0("Vergleich des Bildungskapitals im Bereich ", fach_m, " in ausgewählten Ländern (PISA, ", timerange, ")"),
+          title = paste0("Mittlere erreichte Punktezahlen im PISA-", fach_m, "-Test der 15-jährigen (ca. 9. Klassen) nach Bildungskapital (", timerange, ")"),
           xaxis = list(title = ""),
           yaxis = list(title = ""),
           margin = list(l = 100, r = 50, t = 50, b = 50),
@@ -2309,7 +2383,7 @@ plot_international_schule_migration <- function(r) {
           ),
           annotations = list(
             list(
-              text = "Quelle der Daten: IEA, 2023; OECD, 2023, freier Download, eigene Berechnungen durch MINTvernetzt",
+              text = "Quelle der Daten: OECD, 2023, freier Download, eigene Berechnungen durch MINTvernetzt",
               x = 0,
               y = -0.7,  # passt die vertikale Position (ggf. justieren!)
               xref = "paper",
@@ -3505,7 +3579,9 @@ title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von ", inpp, "n 
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle der Daten: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.';
+
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -3515,7 +3591,7 @@ title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von ", inpp, "n 
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel)))))
+   }", gsub("'", "\\\\'", titel),gsub("'", "\\\\'", titel)))))
                                     )
                                   )
         )
@@ -3571,7 +3647,8 @@ title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von ", inpp, "n 
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle der Daten: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.';
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -3581,7 +3658,7 @@ title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von ", inpp, "n 
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel)))))
+   }", gsub("'", "\\\\'", titel),gsub("'", "\\\\'", titel)))))
                                     )
                                   )
         )
@@ -3632,7 +3709,8 @@ title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von ", inpp, "n 
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle der Daten: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.';
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -3642,7 +3720,7 @@ title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von ", inpp, "n 
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel)))))
+   }", gsub("'", "\\\\'", titel),gsub("'", "\\\\'", titel)))))
                                     )
                                   )
         )
@@ -4151,7 +4229,8 @@ plot_international_top10_mint_arb_gender <- function(r) {
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle der Daten: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.';
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -4161,7 +4240,7 @@ plot_international_top10_mint_arb_gender <- function(r) {
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel)))))
+   }", gsub("'", "\\\\'", titel),gsub("'", "\\\\'", titel)))))
                                   )
                                 )
       )
@@ -4220,7 +4299,8 @@ plot_international_top10_mint_arb_gender <- function(r) {
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle der Daten: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.';
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -4230,7 +4310,7 @@ plot_international_top10_mint_arb_gender <- function(r) {
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel)))))
+   }", gsub("'", "\\\\'", titel),gsub("'", "\\\\'", titel)))))
                                   )
                                 )
       )
@@ -4284,7 +4364,8 @@ plot_international_top10_mint_arb_gender <- function(r) {
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle der Daten: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.';
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -4294,7 +4375,7 @@ plot_international_top10_mint_arb_gender <- function(r) {
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel)))))
+   }", gsub("'", "\\\\'", titel),gsub("'", "\\\\'", titel)))))
                                   )
                                 )
       )
@@ -4344,7 +4425,8 @@ plot_international_top10_mint_arb_gender <- function(r) {
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle der Daten: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.';
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -4354,7 +4436,7 @@ plot_international_top10_mint_arb_gender <- function(r) {
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel)))))
+   }", gsub("'", "\\\\'", titel),gsub("'", "\\\\'", titel)))))
                                   )
                                 )
       )
@@ -4498,7 +4580,8 @@ plot_international_arbeitsmarkt_vergleiche <- function(r) {
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle der Daten: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.';
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -4508,7 +4591,7 @@ plot_international_arbeitsmarkt_vergleiche <- function(r) {
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel)))))
+   }", gsub("'", "\\\\'", titel),gsub("'", "\\\\'", titel)))))
                                 )
                               )
     )

@@ -75,6 +75,8 @@ kurse_einstieg_comparison <- function(r) {
       style = list(fontFamily = "Calibri Regular", fontSize = "14px")
     ) %>%
     highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+   highcharter::hc_caption(text = "Quellen: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+                           style = list(fontSize = "11px", color = "gray")) %>%
    highcharter::hc_exporting(enabled = TRUE,
                              buttons = list(
                                contextButton = list(
@@ -87,7 +89,9 @@ kurse_einstieg_comparison <- function(r) {
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle:Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt';
+
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -97,7 +101,7 @@ kurse_einstieg_comparison <- function(r) {
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel)))))
+   }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel)    ))))
                                )
                              )
    )
@@ -670,7 +674,8 @@ kurse_waffle_mint <- function(r) {
 
     # # # plot
 
-    titel <- paste0( "Anteil von ", kurs_help, "-Belegungen in ", help_title, " nach Bundesländern (",  timerange, ")"        )
+
+    titel <- paste0( "Anteil von ", indika, "-Belegungen nach Fächern in ", regio, " (", timerange, ")")
 
      #nicht in bar wegen categories
     out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y = round(proportion,1), x = region)) %>%
@@ -682,8 +687,7 @@ kurse_waffle_mint <- function(r) {
         colorByPoint = TRUE,
        colors = as.character(color_fach)
       )) %>%
-      highcharter::hc_title(text = paste0( "Anteil von ", indika, "-Belegungen nach Fächern in ", regio, " (", timerange, ")"
-      ),
+      highcharter::hc_title(text = titel,
       margin = 45,
       align = "center",
       style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
@@ -705,7 +709,10 @@ kurse_waffle_mint <- function(r) {
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle:Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt';
+
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -715,7 +722,7 @@ kurse_waffle_mint <- function(r) {
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel)))))
+   }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel)    ))))
                                   )
                                 )
       )
@@ -1202,7 +1209,8 @@ kurse_map <- function(r) {
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Titel: %s\\n' + this.getCSV();
+
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -1212,7 +1220,7 @@ kurse_map <- function(r) {
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel)))))
+   }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel)    ))))
 
                                 )
       )
@@ -2077,7 +2085,10 @@ kurse_comparison_gender <- function(r) {
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle:Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt';
+
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -2087,7 +2098,7 @@ kurse_comparison_gender <- function(r) {
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel)))))
+   }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel)   ))))
                                     )
                                   ))
 
@@ -2132,7 +2143,10 @@ kurse_comparison_gender <- function(r) {
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle:Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt';
+
+
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -2142,7 +2156,7 @@ kurse_comparison_gender <- function(r) {
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel)))))
+   }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel)    ))))
                                     )
                                   )
         )
@@ -2547,7 +2561,10 @@ iqb_standard_zeitverlauf <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle: Institut zur Qualitätsentwicklung im Bildungswesen, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt';
+
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -2557,7 +2574,7 @@ iqb_standard_zeitverlauf <- function(r){
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel)))))
+   }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel)    ))))
                                 )
                               )
     )
@@ -2757,8 +2774,9 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
      var date = new Date().toISOString().slice(0,10);
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle: Institut zur Qualitätsentwicklung im Bildungswesen, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt';
 
-     var data = this.getCSV();
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -2768,7 +2786,7 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel)))))
+   }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel)    ))))
                                    )
                                  )
        )
@@ -2812,7 +2830,10 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle: Institut zur Qualitätsentwicklung im Bildungswesen, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt';
+
+
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -2822,7 +2843,7 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel)))))
+   }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel)    ))))
                                     )
                                   )
         )
@@ -2869,7 +2890,13 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle: Institut zur Qualitätsentwicklung im Bildungswesen, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt';
+
+
+
+
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -2879,7 +2906,7 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel)))))
+   }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel)    ))))
                                     )
                                   )
         )
@@ -2921,7 +2948,10 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle: Institut zur Qualitätsentwicklung im Bildungswesen, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt';
+
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -2931,7 +2961,7 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel)))))
+   }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel)    ))))
                                       )
                                     )
           )
@@ -2971,7 +3001,11 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle: Institut zur Qualitätsentwicklung im Bildungswesen, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt';
+
+
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -2981,7 +3015,7 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel)))))
+   }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel)    ))))
                                         )
                                       )
             )
@@ -3020,7 +3054,10 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle: Institut zur Qualitätsentwicklung im Bildungswesen, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt';
+
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -3030,7 +3067,7 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel)))))
+   }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel)    ))))
                                         )
                                       )
             )
@@ -3129,7 +3166,12 @@ iqb_fragebogen <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+
+
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle: Institut zur Qualitätsentwicklung im Bildungswesen, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt';
+
+
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -3139,7 +3181,7 @@ iqb_fragebogen <- function(r){
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel)))))
+   }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel)    ))))
                                 )
                               )
     )

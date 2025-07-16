@@ -34,8 +34,8 @@ mod_ausserschulisch_start_ui <- function(id){
         width = 7,
         p(style = "text-align: left; font-size = 16px",
           "Auf dieser Seite zeigen wir Daten aus dem außerschulischen MINT-Bildungsbereich.
-          Amtliche Statistiken für den außerschulischen Bereich liegen nicht vor. Hier wollen wir
-          schrittweise immer mehr weiße Flecken der außerschulischen MINT-Bildungslandschaft füllen."),
+          Amtliche Statistiken für den außerschulischen Bereich liegen nicht vor. Deshalb wollen wir hier Daten
+          aus der außerschulischen MINT-Bildungs-Community sammeln und so schrittweise die weißen Flecken der außerschulischen MINT-Bildungslandschaft füllen."),
         p("Wir zeigen zum einen Daten von MINTvernetzt. Hierzu nutzen wir die Daten der MINTvernetzt-Community-Plattform und
           stellen dar, wie viele Organsiationen, Projekte und Personen in welchen Bereichen der außerschulischen MINT-Bildung
           tätig sind. Außerdem zeigen wir eine Auswahl an Ergebnisse der Befragungen von MINTvernetzt."),

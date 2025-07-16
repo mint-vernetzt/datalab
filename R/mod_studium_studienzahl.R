@@ -224,7 +224,7 @@ mod_studium_studienzahl_ui <- function(id){
                                  width = 12,
                                  mod_studium_studienzahl_mint_anteile_ui("mod_studium_studienzahl_mint_anteile_ui_1"),
                                ),
-                               tags$img(src = "www/ti.png", style = "margin-top: 10px; width: 90%; display: block; margin-left: auto; margin-right: auto;")
+                            #   tags$img(src = "www/ti.png", style = "margin-top: 10px; width: 90%; display: block; margin-left: auto; margin-right: auto;")
 
                              ),
                              shiny::mainPanel(
@@ -391,7 +391,7 @@ mod_studium_studienzahl_ui <- function(id){
                                                 placement = "top",
                                                 trigger = "hover"),
                              tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_studium_mint_2_fruen"))
-                  ),
+                  )
         )
         ))),
 

@@ -85,6 +85,11 @@ mod_startseite_start_ui <- function(id){
       slickR::slickROutput(ns("slider_output"), width = '800px', height = '500px'),
 
       # Lernvideo ----
+
+      h5("Lernvideo zu den MINT-Daten",
+         style = "margin-top: 40px;"),
+      p("Auf dem MINT-Campus haben wir ein Video veröffentlich, in dem wir Statistiken
+        zum Thema Frauen in MINT zeigen und einordnen."),
       div(
         style = "display: flex; justify-content: center;",
         tags$iframe(

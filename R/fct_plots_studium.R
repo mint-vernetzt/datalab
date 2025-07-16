@@ -119,8 +119,8 @@ studienzahl_mint <- function(r){
 
 
          titel <-  ifelse(regio == "Saarland",
-                          paste0("Anteil von Studierenden in MINT an allen Studierenden im ", regio, " (", testy1, ")"),
-                          paste0("Anteil von Studierenden in MINT an allen Studierenden in ", regio, " (", testy1, ")"))
+                          paste0("MINT-Anteil in verschiedenen Studierenden-Gruppen im ", regio, " (", testy1, ")"),
+                          paste0("MINT-Anteil in verschiedenen Studierenden-Gruppen in ", regio, " (", testy1, ")"))
 
          highcharter::hchart(df, 'bar', highcharter::hcaes(y = proportion, x = indikator, group =forcats::fct_rev(fach)))%>%
            highcharter::hc_tooltip(pointFormat = "Anteil: {point.display_rel} % <br> Anzahl: {point.wert}") %>%
@@ -129,8 +129,8 @@ studienzahl_mint <- function(r){
            highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
            highcharter::hc_colors(c( "#b16fab","#efe8e6")) %>%
            highcharter::hc_title(text = ifelse(regio == "Saarland",
-                                               paste0("Anteil von Studierenden in MINT an allen Studierenden im ", regio, " (", testy1, ")"),
-                                               paste0("Anteil von Studierenden in MINT an allen Studierenden in ", regio, " (", testy1, ")")),
+                                               paste0("MINT-Anteil in verschiedenen Studierenden-Gruppen im ", regio, " (", testy1, ")"),
+                                               paste0("MINT-Anteil in verschiedenen Studierenden-Gruppen in ", regio, " (", testy1, ")")),
                                  margin = 45,
                                  align = "center",
                                  style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
@@ -152,7 +152,9 @@ studienzahl_mint <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle:Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
+
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -162,7 +164,7 @@ studienzahl_mint <- function(r){
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel)))))
+   }", gsub("'", "\\\\'", titel),gsub("'", "\\\\'", titel) ))))
                                        )
                                      )
            )
@@ -245,7 +247,7 @@ studienzahl_verlauf_single <- function(r) {
 
 
 
-    titel <- ifelse(regio == "Saarland",paste0("Anteil von Studierenden in MINT an allen Studierenden im ", regio), paste0("Anteil von Studierenden in MINT an allen Studierenden in ", regio))
+    titel <- ifelse(regio == "Saarland",paste0("MINT-Anteil in verschiedenen Studierenden-Gruppen im ", regio), paste0("MINT-Anteil in verschiedenen Studierenden-Gruppen in ", regio))
     tooltip <- "{point.indikator} <br> Anteil: {point.display_rel}%"
     format <- "{value}%"
     color <- c("#b16fab", "#154194", "#66cbaf", "#fbbf24", "#AFF3E0", "#2D6BE1", "#008F68", "#8893a7", "#ee7775", "#9d7265", "#35bd97",
@@ -359,7 +361,7 @@ studierende_bula_mint <- function(r) {
     joinby <- c("name", "region")
     name <- paste0(label_m, " in MINT")
     tooltip <- "{point.region} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.display_abs}"
-    titel <- paste0("Anteil von ", label_m, " in MINT-Fächern an allen ", help_l, " (", timerange, ")")
+    titel <- paste0("MINT-Anteil von ", label_m, " (", timerange, ")")
     mincolor <- "#f4f5f6"
     map_selection <- 1
     maxcolor <- "#b16fab"
@@ -569,7 +571,9 @@ studierende_bula_mint <- function(r) {
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle:Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
+
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -579,7 +583,7 @@ studierende_bula_mint <- function(r) {
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel)))))
+   }", gsub("'", "\\\\'", titel),gsub("'", "\\\\'", titel)    ))))
                                   )
                                 )
       )
@@ -1663,7 +1667,9 @@ plot_mint_faecher <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle:Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
+
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -1673,7 +1679,7 @@ plot_mint_faecher <- function(r){
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel)))))
+   }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel) ))))
                                   )
                                 )
       )
@@ -2265,8 +2271,9 @@ plot_studierende_bula_faecher <- function(r){
      var date = new Date().toISOString().slice(0,10);
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle:Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
 
-     var data = this.getCSV();
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -2276,7 +2283,7 @@ plot_studierende_bula_faecher <- function(r){
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel)))))
+   }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel) ))))
                                   )
                                 )
       )
@@ -2933,7 +2940,10 @@ studienzahl_einstieg_gender <- function(r) {
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle:Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
+
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -2943,7 +2953,7 @@ studienzahl_einstieg_gender <- function(r) {
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel)))))
+   }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel) ))))
                                   )
                                 )
       )
@@ -3537,7 +3547,10 @@ plot_ranking_top_faecher <- function(r) {
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle:Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
+
+
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -3547,7 +3560,7 @@ plot_ranking_top_faecher <- function(r) {
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel)))))
+   }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel) ))))
                                   )
                                 )
       )
@@ -3589,7 +3602,9 @@ plot_ranking_top_faecher <- function(r) {
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle:Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
+
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -3599,7 +3614,7 @@ plot_ranking_top_faecher <- function(r) {
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel)))))
+   }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel) ))))
                                   )
                                 )
       )
@@ -3661,7 +3676,9 @@ plot_ranking_top_faecher <- function(r) {
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle:Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
+
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -3671,7 +3688,7 @@ plot_ranking_top_faecher <- function(r) {
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel)))))
+   }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel) ))))
                                   )
                                 )
       )
@@ -3713,7 +3730,11 @@ plot_ranking_top_faecher <- function(r) {
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle:Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
+
+
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -3723,7 +3744,7 @@ plot_ranking_top_faecher <- function(r) {
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel)))))
+   }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel) ))))
                                   )
                                 )
       )
@@ -3880,11 +3901,11 @@ plot_mint_faecher_frauen <- function(r){
     df_query <- glue::glue_sql("
         SELECT *
         FROM studierende_detailliert
-        WHERE jahr = {timerange}
+        WHERE jahr == {timerange}
         AND geschlecht = 'Frauen'
         AND indikator IN ({label_w*})
         AND region = {regio}
-        AND mint_select = 'Nicht MINT'
+        AND ((mint_select = 'MINT' AND typ = 'Aggregat') OR fachbereich = 'Nicht MINT')
                                ", .con = con)
 
     df <- DBI::dbGetQuery(con, df_query)
@@ -3893,17 +3914,21 @@ plot_mint_faecher_frauen <- function(r){
     #   dplyr::select(-region, -geschlecht, - jahr, -bereich, -mint_select, -typ)
 
 
-    df_query2 <- glue::glue_sql("
+    df_query <- glue::glue_sql("
         SELECT *
         FROM studierende_detailliert
-        WHERE jahr = {timerange}
+        WHERE jahr == {timerange}
         AND geschlecht = 'Gesamt'
         AND indikator IN ({label_w*})
         AND region = {regio}
-        AND mint_select = 'Nicht MINT'
+        AND fachbereich = 'Gesamt'
                                ", .con = con)
 
-    alle <- DBI::dbGetQuery(con, df_query2)
+    alle <- DBI::dbGetQuery(con, df_query)
+
+    # alle <- alle %>%
+    #   dplyr::select(-region, -geschlecht, - jahr, -bereich, -mint_select, -typ, -fach)
+    # browser()
 
   # alle <- alle %>%
   #   dplyr::select(-region, -geschlecht, - jahr, -bereich, -mint_select, -typ, -fach)
@@ -3911,7 +3936,13 @@ plot_mint_faecher_frauen <- function(r){
 
   }
 
+
+
+
+  if(ebene == "MINT"){
+
   df <- df %>%
+    # dplyr::anti_join(df, alle, by = c("region", "jahr", "bereich", "indikator", "mint_select", "typ", "fachbereich", "fach")) %>%
     dplyr::left_join(alle,
                      by = c("region", "jahr", "bereich", "indikator", "mint_select", "typ", "fachbereich", "fach")) %>%
     dplyr::rename(
@@ -3919,6 +3950,23 @@ plot_mint_faecher_frauen <- function(r){
       wert_ges = wert.y
     ) %>%
     dplyr::mutate(prop = round(wert / wert_ges * 100, 1))
+
+  }
+
+  else {
+
+
+
+    df <- df %>%
+      dplyr::left_join(alle,
+                       by = c("region", "jahr", "bereich", "indikator")) %>%
+      dplyr::rename(
+        wert = wert.x,
+        wert_ges = wert.y
+      ) %>%
+      dplyr::mutate(prop = round(wert / wert_ges * 100, 1))
+
+  }
 
 
   #Anteil Berechnen
@@ -3937,13 +3985,11 @@ plot_mint_faecher_frauen <- function(r){
   df$wert <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
 
 
-
   df <- df[with(df, order(prop, decreasing = FALSE)), ]
 
-
-  if(ebene == "Nicht MINT"){
+  if(ebene == "Übersicht"){
     df <- df %>%
-      dplyr::mutate(color = color_fachbereich[fach])
+      dplyr::mutate(color = color_fachbereich[fach.x])
   }else{
     df <- df %>%
       dplyr::mutate(color = color_fach_pie[fach])
@@ -3952,9 +3998,9 @@ plot_mint_faecher_frauen <- function(r){
 
     df <- df[with(df, order(prop, decreasing = TRUE)), ]
 
-    if(ebene == "Nicht MINT"){
+    if(ebene == "Übersicht"){
       df <- df %>%
-        dplyr::mutate(color = color_fachbereich[fach])
+        dplyr::mutate(color = color_fachbereich[fach.x])
       col <- df$color
       titel <- ifelse(regio == "Saarland",
                       paste0( "Anteil der ", labelll, " an Nicht-MINT-Fächern im ",regio," (", timerange, ")"),
@@ -3970,6 +4016,7 @@ plot_mint_faecher_frauen <- function(r){
     }
 
 
+    if (ebene == "MINT"){
     out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y=prop, x= fach))%>%
       highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}") %>% #Inhalt für Hover-Box
       highcharter::hc_yAxis(title = list(text=""), labels = list(format = "{value}%")) %>% #x-Achse -->Werte in %
@@ -3995,7 +4042,8 @@ plot_mint_faecher_frauen <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Titel: %s\\n' + this.getCSV();
+
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -4005,12 +4053,55 @@ plot_mint_faecher_frauen <- function(r){
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel)))))
+   }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel) ))))
                                   )
                                 )
       )
 
+    } else {
+      out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y=prop, x= fach.x))%>%
+        highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}") %>% #Inhalt für Hover-Box
+        highcharter::hc_yAxis(title = list(text=""), labels = list(format = "{value}%")) %>% #x-Achse -->Werte in %
+        highcharter::hc_xAxis(title= list(text="")
+        ) %>%
+        highcharter::hc_plotOptions(bar = list(
+          colorByPoint = TRUE,
+          colors = as.character(df$color)
+        )) %>%
+        highcharter::hc_title(text = titel,
+                              margin = 45,
+                              align = "center",
+                              style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+        highcharter::hc_exporting(enabled = TRUE,
+                                  buttons = list(
+                                    contextButton = list(
+                                      menuItems = list("downloadPNG", "downloadCSV",
+                                                       list(
+                                                         text = "Daten für GPT",
+                                                         onclick = htmlwidgets::JS(sprintf(
+                                                           "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
 
+     var data = 'Titel: %s\\n' + this.getCSV();
+
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel) ))))
+                                    )
+                                  )
+        )
+
+
+}
 
   return(out)
 
@@ -4251,7 +4342,10 @@ plot_auslaender_mint <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle:Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
+
+
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -4261,7 +4355,7 @@ plot_auslaender_mint <- function(r){
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel)))))
+   }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel) ))))
                                       )
                                     )
           )
@@ -4313,7 +4407,9 @@ plot_auslaender_mint <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle:Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
+
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -4323,7 +4419,7 @@ plot_auslaender_mint <- function(r){
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel)))))
+   }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel) ))))
                                       )
                                     )
           )
@@ -4387,7 +4483,9 @@ plot_auslaender_mint <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle:Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
+
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -4397,7 +4495,7 @@ plot_auslaender_mint <- function(r){
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel)))))
+   }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel) ))))
                                       )
                                     )
           )
@@ -4447,7 +4545,9 @@ plot_auslaender_mint <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle:Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
+
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -4457,7 +4557,7 @@ plot_auslaender_mint <- function(r){
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel)))))
+   }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel) ))))
                                       )
                                     )
           )
@@ -4515,7 +4615,10 @@ plot_auslaender_mint <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle:Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
+
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -4525,7 +4628,7 @@ plot_auslaender_mint <- function(r){
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel)))))
+   }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel) ))))
                                        )
                                      )
            )
@@ -4570,7 +4673,10 @@ plot_auslaender_mint <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle:Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
+
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -4580,7 +4686,7 @@ plot_auslaender_mint <- function(r){
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel)))))
+   }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel) ))))
                                        )
                                      )
            )
@@ -4639,7 +4745,10 @@ plot_auslaender_mint <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle:Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
+
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -4649,7 +4758,7 @@ plot_auslaender_mint <- function(r){
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel)))))
+   }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel) ))))
                                         )
                                       )
             )
@@ -4686,7 +4795,9 @@ plot_auslaender_mint <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle:Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
+
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -4696,7 +4807,7 @@ plot_auslaender_mint <- function(r){
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel)))))
+   }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel) ))))
                                         )
                                       )
             )
@@ -4888,7 +4999,9 @@ plot_auslaender_mint_zeit <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle:Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
+
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -4898,7 +5011,7 @@ plot_auslaender_mint_zeit <- function(r){
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel)))))
+   }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel) ))))
                                       )
                                     ))
 
@@ -4940,7 +5053,10 @@ plot_auslaender_mint_zeit <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle:Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
+
+
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -4950,7 +5066,7 @@ plot_auslaender_mint_zeit <- function(r){
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel)))))
+   }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel) ))))
                                       )
                                     ))
       }
@@ -5028,7 +5144,9 @@ plot_auslaender_mint_zeit <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle:Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
+
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -5038,7 +5156,7 @@ plot_auslaender_mint_zeit <- function(r){
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel)))))
+   }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel) ))))
                                       )
                                     ))
 
@@ -5077,7 +5195,9 @@ plot_auslaender_mint_zeit <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle:Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
+
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -5087,7 +5207,7 @@ plot_auslaender_mint_zeit <- function(r){
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel)))))
+   }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel) ))))
                                       )
                                     ))
 
@@ -5428,7 +5548,10 @@ studierende_international_bula_mint <- function(r) {
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle:Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
+
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -5438,7 +5561,7 @@ studierende_international_bula_mint <- function(r) {
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel)))))
+   }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel) ))))
                                   )
                                 )
       )

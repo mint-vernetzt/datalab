@@ -168,7 +168,10 @@ plot_cp_orgas <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\n\\nQuelle der Daten: MINTvernetzt Community Plattform, Stand 14. April 2024';
+
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -178,7 +181,7 @@ plot_cp_orgas <- function(r){
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel))  #
+   }", gsub("'", "\\\\'", titel), gsub("'", "\\\\'", titel))  #
                                                        )))
                                   ))
       )
@@ -240,7 +243,9 @@ plot_cp_orgas <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\n\\nQuelle der Daten: MINTvernetzt Community Plattform, Stand 14. April 2024';
+
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -430,7 +435,9 @@ plot_cp_projekte <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\n\\nQuelle der Daten: MINTvernetzt Community Plattform, Stand 14. April 2024';
+
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -440,7 +447,7 @@ plot_cp_projekte <- function(r){
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel))  #
+   }", gsub("'", "\\\\'", titel), gsub("'", "\\\\'", titel) )  #
                                                        )))
                                   ))
       )
@@ -505,7 +512,9 @@ plot_cp_projekte <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\n\\nQuelle der Daten: MINTvernetzt Community Plattform, Stand 14. April 2024';
+
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -515,7 +524,7 @@ plot_cp_projekte <- function(r){
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel))  #
+   }", gsub("'", "\\\\'", titel), gsub("'", "\\\\'", titel)   )  #
                                                        )))
                                   ))
       )
@@ -689,7 +698,9 @@ plot_cp_profile <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\n\\nQuelle der Daten: MINTvernetzt Community Plattform, Stand 14. April 2024';
+
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -699,7 +710,7 @@ plot_cp_profile <- function(r){
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel))  #
+   }", gsub("'", "\\\\'", titel), gsub("'", "\\\\'", titel))  #
                                                          )))
                                     ))
         )
@@ -758,7 +769,10 @@ plot_cp_profile <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\n\\nQuelle der Daten: MINTvernetzt Community Plattform, Stand 14. April 2024';
+
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -768,7 +782,7 @@ plot_cp_profile <- function(r){
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel))  #
+   }", gsub("'", "\\\\'", titel), gsub("'", "\\\\'", titel))  #
                                                          )))
                                     ))
         )
@@ -832,7 +846,9 @@ plot_cp_profile <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\n\\nQuelle der Daten: MINTvernetzt Community Plattform, Stand 14. April 2024';
+
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -842,7 +858,7 @@ plot_cp_profile <- function(r){
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel))  #
+   }", gsub("'", "\\\\'", titel), gsub("'", "\\\\'", titel))  #
                                                          )))
                                     ))
         )
@@ -899,7 +915,9 @@ plot_cp_profile <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\n\\nQuelle der Daten: MINTvernetzt Community Plattform, Stand 14. April 2024';
+
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -909,7 +927,7 @@ plot_cp_profile <- function(r){
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel))  #
+   }", gsub("'", "\\\\'", titel), gsub("'", "\\\\'", titel))  #
                                                          )))
                                     ))
         )
@@ -1027,7 +1045,9 @@ plot_mv_akteursb <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\n\\nQuelle der Daten: MINTvernetzt 2024';
+
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -1037,7 +1057,7 @@ plot_mv_akteursb <- function(r){
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel))  #
+   }", gsub("'", "\\\\'", titel), gsub("'", "\\\\'", titel) )  #
                                                        )))
                                   ))
       )
@@ -1085,7 +1105,7 @@ plot_mv_stimmung <- function(r){
 
 
     # quelle <- "Quelle der Daten: MINTvernetzt 2024."
-    
+
     plot <- df %>%
       highcharter::hchart(
         "bar", highcharter::hcaes(group = antwort , y = wert, x = typ)
@@ -1108,7 +1128,8 @@ plot_mv_stimmung <- function(r){
     highcharter::hc_chart(
       style = list(fontFamily = "SourceSans3-Regular", fontSize = "18px")) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
-    
+      highcharter::hc_caption(text = "Quelle der Daten: MINTvernetzt 2024.",
+                              style = list(fontSize = "11px", color = "gray")) %>%
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
@@ -1121,7 +1142,9 @@ plot_mv_stimmung <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\n\\nQuelle der Daten: MINTvernetzt 2024';
+
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -1131,7 +1154,7 @@ plot_mv_stimmung <- function(r){
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel))  #
+   }", gsub("'", "\\\\'", titel), gsub("'", "\\\\'", titel))  #
                                                        )))
                                   ))
       )
@@ -1145,7 +1168,7 @@ plot_mv_stimmung <- function(r){
  #               "#ee7775", "#fca5a5",
  #               "#66cbaf", "#35bd97" )
  #   tooltip <- paste('\"{point.antwort}\" <br> Anteil: {point.wert}%')
- #   
+ #
 #
  #   plot <- balkenbuilder(df, titel, x, y, group=group, tooltip, format = "1", color = color, stacking = "percent", subtitel = subtitel, quelle =quelle)
 
@@ -1193,8 +1216,6 @@ plot_mv_stimmung <- function(r){
 
 plot_mv_genderb <- function(){
 
-
-
     df_query <- glue::glue_sql("
     SELECT *
     FROM ausserschulisch_genderbefragung
@@ -1216,6 +1237,19 @@ plot_mv_genderb <- function(){
         )
       )
 
+    # tooltip <- paste('Anteil: {point.wert} %')
+    # color <- c("#b16fab", "#154194", "#66cbaf")
+    # titel <- titel
+    # subtitel <- subtitel
+    # format <- '{point.wert}%'
+    #
+    # x = "gruppe"
+    # y = "wert"
+    #
+    # quelle <- "Quelle der Daten: MINTvernetzt 2024"
+    #
+    #
+    # plot <- piebuilder(df, titel, x,y, tooltip, color, format, subtitel, quelle = quelle )
 
     plot <- df %>%
       highcharter::hchart(
@@ -1247,52 +1281,36 @@ plot_mv_genderb <- function(){
             )
           )
         )
-      ) %>%
-        highcharter::hc_exporting(enabled = TRUE,
-                                  buttons = list(
-                                    contextButton = list(
-                                      menuItems = list("downloadPNG", "downloadCSV",
-                                                       list(
-                                                         text = "Daten für GPT",
-                                                         onclick = htmlwidgets::JS(sprintf(
-                                                           "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
+      )
 
-     var data = this.getCSV();
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-   }", gsub("'", "\\\\'", titel))  #
-                                                         )))
-                                    ))
-        )
+    #%>%
+   #      highcharter::hc_exporting(enabled = TRUE,
+   #                                buttons = list(
+   #                                  contextButton = list(
+   #                                    menuItems = list("downloadPNG", "downloadCSV",
+   #                                                     list(
+   #                                                       text = "Daten für GPT",
+   #                                                       onclick = htmlwidgets::JS(sprintf(
+   #                                                         "function () {
+   #   var date = new Date().toISOString().slice(0,10);
+   #   var chartTitle = '%s'.replace(/\\s+/g, '_');
+   #   var filename = chartTitle + '_' + date + '.txt';
+   #
+   #   var data = this.getCSV();
+   #   var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+   #   if (window.navigator.msSaveBlob) {
+   #     window.navigator.msSaveBlob(blob, filename);
+   #   } else {
+   #     var link = document.createElement('a');
+   #     link.href = URL.createObjectURL(blob);
+   #     link.download = filename;
+   #     link.click();
+   #   }
+   # }", gsub("'", "\\\\'", titel))  #
+   #                                                       )))
+   #                                  ))
+        # )
 
-
- #   tooltip <- paste('Anteil: {point.wert} %')
-#   color <- c("#b16fab", "#154194", "#66cbaf")
- #   titel <- titel
-#    subtitel <- subtitel
-  #  format <- '{point.wert}%'
-
-
-#    x = "gruppe"
-  #  y = "wert"
-
-  #  quelle <- "Quelle der Daten: MINTvernetzt 2024"
-
-
-#    plot <- piebuilder(df, titel, x,y, tooltip, color, format, subtitel, quelle = quelle )
-
-#
-#
   return(plot)
 }
 
@@ -1406,7 +1424,9 @@ skf_einrichtungen <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\n\\nQuelle der Daten: Stiftung Kinder forschen, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
+
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -1416,7 +1436,7 @@ skf_einrichtungen <- function(r){
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel))  #
+   }", gsub("'", "\\\\'", titel), gsub("'", "\\\\'", titel))  #
                                                      )))
                                 ))
     )
@@ -1514,7 +1534,9 @@ skf_personal <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\n\\nQuelle der Daten: Stiftung Kinder forschen, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
+
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -1524,7 +1546,7 @@ skf_personal <- function(r){
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel))  #
+   }", gsub("'", "\\\\'", titel), gsub("'", "\\\\'", titel) )  #
                                                      )))
                                 ))
     )

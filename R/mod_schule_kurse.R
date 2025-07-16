@@ -131,7 +131,7 @@ mod_schule_kurse_ui <- function(id){
                                  mod_schule_kurse_einstieg_verlauf_ui("mod_schule_kurse_einstieg_verlauf_ui_1"),
 
                                ),
-                               tags$img(src = "www/ti.png", style = "margin-top: 10px; width: 90%; display: block; margin-left: auto; margin-right: auto;")
+                               #tags$img(src = "www/ti.png", style = "margin-top: 10px; width: 90%; display: block; margin-left: auto; margin-right: auto;")
                              ),
                              shiny::mainPanel(
                                width = 9,
