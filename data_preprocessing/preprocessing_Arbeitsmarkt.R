@@ -4121,7 +4121,15 @@ library(stringr)
 
 
 
-list <- c("EA_349270_Entgelte_MINT_D.xlsb", "EA_349270_Entgelte_MINT_BE.xlsb", "EA_349270_Entgelte_MINT_SL.xlsb","EA_349270_Entgelte_MINT_BRB.xlsb", "EA_349270_Entgelte_MINT_BW.xlsb", "EA_349270_Entgelte_MINT_BY.xlsb", "EA_349270_Entgelte_MINT_H.xlsb", "EA_349270_Entgelte_MINT_HB.xlsb", "EA_349270_Entgelte_MINT_HH.xlsb", "EA_349270_Entgelte_MINT_MV.xlsb", "EA_349270_Entgelte_MINT_NDS.xlsb", "EA_349270_Entgelte_MINT_NRW.xlsb", "EA_349270_Entgelte_MINT_RLP.xlsb", "EA_349270_Entgelte_MINT_S.xlsb", "EA_349270_Entgelte_MINT_SA.xlsb", "EA_349270_Entgelte_MINT_SH.xlsb", "EA_349270_Entgelte_MINT_TH.xlsb")
+list <- c("BA028_2024_Entgelte_MINT_D.xlsb", "BA028_2024_Entgelte_MINT_BE.xlsb",
+          "BA028_2024_Entgelte_MINT_SL.xlsb","BA029_2024_Entgelte_MINT_BRB.xlsb",
+          "BA028_2024_Entgelte_MINT_BW.xlsb", "BA028_2024_Entgelte_MINT_BY.xlsb",
+          "BA028_2024_Entgelte_MINT_H.xlsb", "BA028_2024_Entgelte_MINT_HB.xlsb",
+          "BA028_2024_Entgelte_MINT_HH.xlsb", "BA028_2024_Entgelte_MINT_MV.xlsb",
+          "BA028_2024_Entgelte_MINT_NDS.xlsb", "BA028_2024_Entgelte_MINT_NRW.xlsb",
+          "BA028_2024_Entgelte_MINT_RLP.xlsb", "BA028_2024_Entgelte_MINT_S.xlsb",
+          "BA028_2024_Entgelte_MINT_SA.xlsb", "BA028_2024_Entgelte_MINT_SH.xlsb",
+          "BA028_2024_Entgelte_MINT_TH.xlsb")
 
 
 for(i in list){
