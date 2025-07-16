@@ -885,10 +885,14 @@ home_comparison_line <- function(r) {
 
     df_alle <- df_alle %>%
       group_by(bereich, indikator, fachbereich, jahr) %>%
-      summarise(
+      reframe(
         wert = sum(wert, na.rm = TRUE),
         .groups = "drop"
       ) %>%
+      # summarise(
+      #   wert = sum(wert, na.rm = TRUE),
+      #   .groups = "drop"
+      # ) %>%
       mutate(geschlecht = "Gesamt") %>%
       select(bereich, indikator, fachbereich, geschlecht, jahr, wert)
 
