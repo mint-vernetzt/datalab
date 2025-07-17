@@ -65,7 +65,7 @@ mod_startseite_start_ui <- function(id){
 
     # Kurzanalysen ----
             h5("Was steckt hinter den MINT-Statistiken?"),
-            p(style = "text-align: justify; font-size = 20px",
+            p(style = "font-size = 20px",
               "Ausgewählte Statistiken bereiten wir in Kurzanalysen auf.
               Hier schauen wir hinter die Zahlen und ordnen sie ein – erklärend,
               lösungsorientiert und wissenschaftlich fundiert.
