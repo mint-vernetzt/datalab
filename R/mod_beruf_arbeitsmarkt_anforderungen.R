@@ -64,6 +64,14 @@ mod_beruf_arbeitsmarkt_anforderungen_ui <- function(id){
                        selected = "Beschäftigte",
                        multiple = FALSE
                      ),
+                     p("Darstellungsart:"),
+                     shinyWidgets::radioGroupButtons(
+                       inputId = ns("abs_zahlen_arbeitsmarkt_einstieg_vergleich12"),
+                       choices = c("In Prozent", "Anzahl"),
+                       justified = TRUE,
+                       checkIcon = list(yes = icon("ok",
+                                                   lib = "glyphicon"))
+                     ),
                      br(),
                      shinyBS::bsPopover(id="ih_beruf_fach_2", title="",
                                         content = paste0("Die Grafik mit der ersten Einstellung zeigt, dass in Deutschland im Jahr 2023 rund 77 % der Beschäftigten in Nicht-MINT Berufen tätig sind. In den MINT-Berufen dominiert die Technik: 18.1 % der Beschäftigten gehen beruflich einer Tätigkeit in der Technik nach."),
@@ -130,6 +138,15 @@ mod_beruf_arbeitsmarkt_anforderungen_server <- function(id, r){
     })
     observeEvent(input$gegenwert_arbeitsmarkt_fach_vergleich, {
       r$gegenwert_arbeitsmarkt_fach_vergleich <- input$gegenwert_arbeitsmarkt_fach_vergleich
+    })
+    # Initialwert setzen (falls noch nicht gesetzt)
+    observe({
+      if (is.null(r$abs_zahlen_arbeitsmarkt_einstieg_vergleich12)) {
+        r$abs_zahlen_arbeitsmarkt_einstieg_vergleich12 <- "In Prozent"
+      }
+    })
+    observeEvent(input$abs_zahlen_arbeitsmarkt_einstieg_vergleich12, {
+      r$abs_zahlen_arbeitsmarkt_einstieg_vergleich12 <- input$abs_zahlen_arbeitsmarkt_einstieg_vergleich12
     })
 
   })

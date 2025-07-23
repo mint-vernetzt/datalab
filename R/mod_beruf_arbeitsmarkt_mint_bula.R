@@ -56,6 +56,14 @@ mod_beruf_arbeitsmarkt_mint_bula_ui <- function(id){
                                    "Beschäftigte ü55"),
                        selected= "Beschäftigte",
                      ),
+                     p("Darstellungsart:"),
+                     shinyWidgets::radioGroupButtons(
+                       inputId = ns("abs_zahlen_arbeitsmarkt_einstieg_vergleich_123bula"),
+                       choices = c("In Prozent", "Anzahl"),
+                       justified = TRUE,
+                       checkIcon = list(yes = icon("ok",
+                                                   lib = "glyphicon"))
+                     ),
                      br(),
                      darstellung(id="dh_beruf_mint_bula_1"),
                      br(),
@@ -216,6 +224,10 @@ mod_beruf_arbeitsmarkt_mint_bula_server <- function(id, r){
 
     observeEvent(input$indikator_beruf_mint_bula_balken, {
       r$indikator_beruf_mint_bula_balken <- input$indikator_beruf_mint_bula_balken
+    })
+
+    observeEvent(input$abs_zahlen_arbeitsmarkt_einstieg_vergleich_123bula, {
+      r$abs_zahlen_arbeitsmarkt_einstieg_vergleich_123bula <- input$abs_zahlen_arbeitsmarkt_einstieg_vergleich_123bula
     })
 
   })
