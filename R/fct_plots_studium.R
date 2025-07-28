@@ -16,6 +16,7 @@ studienzahl_mint <- function(r){
     testy1 <- r$studium_anteil_y
     regio <- r$region_studium_anteil
     testl1 <- if (betrachtung == "Einzelansicht - Kuchendiagramm") r$studium_anteil_i else r$studium_anteil_i_balken
+    darstellung <-  r$abs_zahlen_arbeitsmarkt_einstieg_vergleich123
 
     df_query <- glue::glue_sql("
     SELECT region, jahr, indikator, fach, wert
@@ -113,9 +114,13 @@ studienzahl_mint <- function(r){
     }
 
        else if(betrachtung == "Gruppenvergleich - Balkendiagramm"){
-
+         # req(r$abs_zahlen_fach_vergleich_balken14)
          df <- df %>% dplyr::filter(indikator %in% testl1)
          df <- df[with(df, order(proportion, decreasing = TRUE)), ]
+
+
+         if(darstellung == "In Prozent"){
+
 
 
          titel <-  ifelse(regio == "Saarland",
@@ -168,6 +173,65 @@ studienzahl_mint <- function(r){
                                        )
                                      )
            )
+         } else {
+           titel <-  ifelse(regio == "Saarland",
+                            paste0("MINT-Anteil in verschiedenen Studierenden-Gruppen im ", regio, " (", testy1, ")"),
+                            paste0("MINT-Anteil in verschiedenen Studierenden-Gruppen in ", regio, " (", testy1, ")"))
+
+           df <- df %>%
+             filter(fach != "Alle Nicht MINT-Fächer")
+
+           highcharter::hchart(df, 'bar', highcharter::hcaes(y = wert_ges, x = indikator, group =forcats::fct_rev(fach)))%>%
+             highcharter::hc_tooltip(pointFormat = "Anteil: {point.display_rel} % <br> Anzahl: {point.wert}") %>%
+             highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}"),  reversedStacks =  F) %>%
+             highcharter::hc_xAxis(title = list(text = "")) %>%
+             highcharter::hc_plotOptions(bar = list(stacking = "value")) %>%
+             highcharter::hc_colors(c( "#b16fab","#efe8e6")) %>%
+             highcharter::hc_title(text = ifelse(regio == "Saarland",
+                                                 paste0("MINT-Anzahl in verschiedenen Studierenden-Gruppen im ", regio, " (", testy1, ")"),
+                                                 paste0("MINT-Anzahl in verschiedenen Studierenden-Gruppen in ", regio, " (", testy1, ")")),
+                                   margin = 45,
+                                   align = "center",
+                                   style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
+             highcharter::hc_chart(
+               style = list(fontFamily = "Calibri Regular", fontSize = "14px")
+             ) %>%
+             highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
+             highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+                                     style = list(fontSize = "11px", color = "gray")) %>%
+             highcharter::hc_exporting(enabled = TRUE,
+                                       buttons = list(
+                                         contextButton = list(
+                                           menuItems = list("downloadPNG", "downloadCSV",
+                                                            list(
+                                                              text = "Daten für GPT",
+                                                              onclick = htmlwidgets::JS(sprintf(
+                                                                "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle:Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
+
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel),gsub("'", "\\\\'", titel) ))))
+                                         )
+                                       )
+             )
+         }
+
+
+
+
        }
 }
 

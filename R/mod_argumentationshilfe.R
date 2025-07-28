@@ -283,7 +283,51 @@ mod_argumentation_ui <- function(id){
         "Kopieren Sie folgende Inhalte und fügen Sie sie direkt in den GPT-Chat ein."),
 
         downloadButton(ns("download_txt"), "   Gesammelte Daten herunterladen"),
-      )
+      ),
+
+
+
+  #     tags$head(
+  #       tags$script(HTML("
+  #   function copyToClipboard(id) {
+  #     var pre = document.querySelector('#' + id + ' pre');
+  #     var text = pre ? pre.innerText : '';
+  #     navigator.clipboard.writeText(text).then(function() {
+  #       alert('Inhalt wurde in die Zwischenablage kopiert!');
+  #     }, function(err) {
+  #       alert('Fehler beim Kopieren: ' + err);
+  #     });
+  #   }
+  # "))
+  #     ),
+
+
+      # tagList(
+      #   fluidRow(
+      #     column(
+      #       width = 8,
+      #
+      #       # Unsichtbarer Textblock zum Kopieren
+      #       div(
+      #         id = "copy_target",
+      #         style = "visibility: hidden; height: 0; overflow: hidden;",
+      #
+      #         verbatimTextOutput("clipboard_text")
+      #
+      #       ),
+      #
+      #       # Kopier-Button
+      #       actionButton("copy_btn", "Daten direkt kopieren"),
+      #
+      #       tags$script(HTML("
+      #     $(document).on('click', '#copy_btn', function(){
+      #       copyToClipboard('copy_target');
+      #     });
+      #   ")),
+
+
+# )))
+
     ),
 
       ## MINT-DataLab-GPT ----
@@ -945,6 +989,10 @@ mod_argumentation_server <- function(id){
       r$region_argumentationshilfe <- input$region_argumentationshilfe
     })
 
+    # daten_text <- reactive({
+    #   paste("ddd")
+    # })
+
     # Hier Funktionen eingebunden
 
     output$download_txt <- downloadHandler(
@@ -952,14 +1000,25 @@ mod_argumentation_server <- function(id){
         paste0("daten_export_", Sys.Date(), ".txt")
       },
       content = function(file) {
-        # Hier holst du die fertigen Daten
-        daten <- daten_download(r)
+        daten <- daten_download(r)#
 
-        # Schreibe sie ins file (Shiny gibt 'file' automatisch an den Browser aus)
         writeLines(daten, con = file)
       },
       contentType = "text/plain"
     )
+
+
+#
+#     output$clipboard_text <- renderText({
+#       daten_text()
+#     })
+#
+
+
+
+
+
+
 
     output$plot_argument_verlauf <- renderUI({
       argument_verlauf(r)

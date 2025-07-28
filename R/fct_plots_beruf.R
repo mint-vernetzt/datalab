@@ -365,6 +365,7 @@ arbeitsmarkt_mint_bulas <- function(r) {
   else if(betrachtung == "Gruppenvergleich - Balkendiagramm" ){
     timerange <- r$zeit_beruf_mint_bula_balken
     indikator_choice <- r$indikator_beruf_mint_bula_balken
+    darstellung <- r$abs_zahlen_arbeitsmarkt_einstieg_vergleich_123bula
 
 
     df_query <- glue::glue_sql("
@@ -435,8 +436,14 @@ arbeitsmarkt_mint_bulas <- function(r) {
 
 
     quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
-    out <- balkenbuilder(df, titel, x="bundesland", y="prop", group = NULL, tooltip = "Anteil: {point.display_rel} % <br> Anzahl: {point.wert}", format = "{value}%", color = "#b16fab", optional = optional, quelle = quelle)
 
+    if (darstellung == "In Prozent"){
+    out <- balkenbuilder(df, titel, x="bundesland", y="prop", group = NULL, tooltip = "Anteil: {point.display_rel} % <br> Anzahl: {point.wert}", format = "{value}%", color = "#b16fab", optional = optional, quelle = quelle)
+    }
+    else
+    {
+      out <- balkenbuilder(df, titel, x="bundesland", y="wert_ges", group = NULL, tooltip = "Anteil: {point.display_rel} % <br> Anzahl: {point.wert}", format = "{value}", color = "#b16fab", optional = optional, quelle = quelle)
+    }
   }
   else if(betrachtung == "Zeitverlauf - Liniendiagramm"){
     timerange <-r$zeit_beruf_mint_bula_verlauf
@@ -1303,10 +1310,20 @@ arbeitsmarkt_faecher_anteil <- function(r) {
       colors = as.character(df$color)
     ))
 
+    darstellung <- r$abs_zahlen_arbeitsmarkt_einstieg_vergleich12
+    if (is.null(r$abs_zahlen_arbeitsmarkt_einstieg_vergleich12)) {
+      r$abs_zahlen_arbeitsmarkt_einstieg_vergleich12 <- "In Prozent"
+    }
+
+
 
     quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
-    out <- balkenbuilder(df, titel, x="fachbereich", y = "prop", group=NULL, tooltip, format, color, optional, quelle = quelle)
 
+    if(darstellung == "In Prozent"){
+    out <- balkenbuilder(df, titel, x="fachbereich", y = "prop", group=NULL, tooltip, format, color, optional, quelle = quelle)
+    } else {
+    out <- balkenbuilder(df, titel, x="fachbereich", y = "wert", group=NULL, tooltip, format, color, optional, quelle = quelle)
+    }
   }
 
   return(out)
