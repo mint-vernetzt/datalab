@@ -41,7 +41,7 @@ mod_startseite_start_ui <- function(id){
             p(),
 
           # Updates ----
-          h1(style = "color: #00a87a; font-size: 18px;",
+          h2(style = "color: #00a87a;",
              "Was ist Neu?"),
           p(style = "text-align: justify; font-size: 14px;",
             "-  Grafiken und Daten als Download", br(),
@@ -49,7 +49,7 @@ mod_startseite_start_ui <- function(id){
             "-  Neue Kurzanalyse: Fachkräftemangel in den MINT-Disziplinen", br(),
             "-  Daten zu Lehramts-Absolvent:innen verfügbar"
           ),
-          h1(style = "color: #00a87a; font-size: 18px;",
+          h2(style = "color: #00a87a;",
              "Woran wir aktuell arbeiten:"),
           p(style = "text-align: justify; font-size: 14px;",
             "-  Argumentationshilfe mit Erklärungen und Beispielen",br(),

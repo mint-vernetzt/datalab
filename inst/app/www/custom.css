@@ -24,7 +24,14 @@
 }
 
 h2 {
-  font-size: 18px;
+  font-size: 22px;
+  margin-block: 20px;
+  margin-top: 20px;
+}
+
+
+h1 {
+  font-size: 28px;
   margin-block: 20px;
 }
 
