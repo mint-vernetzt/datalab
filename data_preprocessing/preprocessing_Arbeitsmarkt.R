@@ -16,11 +16,11 @@ library(magrittr)
 library(dplyr)
 
 #pafd kbr
-#pfad <- "C:/Users/kbr/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/"
+pfad <- "C:/Users/kbr/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/"
 #pfad kab
 # pfad <- "C:/Users/kab/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/"
 
-pfad <- "C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/"
+# pfad <- "C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/"
 
 # Erstellt "arbeitsmarkt" -------------------------------------------------
 
@@ -1872,9 +1872,9 @@ usethis::use_data(data_naa, overwrite = T)
 
 
 
-# Erstellt arbeitsmarkt_entgelte.rda ----
+# Erstellt arbeitsmarkt_entgelte ----
 
-install.packages("readxlsb")
+# install.packages("readxlsb")
 library(tidyr)
 library(readxlsb)
 library(dplyr)
@@ -1897,7 +1897,7 @@ list <- c("BA032_2024_Entgelte_MINT_D.xlsb", "BA028_2024_Entgelte_MINT_BE.xlsb",
           "BA044_2024_Entgelte_MINT_TH.xlsb")
 
 
-
+i <- list[1]
 for(i in list){
   print(i)
   pfad_i <- paste0(pfad, i)
@@ -1910,25 +1910,72 @@ for(i in list){
   colnames(data)[5:10] <- header2
 
   data <- data[-c(1:3),]
-  data <- data[,-1]
-  data[data == ""] <- NA
+  #data <- data[,-1] # NEIN - hier steht das Jahr drin!!!
+  #data[data == ""] <- NA # was macht das?
 
   data_2 <- data %>%
-    fill(`Berufsaggregat MINT`, .direction = "down") %>%
+    rename(berufe = `Berufsaggregat MINT`,
+           jahr = Stichtag)
+
+  data_2 <- data_2[,-1*5:10]
+
+  data_2 <- data_2 %>%
+    mutate(jahr = )
+
+  data_2$berufe <- zoo::na.locf(data_2$berufe)
+
+  data_2 <- data_2 %>%
+    #tidyr::fill(berufe, .direction = "down") %>% hat aus irgendeinem Grund nicht funktioniert - habe das davor verwendet
     mutate(
-      code = str_extract(`Berufsaggregat MINT`, "^\\d+"),
-      berufslevel = str_extract(`Berufsaggregat MINT`, "(Fachkraft|Spezialist|Experten)"),
+      code = str_extract(berufe, "^\\d+"),
+      berufslevel = str_extract(berufe, "(Fachkraft|Fachkräfte|Spezialist|Spezialisten|Experten|Experte)"),
+
       beruf = str_trim(
-        str_remove_all(`Berufsaggregat MINT`, "^\\d+\\s*|(Fachkraft|Spezialist|Experten)$|\\s*-\\s*")
+        str_remove_all(berufe, "^\\d+\\s*|(Fachkraft|Fachkräfte|Spezialist|Spezialisten|Experten|Experte)$|\\s*-\\s*")
       )
     ) %>%
-    select(-`Berufsaggregat MINT`) %>%
-    pivot_longer(
-      cols = starts_with("bis") | starts_with("über"),
-      names_to = "Einkommensgruppe",
-      values_to = "Anzahl"
-    )
+    select(-berufe)
+  # %>%
+  #   pivot_longer(
+  #     cols = starts_with("bis") | starts_with("über"),
+  #     names_to = "Einkommensgruppe",
+  #     values_to = "Anzahl"
+  #   )
 
+  data_2$berufsgruppe <- ifelse(is.na(data_2$code),
+                         data_2$beruf,
+                         NA)
+  data_2$berufsgruppe <- zoo::na.locf(data_2$berufsgruppe)
+
+  data_2 <- data_2 %>%
+    mutate(beruf = case_when(
+      beruf == "MINTBerufe" ~ "MINT-Berufe",
+      beruf == "Bauund Gebäudetechnik"  ~ "Bau- und Gebäudetechnik",
+      beruf == "Verkehrs, Sicherheitsund Veranstaltungstechnik" ~
+        "Verkehrs-, Sicherheits- und Veranstaltungstechnik",
+      beruf == "Keine MINTBerufe" ~ "Keine MINT-Berufe",
+      beruf == "Technik" ~ "Technik (gesamt)",
+      T ~ beruf
+    ),
+    berufsgruppe = case_when(
+      berufsgruppe == "MINTBerufe" ~ "MINT-Berufe",
+      berufsgruppe == "Bauund Gebäudetechnik"  ~ "Bau- und Gebäudetechnik",
+      berufsgruppe == "Verkehrs, Sicherheitsund Veranstaltungstechnik" ~
+        "Verkehrs-, Sicherheits- und Veranstaltungstechnik",
+      berufsgruppe == "Keine MINTBerufe" ~ "Keine MINT-Berufe",
+      berufsgruppe == "Technik" ~ "Technik (gesamt)",
+      T ~ berufsgruppe
+    ),
+    berufslevel = case_when(
+      is.na(berufslevel) ~ "Insgesamt",
+      berufslevel == "Fachkraft" ~ "Fachkräfte",
+      berufslevel %in% c("Spezialist", "Spezialisten") ~ "Spezialist:innen",
+      berufslevel %in% c("Experte", "Experten") ~ "Expert:innen",
+      T ~ berufslevel
+    ))
+
+
+  data_2 <- unique(data_2)
 
   a <- str_extract(i, "_[A-Za-z]{1,3}\\.")
   a <- str_extract(a, "_[A-Za-z]{1,3}")
