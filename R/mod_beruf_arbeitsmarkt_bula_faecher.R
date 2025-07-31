@@ -200,7 +200,14 @@ mod_beruf_arbeitsmarkt_bula_faecher_ui <- function(id){
                        ),
                        selected = "Informatik"
                      ),
-
+                     p("Darstellungsart:"),
+                     shinyWidgets::radioGroupButtons(
+                       inputId = ns("abs_zahlen_arbeitsmarkt_einstieg_vergleich_123bula123"),
+                       choices = c("In Prozent", "Anzahl"),
+                       justified = TRUE,
+                       checkIcon = list(yes = icon("ok",
+                                                   lib = "glyphicon"))
+                     ),
 
                      br(),
                      shinyBS::bsPopover(id="ih_beruf_faecher_3", title="",
@@ -266,9 +273,15 @@ mod_beruf_arbeitsmarkt_bula_faecher_server <- function(id, r){
       r$indikator_beruf_faecher_bula_balken <- input$indikator_beruf_faecher_bula_balken
     })
 
+    observeEvent(input$abs_zahlen_arbeitsmarkt_einstieg_vergleich_123bula123, {
+      r$abs_zahlen_arbeitsmarkt_einstieg_vergleich_123bula123 <- input$abs_zahlen_arbeitsmarkt_einstieg_vergleich_123bula123
+    })
+
     observeEvent(input$fachbereich_beruf_faecher_bula_balken, {
       r$fachbereich_beruf_faecher_bula_balken <- input$fachbereich_beruf_faecher_bula_balken
     })
+
+
 
   })
 }

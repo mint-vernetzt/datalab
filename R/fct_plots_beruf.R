@@ -1072,6 +1072,8 @@ arbeitsmarkt_faecher_anteil <- function(r) {
   regio <- r$region_arbeitsmarkt_fach_vergleich
   nicht_mint <- r$gegenwert_arbeitsmarkt_fach_vergleich
 
+
+
   if(betrachtung == "Einzelansicht - Kuchendiagramm"){
     indikator_choice <- r$indikator_arbeitsmarkt_fach_vergleich_pies
 
@@ -1310,10 +1312,12 @@ arbeitsmarkt_faecher_anteil <- function(r) {
       colors = as.character(df$color)
     ))
 
-    darstellung <- r$abs_zahlen_arbeitsmarkt_einstieg_vergleich12
-    if (is.null(r$abs_zahlen_arbeitsmarkt_einstieg_vergleich12)) {
-      r$abs_zahlen_arbeitsmarkt_einstieg_vergleich12 <- "In Prozent"
-    }
+
+    # if (is.null(r$abs_zahlen_arbeitsmarkt_einstieg_vergleich12)) {
+    #   r$abs_zahlen_arbeitsmarkt_einstieg_vergleich12 <- "In Prozent"
+    # }
+    darstellung <- r$abs_zahlen_arbeitsmarkt_einstieg_vergleich12_1
+
 
 
 
@@ -1322,6 +1326,8 @@ arbeitsmarkt_faecher_anteil <- function(r) {
     if(darstellung == "In Prozent"){
     out <- balkenbuilder(df, titel, x="fachbereich", y = "prop", group=NULL, tooltip, format, color, optional, quelle = quelle)
     } else {
+      tooltip <- "test"
+      format <- "{value}"
     out <- balkenbuilder(df, titel, x="fachbereich", y = "wert", group=NULL, tooltip, format, color, optional, quelle = quelle)
     }
   }
@@ -1562,6 +1568,7 @@ arbeitsmarkt_bula_faecher <- function(r) {
     timerange <- r$zeit_beruf_faecher_bula_balken
     indikator_choice <- r$indikator_beruf_faecher_bula_balken
     faecher <- r$fachbereich_beruf_faecher_bula_balken
+    darstellung12 <- r$abs_zahlen_arbeitsmarkt_einstieg_vergleich_123bula123
 
 #
     df_query <- glue::glue_sql("
@@ -1635,8 +1642,12 @@ arbeitsmarkt_bula_faecher <- function(r) {
                       ifelse(df$bundesland == "Ostdeutschland (inkl. Berlin)", "#d3a4d7",
                              ifelse(df$bundesland == "Westdeutschland (o. Berlin)", "#d3a4d7", "#A9A9A9")))))
     quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
-    out <- balkenbuilder(df, titel, x= "bundesland", y="prop", group=NULL, tooltip, format, color, optional=optional, quelle = quelle)
 
+    if(darstellung12 == "In Prozent"){
+    out <- balkenbuilder(df, titel, x= "bundesland", y="prop", group=NULL, tooltip, format, color, optional=optional, quelle = quelle)
+    } else{
+      out <- balkenbuilder(df, titel, x= "bundesland", y="prop", group=NULL, tooltip, format, color, optional=optional, quelle = quelle)
+    }
 
   }
   else if(betrachtung == "Zeitverlauf - Liniendiagramm"){

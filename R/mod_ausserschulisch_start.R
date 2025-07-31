@@ -81,7 +81,7 @@ mod_ausserschulisch_start_ui <- function(id){
         title = "Datenquellen",
         width = 5,
         p(style = "text-align: left; font-size = 16px",
-          span(tags$b(span("Daten zu den außerschulische MINT-Akteur:innen und MINTvernetzt Befragungen: Quelle MINTvernetzt, Stand 14. April 2024.")))),
+          span(tags$b(span("Daten zu den außerschulische MINT-Akteur:innen und MINTvernetzt Befragungen: Quelle MINTvernetzt, Stand 14. April 20-25.")))),
         p(style = "text-align: left; font-size = 16px",
           span(tags$b(span("Daten zu frühklindlicher Bildung: Quelle Stiftung Kinder forschen, 2023."))))
       )

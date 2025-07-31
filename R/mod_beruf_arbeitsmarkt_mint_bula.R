@@ -56,14 +56,6 @@ mod_beruf_arbeitsmarkt_mint_bula_ui <- function(id){
                                    "Beschäftigte ü55"),
                        selected= "Beschäftigte",
                      ),
-                     p("Darstellungsart:"),
-                     shinyWidgets::radioGroupButtons(
-                       inputId = ns("abs_zahlen_arbeitsmarkt_einstieg_vergleich_123bula"),
-                       choices = c("In Prozent", "Anzahl"),
-                       justified = TRUE,
-                       checkIcon = list(yes = icon("ok",
-                                                   lib = "glyphicon"))
-                     ),
                      br(),
                      darstellung(id="dh_beruf_mint_bula_1"),
                      br(),
@@ -145,6 +137,7 @@ mod_beruf_arbeitsmarkt_mint_bula_ui <- function(id){
                                   lib = "glyphicon"))
     ),
 
+
     br(),
     shinyBS::bsPopover(id="ih_beruf_mint_7", title="",
                        content = paste0("Die erste Darstellung zeigt, dass sich der MINT-Anteil unter Beschäftigten in den ostdeutschen Bundesländern und Nordrhein-Westfalen ähnlich entwickelt. Der Anteil bleibt relativ konstant und nimmt von 2020 auf 2022 ein weing, um ca. einen halben Prozentpunkt, ab."),
@@ -175,6 +168,15 @@ mod_beruf_arbeitsmarkt_mint_bula_ui <- function(id){
                         selected = "Beschäftigte",
                         multiple = FALSE
                       ),
+
+                     p("Darstellungsart:"),
+                     shinyWidgets::radioGroupButtons(
+                       inputId = ns("abs_zahlen_arbeitsmarkt_einstieg_vergleich_123bula"),
+                       choices = c("In Prozent", "Anzahl"),
+                       justified = TRUE,
+                       checkIcon = list(yes = icon("ok",
+                                                   lib = "glyphicon"))
+                     ),
 
                      br(),
                      shinyBS::bsPopover(id="ih_beruf_fach_3", title="",

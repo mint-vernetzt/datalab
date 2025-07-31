@@ -99,7 +99,7 @@ plot_cp_orgas <- function(r){
                "#5f94f9", "#007655", "#d0a9cd")
 
 
-    quelke <- "Quelle der Daten: MINTvernetzt Community Plattform, Stand 14. April 2024."
+    quelke <- "Quelle der Daten: MINTvernetzt Community Plattform, Stand 14. April 2025."
     out <- linebuilder(df, titel, x = "indikator", y = "wert", group = "region", tooltip, format, color, quelle = quelke)
 
     #keine quelle weil net relevant
@@ -154,7 +154,7 @@ plot_cp_orgas <- function(r){
         style = list(fontFamily = "Calibri Regular", fontSize = "14px")
       ) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
-      highcharter::hc_caption(text = "Quelle der Daten: MINTvernetzt Community Plattform, Stand 14. April 2024.",
+      highcharter::hc_caption(text = "Quelle der Daten: MINTvernetzt Community Plattform, Stand 30. Juli 2025.",
                               style = list(fontSize = "11px", color = "gray")) %>%
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
@@ -170,7 +170,7 @@ plot_cp_orgas <- function(r){
 
 
      var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\n\\nQuelle der Daten: MINTvernetzt Community Plattform, Stand 14. April 2024';
+     data += '\\n\\nQuelle der Daten: MINTvernetzt Community Plattform, Stand 30. Juli 2025';
 
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
@@ -203,6 +203,8 @@ plot_cp_orgas <- function(r){
     }else{
       regio_angabe <- paste0(" die in ", regio, " tätig sind")
     }
+
+    browser()
     titel <- paste0("Organisationen der Community-Plattform von MINTvernetzt nach ",
                     charas, regio_angabe)
     subtitel <- paste0("Angaben wurden von <b>", ges, "</b> Organisationen gemacht. Mehrfachangabe möglich.")
@@ -229,7 +231,7 @@ plot_cp_orgas <- function(r){
         style = list(fontFamily = "Calibri Regular", fontSize = "14px")
       ) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
-      highcharter::hc_caption(text = "Quelle der Daten: MINTvernetzt Community Plattform, Stand 14. April 2024.",
+      highcharter::hc_caption(text = "Quelle der Daten: MINTvernetzt Community Plattform, Stand 30. Juli 2025.",
                               style = list(fontSize = "11px", color = "gray")) %>%
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
@@ -244,7 +246,7 @@ plot_cp_orgas <- function(r){
      var filename = chartTitle + '_' + date + '.txt';
 
      var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\n\\nQuelle der Daten: MINTvernetzt Community Plattform, Stand 14. April 2024';
+     data += '\\n\\nQuelle der Daten: MINTvernetzt Community Plattform, Stand 30. Juli 2025';
 
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
@@ -255,7 +257,7 @@ plot_cp_orgas <- function(r){
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel))  #
+   }", gsub("'", "\\\\'", titel),gsub("'", "\\\\'", titel))  #
                                                        )))
                                   ))
       )
@@ -421,7 +423,7 @@ plot_cp_projekte <- function(r){
         style = list(fontFamily = "Calibri Regular", fontSize = "14px")
       ) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
-      highcharter::hc_caption(text = "Quelle der Daten: MINTvernetzt Community Plattform, Stand 14. April 2024.",
+      highcharter::hc_caption(text = "Quelle der Daten: MINTvernetzt Community Plattform, Stand 30. Juli 2025.",
                               style = list(fontSize = "11px", color = "gray")) %>%
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
@@ -436,7 +438,7 @@ plot_cp_projekte <- function(r){
      var filename = chartTitle + '_' + date + '.txt';
 
      var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\n\\nQuelle der Daten: MINTvernetzt Community Plattform, Stand 14. April 2024';
+     data += '\\n\\nQuelle der Daten: MINTvernetzt Community Plattform, Stand 30. Juli 2025';
 
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
@@ -498,7 +500,7 @@ plot_cp_projekte <- function(r){
         style = list(fontFamily = "Calibri Regular", fontSize = "14px")
       ) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
-      highcharter::hc_caption(text = "Quelle der Daten: MINTvernetzt Community Plattform, Stand 14. April 2024.",
+      highcharter::hc_caption(text = "Quelle der Daten: MINTvernetzt Community Plattform, Stand 30. Juli 2025.",
                               style = list(fontSize = "11px", color = "gray")) %>%
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
@@ -513,7 +515,7 @@ plot_cp_projekte <- function(r){
      var filename = chartTitle + '_' + date + '.txt';
 
      var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\n\\nQuelle der Daten: MINTvernetzt Community Plattform, Stand 14. April 2024';
+     data += '\\n\\nQuelle der Daten: MINTvernetzt Community Plattform, Stand 30. Juli 2025';
 
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
@@ -684,7 +686,7 @@ plot_cp_profile <- function(r){
           style = list(fontFamily = "Calibri Regular", fontSize = "14px")
         ) %>%
         highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
-        highcharter::hc_caption(text = "Quelle der Daten: MINTvernetzt Community Plattform, Stand 14. April 2024.",
+        highcharter::hc_caption(text = "Quelle der Daten: MINTvernetzt Community Plattform, Stand 30. Juli 2025.",
                                 style = list(fontSize = "11px", color = "gray")) %>%
         highcharter::hc_exporting(enabled = TRUE,
                                   buttons = list(
@@ -699,7 +701,7 @@ plot_cp_profile <- function(r){
      var filename = chartTitle + '_' + date + '.txt';
 
      var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\n\\nQuelle der Daten: MINTvernetzt Community Plattform, Stand 14. April 2024';
+     data += '\\n\\nQuelle der Daten: MINTvernetzt Community Plattform, Stand 30. Juli 2025';
 
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
@@ -755,7 +757,7 @@ plot_cp_profile <- function(r){
           style = list(fontFamily = "Calibri Regular", fontSize = "14px")
         ) %>%
         highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
-        highcharter::hc_caption(text = "Quelle der Daten: MINTvernetzt Community Plattform, Stand 14. April 2024.",
+        highcharter::hc_caption(text = "Quelle der Daten: MINTvernetzt Community Plattform, Stand 30. Juli 2025.",
                                 style = list(fontSize = "11px", color = "gray")) %>%
         highcharter::hc_exporting(enabled = TRUE,
                                   buttons = list(
@@ -771,7 +773,7 @@ plot_cp_profile <- function(r){
 
 
      var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\n\\nQuelle der Daten: MINTvernetzt Community Plattform, Stand 14. April 2024';
+     data += '\\n\\nQuelle der Daten: MINTvernetzt Community Plattform, Stand 30. Juli 2025';
 
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
@@ -832,7 +834,7 @@ plot_cp_profile <- function(r){
           style = list(fontFamily = "Calibri Regular", fontSize = "14px")
         ) %>%
         highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
-        highcharter::hc_caption(text = "Quelle der Daten: MINTvernetzt Community Plattform, Stand 14. April 2024.",
+        highcharter::hc_caption(text = "Quelle der Daten: MINTvernetzt Community Plattform, Stand 30. Juli 2025.",
                                 style = list(fontSize = "11px", color = "gray")) %>%
         highcharter::hc_exporting(enabled = TRUE,
                                   buttons = list(
@@ -847,7 +849,7 @@ plot_cp_profile <- function(r){
      var filename = chartTitle + '_' + date + '.txt';
 
      var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\n\\nQuelle der Daten: MINTvernetzt Community Plattform, Stand 14. April 2024';
+     data += '\\n\\nQuelle der Daten: MINTvernetzt Community Plattform, Stand 30. Juli 2025';
 
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
@@ -901,7 +903,7 @@ plot_cp_profile <- function(r){
           style = list(fontFamily = "Calibri Regular", fontSize = "14px")
         ) %>%
         highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
-        highcharter::hc_caption(text = "Quelle der Daten: MINTvernetzt Community Plattform, Stand 14. April 2024.",
+        highcharter::hc_caption(text = "Quelle der Daten: MINTvernetzt Community Plattform, Stand 30. Juli 2025.",
                                 style = list(fontSize = "11px", color = "gray")) %>%
         highcharter::hc_exporting(enabled = TRUE,
                                   buttons = list(
@@ -916,7 +918,7 @@ plot_cp_profile <- function(r){
      var filename = chartTitle + '_' + date + '.txt';
 
      var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\n\\nQuelle der Daten: MINTvernetzt Community Plattform, Stand 14. April 2024';
+     data += '\\n\\nQuelle der Daten: MINTvernetzt Community Plattform, Stand 30. Juli 2025';
 
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
