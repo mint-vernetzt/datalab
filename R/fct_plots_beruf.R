@@ -442,7 +442,10 @@ arbeitsmarkt_mint_bulas <- function(r) {
     }
     else
     {
-      out <- balkenbuilder(df, titel, x="bundesland", y="wert_ges", group = NULL, tooltip = "Anteil: {point.display_rel} % <br> Anzahl: {point.wert}", format = "{value}", color = "#b16fab", optional = optional, quelle = quelle)
+
+      df$wert <- as.numeric(gsub("\\.", "", df$wert))
+      format <- "{value}"
+      out <- balkenbuilder(df, titel, x="bundesland", y="wert", group = NULL, tooltip = "Anteil: {point.display_rel} % <br> Anzahl: {point.wert}", format = "{value}", color = "#b16fab", optional = optional, quelle = quelle)
     }
   }
   else if(betrachtung == "Zeitverlauf - Liniendiagramm"){
@@ -1326,7 +1329,7 @@ arbeitsmarkt_faecher_anteil <- function(r) {
     if(darstellung == "In Prozent"){
     out <- balkenbuilder(df, titel, x="fachbereich", y = "prop", group=NULL, tooltip, format, color, optional, quelle = quelle)
     } else {
-      tooltip <- "test"
+      df$wert <- as.numeric(gsub("\\.", "", df$wert))
       format <- "{value}"
     out <- balkenbuilder(df, titel, x="fachbereich", y = "wert", group=NULL, tooltip, format, color, optional, quelle = quelle)
     }
@@ -1646,7 +1649,9 @@ arbeitsmarkt_bula_faecher <- function(r) {
     if(darstellung12 == "In Prozent"){
     out <- balkenbuilder(df, titel, x= "bundesland", y="prop", group=NULL, tooltip, format, color, optional=optional, quelle = quelle)
     } else{
-      out <- balkenbuilder(df, titel, x= "bundesland", y="prop", group=NULL, tooltip, format, color, optional=optional, quelle = quelle)
+      df$wert <- as.numeric(gsub("\\.", "", df$wert))
+      format <- "{value}"
+      out <- balkenbuilder(df, titel, x= "bundesland", y="wert", group=NULL, tooltip, format, color, optional=optional, quelle = quelle)
     }
 
   }
@@ -2178,8 +2183,15 @@ arbeitsmarkt_einstieg_pie_gender <- function(r) {
     }
 
 
-    #
-   tooltip <- "{point.geschlecht}-Anteil: {point.y} % <br> Anzahl: {disp_wert}"
+
+
+
+
+
+
+
+
+   tooltip <- "{point.geschlecht}-Anteil: {point.y} % <br> Anzahl: {point.wert}"
    format <- "{value}%"
    # optional <- list(bar = list(stacking = "percent"))
    reverse <- FALSE

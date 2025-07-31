@@ -76,6 +76,19 @@ mod_schule_kurse_multiple_mint_ui <- function(id){
     conditionalPanel(condition = "input.ansicht_kurse_mint == 'Gruppenvergleich - Balkendiagramm'
                      ",
                      ns = ns,
+
+
+                     p("Darstellungsart:"),
+                     shinyWidgets::radioGroupButtons(
+                       inputId = ns("abs_zahlen_arbeitsmarkt_einstieg_vergleich_der446"),
+                       choices = c("In Prozent", "Anzahl"),
+                       justified = TRUE,
+                       checkIcon = list(yes = icon("ok",
+                                                   lib = "glyphicon"))
+                     ),
+
+
+
                      br(),
                      shinyBS::bsPopover(id="balken_mint_1", title="",
                                         content = paste0("In der ersten Einstellung erkennt man, dass MINT-Fächer in Deutschland insgesamt 32 % aller Leistungskursbelegungen ausmachen. Davon entfallen 15 Prozentpunkte auf die Mathematik, 1 Prozentpunkt auf die Informatik, etc."),
@@ -109,6 +122,10 @@ mod_schule_kurse_multiple_mint_server <- function(id, r){
       r$indikator_kurse_mint <- input$indikator_kurse_mint
     })
 
+    observeEvent(input$abs_zahlen_arbeitsmarkt_einstieg_vergleich_der446, {
+      r$abs_zahlen_arbeitsmarkt_einstieg_vergleich_der446 <- input$abs_zahlen_arbeitsmarkt_einstieg_vergleich_der446
+    })
+
     observeEvent(input$region_kurse_mint, {
       r$region_kurse_mint <- input$region_kurse_mint
     })
@@ -116,6 +133,9 @@ mod_schule_kurse_multiple_mint_server <- function(id, r){
     observeEvent(input$ebene_kurse_mint, {
       r$ebene_kurse_mint <- input$ebene_kurse_mint
     })
+
+
+
 
 
   })
