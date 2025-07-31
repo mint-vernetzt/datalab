@@ -172,7 +172,17 @@ mod_studium_studienzahl_bundeslandvergleich_ui <- function(id){
                        selected = "Studierende"),
 
 
+                     p("Darstellungsart:"),
+                     shinyWidgets::radioGroupButtons(
+                       inputId = ns("abs_zahlen_arbeitsmarkt_einstieg_vergleich_der"),
+                       choices = c("In Prozent", "Anzahl"),
+                       justified = TRUE,
+                       checkIcon = list(yes = icon("ok",
+                                                   lib = "glyphicon"))
+                     ),
                      br(),
+
+
                      shinyBS::bsPopover(id="ih_studium_fach_5", title="",
                                         content = paste0("Die Übersicht zeigt, dass der Anteil von Studierenden in MINT an allen Studierenden zwischen den Bundesländern zwischen 24 % (Thüringen, Saarland) und 42 % (Sachsen) liegt."),
                                         placement = "top",
@@ -222,9 +232,16 @@ mod_studium_studienzahl_bundeslandvergleich_server <- function(id, r){
       r$bulas_balken_date <- input$bulas_balken_date
     })
 
+
+    observeEvent(input$abs_zahlen_arbeitsmarkt_einstieg_vergleich_der, {
+      r$abs_zahlen_arbeitsmarkt_einstieg_vergleich_der <- input$abs_zahlen_arbeitsmarkt_einstieg_vergleich_der
+    })
+
     observeEvent(input$bulas_balken_l, {
       r$bulas_balken_l <- input$bulas_balken_l
     })
+
+
 
 
   })

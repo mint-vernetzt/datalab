@@ -317,6 +317,15 @@ mod_studium_studienzahl_bulas_faecher_ui <- function(id){
                                       `select-all-text` = "Alle auswählen"),
                        multiple = TRUE
                      ),
+                     p("Darstellungsart:"),
+                     shinyWidgets::radioGroupButtons(
+                       inputId = ns("abs_zahlen_arbeitsmarkt_einstieg_vergleich_der444"),
+                       choices = c("In Prozent", "Anzahl"),
+                       justified = TRUE,
+                       checkIcon = list(yes = icon("ok",
+                                                   lib = "glyphicon"))
+                     ),
+
 
                      br(),
                      shinyBS::bsPopover(id="ih_studium_fach_5b", title="",
@@ -392,6 +401,12 @@ mod_studium_studienzahl_bulas_faecher_server <- function(id, r){
       r$bl_balken_alle_faecher <- input$bl_balken_alle_faecher
     })
 
+    observeEvent(input$abs_zahlen_arbeitsmarkt_einstieg_vergleich_der444, {
+      r$abs_zahlen_arbeitsmarkt_einstieg_vergleich_der444 <- input$abs_zahlen_arbeitsmarkt_einstieg_vergleich_der444
+    })
+
+
+
     observeEvent(input$bl_balken_lehr_faecher, {
       r$bl_balken_lehr_faecher <- input$bl_balken_lehr_faecher
     })
@@ -399,6 +414,69 @@ mod_studium_studienzahl_bulas_faecher_server <- function(id, r){
     observeEvent(input$bulas_balken_regio_faecher, {
       r$bulas_balken_regio_faecher <- input$bulas_balken_regio_faecher
     })
+
+
+
+
+
+
+
+
+
+
+    observeEvent({
+      input$bulas_verlauf_y_faecher
+      input$bulas_verlauf_l_faecher
+      input$bl_verlauf_lehr_faecher
+      input$bl_verlauf_alle_faecher
+    }, {
+
+      # Hole Inputs
+      timerange <- input$bulas_verlauf_y_faecher
+      t <- timerange[1]:timerange[2]
+      label_select <- input$bulas_verlauf_l_faecher
+
+      if (label_select %in% c("Studierende (Lehramt)", "Absolvent:innen (Lehramt)")) {
+        fach_select <- input$bl_verlauf_lehr_faecher
+      } else {
+        fach_select <- input$bl_verlauf_alle_faecher
+      }
+
+      # Alle Regionen einmal definieren
+      alle_regionen <- c("Deutschland",
+                         "Baden-Württemberg", "Bayern", "Berlin", "Brandenburg", "Bremen",
+                         "Hamburg", "Hessen", "Mecklenburg-Vorpommern", "Niedersachsen",
+                         "Nordrhein-Westfalen", "Rheinland-Pfalz", "Saarland", "Sachsen",
+                         "Sachsen-Anhalt", "Schleswig-Holstein", "Thüringen",
+                         "Westdeutschland (o. Berlin)", "Ostdeutschland (inkl. Berlin)")
+
+      # Datenbankabfrage
+      df_query <- glue::glue_sql("
+    SELECT *
+    FROM studierende_detailliert
+    WHERE jahr IN ({t*})
+    AND geschlecht = 'Gesamt'
+    AND indikator = {label_select}
+    AND fach = {fach_select}
+    AND region IN ({alle_regionen*})
+  ", .con = con)
+
+      df <- DBI::dbGetQuery(con, df_query)
+
+      # Nur valide Daten behalten
+      df_valid <- df %>% dplyr::filter(!is.na(wert) & wert != 0)
+      valid_regions <- unique(df_valid$region)
+
+      # PickerInput dynamisch updaten
+      shinyWidgets::updatePickerInput(
+        session = session,
+        inputId = ns("bulas_verlauf_regio_faecher"),
+        choices = valid_regions,
+        selected = valid_regions
+      )
+    })
+
+
 
   })
 }

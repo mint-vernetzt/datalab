@@ -77,6 +77,15 @@ mod_schule_kurse_einstieg_comparison_ui <- function(id){
                      'Gruppenvergleich - Balkendiagramm'",
                      ns = ns,
 
+                     p("Darstellungsart:"),
+                     shinyWidgets::radioGroupButtons(
+                       inputId = ns("abs_zahlen_arbeitsmarkt_einstieg_vergleich_derff"),
+                       choices = c("In Prozent", "Anzahl"),
+                       justified = TRUE,
+                       checkIcon = list(yes = icon("ok",
+                                                   lib = "glyphicon"))
+                     ),
+
                      br(),
                      shinyBS::bsPopover(id="ih_schule_mint_2b", title="",
                                         content = paste0("In der ersten Einstellung ist zu sehen, dass im Jahr 2023 in Deutschland 24 % aller gewählten Grundkurse aus dem Bereich MINT sind. Bei Leistungskursen liegt der Anteil im Jahr 2022 bei 32 %."),
@@ -105,6 +114,12 @@ mod_schule_kurse_einstieg_comparison_server <- function(id, r){
       r$date_kurse_einstieg_comparison <- input$date_kurse_einstieg_comparison
     })
 
+
+
+
+    observeEvent(input$abs_zahlen_arbeitsmarkt_einstieg_vergleich_derff, {
+      r$abs_zahlen_arbeitsmarkt_einstieg_vergleich_derff <- input$abs_zahlen_arbeitsmarkt_einstieg_vergleich_derff
+    })
     observeEvent(input$region_kurse_einstieg_comparison, {
       r$region_kurse_einstieg_comparison <- input$region_kurse_einstieg_comparison
     })
@@ -112,6 +127,9 @@ mod_schule_kurse_einstieg_comparison_server <- function(id, r){
     observeEvent(input$indikator_kurse_einstieg_comparison, {
       r$indikator_kurse_einstieg_comparison <- input$indikator_kurse_einstieg_comparison
     })
+
+
+
 
   })
 }

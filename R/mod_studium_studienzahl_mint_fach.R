@@ -126,6 +126,15 @@ mod_studium_studienzahl_mint_fach_ui <- function(id){
                        selected = c("Studierende"),
                        multiple = FALSE
                      ),
+
+                     p("Darstellungsart:"),
+                     shinyWidgets::radioGroupButtons(
+                       inputId = ns("abs_zahlen_arbeitsmarkt_einstieg_vergleich_derq"),
+                       choices = c("In Prozent", "Anzahl"),
+                       justified = TRUE,
+                       checkIcon = list(yes = icon("ok",
+                                                   lib = "glyphicon"))
+                     ),
                      br(),
                      shinyBS::bsPopover(id="ih_studium_mint_fach_3", title="",
                                         content = paste0("Die Darstellung zeigt, wie groß der Anteil Studierender in einzelnen MINT-Fächern an allen Studierenden ist. In der ersten Einstellung sieht man beispielsweise, 2023 studieren in Deutschland 128.000 Personen (25,5 %) eine Ingenieurwissenschaft."),
@@ -162,6 +171,11 @@ mod_studium_studienzahl_mint_fach_server <- function(id, r){
     observeEvent(input$gruppe_mint_fach_pies, {
       r$gruppe_mint_fach_pies <- input$gruppe_mint_fach_pies
     })
+
+    observeEvent(input$abs_zahlen_arbeitsmarkt_einstieg_vergleich_derq, {
+      r$abs_zahlen_arbeitsmarkt_einstieg_vergleich_derq <- input$abs_zahlen_arbeitsmarkt_einstieg_vergleich_derq
+    })
+
 
     observeEvent(input$gruppe_mint_fach_balken, {
       r$gruppe_mint_fach_balken <- input$gruppe_mint_fach_balken

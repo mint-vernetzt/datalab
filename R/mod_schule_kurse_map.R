@@ -198,6 +198,14 @@ mod_schule_kurse_map_ui <- function(id){
                                         "Gesellschaftswissenschaften",
                                         "Musik/Kunst",
                                         "Sport"))),
+        p("Darstellungsart:"),
+        shinyWidgets::radioGroupButtons(
+          inputId = ns("abs_zahlen_arbeitsmarkt_einstieg_vergleich_der4ld"),
+          choices = c("In Prozent", "Anzahl"),
+          justified = TRUE,
+          checkIcon = list(yes = icon("ok",
+                                      lib = "glyphicon"))
+        ),
 
         br(),
         shinyBS::bsPopover(id="popover3_box2", title="",
@@ -259,9 +267,17 @@ mod_schule_kurse_map_server <- function(id, r){
       r$indikator_comparison_bl <- input$indikator_comparison_bl
     })
 
+
+    observeEvent(input$abs_zahlen_arbeitsmarkt_einstieg_vergleich_der4ld, {
+      r$abs_zahlen_arbeitsmarkt_einstieg_vergleich_der4ld <- input$abs_zahlen_arbeitsmarkt_einstieg_vergleich_der4ld
+      })
+
     observeEvent(input$subject_comparison_bl1, {
       r$subject_comparison_bl1 <- input$subject_comparison_bl1
     })
+
+
+
 
     observeEvent(input$subject_comparison_bl2, {
       r$subject_comparison_bl2 <- input$subject_comparison_bl2
