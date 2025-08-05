@@ -30,7 +30,7 @@ mod_startseite_start_ui <- function(id){
       div(class = "clean-box",
           column(
             width = 8,
-           # h1("Willkommen im MINT-DataLab von MINTvernetzt!"),
+            h1("Willkommen im MINT-DataLab von MINTvernetzt!"),
             p(style = "font-size: 14px;",
               "Im MINT-DataLab von MINTvernetzt präsentieren wir statistische Kennzahlen rund um MINT in den Bereichen Schule, Hochschule, Ausbildung und
           Arbeitsmarkt in Deutschland.", br(),
