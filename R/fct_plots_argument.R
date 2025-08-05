@@ -483,10 +483,6 @@ AND fachbereich = {faecher}
 
 
 
-
-
-
-
 daten_download <- function(r){
 
   regio <- r$region_argumentationshilfe
@@ -903,7 +899,7 @@ AND fachbereich = {faecher}
     # 1. Beschäftigte MINT
     df_beschäftigte_clean <- df_alle %>%
       mutate(Bereich = "Beschäftigte MINT",
-             Quelle = "Statistisches Bundesamt, 2024; Bundesagentur für Arbeit, 2024; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt",
+             Quelle = "Statistisches Bundesamt, 2024; Bundesagentur für Arbeit, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt",
              Region = region_reserve)
 
 
@@ -982,6 +978,10 @@ AND fachbereich = {faecher}
     return(txt_output)
 
 }
+
+
+# Funktionen für Grafiken -------------------------------------------------
+
 
 argument_verlauf <- function(r){
 

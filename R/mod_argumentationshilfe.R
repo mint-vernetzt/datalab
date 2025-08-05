@@ -49,23 +49,16 @@ mod_argumentation_ui <- function(id){
               erfolgreich für MINT-Förderung zu argumentieren.
               Doch wie lassen sich die Daten aus dem MINT-DataLab korrekt interepretieren?"),
             p("Bei dieser Frage können Sie sich von KI unterstützen lassen: dem MINT-DataLab-GPT"),
-            p("Der MINT-DataLab-GPT ist eine KI-Anwendung, die auf der Grundlage von ChatGPT funktioniert.
-              GPT steht für Generative Pre-Trained Transformer und ist eine Erweiterung der Funktionen von ChatGPT.
-              Diese Erweiterung besteht darin, dass ChatGPT mit Wissen aus dem MINT-DataLab
-              trainiert wurde und Nutzende bei der Analyse von Daten unterstützen kann."),
+
             strong("Der Chatbot unterstützt konkret in drei Situationen:"),
             p(style = "margin-left: 20px; margin-top: 10px;", "1. Er erstellt eine Argumentation für die Förderung von MINT-Bildung"),
-            p(style = "margin-left: 20px;", "2. Er erstellt einen MINT-Bericht für das ausgewählte Bundesland"),
+            p(style = "margin-left: 20px;", "2. Er erstellt einen regionalen MINT-Bericht für das ausgewählte Bundesland"),
             p(style = "margin-left: 20px;", "3. Er hilft, Daten grundlegend zu interpretieren"),
             br(),
             p("Auf dieser Seite finden Sie eine Anleitung, wie Sie den MINT-DataLab-GPT nutzen können,
               einen Beispielbericht für Hamburg, wie er durch die KI erstellt werden kann und eine Rubrik,
-              in der wir häufig gestellte Fragen beantworten."),
-            p("Sollten Sie weitere Fragen haben, schreiben Sie gerne eine Nachricht per ",
-              tags$a(href = "mailto:katharina.brunner@mint-vernetzt.de?subject= ausserschulische Daten MINT-Datalab", "E-Mail"),
-              ". Da der MINT-DataLab-GPT sich noch in der Testphase befindet,
-              freuen wir uns auch über Hinweise, wenn es Irritationen oder Auffälligkeiten gab.
-              Beachten Sie bitte auch die Nutzungshinweise am Ende der Seite.")
+              in der wir häufig gestellte Fragen beantworten. Beachten Sie bitte auch die Nutzungshinweise am Ende der Seite."),
+
             ),
           column(
             width = 4,
@@ -153,73 +146,73 @@ mod_argumentation_ui <- function(id){
 
 
 
-        ## So geht's ----
+        ## 4 Schritte ----
         column(
           width = 12,
           h2("Schnellstart: So analyserien Sie Daten mit dem MINT-DataLab-GPT",
             style = "margin-top: 30px;"),
-          hr(style = "border-top: 2px solid #ee7775; margin-top: 15px; margin-bottom: 15px;")
+         # hr(style = "border-top: 2px solid #ee7775; margin-top: 15px; margin-bottom: 15px;")
         ),
 
         column(
           width = 2,
           tags$span(#icon("1", style = "margin: 10px; font-size: 17px;"),
                     style = "font-weight: 600; font-size: 16px;
-                    display: block; height: 60px; margin-bottom: 10px;",
+                    display: block; height: 70px; margin-bottom: 10px;",
                     "1. Wählen Sie eine Region für die Analyse aus"),
-          img(src='www/gpt_schritt_1.png',
+          tags$a(href="#region", img(src='www/gpt_schritt_1.png',
               class = "img-responsive",
               height = "150px",
               alt = "Symbol Schritt 1 Region wählen",
               style="display: block;
                 margin-top: 10px; height: 200px; border: 2px solid #B16FAB;
-                border-radius: 15px; text-align: left;")
+                border-radius: 15px; text-align: left;"))
         ),
         column(
           width = 2,
           tags$span(#icon("2", style = "margin: 10px; font-size: 17px;"),
                     style = "font-weight: 600; font-size: 16px;
-                    display: block; height: 60px; margin-bottom: 10px;",
+                    display: block; height: 70px; margin-bottom: 10px;",
                     "2. Laden Sie die vorausgewählten Daten herunter"),
-          img(src='www/gpt_schritt_2.png',
+          tags$a(href="#download", img(src='www/gpt_schritt_2.png',
               class = "img-responsive",
               height = "150px",
               alt = "Symbol Schritt 2 Datendownload",
               style="display: block;
                 margin-top: 10px; height: 200px; border: 2px solid #B16FAB;
-                border-radius: 15px;")
+                border-radius: 15px;"))
         ),
         column(
           width = 2,
           tags$span(#icon("3", style = "margin: 10px; font-size: 17px;"),
                     style = "font-weight: 600; font-size: 16px;
-                    display: block; height: 60px; margin-bottom: 10px;",
+                    display: block; height: 70px; margin-bottom: 10px;",
                     "3. Klicken Sie auf den MINT-DataLab-GPT und folgen den Anweisungen"),
-          img(src='www/gpt_schritt_3.png',
+          tags$a(href="#MINT-DataLab-GPT", img(src='www/gpt_schritt_3.png',
               class = "img-responsive",
               height = "150px",
               alt = "Symbol Schritt 3 GPT-Chat",
               style="display: block;
                 margin-top: 10px; height: 200px; border: 2px solid #B16FAB;
-                border-radius: 15px;")
+                border-radius: 15px;"))
         ),
         column(
           width = 2,
           tags$span(#icon("4", style = "margin: 10px; font-size: 17px;"),
                     style = "font-weight: 600; font-size: 16px;
-                    display: block; height: 60px; margin-bottom: 10px;",
+                    display: block; height: 70px; margin-bottom: 10px;",
                     "4. Ergänzen Sie den KI-Bericht zur Veranschaulichung mit Grafiken"),
-          img(src='www/gpt_schritt_4.png',
+          tags$a(href="#grafiken", img(src='www/gpt_schritt_4.png',
               class = "img-responsive",
               height = "150px",
               alt = "Symbol Schritt 4 Grafiken ergänzen",
               style="display: block;
                 margin-top: 10px; height: 200px; border: 2px solid #B16FAB;
-                border-radius: 15px;")
+                border-radius: 15px;"))
           ),
         column(
           width = 12,
-          hr(style = "border-top: 2px solid #ee7775; margin-top: 30px; margin-bottom: 15px;")
+         # hr(style = "border-top: 2px solid #ee7775; margin-top: 30px; margin-bottom: 15px;")
         ),
 
       )
@@ -228,7 +221,7 @@ mod_argumentation_ui <- function(id){
    div(
       style = "margin-top: 40px;",
 
-      ## Region-Filter ----
+       ## Region-Filter ----
 
     column(
       width = 8,
@@ -242,7 +235,7 @@ mod_argumentation_ui <- function(id){
                 margin-top: 10px; border: 2px solid #B16FAB;
                 border-radius: 15px; max-width: 50px;")
       ),
-      div(
+      div(id = "region",
 
         p(strong(style = "text-align: justify; font-size: 18px;",
                  "1. Wählen Sie eine Region für die Analyse aus")),
@@ -289,24 +282,21 @@ mod_argumentation_ui <- function(id){
                   margin-top: 10px; border: 2px solid #B16FAB;
                   border-radius: 15px; max-width: 50px;")
       ),
-      div(
+      div(id = "download",
         style = "flex: 1; margin-bottom: 15px;",
 
         p(strong(style = "text-align: justify; font-size: 18px;",
                  "2. Laden Sie die gewünschten Daten herunter")),
         p(style = "font-size : 15px;", "Als Basis für den Datenbericht sowie
         die datenbasierte Argumentation haben wir fünf Statistiken aus dem MINT-DataLab ausgewählt.
-        Die Daten können an dieser Stelle gesammelt heruntergeladen werden. Selbstverständlich
-          können Sie weitere Daten aus dem MINT-DataLab in die KI einspeisen.
-          Die fünf Statistiken bilden jedoch eine ausreichende Grundlage,
-          um ein gutes Ergebnis zu erzielen. Um welche Statistiken es sich handelt,
-          sehen Sie weiter unten auf dieser Seite, wo sie grafisch eingebunden sind.",
-          br(), br(),
-          "Achtung: Die Daten öffnen sich in einem Text-Dokument und können auf den
-          ersten Blick verwirrend aussehen. Kopieren Sie den Inhalt der Datei und fügen
-          Sie diesen direkt in das Chat-Fenster des GPT ein."),
+        Um welche Statistiken es sich handelt, sehen Sie weiter unten auf dieser Seite,
+          wo sie grafisch eingebunden sind.",
+          br(), br()),
 
         downloadButton(ns("download_txt"), "   Vorausgewählte Daten herunterladen"),
+        p("Hinweis: Die Daten öffnen sich in einem Text-Dokument und können auf den
+          ersten Blick verwirrend aussehen. Kopieren Sie den Inhalt der Datei und fügen
+          Sie diesen direkt in das Chat-Fenster des GPT ein.")
       ),
 
 
@@ -368,17 +358,15 @@ mod_argumentation_ui <- function(id){
                   margin-top: 10px; border: 2px solid #B16FAB;
                   border-radius: 15px; max-width: 50px;")
       ),
-      div(
+      div(id = "MINT-DataLab-GPT",
         style = "flex: 1; margin-bottom: 15px;",
         p(strong(style = "text-align: justify; font-size: 18px; margin-bottom: 15px;",
                  "3. Klicken Sie auf den MINT-DataLab GPT und folgen den Anweisungen")),
         p(style = "font-size : 15px;",
           "Sobald Sie auf den Link zum MINT-DataLab-GPT klicken, öffnet sich ein Chatfenster in ChatGPT,
           in dem Sie der MINT-DataLab-GPT willkommen heißt und zur Interaktion auffordert.
-          Im ersten Schritt wählen Sie zwischen den drei Szenarien Argumentation erstellen,
-          Bericht erstellen und generelle Datenanalyse. Der Chatbot wird Sie daraufhin auffordern,
-          die zuvor kopierten Daten einzuspeisen. Lassen Sie sich durch den Chatbot durch die
-          darauffolgenden Schritte leiten. Auf Anweisung kann der MINT-DataLab-GPT die Daten
+          Lassen Sie sich durch den Chatbot durch die darauffolgenden Schritte leiten.
+          Auf Anweisung kann der MINT-DataLab-GPT die Daten
           durch eine Online-Recherche ergänzen."),
         # tags$a(href="https://chatgpt.com/g/g-67e4f41fd91881919a753f4309194bf7-test-mint-datalab-assistent-test",
         #        "→ Zum MINT-DataLab-GPT", target="_blank",
@@ -403,28 +391,27 @@ mod_argumentation_ui <- function(id){
                   margin-top: 10px; border: 2px solid #B16FAB;
                   border-radius: 15px; max-width: 50px;")
       ),
-      div(
+      div(id = "grafiken",
         style = "flex: 1; margin-bottom: 15px;",
         p(strong(style = "text-align: justify; font-size: 18px;",
                  "4. Ergänzen Sie den KI-Bericht zur Veranschaulichung mit Grafiken")),
         p(style = "font-size : 15px;",
-        "Der MINT-DataLab-GPT ist so trainiert, dass er fertige Textdokumente liefert.
+        "Der MINT-DataLab-GPT ist so trainiert, dass er fertige Textbausteine liefert.
         Für einen Bericht bietet es sich an, den Texten Grafiken hinzuzufügen,
         um den Inhalt zu veranschaulichen. Diese Grafiken finden sie weiter unten
-        auf dieser Seite zum Download. Selbstverständlich können Sie an dieser Stelle
-        im Prozess noch weitere Daten einspeisen, um ein noch individuelleres Ergebnis zu erzielen."),
+        auf dieser Seite zum Download. "), #Selbstverständlich können Sie an dieser Stelle im Prozess noch weitere Daten einspeisen, um ein noch individuelleres Ergebnis zu erzielen.
 
-        p("Hilfestellung für die weiteren Schritte:"),
+     #  p("Hilfestellung für die weiteren Schritte:"),
         p(stlye="margin-left: 20px;",
-          "→ Die Download-Option für alle Grafiken des MINT-DataLab finden Sie rechts oben an den Grafiken.", br(),
-          "→ Die ", tags$span("blauen Boxen", style = "color: #154194;"),
-          " rechts neben den Grafiken geben Impulse, welche weiteren
-           Statistiken in einem MINT-Bericht ergänzt werden könnten.", br(),
-
-          "→ Die ", tags$span("grünen Boxen", style = "color: #00a87a;"),
-          "unter den Grafiken zeigen beispielhaft, wie man anhand
-          der Statistiken für die MINT-Bildungsförderung argumentieren kann."
-          ),
+          "→ Die Download-Option für alle Grafiken des MINT-DataLab finden Sie rechts oben an den Grafiken.")
+          # "→ Die ", tags$span("blauen Boxen", style = "color: #154194;"),
+          # " rechts neben den Grafiken geben Impulse, welche weiteren
+          #  Statistiken in einem MINT-Bericht ergänzt werden könnten.", br(),
+          #
+          # "→ Die ", tags$span("grünen Boxen", style = "color: #00a87a;"),
+          # "unter den Grafiken zeigen beispielhaft, wie man anhand
+          # der Statistiken für die MINT-Bildungsförderung argumentieren kann."
+          # ),
         )
       )
     ),
@@ -444,9 +431,22 @@ mod_argumentation_ui <- function(id){
         als Grafiken dargestellt. Diese können Sie herunterladen und Ihrem Bericht hinzufügen.
         Wir erläutern an dieser Stelle jedoch auch, wie die KI die Daten interpretiert –
         und bieten Ihnen so die Möglichkeit, die Ergebnisse kontrollieren zu können.", br(),
-        "Einen Beispielbericht für Hamburg können sie ",tags$a(href = "www/MINTvernetzt_Argumentationskette_Hamburg.pdf",
-                                                              target = "_blank",
-                                                              "hier") , " herunterladen. ")
+        # "Einen Beispielbericht für Hamburg können sie ",tags$a(href = "www/MINTvernetzt_Argumentationskette_Hamburg.pdf",
+        #                                                       target = "_blank",
+        #
+        #"hier") , " herunterladen. "
+        ),
+      p("Hilfestellung für die weiteren Schritte:"),
+      p(stlye="margin-left: 20px;",
+        "→ Die Download-Option für alle Grafiken des MINT-DataLab finden Sie rechts oben an den Grafiken.", br(),
+        "→ Die ", tags$span("blauen Boxen", style = "color: #154194;"),
+        " rechts neben den Grafiken geben Impulse, welche weiteren
+           Statistiken in einem MINT-Bericht ergänzt werden könnten.", br(),
+
+        "→ Die ", tags$span("grünen Boxen", style = "color: #00a87a;"),
+        "unter den Grafiken zeigen beispielhaft, wie man anhand
+          der Statistiken für die MINT-Bildungsförderung argumentieren kann."
+      )
     )
   ),
 
@@ -929,12 +929,22 @@ mod_argumentation_ui <- function(id){
 
 
     br(),
-    fluidRow(id = "box6",
+    fluidRow(id = "faq_nutzungshinweis",
       column(
         width = 9,
         # h3("Fragen und Antworten"),
         # reactable::reactableOutput(ns("faq_table")),
         h2("Fragen und Antworten"),
+
+        tags$details(
+          tags$summary(strong(class = "faq-summary",
+                              "Welche Technologie steckt hinter dem MINT-DataLab-GPT")),
+          br(),
+          p("Der MINT-DataLab-GPT ist eine KI-Anwendung, die auf der Grundlage von ChatGPT funktioniert.
+              GPT steht für Generative Pre-Trained Transformer und ist eine Erweiterung der Funktionen von ChatGPT.
+              Diese Erweiterung besteht darin, dass ChatGPT mit Wissen aus dem MINT-DataLab
+              trainiert wurde und darauf spezialisiert ist, Nutzende bei der Analyse von Daten zu unterstützen.")
+          ),
 
         tags$details(
           tags$summary(strong(class = "faq-summary",
@@ -1011,6 +1021,10 @@ mod_argumentation_ui <- function(id){
   ")
         ),
 
+        p("Sollten Sie weitere Fragen haben, schreiben Sie gerne eine Nachricht per ",
+          tags$a(href = "mailto:katharina.brunner@mint-vernetzt.de?subject= ausserschulische Daten MINT-Datalab", "E-Mail"),
+          ". Da der MINT-DataLab-GPT sich noch in der Testphase befindet,
+              freuen wir uns auch über Hinweise, wenn es Irritationen oder Auffälligkeiten gab."),
 
         br(),
         h2("Nutzungshinweis"),
@@ -1053,11 +1067,7 @@ mod_argumentation_server <- function(id){
     })
 
 
-    # daten_text <- reactive({
-    #   paste("ddd")
-    # })
-
-    # Hier Funktionen eingebunden
+    # Download der gesemmelten Daten
 
     output$download_txt <- downloadHandler(
       filename = function() {
@@ -1072,17 +1082,11 @@ mod_argumentation_server <- function(id){
     )
 
 
-
 #
 #     output$clipboard_text <- renderText({
 #       daten_text()
 #     })
 #
-
-
-
-
-
 
 
     output$plot_argument_verlauf <- renderUI({
@@ -1109,87 +1113,8 @@ mod_argumentation_server <- function(id){
       argument_frauen(r)
     })
 
-    # #### FAQ Tabelle ----
-    # faq_data <- data.frame( #tibble::tibble
-    #   Frage   = c(
-    #     "Kann ich den MINT-DataLab-GPT auch ohne OpenAI-Konto nutzen?",
-    #     "Welche Quellen muss ich angeben, wenn ich die Argumentationshilfe nutze?",
-    #     "Kann ich auch andere Daten mit dem MINT-DataLab-GPT analysieren?",
-    #     "Wie kann ich das Ergebnis exportieren?",
-    #     "Ich habe ein Fehlverhalten festgestellt, wo kann ich das melden?"
-    #   ),
-    #   Antwort = c(
-    #    "Nein, die Nutzung des MINT-DataLab-GPT erfordert ein aktives OpenAI-Konto.
-    #     Da es sich um einen individualisierten GPT handelt, läuft der Zugriff
-    #     über die Infrastruktur von OpenAI. Die Registrierung ist kostenlos und
-    #     in wenigen Schritten möglich.",
-    #
-    #     "Beim Herunterladen der Grafiken werden die Quellen der zugrunde liegenden
-    #     Daten automatisch mit heruntergeladen. Der MINT-DataLab-GPT ergänzt die
-    #     Quellenangaben zu den verwendeten Daten oder den durchgeführten Online-Recherchen.
-    #    Je nach Kontext und Zweck der Nutzung empfehlen wir aus Gründen der Transparenz,
-    #            auf die Unterstützung durch ein KI-Modell und insbesondere auf den Einsatz des
-    #            MINT-DataLab-GPT hinzuweisen. Dafür kann folgende Formulierung genutzt werden:
-    #            Erstellt unter Verwendung des angepassten GPT-Sprachmodells von
-    #            MINTvernetzt (MINT-DataLab-GPT) auf Basis von OpenAI-Technologie.",
-    #
-    #     "Der MINT-DataLab-GPT ist auf die Daten des MINT-DataLabs spezialisiert und
-    #     kann diese fehlerfrei auslesen und interpretieren. Dabei können alle Daten
-    #     des MINT-DataLabs, auch diejenigen, die nicht auf der Argumentationsseite
-    #     zu finden sind, ohne Probleme genutzt werden. Bei externen Datenquellen
-    #     können ggf. Probleme beim Lesen der Datenformate auftreten. Grundsätzlich
-    #     ist es aber möglich, eigene oder externe Daten ergänzend mit einzuspielen.
-    #     Wir empfehlen, die Korrektheit der übergebenen Daten unbedingt zu prüfen.",
-    #
-    #    "Der MINT-DataLab-GPT liefert Texte oder Textbausteine, die sich flexibel
-    #     in Berichte oder Anträge integrieren lassen. Wie bei der Nutzung anderer
-    #     KI-Chats kann zusätzlich das Format des gewünschten Outputs spezifiziert werden,
-    #     z. B. Stichpunkte für eine Präsentation.",
-    #
-    #     "Der MINT-DataLab-GPT ist eine Beta-Version. Mithilfe Ihres Feedbacks können
-    #     wir die zukünftige Nutzung weiter verbessern. Bitte schreiben Sie uns dafür,
-    #     kurz und informell, eine Nachricht per Mail: ,
-    #     <a href='mailto:katharina.brunner@mint-vernetzt.de?subject=Feedback Argumentationshilfe'>
-    #     E-Mail schreiben</a>. Vielen Dank!"
-    #   ),
-    #   stringsAsFactors = FALSE
-    # )
 
 
-
-
-
-
-    # output$faq_table <- reactable::renderReactable({
-    #
-    #   faq_data <- faq_data[,-3]
-    #   reactable::reactable(
-    #   faq_data,
-    #   searchable       = FALSE,      # Suchfeld ausblenden (minimalistischer Stil)
-    #   pagination       = FALSE,      # keine Pagination – wir zeigen alles auf einer Seite
-    #   wrap             = TRUE,
-    #   highlight        = TRUE,       # hinterlegt Hover-Zeile leicht
-    #   outlined         = FALSE,
-    #   bordered         = FALSE,
-    #   columnGroups     = NULL,
-    #
-    #   columns = list(
-    #     Frage = reactable::colDef(name = "", minWidth = 300),  # Spaltenkopf ausblenden
-    #     Antwort = reactable::colDef(show = FALSE, html = TRUE)              # zunächst nicht anzeigen
-    #   ),
-    #
-    #   details = function(index) {
-    #     # wird geöffnet, sobald der User eine Frage anklickt
-    #     as.character(
-    #       tagList(HTML(faq_data$Antwort[index]))
-    #       )
-    #     # htmltools::tags$div(class = "faq-answer", faq_data$Antwort[[index]]))
-    #     #HTML(paste0('<div class = "faq-answer">', faq_data$Antwort[[index]], '</div>'))
-    #   },
-    #
-    #   class = "faq-table"
-    # )
-    # })
 
   })
 }
