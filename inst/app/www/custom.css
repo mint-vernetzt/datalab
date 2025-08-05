@@ -41,6 +41,9 @@ p {
   font-size: inherit;
 }  */
 
+[id] {
+  scroll-margin-top: 60px;
+}
 
 /* Sidebar und Hintergrundfarben definieren */
 
