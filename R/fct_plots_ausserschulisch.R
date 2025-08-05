@@ -204,7 +204,6 @@ plot_cp_orgas <- function(r){
       regio_angabe <- paste0(" die in ", regio, " tätig sind")
     }
 
-    browser()
     titel <- paste0("Organisationen der Community-Plattform von MINTvernetzt nach ",
                     charas, regio_angabe)
     subtitel <- paste0("Angaben wurden von <b>", ges, "</b> Organisationen gemacht. Mehrfachangabe möglich.")
