@@ -55,10 +55,11 @@ mod_argumentation_ui <- function(id){
             p(style = "margin-left: 20px;", "2. Er erstellt einen MINT-Bericht für das ausgewählte Bundesland"),
             p(style = "margin-left: 20px;", "3. Er hilft, Daten grundlegend zu interpretieren"),
             br(),
-            p("Der MINT-DataLab-GPT kann bei der Interpretation aller Daten im MINT-DataLab assistieren.", br(),
-            "Auf dieser Seite finden Sie eine Anleitung, wie Sie mit dem MINT-DataLab-GPT einen MINT-Bericht erstellen können.
+            p("Der MINT-DataLab-GPT kann bei der Interpretation aller Daten im MINT-DataLab assistieren."),
+            p("Auf dieser Seite finden Sie eine Anleitung, wie Sie mit dem MINT-DataLab-GPT einen MINT-Bericht erstellen können.
             einen Beispielbericht für Hamburg, wie er durch die KI erstellt werden kann, und eine Rubrik,
-              in der wir häufig gestellte Fragen beantworten. Beachten Sie bitte auch die Nutzungshinweise am Ende der Seite."),
+              in der wir häufig gestellte Fragen beantworten."),
+            p("Beachten Sie bitte auch die Nutzungshinweise am Ende der Seite."), #Für die Nutzung des GPT benötigen Sie ein (kostenfreies) OpenAI-Konto.
 
             ),
           column(
@@ -428,8 +429,9 @@ mod_argumentation_ui <- function(id){
               width = 6,  # Text in der linken Spalte
 
               p(style = "font-size: 15px;",
-                "Als Basis für den Datenbericht sowie die datenbasierte Argumentation
-                  haben wir fünf Statistiken aus dem MINT-DataLab ausgewählt.")
+                "Sobald Sie auf den Link zum MINT-DataLab-GPT klicken, öffnet sich ein Chatfenster in ChatGPT.
+                 Wählen Sie aus, ob sie eine Argumentation oder eine Bericht wollen,
+                 der MINT-DataLab-GPT führt Sie durch die Erstellung der Analyse.")
             ),
             column(
               width = 6,
@@ -489,21 +491,21 @@ mod_argumentation_ui <- function(id){
     )
 ),
 
-
+# Überleitung zu Grafiken ----
   column(
     id = "daten_grafiken",
     width = 12,
     hr(style = "border-top: 2px solid #ee7775; margin-top: 20px;"),
 
-    h2("So geht der MINT-DataLab-GPT bei der Analyse vor",
+    h2("Die Datengrundlage Ihres MINT-Berichts als Grafiken", #So geht der MINT-DataLab-GPT bei der Analyse vor
        style= "margin-bottom: 30px; margin-top: 40px;"),
 
     column(
       style = "margin-bottom: 40px;",
       width = 8,
       p("Im Folgenden finden Sie die Daten, die sie dem MINT-DataLab-GPT eingespeist haben,
-        als Grafiken dargestellt. Diese können Sie herunterladen und Ihrem Bericht hinzufügen.
-        Wir erläutern an dieser Stelle jedoch auch, wie die KI die Daten interpretiert –
+        als Grafiken dargestellt. Diese können Sie herunterladen und Ihrem Bericht hinzufügen.", br(),
+        "Wir erläutern an dieser Stelle jedoch auch, wie die KI die Daten interpretiert –
         und bieten Ihnen so die Möglichkeit, die Ergebnisse kontrollieren zu können.", br(),
         # "Einen Beispielbericht für Hamburg können sie ",tags$a(href = "www/MINTvernetzt_Argumentationskette_Hamburg.pdf",
         #                                                       target = "_blank",
@@ -528,7 +530,7 @@ mod_argumentation_ui <- function(id){
 
     fluidRow(id = "box1",
              shinydashboard::box(
-               title = "Schritt 1: Den regionalen Status-Quo analysieren",
+               title = "Den regionalen Status-Quo analysieren",
                width = 12,
                column(
                  width = 9,
@@ -642,7 +644,7 @@ mod_argumentation_ui <- function(id){
     ## Box Fachkräftemagel ----
     fluidRow(id = "box2",
       shinydashboard::box(
-        title = "Schritt 2: Den nicht gedackten Bedarf an Fachkräften verdeutlichen",
+        title = "Den nicht gedackten Bedarf an Fachkräften verdeutlichen",
         width = 12,
         column(
           width = 8,
@@ -736,7 +738,7 @@ mod_argumentation_ui <- function(id){
 
     fluidRow(id = "box3",
       shinydashboard::box(
-        title = "Schritt 3: Demografische Zukunftstrends in die Argumentation integrieren",
+        title = "Demografische Zukunftstrends in die Argumentation integrieren",
         width = 12,
         column(
           width = 8,
@@ -806,7 +808,7 @@ mod_argumentation_ui <- function(id){
     ## Box Nachwuchs ----
     fluidRow(id = "box4",
       shinydashboard::box(
-        title = "Schritt 4: Die aktuelle Nachwuchssituation analysieren",
+        title = "Die aktuelle Nachwuchssituation analysieren",
         width = 12,
         column(
           width = 8,
@@ -908,7 +910,7 @@ mod_argumentation_ui <- function(id){
     ## Box Wirkhebel Förderung ----
     fluidRow(id = "box5",
       shinydashboard::box(
-        title = "Schritt 5: Das Potenzial von Nachwuchsförderung herausstellen",
+        title = "Das Potenzial von Nachwuchsförderung herausstellen",
         width = 12,
         column(
           width = 8,
@@ -1103,6 +1105,7 @@ mod_argumentation_ui <- function(id){
         br(),
         h2("Nutzungshinweis"),
         p("Der MINT-DataLab-GPT ist eine KI-Anwendung, die auf Technologie von OpenAI basiert.
+        Die Nutzung des MINT-DataLab-GPT erfordert daher ein aktives OpenAI-Konto.
         Die bereitgestellten Inhalte werden automatisiert generiert und können unvollständig,
         fehlerhaft oder veraltet sein. Die Nutzer:innen sind selbst für eine kritische Prüfung der
         Ausgaben verantwortlich."),
