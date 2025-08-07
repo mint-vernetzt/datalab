@@ -2461,6 +2461,13 @@ plot_international_map_arb <- function(r) {
     # Kartenausschnitt für hc definieren
     map_selection <- "custom/europe"
 
+    browser()
+
+
+    print(inpp)
+    print(inpy)
+
+
     df_query <- glue::glue_sql("
     SELECT *
     FROM arbeitsmarkt_beschaeftigte_eu
@@ -2472,7 +2479,8 @@ plot_international_map_arb <- function(r) {
 
     data1 <- DBI::dbGetQuery(con, df_query)
 
-    #browser()
+
+    browser()
 
     data1 <- data1 %>%
       tidyr::pivot_wider(names_from = variable, values_from = wert)%>%
