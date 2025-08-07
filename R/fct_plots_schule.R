@@ -1,6 +1,6 @@
-library(DBI)
-library(dplyr)
-library(dbplyr)
+#library(DBI)
+#library(dplyr)
+#library(dbplyr)
 
 
 # Wer wählt MINT ----

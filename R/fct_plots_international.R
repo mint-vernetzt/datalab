@@ -1,5 +1,5 @@
-library(dplyr)
-library(tidyr)
+#library(dplyr)
+#library(tidyr)
 
 #' A function to plot a graph.
 #'
@@ -862,6 +862,7 @@ df <- df %>%
   # Create top 10 plot
 
   #dies ist schon als funktion automatisiert, too complex
+
   plot_top <- highcharter::hchart(
     df %>% dplyr::arrange(desc(wert)) %>% dplyr::slice(1:10),
     'bar',
@@ -2471,6 +2472,7 @@ plot_international_map_arb <- function(r) {
 
     data1 <- DBI::dbGetQuery(con, df_query)
 
+    #browser()
 
     data1 <- data1 %>%
       tidyr::pivot_wider(names_from = variable, values_from = wert)%>%

@@ -186,7 +186,7 @@ mod_argumentation_ui <- function(id){
               height = "150px",
               alt = "Symbol Schritt 1 Region wählen",
               style="display: block;
-                margin-top: 10px; height: 200px; border: 2px solid #B16FAB;
+                margin-top: 20px; height: 200px; border: 2px solid #B16FAB;
                 border-radius: 15px; text-align: left;"))
         ),
         column(
@@ -200,7 +200,7 @@ mod_argumentation_ui <- function(id){
               height = "150px",
               alt = "Symbol Schritt 2 Datendownload",
               style="display: block;
-                margin-top: 10px; height: 200px; border: 2px solid #B16FAB;
+                margin-top: 20px; height: 200px; border: 2px solid #B16FAB;
                 border-radius: 15px;"))
         ),
         column(
@@ -214,7 +214,7 @@ mod_argumentation_ui <- function(id){
               height = "150px",
               alt = "Symbol Schritt 3 GPT-Chat",
               style="display: block;
-                margin-top: 10px; height: 200px; border: 2px solid #B16FAB;
+                margin-top: 20px; height: 200px; border: 2px solid #B16FAB;
                 border-radius: 15px;"))
         ),
         column(
@@ -228,7 +228,7 @@ mod_argumentation_ui <- function(id){
               height = "150px",
               alt = "Symbol Schritt 4 Grafiken ergänzen",
               style="display: block;
-                margin-top: 10px; height: 200px; border: 2px solid #B16FAB;
+                margin-top: 20px; height: 200px; border: 2px solid #B16FAB;
                 border-radius: 15px;"))
           ),
         column(
@@ -331,12 +331,13 @@ mod_argumentation_ui <- function(id){
               haben wir fünf Statistiken aus dem MINT-DataLab ausgewählt.")
           ),
           column(
-            width = 6,  # Link in der rechten Spalte
+            width = 5,
+            div(style = "margin-left: 30px;",
             p(style = "font-size: 15px;",
               tags$a(href = "#daten_grafiken",
                      style = "color: #000000; text-decoration: underline;",
                      "→ Betrachten Sie die Daten in den interaktiven Grafiken weiter unten auf dieser Seite."))
-          )
+          ))
         ),
 
         fluidRow(
@@ -347,10 +348,12 @@ mod_argumentation_ui <- function(id){
               hängen Sie die Datei an.")
           ),
           column(
-            width = 6,  # Download-Button in der rechten Spalte
+            width = 5,
+            div(style = "margin-left: 30px;",
             downloadButton(style = "margin-bottom: 5px;",
                            ns("download_txt"),
                            "   Daten herunterladen")
+          )
           )
         ),
 
@@ -434,10 +437,12 @@ mod_argumentation_ui <- function(id){
                  der MINT-DataLab-GPT führt Sie durch die Erstellung der Analyse.")
             ),
             column(
-              width = 6,
+              width = 5,
+              div(style = "margin-left: 30px;",
               actionButton(label = tagList(icon("arrow-up-right-from-square"), "    Zum MINT-DataLab-GPT"), inputId = "GPT_link",
                            onclick = 'window.open("https://chatgpt.com/g/g-67e4f41fd91881919a753f4309194bf7-mint-datalab-gpt", "_blank");')
             )
+          )
           )
       ),
 
@@ -482,11 +487,13 @@ mod_argumentation_ui <- function(id){
                 Sie Text und Grafiken für Ihren Bericht zusammen.")
             ),
             column(
-              width = 6,
+              width = 5,
+              div(style = "margin-left: 30px;",
               p(stlye="margin-left: 20px;",
                 "→ Die Download-Option für alle Grafiken des MINT-DataLab finden Sie rechts oben an den Grafiken.")
             )
         )
+      )
       )
     )
 ),
