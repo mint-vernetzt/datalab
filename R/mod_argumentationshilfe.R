@@ -51,8 +51,8 @@ mod_argumentation_ui <- function(id){
             p("Bei dieser Frage können Sie sich von KI unterstützen lassen: dem MINT-DataLab-GPT"),
 
             strong("Der Chatbot unterstützt konkret in drei Situationen:"),
-            p(style = "margin-left: 20px; margin-top: 10px;", "1. Er erstellt eine Argumentation für die Förderung von MINT-Bildung"),
-            p(style = "margin-left: 20px;", "2. Er erstellt einen MINT-Bericht für das ausgewählte Bundesland"),
+            p(style = "margin-left: 20px; margin-top: 10px;", "1. Er erstellt einen MINT-Bericht für das ausgewählte Bundesland"),
+            p(style = "margin-left: 20px;", "2. Hilf mir, für MINT-Förderung zu argumentieren"), #Er erstellt eine Argumentation für die Förderung von MINT-Bildung
             p(style = "margin-left: 20px;", "3. Er hilft, Daten grundlegend zu interpretieren"),
             br(),
             p("Der MINT-DataLab-GPT kann bei der Interpretation aller Daten im MINT-DataLab assistieren."),
