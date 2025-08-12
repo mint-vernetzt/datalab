@@ -2461,7 +2461,6 @@ plot_international_map_arb <- function(r) {
     # Kartenausschnitt für hc definieren
     map_selection <- "custom/europe"
 
-    browser()
 
 
     print(inpp)
@@ -2479,8 +2478,6 @@ plot_international_map_arb <- function(r) {
 
     data1 <- DBI::dbGetQuery(con, df_query)
 
-
-    browser()
 
     data1 <- data1 %>%
       tidyr::pivot_wider(names_from = variable, values_from = wert)%>%

@@ -2444,3 +2444,39 @@ get_search_data <- function(term, session) {
 
 
 
+
+
+#bilder downloads
+# save_widget_to_png <- function(widget, png_path,
+#                                vwidth = 1200, vheight = 800, zoom = 2) {
+#   if (!inherits(widget, "htmlwidget")) {
+#     stop("Das übergebene Objekt ist kein htmlwidget.")
+#   }
+#
+#   html_path <- tempfile(fileext = ".html")
+#   on.exit(unlink(html_path, force = TRUE), add = TRUE)
+#
+#   htmlwidgets::saveWidget(widget, file = html_path, selfcontained = TRUE)
+#
+#   chrome_path <- tryCatch(webshot2::find_chrome(), error = function(e) NULL)
+#
+#   if (!is.null(chrome_path) && file.exists(chrome_path)) {
+#     webshot2::webshot(url = html_path, file = png_path,
+#                       vwidth = vwidth, vheight = vheight, zoom = zoom)
+#   } else {
+#     if (!requireNamespace("webshot", quietly = TRUE)) {
+#       stop("Kein Chrome/Chromium gefunden und Paket 'webshot' ist nicht installiert.")
+#     }
+#     if (isFALSE(webshot::is_phantomjs_installed())) {
+#       webshot::install_phantomjs()
+#     }
+#     webshot::webshot(url = html_path, file = png_path,
+#                      vwidth = vwidth, vheight = vheight)
+#   }
+#
+#   if (!file.exists(png_path)) stop("PNG wurde nicht erzeugt (webshot fehlgeschlagen).")
+#   invisible(png_path)
+# }
+
+
+

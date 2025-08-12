@@ -493,6 +493,16 @@ mod_argumentation_ui <- function(id){
                 "→ Die Download-Option für alle Grafiken des MINT-DataLab finden Sie rechts oben an den Grafiken.")
             )
         )
+        # column(
+        #   width = 5,
+        #   div(style = "margin-left: 30px; margin-top: 10px;",
+        #       downloadButton(style = "margin-bottom: 5px;",
+        #                      ns("download_txt1"),
+        #                      "Alle Grafiken herunterladen")
+        #   )
+        # )
+
+
       )
       )
     )
@@ -1193,12 +1203,138 @@ mod_argumentation_server <- function(id){
       argument_wirkhebel(r)
     })
 
-    output$plot_argument_frauen <- renderUI({
-      argument_frauen(r)
-    })
+    # output$plot_argument_frauen <- renderUI({
+    #   argument_frauen(r)
+    # })
+
+
+
+    # output$download_txt1 <- downloadHandler(
+    #   filename = function() {
+    #     paste0("test_", Sys.Date(), ".zip")
+    #   },
+    #   content = function(file) {
+    #     tmpdir <- tempdir()
+    #     files <- c()
+    #
+    #     # einfache Testgrafik
+    #     chart <- highcharter::highchart() %>%
+    #       highcharter::hc_title(text = "Testplot") %>%
+    #       highcharter::hc_add_series(data = c(1, 3, 2, 4))
+    #
+    #     htmlfile <- file.path(tmpdir, "test.html")
+    #     pngfile  <- file.path(tmpdir, "test.png")
+    #
+    #     htmlwidgets::saveWidget(chart, file = htmlfile, selfcontained = TRUE)
+    #     webshot2::webshot(htmlfile, file = pngfile, vwidth = 800, vheight = 600)
+    #
+    #     zipfile <- file.path(tmpdir, "charts.zip")
+    #     zip::zip(zipfile, pngfile)
+    #     file.copy(zipfile, file)
+    #   },
+    #   contentType = "application/zip"
+    # )
+
+
+    # output$download_txt1 <- downloadHandler(
+    #   filename = function() {
+    #     paste0("alle_grafiken_", Sys.Date(), ".zip")
+    #   },
+    #   content = function(file) {
+    #     tmpdir <- tempdir()
+    #     files <- c()
+    #
+    #     # charts <- list(
+    #     #   verlauf     = argument_verlauf(r),
+    #     #   fachkraft   = argument_fachkraft(r),
+    #     #
+    #     #   nachwuchs   = argument_nachwuchs(r),
+    #     #   wirkhebel   = argument_wirkhebel(r)
+    #     # )
+    #
+    #     charts <- list(
+    #       verlauf     = argument_verlauf(r),
+    #       fachkraft   = argument_fachkraft(r),
+    #       demografie  = argument_demografie(r),
+    #       nachwuchs   = argument_nachwuchs(r),
+    #       wirkhebel   = argument_wirkhebel(r)
+    #     )
+    #
+    #     for (name in names(charts)) {
+    #       htmlfile <- file.path(tmpdir, paste0(name, ".html"))
+    #       pngfile  <- file.path(tmpdir, paste0(name, ".png"))
+    #       htmlwidgets::saveWidget(charts[[name]], file = htmlfile, selfcontained = TRUE)
+    #       webshot2::webshot(htmlfile, file = pngfile, vwidth = 800, vheight = 600)
+    #       files <- c(files, pngfile)
+    #     }
+    #
+    #     zipfile <- file.path(tmpdir, "charts.zip")
+    #     zip::zip(zipfile, files)
+    #     file.copy(zipfile, file)
+    #   },
+    #   contentType = "application/zip"
+    # )
+
+
+    # output$download_txt1 <- downloadHandler(
+    #   filename = function() paste0("testplot_", Sys.Date(), ".png"),
+    #   content = function(file) {
+    #     testchart <- highcharter::highchart() |>
+    #       highcharter::hc_title(text = "Testplot") |>
+    #       highcharter::hc_add_series(data = c(1,3,2,4))
+    #
+    #     save_widget_to_png(testchart, file)
+    #   },
+    #   contentType = "image/png"
+    # )
+
+
+    # output$download_txt1 <- downloadHandler(
+    #   filename = function() paste0("alle_grafiken_", Sys.Date(), ".zip"),
+    #   content  = function(file) {
+    #     # Arbeitsordner
+    #     tmpdir <- tempfile("charts_")
+    #     dir.create(tmpdir, showWarnings = FALSE)
+    #     on.exit(unlink(tmpdir, recursive = TRUE, force = TRUE), add = TRUE)
+    #
+    #     # 1) Eure bestehenden Funktionen (müssen highcharter-Widgets zurückgeben!)
+    #     charts <- list(
+    #       verlauf    = argument_verlauf(r),
+    #       fachkraft  = argument_fachkraft(r),
+    #       demografie = argument_demografie(r),
+    #       nachwuchs  = argument_nachwuchs(r),
+    #       wirkhebel  = argument_wirkhebel(r)
+    #     )
+    #
+    #     # 2) Sicherheitscheck
+    #     bad <- names(charts)[!vapply(charts, htmlwidgets::is.htmlwidget, logical(1))]
+    #     if (length(bad)) {
+    #       stop(sprintf("Folgende Einträge sind KEINE htmlwidgets: %s",
+    #                    paste(bad, collapse = ", ")))
+    #     }
+    #
+    #     # 3) In PNGs konvertieren
+    #     png_files <- character(0)
+    #     for (nm in names(charts)) {
+    #       pngfile <- file.path(tmpdir, paste0(nm, ".png"))
+    #       save_widget_to_png(charts[[nm]], pngfile, vwidth = 1200, vheight = 800, zoom = 2)
+    #       png_files <- c(png_files, pngfile)
+    #     }
+    #
+    #     # 4) ZIP bauen (zipr ist hier am bequemsten)
+    #     zipfile <- file.path(tmpdir, "charts.zip")
+    #     zip::zipr(zipfile, files = png_files)
+    #
+    #     # 5) Ausliefern
+    #     ok <- file.copy(zipfile, file, overwrite = TRUE)
+    #     if (!ok) stop("Konnte ZIP nicht an den Download-Stream kopieren.")
+    #   },
+    #   contentType = "application/zip"
+    # )
 
 
 
 
   })
 }
+
