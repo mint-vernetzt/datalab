@@ -2462,7 +2462,6 @@ plot_international_map_arb <- function(r) {
     map_selection <- "custom/europe"
 
 
-
     print(inpp)
     print(inpy)
 

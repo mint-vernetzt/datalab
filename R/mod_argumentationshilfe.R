@@ -13,6 +13,32 @@
 mod_argumentation_ui <- function(id){
   ns <- NS(id)
   tagList(
+
+
+
+    tags$head(
+      tags$script(src = "https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"),
+      tags$script(src = "https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"),
+      tags$script(src = "https://cdn.jsdelivr.net/npm/canvg@3.0.10/lib/umd.min.js"),
+      tags$style(HTML("
+    /* optional: sorge für weißen Hintergrund in Charts */
+    .dl-chart { background:#fff; padding:8px; }
+    .dl-chart .highcharts-container { background:#fff; }
+  "))
+    ),
+
+#     tags$head(
+#       # ZIP bauen
+#       tags$script(src = "https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"),
+#       # Datei speichern
+#       tags$script(src = "https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"),
+#       # DOM → PNG (funktioniert super mit Highcharts)
+#       tags$script(src = "https://cdn.jsdelivr.net/npm/dom-to-image-more@3.4.0/dist/dom-to-image-more.min.js")
+#     ),
+
+
+
+
     useShinyjs(),
     fluidRow(
       # noch austauschen
@@ -492,7 +518,130 @@ mod_argumentation_ui <- function(id){
               p(stlye="margin-left: 20px;",
                 "→ Die Download-Option für alle Grafiken des MINT-DataLab finden Sie rechts oben an den Grafiken.")
             )
-        )
+        ),
+        column(
+          width = 5,
+          div(style = "margin-left: 30px;",
+          # Button (kein downloadHandler nötig!)
+          # actionButton(ns("download_all_png_client"), "Alle Grafiken herunterladen (ZIP)", icon = icon("download"))
+          actionButton(
+            ns("download_all_png_client"),
+            label = tagList(icon("download"), "Alle Grafiken herunterladen (ZIP)")
+          )
+
+          )
+        ),
+
+        # Jede Chart-Ausgabe in einen Wrapper packen:
+        div(class = "dl-chart", `data-filename` = "verlauf.png",
+            uiOutput(ns("plot_argument_verlauf"))
+        ),
+        div(class = "dl-chart", `data-filename` = "fachkraft.png",
+            uiOutput(ns("plot_argument_fachkraft"))
+        ),
+        div(class = "dl-chart", `data-filename` = "demografie.png",
+            uiOutput(ns("plot_argument_demografie"))
+        ),
+        div(class = "dl-chart", `data-filename` = "nachwuchs.png",
+            uiOutput(ns("plot_argument_nachwuchs"))
+        ),
+        div(class = "dl-chart", `data-filename` = "wirkhebel.png",
+            uiOutput(ns("plot_argument_wirkhebel"))
+        ),
+
+
+
+
+        tags$script(HTML(sprintf("
+(function() {
+  function dateStr(){ return new Date().toISOString().slice(0,10); }
+  function blobFromCanvas(canvas, type, quality){
+    return new Promise(function(resolve){ canvas.toBlob(function(b){ resolve(b); }, type || 'image/png', quality || 1.0); });
+  }
+  function filenameFromChart(chart, idx){
+    try {
+      var t = chart && chart.title && chart.title.textStr ? chart.title.textStr : null;
+      if (t) return t.trim().replace(/\\s+/g,'_') + '.png';
+    } catch(e){}
+    return 'chart_' + (idx+1) + '.png';
+  }
+  function filenameFromWrapper(chart, idx){
+    try {
+      var wrap = chart.renderTo && chart.renderTo.closest ? chart.renderTo.closest('.dl-chart') : null;
+      var fn = wrap && wrap.getAttribute ? wrap.getAttribute('data-filename') : null;
+      if (fn && fn.trim()) return fn;
+    } catch(e){}
+    return null;
+  }
+
+  async function chartToPNGBlob(chart, scale){
+    // Chartgröße lesen
+  var w = Math.max(chart.chartWidth || 0, 800);
+  var h = Math.round(w * 9 / 16);
+  var s = 1; // für scharfes Ergebnis
+
+
+    // Highcharts-SVG mit export-Optionen holen
+    var svgStr = chart.getSVG({
+      exporting: { sourceWidth: w * s, sourceHeight: h * s }
+    });
+
+    // Canvas vorbereiten
+    var canvas = document.createElement('canvas');
+    canvas.width  = w * s;
+    canvas.height = h * s;
+
+    var ctx = canvas.getContext('2d');
+    // canvg rendert die SVG in das Canvas
+    var v = await canvg.Canvg.fromString(ctx, svgStr, { ignoreMouse: true, ignoreAnimation: true });
+    await v.render();
+
+    return await blobFromCanvas(canvas, 'image/png', 1.0);
+  }
+
+  document.addEventListener('click', async function(ev){
+    var btn = ev.target.closest('#%s');
+    if (!btn) return;
+
+    // Alle Highcharts-Instanzen einsammeln
+    var charts = (window.Highcharts && Highcharts.charts) ? Highcharts.charts.filter(function(c){ return !!c; }) : [];
+    if (!charts.length){ alert('Keine Highcharts-Instanzen gefunden.'); return; }
+
+    // Hinweis: Charts müssen sichtbar gerendert sein (kein versteckter Tab)
+    var old = btn.innerText; btn.disabled = true; btn.innerText = 'Erzeuge ZIP...';
+
+    try {
+      var zip = new JSZip();
+
+      for (var i=0; i<charts.length; i++){
+        var chart = charts[i];
+        var name = filenameFromWrapper(chart, i) || filenameFromChart(chart, i);
+        try {
+          var blob = await chartToPNGBlob(chart, 2); // scale=2
+          zip.file(name, blob);
+        } catch(e) {
+          console.error('Fehler beim Rendern von', name, e);
+        }
+      }
+
+      var content = await zip.generateAsync({ type: 'blob', compression: 'STORE' });
+      saveAs(content, 'alle_grafiken_' + dateStr() + '.zip');
+    } catch(e){
+      console.error(e);
+      alert('Fehler beim Erzeugen des ZIP.');
+    } finally {
+      btn.disabled = false; btn.innerText = old;
+    }
+  }, false);
+})();
+", ns("download_all_png_client"))))
+
+
+
+
+
+
+
         # column(
         #   width = 5,
         #   div(style = "margin-left: 30px; margin-top: 10px;",
@@ -1208,129 +1357,54 @@ mod_argumentation_server <- function(id){
     # })
 
 
-
-    # output$download_txt1 <- downloadHandler(
-    #   filename = function() {
-    #     paste0("test_", Sys.Date(), ".zip")
-    #   },
-    #   content = function(file) {
-    #     tmpdir <- tempdir()
-    #     files <- c()
+    # ## geht
     #
-    #     # einfache Testgrafik
-    #     chart <- highcharter::highchart() %>%
-    #       highcharter::hc_title(text = "Testplot") %>%
-    #       highcharter::hc_add_series(data = c(1, 3, 2, 4))
     #
-    #     htmlfile <- file.path(tmpdir, "test.html")
-    #     pngfile  <- file.path(tmpdir, "test.png")
-    #
-    #     htmlwidgets::saveWidget(chart, file = htmlfile, selfcontained = TRUE)
-    #     webshot2::webshot(htmlfile, file = pngfile, vwidth = 800, vheight = 600)
-    #
-    #     zipfile <- file.path(tmpdir, "charts.zip")
-    #     zip::zip(zipfile, pngfile)
-    #     file.copy(zipfile, file)
-    #   },
-    #   contentType = "application/zip"
-    # )
-
-
-    # output$download_txt1 <- downloadHandler(
-    #   filename = function() {
-    #     paste0("alle_grafiken_", Sys.Date(), ".zip")
-    #   },
-    #   content = function(file) {
-    #     tmpdir <- tempdir()
-    #     files <- c()
-    #
-    #     # charts <- list(
-    #     #   verlauf     = argument_verlauf(r),
-    #     #   fachkraft   = argument_fachkraft(r),
-    #     #
-    #     #   nachwuchs   = argument_nachwuchs(r),
-    #     #   wirkhebel   = argument_wirkhebel(r)
-    #     # )
-    #
-    #     charts <- list(
-    #       verlauf     = argument_verlauf(r),
-    #       fachkraft   = argument_fachkraft(r),
-    #       demografie  = argument_demografie(r),
-    #       nachwuchs   = argument_nachwuchs(r),
-    #       wirkhebel   = argument_wirkhebel(r)
-    #     )
-    #
-    #     for (name in names(charts)) {
-    #       htmlfile <- file.path(tmpdir, paste0(name, ".html"))
-    #       pngfile  <- file.path(tmpdir, paste0(name, ".png"))
-    #       htmlwidgets::saveWidget(charts[[name]], file = htmlfile, selfcontained = TRUE)
-    #       webshot2::webshot(htmlfile, file = pngfile, vwidth = 800, vheight = 600)
-    #       files <- c(files, pngfile)
-    #     }
-    #
-    #     zipfile <- file.path(tmpdir, "charts.zip")
-    #     zip::zip(zipfile, files)
-    #     file.copy(zipfile, file)
-    #   },
-    #   contentType = "application/zip"
-    # )
-
-
-    # output$download_txt1 <- downloadHandler(
-    #   filename = function() paste0("testplot_", Sys.Date(), ".png"),
-    #   content = function(file) {
-    #     testchart <- highcharter::highchart() |>
-    #       highcharter::hc_title(text = "Testplot") |>
-    #       highcharter::hc_add_series(data = c(1,3,2,4))
-    #
-    #     save_widget_to_png(testchart, file)
-    #   },
-    #   contentType = "image/png"
-    # )
-
-
     # output$download_txt1 <- downloadHandler(
     #   filename = function() paste0("alle_grafiken_", Sys.Date(), ".zip"),
     #   content  = function(file) {
-    #     # Arbeitsordner
     #     tmpdir <- tempfile("charts_")
     #     dir.create(tmpdir, showWarnings = FALSE)
     #     on.exit(unlink(tmpdir, recursive = TRUE, force = TRUE), add = TRUE)
     #
-    #     # 1) Eure bestehenden Funktionen (müssen highcharter-Widgets zurückgeben!)
     #     charts <- list(
-    #       verlauf    = argument_verlauf(r),
-    #       fachkraft  = argument_fachkraft(r),
-    #       demografie = argument_demografie(r),
-    #       nachwuchs  = argument_nachwuchs(r),
-    #       wirkhebel  = argument_wirkhebel(r)
+    #       verlauf    = argument_verlauf(r),     # <- liefert shiny.tag
+    #       fachkraft  = argument_fachkraft(r),   # <- liefert shiny.tag
+    #       demografie = argument_demografie(r),  # <- liefert htmlwidget
+    #       nachwuchs  = argument_nachwuchs(r),   # <- liefert htmlwidget
+    #       wirkhebel  = argument_wirkhebel(r)    # <- liefert htmlwidget
     #     )
     #
-    #     # 2) Sicherheitscheck
-    #     bad <- names(charts)[!vapply(charts, htmlwidgets::is.htmlwidget, logical(1))]
-    #     if (length(bad)) {
-    #       stop(sprintf("Folgende Einträge sind KEINE htmlwidgets: %s",
-    #                    paste(bad, collapse = ", ")))
-    #     }
+    #     # kleine Diagnose-Ausgabe (optional)
+    #     # print(lapply(charts, class))
     #
-    #     # 3) In PNGs konvertieren
     #     png_files <- character(0)
     #     for (nm in names(charts)) {
     #       pngfile <- file.path(tmpdir, paste0(nm, ".png"))
-    #       save_widget_to_png(charts[[nm]], pngfile, vwidth = 1200, vheight = 800, zoom = 2)
+    #       message("Exportiere: ", nm, " [", paste(class(charts[[nm]]), collapse = ","), "]")
+    #       .save_any_to_png(charts[[nm]], pngfile, vwidth = 1000, vheight = 600, zoom = 1)
     #       png_files <- c(png_files, pngfile)
     #     }
     #
-    #     # 4) ZIP bauen (zipr ist hier am bequemsten)
-    #     zipfile <- file.path(tmpdir, "charts.zip")
-    #     zip::zipr(zipfile, files = png_files)
     #
-    #     # 5) Ausliefern
-    #     ok <- file.copy(zipfile, file, overwrite = TRUE)
-    #     if (!ok) stop("Konnte ZIP nicht an den Download-Stream kopieren.")
+    #
+    #
+    #     zipfile <- file.path(tmpdir, "charts.zip")
+    #     #zip::zipr(zipfile, files = png_files)
+    #     zip::zipr(zipfile, files = c(png_files), compression_level = 1)
+    #     if (!file.copy(zipfile, file, overwrite = TRUE)) {
+    #       stop("Konnte ZIP nicht an den Download-Stream kopieren.")
+    #     }
     #   },
     #   contentType = "application/zip"
     # )
+
+
+
+
+
+
+
 
 
 
