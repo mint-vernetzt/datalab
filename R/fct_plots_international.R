@@ -2792,6 +2792,7 @@ plot_international_map_arb_gender <- function(r) {
 
     data1 <- DBI::dbGetQuery(con, df_query)
 
+    browser()
 
     data1 <- data1 %>%
       tidyr::pivot_wider(names_from = geschlecht, values_from = wert)%>%
@@ -2875,8 +2876,8 @@ plot_international_map_arb_gender <- function(r) {
       SELECT *
       FROM arbeitsmarkt_anfaenger_absolv_oecd
       WHERE jahr = {inpy}
-            AND fach IN ('MINT', 'Informatik & Kommunikationstechnologie','Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe','Naturwissenschaften, Mathematik und Statistik','Alle')
-            AND geschecht = 'Frauen'
+      AND fach IN ('MINT', 'Informatik & Kommunikationstechnologie','Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe','Naturwissenschaften, Mathematik und Statistik','Alle')
+      AND geschlecht = 'Frauen'
                                ", .con = con)
 
       data1 <- DBI::dbGetQuery(con, df_query)
