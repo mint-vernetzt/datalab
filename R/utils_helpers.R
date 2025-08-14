@@ -1,4 +1,6 @@
-
+#library(tidyr)
+#library(rlang)
+#library(tidyr)
 
 #' helpers
 #'
@@ -601,6 +603,8 @@ int_pisa_ui_country <- function(type = "TIMSS", n = NULL) {
                                  "SELECT DISTINCT land
                                  FROM schule_pisa")$land
 
+
+
   }
 
   if(type == "PISA" && !is.null(n)){
@@ -614,8 +618,8 @@ int_pisa_ui_country <- function(type = "TIMSS", n = NULL) {
     laender_ausgeschlossen <- c("Luxemburg", "Japan", "Großbritannien")
 
     selection <- selection %>%
-      filter(!land %in% laender_ausgeschlossen) %>%
-      pull(land)
+      dplyr::filter(!land %in% laender_ausgeschlossen) %>%
+      dplyr::pull(land)
 
   }
 

@@ -1,3 +1,7 @@
+#library(rlang)
+#library(tidyr)
+#library(dplyr)
+
 daten_download_q <- function(r){
 
   regio <- r$region_argumentationshilfe
@@ -1833,9 +1837,9 @@ argument_demografie <- function(r){
 
 
   out <- highcharter::hchart(df, 'bar', highcharter::hcaes(
-    y = !!sym("wert"),
-    x = !!sym("indikator"),
-    color = !!sym("color")
+    y = !!rlang::sym("wert"),
+    x = !!rlang::sym("indikator"),
+    color = !!rlang::sym("color")
   )) %>%
     highcharter::hc_plotOptions(
       series = list(
@@ -1925,9 +1929,11 @@ argument_nachwuchs <- function(r){
 
   df_auszubildende <- DBI::dbGetQuery(con, query_df)
 
+
+
   df_azubi_clean <- df_auszubildende %>%
-    rename(region = bundesland, fach = fachbereich, indikator = kategorie) %>%
-    mutate(
+    dplyr::rename(region = bundesland, fach = fachbereich, indikator = kategorie) %>%
+    dplyr::mutate(
       fach = dplyr::case_when(
         fach == "Technik (gesamt)" ~ "Technik (inkl. Ingenieurwesen)",
         TRUE ~ fach
@@ -1935,18 +1941,18 @@ argument_nachwuchs <- function(r){
       indikator = "Nachwuchs",
       wert = as.numeric(wert)
     ) %>%
-    mutate(across(c(region, fach, indikator), as.character)) %>%
-    filter(!is.na(wert))
+    dplyr::mutate(across(c(region, fach, indikator), as.character)) %>%
+    dplyr::filter(!is.na(wert))
 
   df_azubi_clean %>%
-    group_by(region, fach, jahr, indikator) %>%
-    summarise(wert = sum(wert, na.rm = TRUE), .groups = "drop")
+    dplyr::group_by(region, fach, jahr, indikator) %>%
+    dplyr::summarise(wert = sum(wert, na.rm = TRUE), .groups = "drop")
 
 
 
   df_studi_clean <- df_studierende %>%
-    rename(fach = fach) %>%
-    mutate(
+    dplyr::rename(fach = fach) %>%
+    dplyr::mutate(
       fach = dplyr::case_when(
         fach == "Ingenieurwissenschaften (ohne Informatik)" ~ "Technik (inkl. Ingenieurwesen)",
         TRUE ~ fach
@@ -1960,7 +1966,7 @@ argument_nachwuchs <- function(r){
     dplyr::ungroup()
 
 
-  df_nachwuchs <- bind_rows(df_azubi_clean, df_studi_clean)
+  df_nachwuchs <- dplyr::bind_rows(df_azubi_clean, df_studi_clean)
 
   df_nachwuchs_agg <- df_nachwuchs %>%
     dplyr::group_by(region, fach, jahr, indikator) %>%
@@ -2157,9 +2163,9 @@ argument_wirkhebel <- function(r){
 
 
   out <- highcharter::hchart(final_data, 'bar', highcharter::hcaes(
-    y = !!sym("diff"),
-    x = !!sym("wirkhebel"),
-    color = !!sym("color")
+    y = !!rlang::sym("diff"),
+    x = !!rlang::sym("wirkhebel"),
+    color = !!rlang::sym("color")
   )) %>%
     highcharter::hc_plotOptions(
       series = list(

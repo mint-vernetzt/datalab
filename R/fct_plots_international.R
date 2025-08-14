@@ -98,7 +98,7 @@ get_top10_hc_plot_options_int <- function(hc,
   out <- hc %>%
     highcharter::hc_plotOptions(
       series = list(
-        boderWidth = 0,
+        borderWidth = 0,
         dataLabels = list(enabled = TRUE, format = "{point.wert} %",
                           style = list(textOutline = "none"))
       )) %>%
@@ -281,6 +281,7 @@ plot_international_map <- function(r) {
       ", .con = con)
 
     df <- DBI::dbGetQuery(con, df_query)
+
 
 
   } else {
@@ -738,14 +739,15 @@ plot_international_top10 <- function(r) {
 
   timerange <- r$map_y_m
   label_m <- r$map_l_m
-  fach_m <- r$map_f_m
+
   show_avg <- r$show_avg_top10_mint_line_m
 
 
-
-  if (is.null(fach_m)) { fach_m <- ""}
+  ###if (is.null(fach_m)) { fach_m <- ""}
 
   if (label_m == "Weltweit") {
+
+    fach_m <- "MINT"
 
     df <- dplyr::tbl(con, from = "studierende_absolventen_weltweit")  %>%
       dplyr::filter(fach == "Alle MINT-Fächer" &
@@ -761,6 +763,9 @@ plot_international_top10 <- function(r) {
   }
   else if (label_m == "OECD") {
 
+
+    fach_m <- r$map_f_m_oecd
+    if (is.null(fach_m)) { fach_m <- ""}
 
     df_query <- glue::glue_sql("
     SELECT *
@@ -800,6 +805,9 @@ plot_international_top10 <- function(r) {
   }
   if (label_m == "EU") {
 
+
+    fach_m <- r$map_f_m_eu
+    if (is.null(fach_m)) { fach_m <- ""}
 
     # Prüfe, ob mint_select existiert, falls nicht, setze Standardwert
     if (!exists("mint_select") || is.null(mint_select)) mint_select <- "mint"
@@ -863,6 +871,8 @@ df <- df %>%
 
   #dies ist schon als funktion automatisiert, too complex
 
+
+
   plot_top <- highcharter::hchart(
     df %>% dplyr::arrange(desc(wert)) %>% dplyr::slice(1:10),
     'bar',
@@ -905,19 +915,23 @@ plot_international_top10_gender <- function(r) {
 
   timerange <- r$map_y_g
   label_m <- r$map_l_g
-  fach_m <- r$map_f_g
+
   show_avg <- r$show_avg_g
   # höchster Frauenanteil in MINT vs meiste Frauen wählen MINT
   # AA vs BB
   art <- r$art_g
 
 
-  if (is.null(fach_m)) { fach_m <- ""}
+
   if (is.null(art)) { art <- ""}
 
 
   if (label_m == "OECD" & art == "meisten Frauen wählen MINT") {
     # meiste Frauen wählen MINT
+
+    fach_m <- r$map_f_g_o_ecd
+
+    if (is.null(fach_m)) { fach_m <- ""}
 
     df_query <- glue::glue_sql("
     SELECT *
@@ -961,6 +975,11 @@ plot_international_top10_gender <- function(r) {
   if (label_m == "OECD" & art == "höchster Frauenanteil in MINT") {
     # höchster Frauenanteil
 
+    fach_m <- r$map_f_g_o_ecd
+
+
+    if (is.null(fach_m)) { fach_m <- ""}
+
     df_query <- glue::glue_sql("
     SELECT *
     FROM studierende_anzahl_oecd
@@ -1002,6 +1021,11 @@ plot_international_top10_gender <- function(r) {
     # höchster Frauenanteil
 
 
+
+    fach_m <- r$map_f_g_e_u
+
+    if (is.null(fach_m)) { fach_m <- ""}
+
     if (!exists("mint_select") || is.null(mint_select)) mint_select <- "mint"
 
 
@@ -1029,6 +1053,17 @@ plot_international_top10_gender <- function(r) {
   if (label_m == "EU" & art == "meisten Frauen wählen MINT") {
     # meiste Frauen wählen MINT
 
+
+
+
+
+
+
+
+
+    fach_m <- r$map_f_g_e_u
+    if (is.null(fach_m)) { fach_m <- ""}
+
     df_query <- glue::glue_sql("
             SELECT land, wert
             FROM studierende_europa
@@ -1036,7 +1071,7 @@ plot_international_top10_gender <- function(r) {
             AND jahr = {timerange}
             AND (
                 mint_select = 'mint'
-                OR (mint_select = 'nicht mint' AND fach_m = 'Alle MINT-Fächer')
+                OR (mint_select = 'nicht mint' AND fach = 'Alle MINT-Fächer')
             )
             AND fach = {fach_m}
             AND indikator = 'Fächerwahl'
@@ -1205,7 +1240,7 @@ if (avg_line == "Ja"){
       highcharter::hcaes(y = wert, x = land))%>%
       highcharter::hc_plotOptions(
         series = list(
-          boderWidth = 0,
+          borderWidth = 0,
           dataLabels = list(enabled = TRUE, format = "{point.display_total}")
         )) %>%
       highcharter::hc_tooltip(pointFormat = "Anzahl: {point.display_total}") %>%
@@ -1275,7 +1310,7 @@ if (avg_line == "Ja"){
       highcharter::hcaes(y = wert, x = land))%>%
       highcharter::hc_plotOptions(
         series = list(
-          boderWidth = 0,
+          borderWidth = 0,
           dataLabels = list(enabled = TRUE, format = "{point.display_total}")
         )) %>%
       highcharter::hc_tooltip(pointFormat = "Anzahl: {point.display_total}") %>%
@@ -1312,28 +1347,7 @@ if (avg_line == "Ja"){
                                   )
                                 )
 
-   #  ,
-   #                                                   list(
-   #                                                     text = "Daten für GPT",
-   #                                                     onclick = htmlwidgets::JS(sprintf(
-   #                                                       "function () {
-   #   var date = new Date().toISOString().slice(0,10);
-   #   var chartTitle = '%s'.replace(/\\s+/g, '_');
-   #   var filename = chartTitle + '_' + date + '.txt';
-   #
-   #   var data = this.getCSV();
-   #   var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-   #   if (window.navigator.msSaveBlob) {
-   #     window.navigator.msSaveBlob(blob, filename);
-   #   } else {
-   #     var link = document.createElement('a');
-   #     link.href = URL.createObjectURL(blob);
-   #     link.download = filename;
-   #     link.click();
-   #   }
-   # }", gsub("'", "\\\\'", titel)))))
-   #                                )
-   #                              )
+
    #    )
 
 
@@ -1352,16 +1366,12 @@ if (avg_line == "Ja"){
     highcharter::hcaes(y = wert, x = land))%>%
     highcharter::hc_plotOptions(
       series = list(
-        boderWidth = 0,
+        borderWidth = 0,
         dataLabels = list(enabled = TRUE, format = "{point.display_total}")
       )) %>%
     highcharter::hc_tooltip(pointFormat = "Anzahl: {point.display_total}") %>%
-    highcharter::hc_yAxis(title = list(text = ""),
-                          labels = list(format = "{value}"),
-                          min = 0,
-                          max = max(data1$wert)*1.2) %>%
     highcharter::hc_xAxis(title = list(text = " ")) %>%
-    highcharter::hc_colors(c("#154194")) %>%
+    highcharter::hc_colors(c("#66CBAF")) %>%
     highcharter::hc_title(text = title_dyn_top,
                           margin = 10,
                           align = "center",
@@ -1376,29 +1386,11 @@ if (avg_line == "Ja"){
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(
                                 contextButton = list(
-                                  menuItems = list("downloadPNG", "downloadCSV",
-                                                   list(
-                                                     text = "Daten für GPT",
-                                                     onclick = htmlwidgets::JS(sprintf(
-                                                       "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
-
-     var data = this.getCSV();
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-   }", gsub("'", "\\\\'", titel),gsub("'", "\\\\'", titel)))))
+                                  menuItems = list("downloadPNG", "downloadCSV")
                                 )
                               )
     )
+  #
 
 
   titel <- title_dyn_bot
@@ -1411,15 +1403,11 @@ if (avg_line == "Ja"){
     highcharter::hcaes(y = wert, x = land))%>%
     highcharter::hc_plotOptions(
       series = list(
-        boderWidth = 0,
+        borderWidth = 0,
         dataLabels = list(enabled = TRUE, format = "{point.display_total}")
       )) %>%
     highcharter::hc_tooltip(pointFormat = "Anzahl: {point.display_total}") %>%
-    highcharter::hc_yAxis(title = list(text = ""),
-                          labels = list(format = "{value}"),
-                          min = 0,
-                          max = max(data1$wert)*1.2) %>%
-    highcharter::hc_xAxis(title = list(text = "")) %>%
+    highcharter::hc_xAxis(title = list(text = " ")) %>%
     highcharter::hc_colors(c("#154194")) %>%
     highcharter::hc_title(text =  title_dyn_bot,
                           margin = 10,
@@ -1435,29 +1423,7 @@ if (avg_line == "Ja"){
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(
                                 contextButton = list(
-                                  menuItems = list("downloadPNG", "downloadCSV",
-                                                   list(
-                                                     text = "Daten für GPT",
-                                                     onclick = htmlwidgets::JS(sprintf(
-                                                       "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
-
-     var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle der Daten: Eurostat, 2023; OECD, 2023; UNESCO, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.';
-
-
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-   }", gsub("'", "\\\\'", titel), gsub("'", "\\\\'", titel)))))
+                                  menuItems = list("downloadPNG", "downloadCSV")
                                 )
                               )
     )
@@ -1473,10 +1439,10 @@ if (avg_line == "Ja"){
 ## schule ----
 plot_international_schule_map <- function(r) {
 
-  timerange <- r$map_y_int_schule
+  timerange <- r$map_y_int_schule_timss
   label_m <- r$map_l_int_schule
-  fach_m <- r$map_f_int_schule
-  leistungsindikator_m <- r$map_li_int_schule
+  fach_m <- r$map_f_int_schule_timss
+  leistungsindikator_m <- r$map_li_int_schule_timss
 
   if (is.null(fach_m)) { fach_m <- ""}
 
@@ -1507,6 +1473,12 @@ plot_international_schule_map <- function(r) {
     help_l <- "4. Klasse"
   }
   if (label_m == "PISA") {
+
+    timerange <- r$map_y_int_schule
+
+    fach_m <- r$map_f_int_schule
+    leistungsindikator_m <- r$map_li_int_schule
+
 
     df_query <- glue::glue_sql("
     SELECT *
@@ -1815,14 +1787,16 @@ plot_international_schule_migration <- function(r) {
   leistungsindikator_m <- r$line_li_int_schule
    # lander <- r$regio_int_schule
 
-  if(label_m == "TIMSS") {lander <- r$regio_int_schule_timss} else{
-    lander <- r$regio_int_schule_pisa
-  }
+
+
+
+
 
 
   if (is.null(fach_m)) { fach_m <- ""}
 
   if (label_m == "TIMSS") {
+    lander <- r$regio_int_schule_timss
     this_ordnung <- switch(
       leistungsindikator_m,
       "nach Geschlecht" = "Gender",
@@ -1850,6 +1824,7 @@ plot_international_schule_migration <- function(r) {
     AND typ = {this_typ}
                                ", .con = con)
 
+
     df <- DBI::dbGetQuery(con, df_query)
 
     help_l <- "4. Klasse"
@@ -1862,6 +1837,16 @@ plot_international_schule_migration <- function(r) {
 
   }
   if (label_m == "PISA") {
+
+
+
+    lander <- r$regio_int_schule_pisa
+    if(is.null(lander)){
+
+
+      lander <- c("Deutschland", "Türkei", "Schweden", "Italien", "Vereinigte Staaten", "OECD Durchschnitt")
+
+    }
 
     this_bereich <- switch(
       leistungsindikator_m,
@@ -1932,8 +1917,8 @@ plot_international_schule_migration <- function(r) {
   color <- line_colors[seq_along(this_indikator)]
 
   plot_data <- data_line %>%
-    select(land, indikator, wert) %>%
-    pivot_wider(
+    dplyr::select(land, indikator, wert) %>%
+    tidyr::pivot_wider(
       names_from = indikator,
       values_from = wert
     )
@@ -1942,20 +1927,20 @@ plot_international_schule_migration <- function(r) {
     if (label_m == "TIMSS" && leistungsindikator_m == "nach sozialem Status") {
 
       plot_data <- plot_data %>%
-        rename(
+        dplyr::rename(
           basis_wert = `niedriger sozialer Status`,
           mittel_wert = `mittlerer sozialer Status`,
           wert = `hoher sozialer Status`
         )
 
       plot_data <- plot_data %>%
-        filter(!is.na(mittel_wert) | !is.na(wert) | !is.na(basis_wert))
+        dplyr::filter(!is.na(mittel_wert) | !is.na(wert) | !is.na(basis_wert))
 
       plot_data <- plot_data %>%
-        filter(land %in% lander)
+        dplyr::filter(land %in% lander)
 
       plot_data <- plot_data %>%
-        arrange(desc(basis_wert))  # Sortieren absteigend nach `basis_wert`
+        dplyr::arrange(desc(basis_wert))  # Sortieren absteigend nach `basis_wert`
 
 
       ####
@@ -2046,16 +2031,16 @@ plot_international_schule_migration <- function(r) {
   else if (label_m == "TIMSS" && leistungsindikator_m == "nach Geschlecht") {
 
       plot_data <- plot_data %>%
-        rename(
+        dplyr::rename(
           basis_wert = Jungen,
           wert = Mädchen
         )
 
       plot_data <- plot_data %>%
-        filter(!is.na(wert) | !is.na(basis_wert))
+        dplyr::filter(!is.na(wert) | !is.na(basis_wert))
 
       plot_data <- plot_data %>%
-        filter(land %in% lander)
+        dplyr::filter(land %in% lander)
 
       fig <- plotly::plot_ly(data = plot_data, color = I("gray80")) %>%
         plotly::add_segments(
@@ -2124,16 +2109,16 @@ plot_international_schule_migration <- function(r) {
     }
   else if (label_m == "PISA" && leistungsindikator_m == "nach Geschlecht") {
       plot_data <- plot_data %>%
-        rename(
+        dplyr::rename(
           basis_wert = Jungen,
           wert = Mädchen
         )
 
       plot_data <- plot_data %>%
-        filter(!is.na(wert) | !is.na(basis_wert))
+        dplyr::filter(!is.na(wert) | !is.na(basis_wert))
 
       plot_data <- plot_data %>%
-        filter(land %in% lander)
+        dplyr::filter(land %in% lander)
 
       fig <- plotly::plot_ly(data = plot_data, color = I("gray80")) %>%
         plotly::add_segments(
@@ -2201,7 +2186,7 @@ plot_international_schule_migration <- function(r) {
     }
   else if (label_m == "PISA" && leistungsindikator_m == "nach Zuwanderungsgeschichte") {
       plot_data <- plot_data %>%
-        rename(
+        dplyr::rename(
           basis_wert = `ohne Zuwanderungsgeschichte`,
           mittel_wert = `nur Eltern zugewandert`,
           wert = `Kind selbst zugewandert`
@@ -2209,10 +2194,10 @@ plot_international_schule_migration <- function(r) {
 
 
       plot_data <- plot_data %>%
-        filter(!is.na(mittel_wert) | !is.na(wert) | !is.na(basis_wert))
+        dplyr::filter(!is.na(mittel_wert) | !is.na(wert) | !is.na(basis_wert))
 
       plot_data <- plot_data %>%
-        filter(land %in% lander)
+        dplyr::filter(land %in% lander)
 
       fig <- plotly::plot_ly(data = plot_data, color = I("gray80")) %>%
         plotly::add_segments(
@@ -2301,18 +2286,20 @@ plot_international_schule_migration <- function(r) {
     }
   else if (label_m == "PISA" && leistungsindikator_m == "nach Bildungskapital") {
 
+
+
      plot_data <- plot_data %>%
-        rename(
+        dplyr::rename(
           sehr_niedrig = `sehr niedriges Bildungskapital (bis zu 10 Bücher zuhause)`,
           niedrig = `niedriges Bildungskapital (bis zu 100 Bücher zuhause)`,
           hoch = `hohes Bildungskapital (über 500 Bücher zuhause)`
         )
 
       plot_data <- plot_data %>%
-        filter(!is.na(niedrig) | !is.na(hoch) | !is.na(sehr_niedrig))
+        dplyr::filter(!is.na(niedrig) | !is.na(hoch) | !is.na(sehr_niedrig))
 
       plot_data <- plot_data %>%
-        filter(land %in% lander)
+        dplyr::filter(land %in% lander)
 
       fig <- plotly::plot_ly(data = plot_data, color = I("gray80")) %>%
         plotly::add_segments(
@@ -2399,7 +2386,10 @@ plot_international_schule_migration <- function(r) {
 
     } else {
 
+
     }
+
+
 
 
   fig <- fig %>%
@@ -2455,16 +2445,14 @@ plot_international_map_arb <- function(r) {
   if(map_l== "EU"){
 
     # Spezifische UI inputs laden
-    inpy <- r$map_y_arb
-    inpp <- r$map_pers_arb
+    inpy <- r$map_y_arb_eu
+    inpp <- r$map_pers_arb_eu
 
     # Kartenausschnitt für hc definieren
     map_selection <- "custom/europe"
 
 
 
-    print(inpp)
-    print(inpy)
 
 
     df_query <- glue::glue_sql("
@@ -2556,7 +2544,8 @@ plot_international_map_arb <- function(r) {
 
       df_query <- glue::glue_sql("
       SELECT *
-      FROM jahr = {inpy}
+      FROM arbeitsmarkt_beschaeftigte_eu
+      WHERE jahr = {inpy}
       AND fachbereich IN ('MINT','Informatik & Kommunikationstechnologie','Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe','Naturwissenschaften, Mathematik und Statistik','Alle')
       AND geschlecht = 'Gesamt'
                                ", .con = con)
@@ -2774,8 +2763,8 @@ plot_international_map_arb_gender <- function(r) {
   if(inpl== "EU"){
 
     #Spezifische ui inputs laden
-    inpy <- r$map_y_arb_gender
-    inpp <- r$map_pers_arb_gender
+    inpy <- r$map_y_arb_gender_eu
+    inpp <- r$map_pers_arb_gender_eu
 
     # Kartenabschnitt für hc
     map_selection <- "custom/europe"
@@ -2792,7 +2781,6 @@ plot_international_map_arb_gender <- function(r) {
 
     data1 <- DBI::dbGetQuery(con, df_query)
 
-    browser()
 
     data1 <- data1 %>%
       tidyr::pivot_wider(names_from = geschlecht, values_from = wert)%>%
@@ -2871,17 +2859,19 @@ plot_international_map_arb_gender <- function(r) {
                     "Absolvent*innen Ausbildung (ISCED 45)",
                     "Absolvent*innen Erstausbildung (ISCED 35)")){
 
-      #
+
+
+      inpy <- as.numeric(inpy)
+
       df_query <- glue::glue_sql("
       SELECT *
       FROM arbeitsmarkt_anfaenger_absolv_oecd
       WHERE jahr = {inpy}
-      AND fach IN ('MINT', 'Informatik & Kommunikationstechnologie','Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe','Naturwissenschaften, Mathematik und Statistik','Alle')
+      AND fachbereich IN ('MINT', 'Informatik & Kommunikationstechnologie','Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe','Naturwissenschaften, Mathematik und Statistik','Alle')
       AND geschlecht = 'Frauen'
                                ", .con = con)
 
       data1 <- DBI::dbGetQuery(con, df_query)
-
 
 
       data1 <- data1 %>%
@@ -3505,7 +3495,7 @@ title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von ", inpp, "n 
         highcharter::hcaes(y = wert, x = land))%>%
         highcharter::hc_plotOptions(
           series = list(
-            boderWidth = 0,
+            borderWidth = 0,
             dataLabels = list(enabled = TRUE, format = "{point.display_rel} %",
                               style = list(textOutline = "none"))
           )) %>%
@@ -3545,7 +3535,7 @@ title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von ", inpp, "n 
         highcharter::hcaes(y = wert, x = land))%>%
         highcharter::hc_plotOptions(
           series = list(
-            boderWidth = 0,
+            borderWidth = 0,
             dataLabels = list(enabled = TRUE, format = "{point.display_rel} %",
                               style = list(textOutline = "none"))
           )) %>%
@@ -3608,136 +3598,147 @@ title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von ", inpp, "n 
 
      out <- list(plot_top, plot_bottom)
 
-    } else if (avg_line == "Nein"){
+    } else if (avg_line == "Nein") {
 
+      # Gemeinsame Hilfsfunktion für Export-Button
+      export_button_js <- function(titel) {
+        htmlwidgets::JS(sprintf(
+          "function () {
+        var date = new Date().toISOString().slice(0,10);
+        var chartTitle = '%s'.replace(/\\s+/g, '_');
+        var filename = chartTitle + '_' + date + '.txt';
 
-    titel <- title_top
+        var data = 'Titel: %s\\n' + this.getCSV();
+        data += '\\nQuelle der Daten: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.';
 
-      #dies ist schon als funktion automatisiert, too complex
+        var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+        if (window.navigator.msSaveBlob) {
+          window.navigator.msSaveBlob(blob, filename);
+        } else {
+          var link = document.createElement('a');
+          link.href = URL.createObjectURL(blob);
+          link.download = filename;
+          link.click();
+        }
+      }",
+          gsub("'", "\\\\'", titel),  # ersetzt erstes %s
+          gsub("'", "\\\\'", titel)   # ersetzt zweites %s
+        ))
+      }
 
+      # --- Plot Top 10 ---
+      titel <- title_top
       plot_top <- highcharter::hchart(
         data_fn %>% dplyr::arrange(desc(wert)) %>% dplyr::slice(1:10),
         'bar',
-        highcharter::hcaes(y = wert, x = land))%>%
+        highcharter::hcaes(y = wert, x = land)
+      ) %>%
         highcharter::hc_plotOptions(
           series = list(
-            boderWidth = 0,
-            dataLabels = list(enabled = TRUE, format = "{point.display_rel} %",
-                              style = list(textOutline = "none"))
-          )) %>%
-        highcharter::hc_tooltip(pointFormat = plotopshov)%>%
-        highcharter::hc_yAxis(title = list(text = ""),
-                              labels = list(format = "{value}%"),
-                              min = 0,
-                              max = max(data_fn$wert, na.rm = T)*1.2)%>%
+            borderWidth = 0,
+            dataLabels = list(
+              enabled = TRUE,
+              format = "{point.display_rel} %",
+              style = list(textOutline = "none")
+            )
+          )
+        ) %>%
+        highcharter::hc_tooltip(pointFormat = plotopshov) %>%
+        highcharter::hc_yAxis(
+          title = list(text = ""),
+          labels = list(format = "{value}%"),
+          min = 0,
+          max = max(data_fn$wert, na.rm = TRUE) * 1.2
+        ) %>%
         highcharter::hc_xAxis(title = list(text = " ")) %>%
         highcharter::hc_colors(c("#B16FAB")) %>%
-        highcharter::hc_title(text = title_top,
-                              margin = 10,
-                              align = "center",
-                              style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")
+        highcharter::hc_title(
+          text = title_top,
+          margin = 10,
+          align = "center",
+          style = list(
+            color = "black", useHTML = TRUE,
+            fontFamily = "Calibri Regular", fontSize = "20px"
+          )
         ) %>%
         highcharter::hc_chart(
           style = list(fontFamily = "Calibri Regular", fontSize = "14px")
         ) %>%
         highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
-        highcharter::hc_caption(text = "Quelle der Daten: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.",
-                                style = list(fontSize = "11px", color = "gray")) %>%
-        highcharter::hc_exporting(enabled = TRUE,
-                                  buttons = list(
-                                    contextButton = list(
-                                      menuItems = list("downloadPNG", "downloadCSV",
-                                                       list(
-                                                         text = "Daten für GPT",
-                                                         onclick = htmlwidgets::JS(sprintf(
-                                                           "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
-
-     var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle der Daten: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.';
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-   }", gsub("'", "\\\\'", titel),gsub("'", "\\\\'", titel)))))
-                                    )
-                                  )
+        highcharter::hc_caption(
+          text = "Quelle der Daten: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.",
+          style = list(fontSize = "11px", color = "gray")
+        ) %>%
+        highcharter::hc_exporting(
+          enabled = TRUE,
+          buttons = list(
+            contextButton = list(
+              menuItems = list(
+                "downloadPNG",
+                "downloadCSV",
+                list(text = "Daten für GPT", onclick = export_button_js(titel))
+              )
+            )
+          )
         )
 
-
-     titel <-title_bot
-
-
-      #dies ist schon als funktion automatisiert, too complex
-
+      # --- Plot Bottom 10 ---
+      titel <- title_bot
       plot_bottom <- highcharter::hchart(
         data_fn %>% dplyr::arrange(desc(wert)) %>% dplyr::slice_tail(n = 10),
         'bar',
-        highcharter::hcaes(y = wert, x = land))%>%
+        highcharter::hcaes(y = wert, x = land)
+      ) %>%
         highcharter::hc_plotOptions(
           series = list(
-            boderWidth = 0,
-            dataLabels = list(enabled = TRUE, format = "{point.display_rel} %",
-                              style = list(textOutline = "none"))
-          )) %>%
-        highcharter::hc_tooltip(pointFormat = plotopshov)%>%
-        highcharter::hc_yAxis(title = list(text = ""),
-                              labels = list(format = "{value}%"),
-                              min = 0,
-                              max = max(data_fn$wert, na.rm = T)*1.2)%>%
+            borderWidth = 0,
+            dataLabels = list(
+              enabled = TRUE,
+              format = "{point.display_rel} %",
+              style = list(textOutline = "none")
+            )
+          )
+        ) %>%
+        highcharter::hc_tooltip(pointFormat = plotopshov) %>%
+        highcharter::hc_yAxis(
+          title = list(text = ""),
+          labels = list(format = "{value}%"),
+          min = 0,
+          max = max(data_fn$wert, na.rm = TRUE) * 1.2
+        ) %>%
         highcharter::hc_xAxis(title = list(text = "")) %>%
         highcharter::hc_colors(c("#B16FAB")) %>%
-        highcharter::hc_title(text =  title_bot,
-                              margin = 10,
-                              align = "center",
-                              style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")
+        highcharter::hc_title(
+          text = title_bot,
+          margin = 10,
+          align = "center",
+          style = list(
+            color = "black", useHTML = TRUE,
+            fontFamily = "Calibri Regular", fontSize = "20px"
+          )
         ) %>%
         highcharter::hc_chart(
           style = list(fontFamily = "Calibri Regular", fontSize = "14px")
         ) %>%
         highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
-        highcharter::hc_caption(text = "Quelle der Daten: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.",
-                                style = list(fontSize = "11px", color = "gray")) %>%
-        highcharter::hc_exporting(enabled = TRUE,
-                                  buttons = list(
-                                    contextButton = list(
-                                      menuItems = list("downloadPNG", "downloadCSV",
-                                                       list(
-                                                         text = "Daten für GPT",
-                                                         onclick = htmlwidgets::JS(sprintf(
-                                                           "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
-
-     var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle der Daten: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.';
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-   }", gsub("'", "\\\\'", titel),gsub("'", "\\\\'", titel)))))
-                                    )
-                                  )
+        highcharter::hc_caption(
+          text = "Quelle der Daten: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.",
+          style = list(fontSize = "11px", color = "gray")
+        ) %>%
+        highcharter::hc_exporting(
+          enabled = TRUE,
+          buttons = list(
+            contextButton = list(
+              menuItems = list(
+                "downloadPNG",
+                "downloadCSV",
+                list(text = "Daten für GPT", onclick = export_button_js(titel))
+              )
+            )
+          )
         )
 
-
       out <- list(plot_top, plot_bottom)
-
-
-
     }
 
 
@@ -3756,8 +3757,8 @@ plot_international_top10_mint_arb_gender <- function(r) {
 
 
     # Spez. EU inputs
-    inpy <- r$map_y_eu_top10_mint_arb_gender
-    inpp <- r$map_pers_top10_mint_arb_gender
+    inpy <- r$map_y_eu_top10_mint_arb_gender_eu
+    inpp <- r$map_pers_top10_mint_arb_gender_eu
 
 
 
@@ -4195,7 +4196,7 @@ plot_international_top10_mint_arb_gender <- function(r) {
       highcharter::hcaes(y = wert, x = land))%>%
       highcharter::hc_plotOptions(
         series = list(
-          boderWidth = 0,
+          borderWidth = 0,
           dataLabels = list(enabled = TRUE, format = "{point.display_rel} %",
                             style = list(textOutline = "none"))
         )) %>%
@@ -4264,7 +4265,7 @@ plot_international_top10_mint_arb_gender <- function(r) {
       highcharter::hcaes(y = wert, x = land))%>%
       highcharter::hc_plotOptions(
         series = list(
-          boderWidth = 0,
+          borderWidth = 0,
           dataLabels = list(enabled = TRUE, format = "{point.display_rel} %",
                             style = list(textOutline = "none"))
         )) %>%
@@ -4338,7 +4339,7 @@ plot_international_top10_mint_arb_gender <- function(r) {
       highcharter::hcaes(y = wert, x = land))%>%
       highcharter::hc_plotOptions(
         series = list(
-          boderWidth = 0,
+          borderWidth = 0,
           dataLabels = list(enabled = TRUE, format = "{point.display_rel} %",
                             style = list(textOutline = "none"))
         )) %>%
@@ -4399,7 +4400,7 @@ plot_international_top10_mint_arb_gender <- function(r) {
       highcharter::hcaes(y = wert, x = land))%>%
       highcharter::hc_plotOptions(
         series = list(
-          boderWidth = 0,
+          borderWidth = 0,
           dataLabels = list(enabled = TRUE, format = "{point.display_rel} %",
                             style = list(textOutline = "none"))
         )) %>%

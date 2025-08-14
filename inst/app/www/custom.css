@@ -24,14 +24,7 @@
 }
 
 h2 {
-  font-size: 22px;
-  margin-block: 20px;
-  margin-top: 20px;
-}
-
-
-h1 {
-  font-size: 28px;
+  font-size: 18px;
   margin-block: 20px;
 }
 
@@ -41,9 +34,6 @@ p {
   font-size: inherit;
 }  */
 
-[id] {
-  scroll-margin-top: 60px;
-}
 
 /* Sidebar und Hintergrundfarben definieren */
 

@@ -224,11 +224,11 @@ mod_international_top10_mint_arb_gender_server <- function(id, r){
 
 
     observeEvent(input$map_y_eu_top10_mint_arb_gender, {
-      r$map_y_eu_top10_mint_arb_gender <- input$map_y_eu_top10_mint_arb_gender
+      r$map_y_eu_top10_mint_arb_gender_eu <- input$map_y_eu_top10_mint_arb_gender
     })
 
     observeEvent(input$map_pers_eu_top10_mint_arb_gender, {
-      r$map_pers_top10_mint_arb_gender <- input$map_pers_eu_top10_mint_arb_gender
+      r$map_pers_top10_mint_arb_gender_eu <- input$map_pers_eu_top10_mint_arb_gender
     })
 
 

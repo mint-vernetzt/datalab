@@ -178,11 +178,11 @@ mod_international_map_arb_server <- function(id, r){
     # eu check should be after oecd check, since it is the default and will
     # otherwise be overwritten on initial load up
     observeEvent(input$map_y_eu_arb, {
-      r$map_y_arb <- input$map_y_eu_arb
+      r$map_y_arb_eu <- input$map_y_eu_arb
     })
 
     observeEvent(input$map_pers_eu_arb, {
-      r$map_pers_arb <- input$map_pers_eu_arb
+      r$map_pers_arb_eu <- input$map_pers_eu_arb
     })
 
 

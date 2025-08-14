@@ -15,7 +15,7 @@ mod_international_map_arb_gender_ui <- function(id) {
     shinyWidgets::pickerInput(
       inputId = ns("map_l_arb_gender"),
       choices = c("Europa" = "EU", "OECD"),
-      selected = "EU",
+      selected = "Europa",
       multiple = FALSE#,
     ),
 
@@ -129,8 +129,8 @@ mod_international_map_arb_gender_server <- function(id, r){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
-    # region change updates respective sub inputs, which will otherwise
-    # still be the last values.
+   # region change updates respective sub inputs, which will otherwise
+  #  still be the last values.
     observeEvent(input$map_l_arb_gender, {
       r$map_l_arb_gender <- input$map_l_arb_gender
       if (input$map_l_arb_gender == "EU") {
@@ -187,15 +187,15 @@ mod_international_map_arb_gender_server <- function(id, r){
     })
 
 
-
-    # otherwise be overwritten on initial load up
+#
+    # # otherwise be overwritten on initial load up
     observeEvent(input$map_y_eu_arb_gender, {
-      r$map_y_arb_gender <- input$map_y_eu_arb_gender
-    })
+       r$map_y_arb_gender_eu <- input$map_y_eu_arb_gender
+     })
 
     observeEvent(input$map_pers_eu_arb_gender, {
-      r$map_pers_arb_gender <- input$map_pers_eu_arb_gender
-    })
+       r$map_pers_arb_gender_eu <- input$map_pers_eu_arb_gender
+     })
 
 
   })

@@ -118,7 +118,7 @@ mod_international_top10_mint_gender_server <- function(id, r){
     })
 
     observeEvent(input$map_f_oecd_top10_mint_gender_ui, {
-      r$map_f_g <- input$map_f_oecd_top10_mint_gender_ui
+      r$map_f_g_o_ecd <- input$map_f_oecd_top10_mint_gender_ui
     })
 
     # eu check should be after oecd check, since it is the default and will
@@ -128,7 +128,7 @@ mod_international_top10_mint_gender_server <- function(id, r){
     })
 
     observeEvent(input$map_f_eu_top10_mint_gender_ui, {
-      r$map_f_g <- input$map_f_eu_top10_mint_gender_ui
+      r$map_f_g_e_u <- input$map_f_eu_top10_mint_gender_ui
     })
 
     observeEvent(input$art, {
