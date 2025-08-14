@@ -127,7 +127,7 @@ mod_international_map_arb_server <- function(id, r){
       r$map_l_arb <- input$map_l_arb
       if (input$map_l_arb == "EU") {
         r$map_y_arb <- input$map_y_eu_arb
-        r$map_pers_arb <- input$map_pers_eu_arb
+        #r$map_pers_arb <- input$map_pers_eu_arb
       }
       if (input$map_l_arb == "OECD") {
         r$map_pers_arb <- input$map_pers_oecd_arb

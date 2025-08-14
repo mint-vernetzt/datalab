@@ -20,7 +20,7 @@ pfad <- "C:/Users/kbr/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 M
 #pfad kab
 # pfad <- "C:/Users/kab/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/"
 
-# pfad <- "C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/"
+#pfad <- "C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/"
 
 # Erstellt "arbeitsmarkt" -------------------------------------------------
 
@@ -2701,6 +2701,9 @@ usethis::use_data(arbeitsmarkt_anzahl_azubis_oecd, overwrite = T)
 
 ### Rohdaten einlesen -------------------------------------------------------
 # akro <- "kbr"
+
+pfad <- "C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/"
+
 dat <- read.csv(paste0(pfad, "EUROSTAT002_custom_Labor_Tech_and_Scie.csv.gz"),
                 header = TRUE, sep = ",", dec = ".")
 

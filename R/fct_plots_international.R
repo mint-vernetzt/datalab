@@ -163,9 +163,10 @@ plot_international_map <- function(r) {
 
   timerange <- r$map_y_int_studium
   label_m <- r$map_l_int_studium
-  fach_m <- r$map_f_int_studium
 
-  if (is.null(fach_m)) { fach_m <- ""}
+
+
+
 
 
   if (label_m == "Weltweit") {
@@ -174,11 +175,8 @@ plot_international_map <- function(r) {
     fach_m <- "Alle MINT-Fächer"
 
     # df <- dplyr::tbl(con, from = "studierende_absolventen_weltweit") %>%
-    #   dplyr::filter(fach == "Alle MINT-Fächer") %>%
-    #   dplyr::filter(land != "San Marino") %>%
-    #   dplyr::filter(jahr != "2022") %>%
-    #   dplyr::mutate(wert = round(wert, 1)) %>%
-    #   dplyr::collect()
+
+    browser()
 
     df_query <- glue::glue_sql("
     SELECT *
@@ -197,18 +195,13 @@ plot_international_map <- function(r) {
   } else if (label_m == "OECD") {
     map_selection <- highcharter::download_map_data(url = "custom/world", showinfo = FALSE)
 
+    fach_m <- r$map_f_int_studium_oec_d
+    if (is.null(fach_m)) { fach_m <- ""}
+
     # filter for selection
 
     # df_filtered <- dplyr::tbl(con, from = "studierende_anzahl_oecd") %>%
-    #   dplyr::filter(geschlecht == "Gesamt" &
-    #                   jahr == timerange &
-    #                   ebene == 1 &
-    #                   anforderung %in% c("Bachelor oder vergleichbar (akademisch)",
-    #
-    #                                      "Master oder vergleichbar (akademisch)",
-    #                                      "Promotion (ISCED 8)")) %>%
-    #   dplyr::collect()
-    #
+
     df_query <- glue::glue_sql("
     SELECT *
     FROM studierende_anzahl_oecd
@@ -253,6 +246,9 @@ plot_international_map <- function(r) {
   } else if (label_m == "EU") {
     map_selection <- highcharter::download_map_data(url = "custom/europe", showinfo = FALSE)
 
+
+    fach_m <- r$map_f_int_studium_e_u
+    if (is.null(fach_m)) { fach_m <- ""}
     # df <- dplyr::tbl(con, from = "studierende_europa") %>%
     #   dplyr::filter(geschlecht == "Gesamt"  &
     #                   (

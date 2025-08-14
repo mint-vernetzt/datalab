@@ -115,7 +115,7 @@ mod_international_map_server <- function(id, r){
     }, ignoreInit = TRUE)
 
     observeEvent(input$map_f_oecd, {
-      r$map_f_int_studium <- input$map_f_oecd
+      r$map_f_int_studium_oec_d <- input$map_f_oecd
     }, ignoreInit = TRUE)
 
     observeEvent(input$map_y_ww, {
@@ -129,7 +129,7 @@ mod_international_map_server <- function(id, r){
     }, ignoreInit = TRUE)
 
     observeEvent(input$map_f_eu, {
-      r$map_f_int_studium <- input$map_f_eu
+      r$map_f_int_studium_e_u <- input$map_f_eu
     }, ignoreInit = TRUE)
 
   })
