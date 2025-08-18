@@ -2128,6 +2128,7 @@ iscedf13_transform_kurz <- function(dat) {
 
 ### Rohdaten einlesen -------------------------------------------------------
 
+pfad <- "C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/"
 # akro <- "kbr"
 data <- read.csv(paste0(pfad, "OECD001_employment_per_field.csv"),
                  header = TRUE, sep = ",", dec = ".")
