@@ -28,6 +28,9 @@ h2 {
   margin-block: 20px;
 }
 
+h1 {
+  margin-bottom: 20px;
+}
 /*
 p {
   font-family: inherit;
@@ -318,6 +321,10 @@ background-color:#FCFCFD;
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+[id] {
+  scroll-margin-top: 60px;
 }
 
 

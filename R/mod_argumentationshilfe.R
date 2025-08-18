@@ -170,7 +170,7 @@ mod_argumentation_ui <- function(id){
         ## 4 Schritte ----
         column(
           width = 12,
-          h2("In vier Schritten zu Ihrem MINT-Bericht oder Ihrer Argumentationskette", #Schnellstart: So analyserien Sie Daten mit dem MINT-DataLab-GPT
+          h1("In vier Schritten zu Ihrem MINT-Bericht oder Ihrer Argumentationskette", #Schnellstart: So analyserien Sie Daten mit dem MINT-DataLab-GPT
             style = "margin-top: 30px;"),
          # hr(style = "border-top: 2px solid #ee7775; margin-top: 15px; margin-bottom: 15px;")
         ),
@@ -514,7 +514,7 @@ mod_argumentation_ui <- function(id){
     width = 12,
     hr(style = "border-top: 2px solid #ee7775; margin-top: 20px;"),
 
-    h2("Die Datengrundlage Ihres MINT-Berichts als Grafiken", #So geht der MINT-DataLab-GPT bei der Analyse vor
+    h1("Die Datengrundlage Ihres MINT-Berichts als Grafiken", #So geht der MINT-DataLab-GPT bei der Analyse vor
        style= "margin-bottom: 30px; margin-top: 40px;"),
 
     column(
@@ -1015,7 +1015,7 @@ mod_argumentation_ui <- function(id){
 
       )),
 
-    ## FAQ + Nutzungshinweis ----
+    ## FAQ  ----
 
     hr(style = "border-top: 2px solid #154194; margin-top: 5px; margin-bottom: 5px;"),
 
@@ -1027,7 +1027,7 @@ mod_argumentation_ui <- function(id){
         width = 9,
         # h3("Fragen und Antworten"),
         # reactable::reactableOutput(ns("faq_table")),
-        h2("Fragen und Antworten"),
+        h1("Fragen und Antworten"),
 
         tags$details(
           tags$summary(strong(class = "faq-summary",
@@ -1120,7 +1120,9 @@ mod_argumentation_ui <- function(id){
               freuen wir uns auch über Hinweise, wenn es Irritationen oder Auffälligkeiten gab."),
 
         br(),
-        h2("Nutzungshinweis"),
+
+        # Nutzungshinweis ####
+        h1("Nutzungshinweis"),
         p("Der MINT-DataLab-GPT ist eine KI-Anwendung, die auf Technologie von OpenAI basiert.
         Die Nutzung des MINT-DataLab-GPT erfordert daher ein aktives OpenAI-Konto.
         Die bereitgestellten Inhalte werden automatisiert generiert und können unvollständig,
