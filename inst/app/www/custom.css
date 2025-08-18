@@ -24,19 +24,26 @@
 }
 
 h2 {
-  font-size: 18px;
+  font-size: 22px;
+  margin-block: 20px;
+  margin-top: 20px;
+}
+
+
+h1 {
+  font-size: 28px;
   margin-block: 20px;
 }
 
-h1 {
-  margin-bottom: 20px;
-}
 /*
 p {
   font-family: inherit;
   font-size: inherit;
 }  */
 
+[id] {
+  scroll-margin-top: 60px;
+}
 
 /* Sidebar und Hintergrundfarben definieren */
 
@@ -321,10 +328,6 @@ background-color:#FCFCFD;
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
-}
-
-[id] {
-  scroll-margin-top: 60px;
 }
 
 
