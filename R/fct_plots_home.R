@@ -431,9 +431,9 @@ home_einstieg_gender <- function(r) {
 
     df_alle_schule <- df_alle[df_alle$bereich == "Schule",] %>%
       dplyr::left_join(df_alle_bw, by = c("bereich", "indikator", "fachbereich", "geschlecht")) %>%
-      dplyr::mutate(wert.x = wert.x - wert.y) %>%
-      dplyr::select(-wert.y) %>%
-      dplyr::rename(wert = wert.x)
+      dplyr::mutate(wert.y = wert.y - wert.x) %>%
+      dplyr::select(-wert.x) %>%
+      dplyr::rename(wert = wert.y)
 
     df_alle <- df_alle %>%
       dplyr::filter(bereich != "Schule") %>%
@@ -891,8 +891,8 @@ home_comparison_line <- function(r) {
 
 
     df_alle <- df_alle %>%
-      group_by(bereich, indikator, fachbereich, jahr) %>%
-      reframe(
+      dplyr::group_by(bereich, indikator, fachbereich, jahr) %>%
+      dplyr::reframe(
         wert = sum(wert, na.rm = TRUE),
         .groups = "drop"
       ) %>%
@@ -900,8 +900,8 @@ home_comparison_line <- function(r) {
       #   wert = sum(wert, na.rm = TRUE),
       #   .groups = "drop"
       # ) %>%
-      mutate(geschlecht = "Gesamt") %>%
-      select(bereich, indikator, fachbereich, geschlecht, jahr, wert)
+      dplyr::mutate(geschlecht = "Gesamt") %>%
+      dplyr::select(bereich, indikator, fachbereich, geschlecht, jahr, wert)
 
 
 
