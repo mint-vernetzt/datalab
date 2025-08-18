@@ -13,7 +13,22 @@
 mod_argumentation_ui <- function(id){
   ns <- NS(id)
   tagList(
+
+    # für Bilder-Download
+    tags$head(
+      tags$script(src = "https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"),
+      tags$script(src = "https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"),
+      tags$script(src = "https://cdn.jsdelivr.net/npm/canvg@3.0.10/lib/umd.min.js"),
+      tags$style(HTML("
+    /* optional: sorge für weißen Hintergrund in Charts */
+    .dl-chart { background:#fff; padding:8px; }
+    .dl-chart .highcharts-container { background:#fff; }
+  "))
+    ),
+
     useShinyjs(),
+
+    # Seiteninhalt
     fluidRow(
       # noch austauschen
       div(class = "clean-box",
@@ -170,7 +185,7 @@ mod_argumentation_ui <- function(id){
         ## 4 Schritte ----
         column(
           width = 12,
-          h1("In vier Schritten zu Ihrem MINT-Bericht oder Ihrer Argumentationskette", #Schnellstart: So analyserien Sie Daten mit dem MINT-DataLab-GPT
+          h2("In vier Schritten zu Ihrem MINT-Bericht oder Ihrer Argumentationskette", #Schnellstart: So analyserien Sie Daten mit dem MINT-DataLab-GPT
             style = "margin-top: 30px;"),
          # hr(style = "border-top: 2px solid #ee7775; margin-top: 15px; margin-bottom: 15px;")
         ),
@@ -195,7 +210,7 @@ mod_argumentation_ui <- function(id){
                     style = "font-weight: 600; font-size: 16px;
                     display: block; height: 70px; margin-bottom: 10px;",
                     "2. Laden Sie die Datengrundlage herunter."),
-          tags$a(href="#download", img(src='www/gpt_schritt_2.png',
+          tags$a(href="#download_section", img(src='www/gpt_schritt_2.png',
               class = "img-responsive",
               height = "150px",
               alt = "Symbol Schritt 2 Datendownload",
@@ -303,7 +318,7 @@ mod_argumentation_ui <- function(id){
                   margin-top: 10px; border: 2px solid #B16FAB;
                   border-radius: 15px; max-width: 50px;")
       ),
-      div(id = "download",
+      div(id = "download_section",
         style = "flex: 1; margin-bottom: 15px;",
 
         # p(strong(style = "text-align: justify; font-size: 18px;",
@@ -486,22 +501,108 @@ mod_argumentation_ui <- function(id){
                 Laden Sie die passenden Grafiken im folgenden Abschnitt herunter und fügen
                 Sie Text und Grafiken für Ihren Bericht zusammen.")
             ),
-            column(
-              width = 5,
-              div(style = "margin-left: 30px;",
-              p(stlye="margin-left: 20px;",
-                "→ Die Download-Option für alle Grafiken des MINT-DataLab finden Sie rechts oben an den Grafiken.")
-            )
-        )
-        # column(
-        #   width = 5,
-        #   div(style = "margin-left: 30px; margin-top: 10px;",
-        #       downloadButton(style = "margin-bottom: 5px;",
-        #                      ns("download_txt1"),
-        #                      "Alle Grafiken herunterladen")
-        #   )
-        # )
+        #     column(
+        #       width = 5,
+        #       div(style = "margin-left: 30px;",
+        #       p(stlye="margin-left: 20px;",
+        #         "→ Die Download-Option für alle Grafiken des MINT-DataLab finden Sie rechts oben an den Grafiken.")
+        #     )
+        # ),
 
+        column(
+          width = 5,
+          div(style = "margin-left: 30px; margin-top: 10px;",
+              actionButton(
+                ns("download_all_png_client"),
+                label = tagList(icon("download"), "Alle Grafiken herunterladen (ZIP)")
+              )
+          )
+        ),
+
+
+        tags$script(HTML(sprintf("
+(function() {
+  function dateStr(){ return new Date().toISOString().slice(0,10); }
+  function blobFromCanvas(canvas, type, quality){
+    return new Promise(function(resolve){ canvas.toBlob(function(b){ resolve(b); }, type || 'image/png', quality || 1.0); });
+  }
+  function filenameFromChart(chart, idx){
+    try {
+      var t = chart && chart.title && chart.title.textStr ? chart.title.textStr : null;
+      if (t) return t.trim().replace(/\\s+/g,'_') + '.png';
+    } catch(e){}
+    return 'chart_' + (idx+1) + '.png';
+  }
+  function filenameFromWrapper(chart, idx){
+    try {
+      var wrap = chart.renderTo && chart.renderTo.closest ? chart.renderTo.closest('.dl-chart') : null;
+      var fn = wrap && wrap.getAttribute ? wrap.getAttribute('data-filename') : null;
+      if (fn && fn.trim()) return fn;
+    } catch(e){}
+    return null;
+  }
+
+  async function chartToPNGBlob(chart, scale){
+    // Chartgröße lesen
+  var w = Math.max(chart.chartWidth || 0, 800);
+  var h = Math.round(w * 9 / 16);
+  var s = 1; // für scharfes Ergebnis
+
+
+    // Highcharts-SVG mit export-Optionen holen
+    var svgStr = chart.getSVG({
+      exporting: { sourceWidth: w * s, sourceHeight: h * s }
+    });
+
+    // Canvas vorbereiten
+    var canvas = document.createElement('canvas');
+    canvas.width  = w * s;
+    canvas.height = h * s;
+
+    var ctx = canvas.getContext('2d');
+    // canvg rendert die SVG in das Canvas
+    var v = await canvg.Canvg.fromString(ctx, svgStr, { ignoreMouse: true, ignoreAnimation: true });
+    await v.render();
+
+    return await blobFromCanvas(canvas, 'image/png', 1.0);
+  }
+
+  document.addEventListener('click', async function(ev){
+    var btn = ev.target.closest('#%s');
+    if (!btn) return;
+
+    // Alle Highcharts-Instanzen einsammeln
+    var charts = (window.Highcharts && Highcharts.charts) ? Highcharts.charts.filter(function(c){ return !!c; }) : [];
+    if (!charts.length){ alert('Keine Highcharts-Instanzen gefunden.'); return; }
+
+    // Hinweis: Charts müssen sichtbar gerendert sein (kein versteckter Tab)
+    var old = btn.innerText; btn.disabled = true; btn.innerText = 'Erzeuge ZIP...';
+
+    try {
+      var zip = new JSZip();
+
+      for (var i=0; i<charts.length; i++){
+        var chart = charts[i];
+        var name = filenameFromWrapper(chart, i) || filenameFromChart(chart, i);
+        try {
+          var blob = await chartToPNGBlob(chart, 2); // scale=2
+          zip.file(name, blob);
+        } catch(e) {
+          console.error('Fehler beim Rendern von', name, e);
+        }
+      }
+
+      var content = await zip.generateAsync({ type: 'blob', compression: 'STORE' });
+      saveAs(content, 'alle_grafiken_' + dateStr() + '.zip');
+    } catch(e){
+      console.error(e);
+      alert('Fehler beim Erzeugen des ZIP.');
+    } finally {
+      btn.disabled = false; btn.innerText = old;
+    }
+  }, false);
+})();
+", ns("download_all_png_client"))))
 
       )
       )
@@ -514,7 +615,7 @@ mod_argumentation_ui <- function(id){
     width = 12,
     hr(style = "border-top: 2px solid #ee7775; margin-top: 20px;"),
 
-    h1("Die Datengrundlage Ihres MINT-Berichts als Grafiken", #So geht der MINT-DataLab-GPT bei der Analyse vor
+    h2("Die Datengrundlage Ihres MINT-Berichts als Grafiken", #So geht der MINT-DataLab-GPT bei der Analyse vor
        style= "margin-bottom: 30px; margin-top: 40px;"),
 
     column(
@@ -1027,7 +1128,7 @@ mod_argumentation_ui <- function(id){
         width = 9,
         # h3("Fragen und Antworten"),
         # reactable::reactableOutput(ns("faq_table")),
-        h1("Fragen und Antworten"),
+        h2("Fragen und Antworten"),
 
         tags$details(
           tags$summary(strong(class = "faq-summary",
@@ -1122,7 +1223,7 @@ mod_argumentation_ui <- function(id){
         br(),
 
         # Nutzungshinweis ####
-        h1("Nutzungshinweis"),
+        h2("Nutzungshinweis"),
         p("Der MINT-DataLab-GPT ist eine KI-Anwendung, die auf Technologie von OpenAI basiert.
         Die Nutzung des MINT-DataLab-GPT erfordert daher ein aktives OpenAI-Konto.
         Die bereitgestellten Inhalte werden automatisiert generiert und können unvollständig,
@@ -1166,16 +1267,31 @@ mod_argumentation_server <- function(id){
     # Download der gesemmelten Daten
 
     output$download_txt <- downloadHandler(
-      filename = function() {
-        paste0("daten_export_", Sys.Date(), ".txt")
-      },
+      filename = function() paste0("daten_export_", Sys.Date(), ".txt"),
+      contentType = "text/plain; charset=UTF-8",
       content = function(file) {
-        daten <- daten_download(r)#
-
-        writeLines(daten, con = file)
-      },
-      contentType = "text/plain"
+        req(r$region_argumentationshilfe)
+        tryCatch({
+          txt_df <- daten_download(r)  # -> gib hier ein data.frame zurück, nicht den formatierten String
+          readr::write_delim(txt_df, file = file, delim = "\t", na = "", append = FALSE)
+        }, error = function(e) {
+          showNotification(paste("Download fehlgeschlagen:", e$message), type = "error")
+          stop(e)
+        })
+      }
     )
+
+    # output$download_txt <- downloadHandler(
+    #   filename = function() {
+    #     paste0("daten_export_", Sys.Date(), ".txt")
+    #   },
+    #   content = function(file) {
+    #     daten <- daten_download(r)#
+    #
+    #     writeLines(daten, con = file)
+    #   },
+    #   contentType = "text/plain"
+    # )
 
 
 #

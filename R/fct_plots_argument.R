@@ -1,6 +1,6 @@
-#library(rlang)
-#library(tidyr)
-#library(dplyr)
+# library(rlang)
+# library(tidyr)
+# library(dplyr)
 
 daten_download_q <- function(r){
 
@@ -773,8 +773,8 @@ AND fachbereich = {faecher}
 
 
     df_azubi_clean <- df_auszubildende %>%
-      rename(region = bundesland, fach = fachbereich, indikator = kategorie) %>%
-      mutate(
+      dplyr::rename(region = bundesland, fach = fachbereich, indikator = kategorie) %>%
+      dplyr::mutate(
         fach = dplyr::case_when(
           fach == "Technik (gesamt)" ~ "Technik (inkl. Ingenieurwesen)",
           TRUE ~ fach
@@ -783,8 +783,8 @@ AND fachbereich = {faecher}
       )
 
     df_studi_clean <- df_studierende %>%
-      rename(fach = fach) %>%
-      mutate(
+      dplyr::rename(fach = fach) %>%
+      dplyr::mutate(
         fach = dplyr::case_when(
           fach == "Ingenieurwissenschaften (ohne Informatik)" ~ "Technik (inkl. Ingenieurwesen)",
           TRUE ~ fach
@@ -792,7 +792,7 @@ AND fachbereich = {faecher}
         indikator = "Nachwuchs"
       )
 
-    df_nachwuchs <- bind_rows(df_azubi_clean, df_studi_clean)
+    df_nachwuchs <-  dplyr::bind_rows(df_azubi_clean, df_studi_clean)
 
     df_nachwuchs_agg <- df_nachwuchs %>%
       dplyr::group_by(region, fach, jahr, indikator) %>%
@@ -902,7 +902,7 @@ AND fachbereich = {faecher}
 
     # 1. Beschäftigte MINT
     df_beschäftigte_clean <- df_alle %>%
-      mutate(Bereich = "Beschäftigte MINT",
+      dplyr::mutate(Bereich = "Beschäftigte MINT",
              Quelle = "Statistisches Bundesamt, 2024; Bundesagentur für Arbeit, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt",
              Region = region_reserve)
 
@@ -912,7 +912,7 @@ AND fachbereich = {faecher}
     # plot_data_clean <- plot_data %>%
     #   mutate(Bereich = "Engpassindikator")
     plot_data_clean <- plot_data %>%
-      mutate(Bereich = "Engpassindikator",
+      dplyr::mutate(Bereich = "Engpassindikator",
              Quelle = "Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt",
              Region = save_regio)
 
@@ -921,7 +921,7 @@ AND fachbereich = {faecher}
     # df_demografie_clean <- df %>%
     #   mutate(Bereich = "Demografie MINT")
     df_demografie_clean <- df %>%
-      mutate(Bereich = "Demografie MINT",
+      dplyr::mutate(Bereich = "Demografie MINT",
              Quelle = "Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt",
              Region = region_reserve)
 
@@ -930,7 +930,7 @@ AND fachbereich = {faecher}
     # df_nachwuchs_clean <- df_nachwuchs_agg %>%
     #   mutate(Bereich = "Nachwuchs MINT")
     df_nachwuchs_clean <- df_nachwuchs_agg %>%
-      mutate(Bereich = "Nachwuchs MINT",
+      dplyr::mutate(Bereich = "Nachwuchs MINT",
              Quelle = "Destatis, 2024 und Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt")
 
 
@@ -938,7 +938,7 @@ AND fachbereich = {faecher}
     # uebersicht_data_clean <- uebersicht_data %>%
     #   mutate(Bereich = "Wirkhebel MINT")
     uebersicht_data_clean <- uebersicht_data %>%
-      mutate(Bereich = "Wirkhebel MINT",
+      dplyr::mutate(Bereich = "Wirkhebel MINT",
              Quelle = "Berechnungen durch das IW Köln, 2024, beauftragt durch MINTvernetzt",
              Region = "Deutschland (immer deutschland)")
 
@@ -949,8 +949,8 @@ AND fachbereich = {faecher}
     # Einfügen einer Funktion, die alle Datensätze vereinheitlicht:
     vereinheitlichen <- function(df) {
       df %>%
-        mutate(across(everything(), as.character)) %>%
-        select(Bereich, everything())
+        dplyr::mutate( dplyr::across(everything(), as.character)) %>%
+        dplyr::select(Bereich, everything())
     }
 
     # Alle Datensätze vereinheitlichen
@@ -963,7 +963,7 @@ AND fachbereich = {faecher}
     )
 
     # Alle Datensätze zusammenfügen
-    final_df <- bind_rows(df_list)
+    final_df <-  dplyr::bind_rows(df_list)
 
     # Download-Format: TXT
     # Hinweis: Schreibe Tabulator als Trenner ("\t"), weil TXT normalerweise tab-getrennt besser lesbar ist
@@ -979,7 +979,8 @@ AND fachbereich = {faecher}
     #
 
 
-    return(txt_output)
+    #return(txt_output)
+    return(final_df)
 
 }
 
@@ -1977,11 +1978,11 @@ argument_nachwuchs <- function(r){
   df_start <- df_nachwuchs_agg %>%
     dplyr::filter(jahr == min(df_nachwuchs_agg$jahr)) %>%
     dplyr::select(fach, wert) %>%
-    dplyr::rename(wert_alt =wert)
+    dplyr::rename(wert_alt = wert)
   df_ende <- df_nachwuchs_agg %>%
     dplyr::filter(jahr == max(df_nachwuchs_agg$jahr)) %>%
     dplyr::select(fach, wert) %>%
-    dplyr::rename(wert_neu =wert)
+    dplyr::rename(wert_neu = wert)
   df_nachwuchs_agg <- df_nachwuchs_agg %>%
     dplyr::left_join(df_start, by = c("fach")) %>%
     dplyr::left_join(df_ende, by = c("fach")) %>%
