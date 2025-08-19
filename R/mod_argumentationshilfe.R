@@ -66,8 +66,8 @@ mod_argumentation_ui <- function(id){
             p("Bei dieser Frage können Sie sich von KI unterstützen lassen: dem MINT-DataLab-GPT"),
 
             strong("Der Chatbot unterstützt konkret in drei Situationen:"),
-            p(style = "margin-left: 20px; margin-top: 10px;", "1. Er erstellt einen MINT-Bericht für das ausgewählte Bundesland"),
-            p(style = "margin-left: 20px;", "2. Hilf mir, für MINT-Förderung zu argumentieren"), #Er erstellt eine Argumentation für die Förderung von MINT-Bildung
+            p(style = "margin-left: 20px; margin-top: 10px;", "1. Er erstellt einen MINT-Bericht für ein ausgewähltes Bundesland"),
+            p(style = "margin-left: 20px;", "2. Er hilft, für MINT-Förderung zu argumentieren"), #Er erstellt eine Argumentation für die Förderung von MINT-Bildung
             p(style = "margin-left: 20px;", "3. Er hilft, Daten grundlegend zu interpretieren"),
             br(),
             p("Der MINT-DataLab-GPT kann bei der Interpretation aller Daten im MINT-DataLab assistieren."),
@@ -498,7 +498,8 @@ mod_argumentation_ui <- function(id){
               width = 6,
               p(style = "font-size : 15px;",
                 "Der Bericht wird anschaulicher, wenn Sie den Texten des MINT-DataLab-GPT Grafiken hinzuzufügen.
-                Laden Sie die passenden Grafiken im folgenden Abschnitt herunter und fügen
+                Laden Sie die passenden Grafiken gesammelt hier herunter oder wählen Sie einzelne Grafiken
+                im folgenden Abschnitt aus und fügen
                 Sie Text und Grafiken für Ihren Bericht zusammen.")
             ),
         #     column(
@@ -512,6 +513,8 @@ mod_argumentation_ui <- function(id){
         column(
           width = 5,
           div(style = "margin-left: 30px; margin-top: 10px;",
+              p(stlye="margin-left: 20px;",
+                 "→ Die Download-Option für alle Grafiken des MINT-DataLab finden Sie rechts oben an den Grafiken."),
               actionButton(
                 ns("download_all_png_client"),
                 label = tagList(icon("download"), "Alle Grafiken herunterladen (ZIP)")

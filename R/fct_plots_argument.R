@@ -718,8 +718,6 @@ daten_download <- function(r){
 # ", .con = con)
 
 
-    regio <- r$region_argumentationshilfe
-
   df_query <- glue::glue_sql("
 SELECT *
 FROM arbeitsmarkt_detail
@@ -824,7 +822,10 @@ AND fachbereich = {faecher}
                                             paste0("+", df_nachwuchs_agg$diff))
 
     df_nachwuchs_agg <- df_nachwuchs_agg %>%
-      filter(!(is.na(wert_alt) |  is.na(wert_neu) | is.na(diff) | is.na(display_diff)))
+      dplyr::filter(!(is.na(df_nachwuchs_agg$wert_alt) |
+                        is.na(df_nachwuchs_agg$wert_neu) |
+                        is.na(df_nachwuchs_agg$diff) |
+                        is.na(df_nachwuchs_agg$display_diff)))
 
     # df_nachwuchs_agg <- df_nachwuchs_agg %>%
     #   na.omit()
