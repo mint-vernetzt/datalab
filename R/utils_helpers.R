@@ -1,5 +1,6 @@
-
-
+#library(tidyr)
+#library(rlang)
+#library(tidyr)
 
 #' helpers
 #'
@@ -234,7 +235,7 @@ international_ui_faecher <- function(region = "EU") {
     #   unique() %>%
     #   sort()
     df_query <- glue::glue_sql("
-  SELECT DISTINCT land, fachbereich,
+  SELECT DISTINCT fachbereich,
   FROM arbeitsmarkt_anfaenger_absolv_oecd
   WHERE geschlecht = 'Gesamt'
   AND variable IN ('Anteil Absolvent*innen nach Fach an allen Fächern', 'Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern')
@@ -243,10 +244,10 @@ international_ui_faecher <- function(region = "EU") {
 
     selection <- DBI::dbGetQuery(con, df_query)
 
-    # selection <- selection %>%
-    #   dplyr::pull(fachbereich) %>%
-    #   unique() %>%
-    #   sort()
+    selection <- selection %>%
+      dplyr::pull(fachbereich) %>%
+      unique() %>%
+      sort()
 
       }
 
@@ -602,6 +603,8 @@ int_pisa_ui_country <- function(type = "TIMSS", n = NULL) {
                                  "SELECT DISTINCT land
                                  FROM schule_pisa")$land
 
+
+
   }
 
   if(type == "PISA" && !is.null(n)){
@@ -615,8 +618,8 @@ int_pisa_ui_country <- function(type = "TIMSS", n = NULL) {
     laender_ausgeschlossen <- c("Luxemburg", "Japan", "Großbritannien")
 
     selection <- selection %>%
-      filter(!land %in% laender_ausgeschlossen) %>%
-      pull(land)
+      dplyr::filter(!land %in% laender_ausgeschlossen) %>%
+      dplyr::pull(land)
 
   }
 
@@ -1251,9 +1254,8 @@ piebuilder <- function(df, titel, x, y, tooltip, color = c("#b16fab", "#efe8e6")
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
-
-     data += '\\n%s';  // <- Quelle anhängen
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle: %s';
 
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
@@ -1266,8 +1268,9 @@ piebuilder <- function(df, titel, x, y, tooltip, color = c("#b16fab", "#efe8e6")
      }
 
    }",
-                                                         gsub("'", "\\\\'", titel),  # Titel escapen
-                                                         gsub("'", "\\\\'", quelle)  # Quelle escapen
+                                                         gsub("'", "\\\\'", titel),
+                                                         gsub("'", "\\\\'", titel),
+                                                         gsub("'", "\\\\'", quelle)
                                                        ))
 
                                                      )
@@ -1307,9 +1310,9 @@ piebuilder <- function(df, titel, x, y, tooltip, color = c("#b16fab", "#efe8e6")
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle: %s';
 
-     data += '\\n%s';  // <- Quelle anhängen
 
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
@@ -1322,8 +1325,9 @@ piebuilder <- function(df, titel, x, y, tooltip, color = c("#b16fab", "#efe8e6")
      }
 
    }",
-                                                         gsub("'", "\\\\'", titel),  # Titel escapen
-                                                         gsub("'", "\\\\'", quelle)  # Quelle escapen
+                                                         gsub("'", "\\\\'", titel),
+                                                         gsub("'", "\\\\'", titel),
+                                                         gsub("'", "\\\\'", quelle)
                                                        ))
 
                                                      )
@@ -1373,9 +1377,8 @@ linebuilder <- function(df, titel, x , y, group = NULL, tooltip, format, color =
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
-
-     data += '\\n%s';  // <- Quelle anhängen
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle: %s';
 
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
@@ -1386,11 +1389,36 @@ linebuilder <- function(df, titel, x , y, group = NULL, tooltip, format, color =
        link.download = filename;
        link.click();
      }
-
    }",
-                                                       gsub("'", "\\\\'", titel),  # Titel escapen
-                                                       gsub("'", "\\\\'", quelle)  # Quelle escapen
+                                                       gsub("'", "\\\\'", titel),
+                                                       gsub("'", "\\\\'", titel),
+                                                       gsub("'", "\\\\'", quelle)
                                                      ))
+
+   #                                                   onclick = htmlwidgets::JS(sprintf(
+   #                                                     "function () {
+   #   var date = new Date().toISOString().slice(0,10);
+   #   var chartTitle = '%s'.replace(/\\s+/g, '_');
+   #   var filename = chartTitle + '_' + date + '.txt';
+   #
+   #   var data = this.getCSV();
+   #
+   #   data += '\\n%s';  // <- Quelle anhängen
+   #
+   #   var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+   #   if (window.navigator.msSaveBlob) {
+   #     window.navigator.msSaveBlob(blob, filename);
+   #   } else {
+   #     var link = document.createElement('a');
+   #     link.href = URL.createObjectURL(blob);
+   #     link.download = filename;
+   #     link.click();
+   #   }
+   #
+   # }",
+   #                                                     gsub("'", "\\\\'", titel),  # Titel escapen
+   #                                                     gsub("'", "\\\\'", quelle)  # Quelle escapen
+   #                                                   ))
 
                                                    ))
                                 )
@@ -1471,9 +1499,8 @@ balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color,
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
-
-     data += '\\n%s';  // <- Quelle anhängen
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle: %s';
 
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
@@ -1486,8 +1513,9 @@ balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color,
      }
 
    }",
-                                                         gsub("'", "\\\\'", titel),  # Titel escapen
-                                                         gsub("'", "\\\\'", quelle)  # Quelle escapen
+                                                         gsub("'", "\\\\'", titel),
+                                                         gsub("'", "\\\\'", titel),
+                                                         gsub("'", "\\\\'", quelle)
                                                        ))
 
                                                      ))
@@ -1524,9 +1552,8 @@ balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color,
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
-
-     data += '\\n%s';  // <- Quelle anhängen
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle: %s';
 
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
@@ -1540,7 +1567,8 @@ balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color,
 
    }",
                                                          gsub("'", "\\\\'", titel),  # Titel escapen
-                                                         gsub("'", "\\\\'", quelle)  # Quelle escapen
+                                                         gsub("'", "\\\\'", titel),  # Quelle escapen
+                                                         gsub("'", "\\\\'", quelle)
                                                        ))
 
                                                      ))
@@ -1579,9 +1607,8 @@ balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color,
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
-
-     data += '\\n%s';  // <- Quelle anhängen
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle: %s';
 
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
@@ -1595,7 +1622,9 @@ balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color,
 
    }",
                                                          gsub("'", "\\\\'", titel),  # Titel escapen
-                                                         gsub("'", "\\\\'", quelle)  # Quelle escapen
+                                                         gsub("'", "\\\\'", titel),###
+                                                         gsub("'", "\\\\'", quelle)
+
                                                        ))
 
                                                      ))
@@ -1636,9 +1665,10 @@ balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color,
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
 
-     data += '\\n%s';  // <- Quelle anhängen
+
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle: %s';
 
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
@@ -1651,7 +1681,8 @@ balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color,
      }
 
    }",
-                                                         gsub("'", "\\\\'", titel),  # Titel escapen
+                                                         gsub("'", "\\\\'", titel),
+                                                         gsub("'", "\\\\'", titel),# Titel escapen
                                                          gsub("'", "\\\\'", quelle)  # Quelle escapen
                                                        ))
 
@@ -1692,8 +1723,8 @@ balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color,
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
-     data += '\\n%s';  // <- Quelle anhängen
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle: %s';
 
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
@@ -1705,8 +1736,9 @@ balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color,
        link.click();
      }
    }",
-                                                         gsub("'", "\\\\'", titel),  # Titel escapen
-                                                         gsub("'", "\\\\'", quelle)  # Quelle escapen
+                                                         gsub("'", "\\\\'", titel),
+                                                         gsub("'", "\\\\'", titel),
+                                                         gsub("'", "\\\\'", quelle)
                                                        ))
 
                                                      ))
@@ -1747,8 +1779,8 @@ balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color,
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
-     data += '\\n%s';  // <- Quelle anhängen
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle: %s';
 
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
@@ -1760,7 +1792,8 @@ balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color,
        link.click();
      }
    }",
-                                                         gsub("'", "\\\\'", titel),  # Titel escapen
+                                                         gsub("'", "\\\\'", titel),
+                                                         gsub("'", "\\\\'", titel),
                                                          gsub("'", "\\\\'", quelle)  # Quelle escapen
                                                        ))
 
@@ -1806,8 +1839,8 @@ balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color,
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
-     data += '\\n%s';  // <- Quelle anhängen
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle: %s';
 
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
@@ -1819,7 +1852,8 @@ balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color,
        link.click();
      }
    }",
-                                                         gsub("'", "\\\\'", titel),  # Titel escapen
+                                                         gsub("'", "\\\\'", titel),
+                                                         gsub("'", "\\\\'", titel),
                                                          gsub("'", "\\\\'", quelle)  # Quelle escapen
                                                        ))
 
@@ -1862,8 +1896,8 @@ balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color,
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
-     data += '\\n%s';  // <- Quelle anhängen
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle: %s';
 
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
@@ -1875,7 +1909,8 @@ balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color,
        link.click();
      }
    }",
-                                                         gsub("'", "\\\\'", titel),  # Titel escapen
+                                                         gsub("'", "\\\\'", titel),
+                                                         gsub("'", "\\\\'", titel),
                                                          gsub("'", "\\\\'", quelle)  # Quelle escapen
                                                        ))
 
@@ -1954,7 +1989,9 @@ get_top10_hc_plot_options <- function(hc,
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+    var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle: %s';
+
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -1964,7 +2001,9 @@ get_top10_hc_plot_options <- function(hc,
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel))  #
+   }", gsub("'", "\\\\'", titel),
+                                                       gsub("'", "\\\\'", titel),
+                                                       gsub("'", "\\\\'", quelle))  #
                                                      )
 
                                                    ))
@@ -2017,7 +2056,8 @@ balkenbuilder3 <- function(df, titel , x, y, tooltip, format, color, optional, o
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle: %s';
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -2027,7 +2067,7 @@ balkenbuilder3 <- function(df, titel , x, y, tooltip, format, color, optional, o
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel))  #
+   }", gsub("'", "\\\\'", titel),gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", quelle))  #
                                                      )
 
                                                    ))
@@ -2087,7 +2127,8 @@ if(prop==FALSE && wert == FALSE){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle: %s';
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -2097,7 +2138,7 @@ if(prop==FALSE && wert == FALSE){
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel))  #
+   }", gsub("'", "\\\\'", titel),gsub("'", "\\\\'", titel),gsub("'", "\\\\'", quelle))  #
                                                      )
 
                                                    ))
@@ -2105,7 +2146,8 @@ if(prop==FALSE && wert == FALSE){
                               )
     )
 
-} else if(prop == TRUE && landkarten == FALSE){
+}
+  else if(prop == TRUE && landkarten == FALSE){
   out<- highcharter::hcmap(
     "countries/de/de-all",
     data = df,
@@ -2147,7 +2189,8 @@ if(prop==FALSE && wert == FALSE){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle: %s';
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -2157,7 +2200,7 @@ if(prop==FALSE && wert == FALSE){
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel))  #
+   }", gsub("'", "\\\\'", titel),gsub("'", "\\\\'", titel), gsub("'", "\\\\'", quelle))  #
                                                      )
 
                                                    ))
@@ -2165,7 +2208,9 @@ if(prop==FALSE && wert == FALSE){
                               )
     )
 
-} else if(wert==TRUE){
+}
+  else if(wert==TRUE){
+
 
   out <- highcharter::hcmap(
     map = map,
@@ -2199,7 +2244,30 @@ if(prop==FALSE && wert == FALSE){
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(
                                 contextButton = list(
-                                  menuItems = list("downloadPNG", "downloadCSV")
+                                  menuItems = list("downloadPNG", "downloadCSV",
+                                                   list(
+                                                     text = "Daten für GPT",
+                                                     onclick = htmlwidgets::JS(sprintf(
+                                                       "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle: %s';
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel),gsub("'", "\\\\'", titel), gsub("'", "\\\\'", quelle))  #
+                                                     )
+
+                                                   ))
                                 )
                               )
     )
@@ -2298,7 +2366,8 @@ if(prop==FALSE && wert == FALSE){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle: %s';
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -2308,7 +2377,7 @@ if(prop==FALSE && wert == FALSE){
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel))  #
+   }", gsub("'", "\\\\'", titel),gsub("'", "\\\\'", titel), gsub("'", "\\\\'", quelle))  #
                                                      )
 
                                                    ))
@@ -2381,5 +2450,60 @@ get_search_data <- function(term, session) {
 }
 
 
+# bilder downloads
+# # Kleiner Helper (oben im Server oder in utils.R)
+# .is_widget <- function(x) inherits(x, "htmlwidget")
+#
+# save_widget_to_png <- function(widget, png_path,
+#                                vwidth = 1200, vheight = 800, zoom = 2) {
+#   if (!.is_widget(widget)) stop("Kein htmlwidget übergeben.")
+#   html_path <- tempfile(fileext = ".html")
+#   on.exit(unlink(html_path, force = TRUE), add = TRUE)
+#
+#   htmlwidgets::saveWidget(widget, file = html_path, selfcontained = TRUE)
+#
+#   chrome_path <- tryCatch(webshot2::find_chrome(), error = function(e) NULL)
+#   if (!is.null(chrome_path) && file.exists(chrome_path)) {
+#     webshot2::webshot(html_path, png_path, vwidth = vwidth, vheight = vheight, zoom = zoom)
+#   } else {
+#     if (!requireNamespace("webshot", quietly = TRUE)) stop("Kein Chrome & 'webshot' fehlt.")
+#     if (isFALSE(webshot::is_phantomjs_installed())) webshot::install_phantomjs()
+#     webshot::webshot(html_path, png_path, vwidth = vwidth, vheight = vheight)
+#   }
+#   if (!file.exists(png_path)) stop("PNG wurde nicht erzeugt.")
+#   invisible(png_path)
+# }
 
+.save_any_to_png <- function(obj, png_path, vwidth = 1200, vheight = 800, zoom = 2) {
+  html_path <- tempfile(fileext = ".html")
+  on.exit(unlink(html_path, force = TRUE), add = TRUE)
+
+  if (inherits(obj, "htmlwidget")) {
+    # htmlwidget -> saveWidget (selfcontained)
+    htmlwidgets::saveWidget(obj, file = html_path, selfcontained = TRUE)
+  } else if (inherits(obj, "shiny.tag") || inherits(obj, "shiny.tag.list") || inherits(obj, "htmlwdwtgrid")) {
+    # Shiny-Tag/Grid -> als browsable HTML speichern (inkl. Dependencies)
+    htmltools::save_html(htmltools::browsable(obj), file = html_path,
+                         background = "white")
+  } else {
+    stop("Unbekannter Grafiktyp: ", paste(class(obj), collapse = "/"))
+  }
+
+  # Screenshot machen (webshot2 -> Chrome/Chromium; sonst PhantomJS)
+  chrome_path <- tryCatch(webshot2::find_chrome(), error = function(e) NULL)
+  if (!is.null(chrome_path) && file.exists(chrome_path)) {
+    webshot2::webshot(url = html_path, file = png_path,
+                      vwidth = vwidth, vheight = vheight, zoom = zoom)
+  } else {
+    if (!requireNamespace("webshot", quietly = TRUE)) {
+      stop("Kein Chrome/Chromium gefunden und Paket 'webshot' fehlt.")
+    }
+    if (isFALSE(webshot::is_phantomjs_installed())) webshot::install_phantomjs()
+    webshot::webshot(url = html_path, file = png_path,
+                     vwidth = vwidth, vheight = vheight)
+  }
+
+  if (!file.exists(png_path)) stop("PNG wurde nicht erzeugt.")
+  invisible(png_path)
+}
 

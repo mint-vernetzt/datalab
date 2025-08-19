@@ -14,7 +14,7 @@ mod_international_map_arb_ui <- function(id) {
     p("Region:"),
     shinyWidgets::pickerInput(
       inputId = ns("map_l_arb"),
-      choices = c("Europa" = "EU", "OECD"),
+      choices = c("Europa" = "EU"),#, "OECD"
       selected = "Europa",
       multiple = FALSE#,
     ),
@@ -127,7 +127,7 @@ mod_international_map_arb_server <- function(id, r){
       r$map_l_arb <- input$map_l_arb
       if (input$map_l_arb == "EU") {
         r$map_y_arb <- input$map_y_eu_arb
-        r$map_pers_arb <- input$map_pers_eu_arb
+        #r$map_pers_arb <- input$map_pers_eu_arb
       }
       if (input$map_l_arb == "OECD") {
         r$map_pers_arb <- input$map_pers_oecd_arb
@@ -178,11 +178,11 @@ mod_international_map_arb_server <- function(id, r){
     # eu check should be after oecd check, since it is the default and will
     # otherwise be overwritten on initial load up
     observeEvent(input$map_y_eu_arb, {
-      r$map_y_arb <- input$map_y_eu_arb
+      r$map_y_arb_eu <- input$map_y_eu_arb
     })
 
     observeEvent(input$map_pers_eu_arb, {
-      r$map_pers_arb <- input$map_pers_eu_arb
+      r$map_pers_arb_eu <- input$map_pers_eu_arb
     })
 
 

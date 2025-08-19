@@ -31,8 +31,8 @@ mod_startseite_start_ui <- function(id){
           column(
             width = 8,
             h1("Willkommen im MINT-DataLab von MINTvernetzt!"),
-            p(style = "text-align: justify; font-size: 14px;",
-              "Hier präsentieren wir statistische Kennzahlen rund um MINT in den Bereichen Schule, Hochschule, Ausbildung und
+            p(style = "font-size: 14px;",
+              "Im MINT-DataLab von MINTvernetzt präsentieren wir statistische Kennzahlen rund um MINT in den Bereichen Schule, Hochschule, Ausbildung und
           Arbeitsmarkt in Deutschland.", br(),
           "Unser Ziel ist es, mit dem MINT-DataLab einen zentralen Ort
           für die wichtigsten Statistiken rund um MINT zu schaffen und mittels interaktiver
@@ -41,19 +41,18 @@ mod_startseite_start_ui <- function(id){
             p(),
 
           # Updates ----
-          h1(style = "color: #00a87a; font-size: 18px;",
+          h2(style = "color: #00a87a;",
              "Was ist Neu?"),
-          p(style = "text-align: justify; font-size: 14px;",
-            "-  Grafiken und Daten als Download", br(),
-            "-  Fachkräftedaten auf Bundesland-Level",br(),
-            "-  Neue Kurzanalyse: Fachkräftemangel in den MINT-Disziplinen", br(),
-            "-  Daten zu Lehramts-Absolvent:innen verfügbar"
+          p(style = "font-size: 14px;",
+            "-  Erstellen Sie einfach MINT-Berichten durch das neue Angebot \"Datenanalyse mit KI\"", br(),
+            "-  Schnellere Ladenzeit der Website",br(),
           ),
-          h1(style = "color: #00a87a; font-size: 18px;",
+          h2(style = "color: #00a87a;",
              "Woran wir aktuell arbeiten:"),
           p(style = "text-align: justify; font-size: 14px;",
-            "-  Argumentationshilfe mit Erklärungen und Beispielen",br(),
-            "-  Optimiertes Laden der Website", br()),
+            "-  Aktualisierung der Daten",br(),
+            "-  Erhöhte Barrierefreiheit", br(),
+            "-  Weiterentwicklung des Angebots \"Datenanalyse mit KI\"", br()),
           p(),      p(),
           p("Bei Fragen oder Anregungen, melden Sie sich jederzeit gerne ",
             tags$a(href = "mailto:katharina.brunner@mint-vernetzt.de?subject= Feedback MINT-Datalab", "per E-Mail"),

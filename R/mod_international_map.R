@@ -108,29 +108,29 @@ mod_international_map_server <- function(id, r){
       if (input$map_l_int_studium == "Weltweit"){
         r$map_y_int_studium <- input$map_y_ww
       }
-    })
+    }, ignoreInit = TRUE)
 
     observeEvent(input$map_y_oecd, {
       r$map_y_int_studium <- input$map_y_oecd
-    })
+    }, ignoreInit = TRUE)
 
     observeEvent(input$map_f_oecd, {
-      r$map_f_int_studium <- input$map_f_oecd
-    })
+      r$map_f_int_studium_oec_d <- input$map_f_oecd
+    }, ignoreInit = TRUE)
 
     observeEvent(input$map_y_ww, {
       r$map_y_int_studium <- input$map_y_ww
-    })
+    }, ignoreInit = TRUE)
 
     # eu check should be after oecd check, since it is the default and will
     # otherwise be overwritten on initial load up
     observeEvent(input$map_y_eu, {
       r$map_y_int_studium <- input$map_y_eu
-    })
+    }, ignoreInit = TRUE)
 
     observeEvent(input$map_f_eu, {
-      r$map_f_int_studium <- input$map_f_eu
-    })
+      r$map_f_int_studium_e_u <- input$map_f_eu
+    }, ignoreInit = TRUE)
 
   })
 }

@@ -17,6 +17,7 @@ mod_international_schule_map_ui <- function(id){
     shinyWidgets::radioGroupButtons(
       inputId = ns("map_l_int_schule"),
       choices = c("TIMSS", "PISA"),
+      selected = "TIMSS",
       justified = TRUE#,
       # checkIcon = list(yes = icon("ok",
       #                             lib = "glyphicon"))
@@ -117,15 +118,15 @@ mod_international_schule_map_server <- function(id, r){
     # eu check should be after oecd check, since it is the default and will
     # otherwise be overwritten on initial load up
     observeEvent(input$map_y_timss_int_schule, {
-      r$map_y_int_schule<- input$map_y_timss_int_schule
+      r$map_y_int_schule_timss <- input$map_y_timss_int_schule
     })
 
     observeEvent(input$map_f_timss_int_schule, {
-      r$map_f_int_schule <- input$map_f_timss_int_schule
+      r$map_f_int_schule_timss <- input$map_f_timss_int_schule
     })
 
     observeEvent(input$map_li_timss_int_schule, {
-      r$map_li_int_schule <- input$map_li_timss_int_schule
+      r$map_li_int_schule_timss <- input$map_li_timss_int_schule
     })
 
 

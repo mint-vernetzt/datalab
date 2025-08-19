@@ -125,6 +125,15 @@ mod_studium_studienzahl_anteil_ui <- function(id){
                                    "Studierende im Lehramt" = "Studierende (Lehramt)",
                                    "Absolvent:innen im Lehramt" ="Absolvent:innen (Lehramt)"),
                      ),
+
+                     p("Darstellungsart:"),
+                     shinyWidgets::radioGroupButtons(
+                       inputId = ns("abs_zahlen_arbeitsmarkt_einstieg_vergleich123"),
+                       choices = c("In Prozent", "Anzahl"),
+                       justified = TRUE,
+                       checkIcon = list(yes = icon("ok",
+                                                   lib = "glyphicon"))
+                     ),
                      br(),
                      shinyBS::bsPopover(id="ih_studium_mint_6", title="",
                                         content = paste0("Der MINT-Anteil variiert zwischen den Studierendengruppen. MINT wird von internationalen Studierenden besonders oft belegt (47 % - 54 %). Dagegen belegt nur etwas weniger als ein viertel der Lehramstudierenden ein MINT-Fach als Hauptfach."),
@@ -162,9 +171,16 @@ mod_studium_studienzahl_anteil_server <- function(id, r){
       r$studium_anteil_i <- input$studium_anteil_i
     })
 
+    observeEvent(input$abs_zahlen_arbeitsmarkt_einstieg_vergleich123, {
+      r$abs_zahlen_arbeitsmarkt_einstieg_vergleich123 <- input$abs_zahlen_arbeitsmarkt_einstieg_vergleich123
+    })
+
     observeEvent(input$studium_anteil_i_balken, {
       r$studium_anteil_i_balken <- input$studium_anteil_i_balken
     })
+
+
+
 
   })
 }

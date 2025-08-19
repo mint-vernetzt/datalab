@@ -10,6 +10,7 @@ library(dplyr)
 
 # kbr
 pfad <- "C:/Users/kbr/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten"
+pfad <- "C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/"
 
 # Community Plattform Daten -----------------------------------------------
 ## Organisationen ----
@@ -137,9 +138,13 @@ cp_orgas <- rbind(cp_orgas, alle, ges, ges_area, ges_focus, ges_typ,
 #Speichern
 ausserschulisch_cp_organisationen <- cp_orgas
 
-  #setwd("C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/02_data/data/")
+  setwd("C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/02_data/data/")
   setwd("C:/Users/kbr/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/02_data/data/")
+
+
 save(ausserschulisch_cp_organisationen, file = "ausserschulisch_cp_organisationen.rda")
+
+#y?
 setwd("~/datalab2")
 
 ## Envir. aufräumen
@@ -335,8 +340,8 @@ cp_pros <- rbind(cp_pros, alle, ges, ges_area, ges_discipline,
 #Speichern
 ausserschulisch_cp_projekte <- cp_pros
 
-#setwd("C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/02_data/data/")
-setwd("C:/Users/kbr/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/02_data/data/")
+setwd("C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/02_data/data/")
+#setwd("C:/Users/kbr/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/02_data/data/")
 
 save(ausserschulisch_cp_projekte, file = "ausserschulisch_cp_projekte.rda")
 
@@ -475,8 +480,8 @@ cp_profile <- rbind(cp_profile, alle, ges, ges_area, ges_offer, ges_seeking,
 #Speichern
 ausserschulisch_cp_profile <- cp_profile
 
-#setwd("C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/02_data/data/")
-setwd("C:/Users/kbr/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/02_data/data/")
+setwd("C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/02_data/data/")
+#setwd("C:/Users/kbr/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/02_data/data/")
 save(ausserschulisch_cp_profile, file = "ausserschulisch_cp_profile.rda")
 setwd("~/datalab2")
 
@@ -485,6 +490,7 @@ all <- ls()
 keep <- c("pfad")
 delete <- setdiff(all, keep)
 rm(list=delete)
+
 
 
 # MINTvernetzt-Befragungen ------------------------------------------------

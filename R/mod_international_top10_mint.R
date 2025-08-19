@@ -135,7 +135,7 @@ mod_international_top10_mint_server <- function(id, r){
     })
 
     observeEvent(input$map_f_oecd_int_top10, {
-      r$map_f_m <- input$map_f_oecd_int_top10
+      r$map_f_m_oecd <- input$map_f_oecd_int_top10
 
     })
 
@@ -147,7 +147,7 @@ mod_international_top10_mint_server <- function(id, r){
     })
 
     observeEvent(input$map_f_eu_int_top10, {
-      r$map_f_m <- input$map_f_eu_int_top10
+      r$map_f_m_eu <- input$map_f_eu_int_top10
 
     })
 

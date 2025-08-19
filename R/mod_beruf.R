@@ -44,6 +44,7 @@ mod_beruf_server <- function(id,
   mod_beruf_arbeitsmarkt_einstieg_verlauf_gender_server("mod_beruf_arbeitsmarkt_einstieg_verlauf_gender_ui_1", r)
   mod_beruf_arbeitsmarkt_anforderungen_gender_server("mod_beruf_arbeitsmarkt_anforderungen_gender_ui_1", r)
   mod_beruf_arbeitsmarkt_top10_server("mod_beruf_arbeitsmarkt_top10_ui_1", r)
+  mod_beruf_arbeitsmarkt_anforderungen_frauen_server("mod_beruf_arbeitsmarkt_anforderungen_frauen_ui_1", r)
 
   # Box 4 regional
   mod_beruf_arbeitsmarkt_landkreis_map_server("mod_beruf_arbeitsmarkt_landkreis_map_ui_1", r)

@@ -129,15 +129,14 @@ mod_international_map_arb_gender_server <- function(id, r){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
-    # region change updates respective sub inputs, which will otherwise
-    # still be the last values.
+   # region change updates respective sub inputs, which will otherwise
+  #  still be the last values.
     observeEvent(input$map_l_arb_gender, {
       r$map_l_arb_gender <- input$map_l_arb_gender
       if (input$map_l_arb_gender == "EU") {
         r$map_y_arb_gender <- input$map_y_eu_arb_gender
         r$map_pers_arb_gender <- input$map_pers_eu_arb_gender
-      }
-      if (input$map_l_arb_gender == "OECD") {
+      } else if (input$map_l_arb_gender == "OECD") {
         r$map_pers_arb_gender <- input$map_pers_oecd_arb_gender
 
         if(input$map_pers_oecd_arb_gender %in% c("Anfänger*innen Ausbildung (ISCED 45)",
@@ -188,19 +187,15 @@ mod_international_map_arb_gender_server <- function(id, r){
     })
 
 
-
-
-
-
-    # eu check should be after oecd check, since it is the default and will
-    # otherwise be overwritten on initial load up
+#
+    # # otherwise be overwritten on initial load up
     observeEvent(input$map_y_eu_arb_gender, {
-      r$map_y_arb_gender <- input$map_y_eu_arb_gender
-    })
+       r$map_y_arb_gender_eu <- input$map_y_eu_arb_gender
+     })
 
     observeEvent(input$map_pers_eu_arb_gender, {
-      r$map_pers_arb_gender <- input$map_pers_eu_arb_gender
-    })
+       r$map_pers_arb_gender_eu <- input$map_pers_eu_arb_gender
+     })
 
 
   })

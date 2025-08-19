@@ -1,6 +1,6 @@
-library(DBI)
-library(dplyr)
-library(dbplyr)
+#library(DBI)
+#library(dplyr)
+#library(dbplyr)
 
 
 # Wer wählt MINT ----
@@ -21,6 +21,8 @@ kurse_einstieg_comparison <- function(r) {
   timerange <- r$date_kurse_einstieg_comparison
   regio <- r$region_kurse_einstieg_comparison
   betrachtung <- r$ansicht_kurse_einstieg_comparison
+  darstellet <- r$abs_zahlen_arbeitsmarkt_einstieg_vergleich_derff
+
 
     df_query <- glue::glue_sql("
     SELECT *
@@ -61,6 +63,8 @@ kurse_einstieg_comparison <- function(r) {
 
    #forcats, daher nicht in balkenbuilder
 
+  if (darstellet == "In Prozent"){
+
  out <-  highcharter::hchart(df1, 'bar', highcharter::hcaes(y = round(proportion,1), x = indikator, group = forcats::fct_rev(fachbereich))) %>%
     highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.fachbereich} <br> Anteil: {point.y} % <br> Anzahl: {point.wert}") %>%
     highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
@@ -89,7 +93,9 @@ kurse_einstieg_comparison <- function(r) {
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle:Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt';
+
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -99,10 +105,58 @@ kurse_einstieg_comparison <- function(r) {
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel)))))
+   }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel)    ))))
                                )
                              )
    )
+  } else {
+    df1$wert <- as.numeric(gsub("\\.", "", df1$wert))
+
+    out <-  highcharter::hchart(df1, 'bar', highcharter::hcaes(y = wert, x = indikator, group = forcats::fct_rev(fachbereich))) %>%
+      highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.fachbereich}<br>Anzahl: {point.wert}") %>%
+      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}")) %>%
+      highcharter::hc_xAxis(title = list(text = "")) %>%
+      highcharter::hc_colors(c("#efe8e6","#b16fab") ) %>%
+      highcharter::hc_title(text = paste0("Anteil von MINT-Belegungen in der Schule in ", regio, " (", timerange,")"),
+                            margin = 45,
+                            align = "center",
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
+      highcharter::hc_chart(
+        style = list(fontFamily = "Calibri Regular", fontSize = "14px")
+      ) %>%
+      highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+      highcharter::hc_caption(text = "Quellen: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+                              style = list(fontSize = "11px", color = "gray")) %>%
+      highcharter::hc_exporting(enabled = TRUE,
+                                buttons = list(
+                                  contextButton = list(
+                                    menuItems = list("downloadPNG", "downloadCSV",
+                                                     list(
+                                                       text = "Daten für GPT",
+                                                       onclick = htmlwidgets::JS(sprintf(
+                                                         "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle:Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt';
+
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel)    ))))
+                                  )
+                                )
+      )
+
+  }
 
  # titel <- paste0("Anteil von MINT-Belegungen an allen Belegungen in ", regio, " (", timerange,")")
  # tooltip <- "Fachbereich: {point.fachbereich} <br> Anteil: {point.y} % <br> Anzahl: {point.wert}"
@@ -473,6 +527,8 @@ kurse_waffle_mint <- function(r) {
   ebene <- r$ebene_kurse_mint
   indika <- r$indikator_kurse_mint
 
+  darster <- r$abs_zahlen_arbeitsmarkt_einstieg_vergleich_der446
+
   color_fach <- c(
     "Informatik" = "#00a87a",
     "Naturwissenschaften" = "#fcc433",
@@ -675,6 +731,8 @@ kurse_waffle_mint <- function(r) {
 
     titel <- paste0( "Anteil von ", indika, "-Belegungen nach Fächern in ", regio, " (", timerange, ")")
 
+
+    if ( darster == "In Prozent"){
      #nicht in bar wegen categories
     out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y = round(proportion,1), x = region)) %>%
       highcharter::hc_tooltip(pointFormat = "{point.fachbereich} <br> Anteil: {point.y} % <br> Anzahl: {point.wert}") %>%
@@ -707,7 +765,10 @@ kurse_waffle_mint <- function(r) {
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle:Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt';
+
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -717,10 +778,63 @@ kurse_waffle_mint <- function(r) {
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel)))))
+   }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel)    ))))
                                   )
                                 )
       )
+    } else {
+
+      df$wert <- as.numeric(gsub("\\.", "", df$wert))
+      #nicht in bar wegen categories
+      out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y = wert, x = region)) %>%
+        highcharter::hc_tooltip(pointFormat = "{point.fachbereich} <br> Anzahl: {point.wert}") %>%
+        highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value} e")) %>%
+        highcharter::hc_xAxis(title = list(text = ""), categories = c
+        ) %>%
+        highcharter::hc_plotOptions(bar = list(
+          colorByPoint = TRUE,
+          colors = as.character(color_fach)
+        )) %>%
+        highcharter::hc_title(text = titel,
+                              margin = 45,
+                              align = "center",
+                              style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
+        highcharter::hc_chart(
+          style = list(fontFamily = "Calibri Regular", fontSize = "14px")
+        ) %>%
+        highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+        highcharter::hc_caption(text = "Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+                                style = list(fontSize = "11px", color = "gray")) %>%
+        highcharter::hc_exporting(enabled = TRUE,
+                                  buttons = list(
+                                    contextButton = list(
+                                      menuItems = list("downloadPNG", "downloadCSV",
+                                                       list(
+                                                         text = "Daten für GPT",
+                                                         onclick = htmlwidgets::JS(sprintf(
+                                                           "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle:Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt';
+
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel)    ))))
+                                    )
+                                  )
+        )
+    }
   }
 
 
@@ -1120,6 +1234,8 @@ kurse_map <- function(r) {
 
     indikator_comparison <- r$indikator_comparison_bl
 
+    darst <- r$abs_zahlen_arbeitsmarkt_einstieg_vergleich_der4ld
+
     if(indikator_comparison=="Grundkurse") {
 
       subject <- r$subject_comparison_bl1
@@ -1176,6 +1292,13 @@ kurse_map <- function(r) {
     df <- df %>% dplyr::arrange(desc(proportion))
 
   titel <-  paste0( "Anteil von ", kurs_help, "belegungen in ", help_title, " nach Bundesländern (",  timerange, ")" )
+
+
+
+
+
+
+  if(darst == "In Prozent"){
   out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y = round(proportion,1), x = region)) %>%
     highcharter::hc_tooltip(pointFormat = "{point.fachbereich} <br> Anteil: {point.y} % <br> Anzahl: {point.wert}") %>%
     highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
@@ -1204,7 +1327,8 @@ kurse_map <- function(r) {
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Titel: %s\\n' + this.getCSV();
+
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -1214,11 +1338,60 @@ kurse_map <- function(r) {
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel)))))
+   }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel)    ))))
 
                                 )
       )
     )
+  } else {
+
+    df$wert <- as.numeric(gsub("\\.", "", df$wert))
+
+    out <-  highcharter::hchart(df, 'bar', highcharter::hcaes(y = wert, x = region)) %>%
+      highcharter::hc_tooltip(pointFormat = "{point.fachbereich} <br> Anzahl: {point.wert}") %>%
+      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}   ")) %>%
+      highcharter::hc_xAxis(title = list(text = "")) %>%
+      # highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
+      # highcharter::hc_colors(c("#efe8e6", "#b16fab")) %>%
+      highcharter::hc_colors("#b16fab") %>%
+      highcharter::hc_title(text = paste0( "Anteil von ", kurs_help, "belegungen in ", help_title, " nach Bundesländern (",  timerange, ")"
+      ),
+      margin = 20,
+      align = "center",
+      style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+      highcharter::hc_chart(
+        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+      ) %>%
+      highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+      highcharter::hc_exporting(enabled = TRUE,
+                                buttons = list(
+                                  contextButton = list(
+                                    menuItems = list("downloadPNG", "downloadCSV",
+                                                     list(
+                                                       text = "Daten für GPT",
+                                                       onclick = htmlwidgets::JS(sprintf(
+                                                         "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = 'Titel: %s\\n' + this.getCSV();
+
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel)    ))))
+
+                                  )
+                                )
+      )
+  }
 
     return(out)
 
@@ -2079,7 +2252,10 @@ kurse_comparison_gender <- function(r) {
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle:Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt';
+
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -2089,7 +2265,7 @@ kurse_comparison_gender <- function(r) {
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel)))))
+   }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel)   ))))
                                     )
                                   ))
 
@@ -2134,7 +2310,10 @@ kurse_comparison_gender <- function(r) {
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle:Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt';
+
+
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -2144,7 +2323,7 @@ kurse_comparison_gender <- function(r) {
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel)))))
+   }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel)    ))))
                                     )
                                   )
         )
@@ -2314,10 +2493,16 @@ kurse_wahl <- function(r) {
 
     df <- na.omit(df)
 
-    # Titel erstellen
-    titel_help <- indikator_gender
-    titel_help <-ifelse(grepl("Leistung", titel_help), "Leistungskursbelegungen", "Grundkursbelegungen")
-    titel_help <-ifelse(grepl("Ober", titel_help), "Oberstufenbelegungen", titel_help)
+    titel_help <- ifelse(
+      grepl("Oberstufen", indikator_gender),
+      "Oberstufenbelegungen",
+      ifelse(grepl("Leistung", indikator_gender), "Leistungskursbelegungen", "Grundkursbelegungen")
+    )
+
+
+
+
+
 
     if(vergleich == "Ja"){
 
@@ -2549,7 +2734,10 @@ iqb_standard_zeitverlauf <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle: Institut zur Qualitätsentwicklung im Bildungswesen, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt';
+
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -2559,7 +2747,7 @@ iqb_standard_zeitverlauf <- function(r){
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel)))))
+   }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel)    ))))
                                 )
                               )
     )
@@ -2759,8 +2947,9 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
      var date = new Date().toISOString().slice(0,10);
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle: Institut zur Qualitätsentwicklung im Bildungswesen, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt';
 
-     var data = this.getCSV();
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -2770,7 +2959,7 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel)))))
+   }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel)    ))))
                                    )
                                  )
        )
@@ -2814,7 +3003,10 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle: Institut zur Qualitätsentwicklung im Bildungswesen, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt';
+
+
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -2824,7 +3016,7 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel)))))
+   }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel)    ))))
                                     )
                                   )
         )
@@ -2871,7 +3063,13 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle: Institut zur Qualitätsentwicklung im Bildungswesen, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt';
+
+
+
+
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -2881,7 +3079,7 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel)))))
+   }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel)    ))))
                                     )
                                   )
         )
@@ -2923,7 +3121,10 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle: Institut zur Qualitätsentwicklung im Bildungswesen, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt';
+
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -2933,7 +3134,7 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel)))))
+   }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel)    ))))
                                       )
                                     )
           )
@@ -2973,7 +3174,11 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle: Institut zur Qualitätsentwicklung im Bildungswesen, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt';
+
+
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -2983,7 +3188,7 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel)))))
+   }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel)    ))))
                                         )
                                       )
             )
@@ -3022,7 +3227,10 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle: Institut zur Qualitätsentwicklung im Bildungswesen, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt';
+
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -3032,7 +3240,7 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel)))))
+   }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel)    ))))
                                         )
                                       )
             )
@@ -3131,7 +3339,12 @@ iqb_fragebogen <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+
+
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle: Institut zur Qualitätsentwicklung im Bildungswesen, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt';
+
+
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -3141,7 +3354,7 @@ iqb_fragebogen <- function(r){
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel)))))
+   }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel)    ))))
                                 )
                               )
     )

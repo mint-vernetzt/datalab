@@ -191,7 +191,7 @@ home_einstieg <- function(r) {
 
 
    title <- paste0("Anteil von MINT nach Bildungsbereichen in ", regio, " (", zeit,")")
-    
+
    #dies kann nicht als systemvariable übergeben werden also group
 
    out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y = prop, x = indikator, group = "fachbereich"))%>%
@@ -222,7 +222,10 @@ home_einstieg <- function(r) {
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle: Quellen: Statistisches Bundesamt, 2024; Bundesagentur für Arbeit, 2024; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt';
+
+
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -232,7 +235,7 @@ home_einstieg <- function(r) {
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel)))))
+   }", gsub("'", "\\\\'", titel), gsub("'", "\\\\'", titel)))))
                                  )
                                )
      )
@@ -410,7 +413,7 @@ home_einstieg_gender <- function(r) {
 
 
   if("Leistungskurse" %in% indi & regio == "Deutschland" |
-     betrachtung == "Gruppenvergleich - Balkendiagramm"){
+     betrachtung == "Gruppenvergleich - Balkendiagramm" & regio == "Deutschland"){
 
     #Baden-Würrtemberg rausrechnen, da dort keine Geschlechter erfasst werden
     query_df_alle_bw <- glue::glue_sql("
@@ -797,7 +800,11 @@ home_einstieg_gender <- function(r) {
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle: Quellen: Statistisches Bundesamt, 2024; Bundesagentur für Arbeit, 2024; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt';
+
+
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -807,7 +814,7 @@ home_einstieg_gender <- function(r) {
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel)))))
+   }", gsub("'", "\\\\'", title),gsub("'", "\\\\'", title)))))
                                     )
                                   )
         )
@@ -884,13 +891,17 @@ home_comparison_line <- function(r) {
 
 
     df_alle <- df_alle %>%
-      group_by(bereich, indikator, fachbereich, jahr) %>%
-      summarise(
+      dplyr::group_by(bereich, indikator, fachbereich, jahr) %>%
+      dplyr::reframe(
         wert = sum(wert, na.rm = TRUE),
         .groups = "drop"
       ) %>%
-      mutate(geschlecht = "Gesamt") %>%
-      select(bereich, indikator, fachbereich, geschlecht, jahr, wert)
+      # summarise(
+      #   wert = sum(wert, na.rm = TRUE),
+      #   .groups = "drop"
+      # ) %>%
+      dplyr::mutate(geschlecht = "Gesamt") %>%
+      dplyr::select(bereich, indikator, fachbereich, geschlecht, jahr, wert)
 
 
 

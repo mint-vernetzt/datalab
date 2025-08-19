@@ -45,7 +45,7 @@ mod_home_start_ui <- function(id){
 
     fluidRow(
       shinydashboard::box(
-        title = "Links zu den Themen dieser Seite",
+        title = "Themenübersicht",
         width = 7,
         p(style = "text-align: left; font-size = 22px",tags$a(href="#alle_mint",
                                                               span(tags$b(span("MINT-Anteil:")))),"ein Drittel MINT in Schule, Studium und Ausbildung, ein knappes Viertel im Beruf."

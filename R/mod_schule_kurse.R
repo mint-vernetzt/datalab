@@ -51,7 +51,7 @@ mod_schule_kurse_ui <- function(id){
 
     fluidRow(
       shinydashboard::box(
-        title = "Links zu den Themen dieser Seite",
+        title = "Themenübersicht",
         width = 7,
 
         p(style = "text-align: left; font-size = 16px",tags$a(href="#schule_mint",

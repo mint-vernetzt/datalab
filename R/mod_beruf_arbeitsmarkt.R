@@ -48,7 +48,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
 
       fluidRow(
         shinydashboard::box(
-          title = "Links zu den Themen dieser Seite",
+          title = "Themenübersicht",
           width = 7,
           p(style = "text-align: left; font-size = 16px",tags$a(href="#beruf_mint",
             span(tags$b(span("MINT-Anteil:")))),"Etwa ein Viertel arbeitet in MINT-Berufen."
@@ -369,7 +369,31 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                           trigger = "hover"),
                        tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_beruf_fach_4")
                      )
-            )
+            ),
+            tabPanel("Frauenanteil im MINT-Fächervergleich", br(),
+
+                     tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                                           .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                     shiny::sidebarPanel(
+                                         width = 3,
+                                         mod_beruf_arbeitsmarkt_anforderungen_frauen_ui("mod_beruf_arbeitsmarkt_anforderungen_frauen_ui_1"),
+
+                     ),
+                     shiny::mainPanel(
+                       width = 9,
+                       shinycssloaders::withSpinner(htmlOutput(ns("plot_arbeitsmarkt_faecher_anteil_frauen")),
+                                                    color = "#154194"),
+
+
+
+                       shinyBS::bsPopover(id = "h_beruf_mint_1_frauen", title = "",
+                                          content = paste0("Die Kategorisierung in MINT entspricht der Zuordnung durch die Bundesagentur für Arbeit. Beschäftigte werden nur als MINT klassifiziert, wenn sie einer so definierten MINT-Tätigkeit nachgehen. Der akademische Hintergrund, z. B. ein Studium in einem MINT-Fach, ist nicht ausschlaggebend. Weitere Infos dazu unter &quotDatenquellen und Hinweise&quot", "<br> <br> Durch Rundung der berechneten Werte kann es zu minimalen Abweichungen zwischen den Grafiken kommen."),
+                                          placement = "top",
+                                          trigger = "hover"),
+                       tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_beruf_mint_1_frauen")
+                     )
+            ),
+
             # ,
             # tabPanel("Frauenanteil in MINT-Fächern", br(),
             #
@@ -558,6 +582,12 @@ mod_beruf_arbeitsmarkt_server <- function(id, r){
     output$plot_arbeitsmarkt_faecher_anteil <- renderUI({
       arbeitsmarkt_faecher_anteil(r)
     })
+
+    ##
+    output$plot_arbeitsmarkt_faecher_anteil_frauen <- renderUI({
+      arbeitsmarkt_faecher_anteil_frauen(r)
+    })
+
 
     output$plot_einstieg_verlauf <- renderUI({
       plot_list <- beruf_verlauf_single(r)
