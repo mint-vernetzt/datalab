@@ -14,7 +14,7 @@ mod_international_map_arb_ui <- function(id) {
     p("Region:"),
     shinyWidgets::pickerInput(
       inputId = ns("map_l_arb"),
-      choices = c("Europa" = "EU", "OECD"),
+      choices = c("Europa" = "EU"),#, "OECD"
       selected = "Europa",
       multiple = FALSE#,
     ),

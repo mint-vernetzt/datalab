@@ -235,7 +235,7 @@ international_ui_faecher <- function(region = "EU") {
     #   unique() %>%
     #   sort()
     df_query <- glue::glue_sql("
-  SELECT DISTINCT land, fachbereich,
+  SELECT DISTINCT fachbereich,
   FROM arbeitsmarkt_anfaenger_absolv_oecd
   WHERE geschlecht = 'Gesamt'
   AND variable IN ('Anteil Absolvent*innen nach Fach an allen Fächern', 'Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern')
@@ -244,10 +244,10 @@ international_ui_faecher <- function(region = "EU") {
 
     selection <- DBI::dbGetQuery(con, df_query)
 
-    # selection <- selection %>%
-    #   dplyr::pull(fachbereich) %>%
-    #   unique() %>%
-    #   sort()
+    selection <- selection %>%
+      dplyr::pull(fachbereich) %>%
+      unique() %>%
+      sort()
 
       }
 
@@ -2210,6 +2210,7 @@ if(prop==FALSE && wert == FALSE){
 
 }
   else if(wert==TRUE){
+
 
   out <- highcharter::hcmap(
     map = map,
