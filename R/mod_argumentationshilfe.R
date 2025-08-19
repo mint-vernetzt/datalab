@@ -71,9 +71,12 @@ mod_argumentation_ui <- function(id){
             p(style = "margin-left: 20px;", "3. Er hilft, Daten grundlegend zu interpretieren"),
             br(),
             p("Der MINT-DataLab-GPT kann bei der Interpretation aller Daten im MINT-DataLab assistieren."),
-            p("Auf dieser Seite finden Sie eine Anleitung, wie Sie mit dem MINT-DataLab-GPT einen MINT-Bericht erstellen können.
-            einen Beispielbericht für Hamburg, wie er durch die KI erstellt werden kann, und eine Rubrik,
-              in der wir häufig gestellte Fragen beantworten."),
+
+            p("Auf dieser Seite finden Sie eine Anleitung, wie Sie mit dem MINT-DataLab-GPT einen MINT-Bericht erstellen können.", br(),
+            "Häufig gestellte Fragen beantworten wir weiter unten auf der Seite. ", tags$a(href = "#faq",
+                                                                       style = "color: #000000; text-decoration: underline;",
+                                                                       "→ zu den FAQs")),
+
             p("Beachten Sie bitte auch die Nutzungshinweise am Ende der Seite."), #Für die Nutzung des GPT benötigen Sie ein (kostenfreies) OpenAI-Konto.
 
             ),
@@ -529,13 +532,20 @@ mod_argumentation_ui <- function(id){
   function blobFromCanvas(canvas, type, quality){
     return new Promise(function(resolve){ canvas.toBlob(function(b){ resolve(b); }, type || 'image/png', quality || 1.0); });
   }
-  function filenameFromChart(chart, idx){
-    try {
-      var t = chart && chart.title && chart.title.textStr ? chart.title.textStr : null;
-      if (t) return t.trim().replace(/\\s+/g,'_') + '.png';
-    } catch(e){}
-    return 'chart_' + (idx+1) + '.png';
+
+    function sanitize(name){
+  return name
+    .replace(/[\\/:*?'<>|]+/g, '_')   // : und andere unzulässige Zeichen
+                         .replace(/_+/g, '_')
+                         .replace(/^_+|_+$/g, '');
   }
+
+  function filenameFromChart(chart, idx){
+    var t = chart && chart.title && chart.title.textStr ? chart.title.textStr : null;
+    var base = t ? sanitize(t) : ('chart' + (idx+1));
+    return base + '.png';
+  }
+
   function filenameFromWrapper(chart, idx){
     try {
       var wrap = chart.renderTo && chart.renderTo.closest ? chart.renderTo.closest('.dl-chart') : null;
@@ -575,8 +585,22 @@ mod_argumentation_ui <- function(id){
     if (!btn) return;
 
     // Alle Highcharts-Instanzen einsammeln
-    var charts = (window.Highcharts && Highcharts.charts) ? Highcharts.charts.filter(function(c){ return !!c; }) : [];
+   var charts = (window.Highcharts && Highcharts.charts ? Highcharts.charts : [])
+  .filter(function(c){
+    return c && c.renderTo && c.renderTo.offsetParent; // sichtbar im DOM
+  });
+
+    // gegen Doppelte absichern
+    var seen = new Set();
+    charts = charts.filter(function(c){
+      var key = c.renderTo;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+
     if (!charts.length){ alert('Keine Highcharts-Instanzen gefunden.'); return; }
+
 
     // Hinweis: Charts müssen sichtbar gerendert sein (kein versteckter Tab)
     var old = btn.innerText; btn.disabled = true; btn.innerText = 'Erzeuge ZIP...';
@@ -616,7 +640,7 @@ mod_argumentation_ui <- function(id){
   column(
     id = "daten_grafiken",
     width = 12,
-    hr(style = "border-top: 2px solid #ee7775; margin-top: 20px;"),
+    hr(style = "border-top: 2px solid #154194; margin-top: 20px;"),
 
     h2("Die Datengrundlage Ihres MINT-Berichts als Grafiken", #So geht der MINT-DataLab-GPT bei der Analyse vor
        style= "margin-bottom: 30px; margin-top: 40px;"),
@@ -624,7 +648,7 @@ mod_argumentation_ui <- function(id){
     column(
       style = "margin-bottom: 40px;",
       width = 8,
-      p("Im Folgenden finden Sie die Daten, die sie dem MINT-DataLab-GPT eingespeist haben,
+      p("Im Folgenden finden Sie die Daten, die Sie dem MINT-DataLab-GPT eingespeist haben,
         als Grafiken dargestellt. Diese können Sie herunterladen und Ihrem Bericht hinzufügen.", br(),
         "Wir erläutern an dieser Stelle jedoch auch, wie die KI die Daten interpretiert –
         und bieten Ihnen so die Möglichkeit, die Ergebnisse kontrollieren zu können.", br(),
@@ -636,9 +660,9 @@ mod_argumentation_ui <- function(id){
       p("Hilfestellung für die weiteren Schritte:"),
       p(stlye="margin-left: 20px;",
         "→ Die Download-Option für alle Grafiken des MINT-DataLab finden Sie rechts oben an den Grafiken.", br(),
-        "→ Die ", tags$span("blauen Boxen", style = "color: #154194;"),
-        " rechts neben den Grafiken geben Impulse, welche weiteren
-           Statistiken in einem MINT-Bericht ergänzt werden könnten.", br(),
+        # "→ Die ", tags$span("blauen Boxen", style = "color: #154194;"),
+        # " rechts neben den Grafiken geben Impulse, welche weiteren
+        #    Statistiken in einem MINT-Bericht ergänzt werden könnten.", br(),
 
         "→ Die ", tags$span("grünen Boxen", style = "color: #00a87a;"),
         "unter den Grafiken zeigen beispielhaft, wie man anhand
@@ -689,20 +713,20 @@ mod_argumentation_ui <- function(id){
                     tags$a(paste0("Interpretationshilfe"), icon("info-circle"), id = "i_argument_1")
                    )
                  ),
-                 column(
-                   width = 3,
-                   div(class = "content-box",
-                       style = "background-color: #15419430;
-                              color: #154194;
-                              border: 2px solid #154194;
-                              margin-left: 20px;
-                              width: 90%;
-                              border-radius: 10px;",
-                              p("Weitere Statistiken, die hier ergänzt werden könnten:"),
-                              p("MINT-Anteil:  \"Alle Bildungsbereiche\", aktueller MINT-Anteil + MINT-Anteil im Zeitverlauf"),
-                              p("Bundeslandvergleich: \"Ausbildung & Beruf\", aktueller MINT-Anteil + Bundeslandvergleich")
-                   )
-                 ),
+                 # column(
+                 #   width = 3,
+                 #   div(class = "content-box",
+                 #       style = "background-color: #15419430;
+                 #              color: #154194;
+                 #              border: 2px solid #154194;
+                 #              margin-left: 20px;
+                 #              width: 90%;
+                 #              border-radius: 10px;",
+                 #              p("Weitere Statistiken, die hier ergänzt werden könnten:"),
+                 #              p("MINT-Anteil:  \"Alle Bildungsbereiche\", aktueller MINT-Anteil + MINT-Anteil im Zeitverlauf"),
+                 #              p("Bundeslandvergleich: \"Ausbildung & Beruf\", aktueller MINT-Anteil + Bundeslandvergleich")
+                 #   )
+                 # ),
                column(
                  width = 12,
 
@@ -797,22 +821,22 @@ mod_argumentation_ui <- function(id){
             tags$a(paste0("Interpretationshilfe"), icon("info-circle"), id = "i_argument_2")
           )
         ),
-        column(
-          width = 3,
-          div(class = "content-box",
-              style = "background-color: #15419430;
-                              color: #154194;
-                              border: 2px solid #154194;
-                              margin-left: 20px;
-                              width: 90%;
-                              border-radius: 10px;",
-              p("Weitere Statistiken, die hier ergänzt werden könnten:"),
-              p("Fachkräfte-Engpass nach MINT-Disziplin: \"Fokusseite MINT-Fachkräfte\",
-                unter \"Berufsgruppen: aktueller Fachkräftebedarf in MINT\", Fachkräfteengpass der Bundesländer"),
-              p("Anteil und Entwicklung der MINT-Disziplinen: \"Ausbildung & Beruf\", unter M-I-N-T, aktueller Anteil MINT-Disziplinen")
-
-          )
-        ),
+        # column(
+        #   width = 3,
+        #   div(class = "content-box",
+        #       style = "background-color: #15419430;
+        #                       color: #154194;
+        #                       border: 2px solid #154194;
+        #                       margin-left: 20px;
+        #                       width: 90%;
+        #                       border-radius: 10px;",
+        #       p("Weitere Statistiken, die hier ergänzt werden könnten:"),
+        #       p("Fachkräfte-Engpass nach MINT-Disziplin: \"Fokusseite MINT-Fachkräfte\",
+        #         unter \"Berufsgruppen: aktueller Fachkräftebedarf in MINT\", Fachkräfteengpass der Bundesländer"),
+        #       p("Anteil und Entwicklung der MINT-Disziplinen: \"Ausbildung & Beruf\", unter M-I-N-T, aktueller Anteil MINT-Disziplinen")
+        #
+        #   )
+        # ),
         column(
           width = 12,
           column(
@@ -890,20 +914,20 @@ mod_argumentation_ui <- function(id){
             tags$a(paste0("Interpretationshilfe"), icon("info-circle"), id = "i_argument_3")
           )
         ),
-        column(
-          width = 3,
-          div(class = "content-box",
-              style = "background-color: #15419430;
-                              color: #154194;
-                              border: 2px solid #154194;
-                              margin-left: 20px;
-                              width: 90%;
-                              border-radius: 10px;",
-              p("Weitere Statistiken, die hier ergänzt werden könnten:"),
-              p("MINT-Anteil nach Gruppen: \"Ausbildung & Beruf\", aktueller MINT-Anteil + Gruppenvergleich – Balkendiagramm, Auswahl unter Berufsgruppen treffen"),
-
-          )
-        ),
+        # column(
+        #   width = 3,
+        #   div(class = "content-box",
+        #       style = "background-color: #15419430;
+        #                       color: #154194;
+        #                       border: 2px solid #154194;
+        #                       margin-left: 20px;
+        #                       width: 90%;
+        #                       border-radius: 10px;",
+        #       p("Weitere Statistiken, die hier ergänzt werden könnten:"),
+        #       p("MINT-Anteil nach Gruppen: \"Ausbildung & Beruf\", aktueller MINT-Anteil + Gruppenvergleich – Balkendiagramm, Auswahl unter Berufsgruppen treffen"),
+        #
+        #   )
+        # ),
         column(
           width = 12,
           column(
@@ -957,20 +981,20 @@ mod_argumentation_ui <- function(id){
             tags$a(paste0("Interpretationshilfe"), icon("info-circle"), id = "h_argument_41")
           )
         ),
-        column(
-          width = 3,
-            div(class = "content-box",
-                style = "background-color: #15419430;
-                              color: #154194;
-                              border: 2px solid #154194;
-                              margin-left: 20px;
-                              width: 90%;
-                              border-radius: 10px;",
-                p("Weitere Statistiken, die hier ergänzt werden könnten:"),
-                p("Getrennte Betrachtung von Studierenden und Auszubildenden: \"Ausbildung & Beruf\" bzw. \"Studium\",
-                  M-I-N-T, Anteil MINT-Fächer im Zeitverlauf"),
-            )
-        ),
+        # column(
+        #   width = 3,
+        #     div(class = "content-box",
+        #         style = "background-color: #15419430;
+        #                       color: #154194;
+        #                       border: 2px solid #154194;
+        #                       margin-left: 20px;
+        #                       width: 90%;
+        #                       border-radius: 10px;",
+        #         p("Weitere Statistiken, die hier ergänzt werden könnten:"),
+        #         p("Getrennte Betrachtung von Studierenden und Auszubildenden: \"Ausbildung & Beruf\" bzw. \"Studium\",
+        #           M-I-N-T, Anteil MINT-Fächer im Zeitverlauf"),
+        #     )
+        # ),
         column(
           width = 12,
           column(
@@ -1065,19 +1089,19 @@ mod_argumentation_ui <- function(id){
             tags$a(paste0("Interpretationshilfe"), icon("info-circle"), id = "i_argument_5")
           )
         ),
-        column(
-          width = 3,
-          div(class = "content-box",
-              style = "background-color: #15419430;
-                              color: #154194;
-                              border: 2px solid #154194;
-                              margin-left: 20px;
-                              width: 90%;
-                              border-radius: 10px;",
-              p("Weitere Statistiken, die hier ergänzt werden könnten:"),
-              p("Alle Ergebnisse der Zukunftsszenarien für MINT-Fachkräfte: “Fokusseite MINT-Fachkräfte“ Zukunftsszenarien + Wirkhebel"),
-          )
-        ),
+        # column(
+        #   width = 3,
+        #   div(class = "content-box",
+        #       style = "background-color: #15419430;
+        #                       color: #154194;
+        #                       border: 2px solid #154194;
+        #                       margin-left: 20px;
+        #                       width: 90%;
+        #                       border-radius: 10px;",
+        #       p("Weitere Statistiken, die hier ergänzt werden könnten:"),
+        #       p("Alle Ergebnisse der Zukunftsszenarien für MINT-Fachkräfte: “Fokusseite MINT-Fachkräfte“ Zukunftsszenarien + Wirkhebel"),
+        #   )
+        # ),
         column(
           width = 12,
           column(
@@ -1121,12 +1145,12 @@ mod_argumentation_ui <- function(id){
 
     ## FAQ  ----
 
-    hr(style = "border-top: 2px solid #154194; margin-top: 5px; margin-bottom: 5px;"),
+    hr(style = "border-top: 2px solid #154194; margin-top: 30px; margin-bottom: 5px;"),
 
 
 
     br(),
-    fluidRow(id = "faq_nutzungshinweis",
+    fluidRow(id = "faq",
       column(
         width = 9,
         # h3("Fragen und Antworten"),
@@ -1309,7 +1333,15 @@ mod_argumentation_server <- function(id){
     })
 
     output$plot_argument_fachkraft <- renderUI({
-      argument_fachkraft(r)
+
+      plots <- argument_fachkraft(r)
+
+        div(
+          style = "width: 1000px;",
+          plots
+          )
+
+
     })
 
     output$plot_argument_demografie <- renderUI({

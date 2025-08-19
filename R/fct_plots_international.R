@@ -176,7 +176,6 @@ plot_international_map <- function(r) {
 
     # df <- dplyr::tbl(con, from = "studierende_absolventen_weltweit") %>%
 
-    browser()
 
     df_query <- glue::glue_sql("
     SELECT *
