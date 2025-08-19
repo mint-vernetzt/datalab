@@ -2146,7 +2146,8 @@ if(prop==FALSE && wert == FALSE){
                               )
     )
 
-} else if(prop == TRUE && landkarten == FALSE){
+}
+  else if(prop == TRUE && landkarten == FALSE){
   out<- highcharter::hcmap(
     "countries/de/de-all",
     data = df,
@@ -2207,7 +2208,8 @@ if(prop==FALSE && wert == FALSE){
                               )
     )
 
-} else if(wert==TRUE){
+}
+  else if(wert==TRUE){
 
   out <- highcharter::hcmap(
     map = map,

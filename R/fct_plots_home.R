@@ -413,7 +413,7 @@ home_einstieg_gender <- function(r) {
 
 
   if("Leistungskurse" %in% indi & regio == "Deutschland" |
-     betrachtung == "Gruppenvergleich - Balkendiagramm"){
+     betrachtung == "Gruppenvergleich - Balkendiagramm" & regio == "Deutschland"){
 
     #Baden-Würrtemberg rausrechnen, da dort keine Geschlechter erfasst werden
     query_df_alle_bw <- glue::glue_sql("
@@ -431,9 +431,9 @@ home_einstieg_gender <- function(r) {
 
     df_alle_schule <- df_alle[df_alle$bereich == "Schule",] %>%
       dplyr::left_join(df_alle_bw, by = c("bereich", "indikator", "fachbereich", "geschlecht")) %>%
-      dplyr::mutate(wert.y = wert.y - wert.x) %>%
-      dplyr::select(-wert.x) %>%
-      dplyr::rename(wert = wert.y)
+      dplyr::mutate(wert.x = wert.x - wert.y) %>%
+      dplyr::select(-wert.y) %>%
+      dplyr::rename(wert = wert.x)
 
     df_alle <- df_alle %>%
       dplyr::filter(bereich != "Schule") %>%

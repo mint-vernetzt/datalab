@@ -48,7 +48,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
 
       fluidRow(
         shinydashboard::box(
-          title = "Links zu den Themen dieser Seite",
+          title = "Themenübersicht",
           width = 7,
           p(style = "text-align: left; font-size = 16px",tags$a(href="#beruf_mint",
             span(tags$b(span("MINT-Anteil:")))),"Etwa ein Viertel arbeitet in MINT-Berufen."
@@ -370,11 +370,11 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                        tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_beruf_fach_4")
                      )
             ),
-            tabPanel("Frauenanteil in den MINT-Disziplinen", br(),
+            tabPanel("Frauenanteil im MINT-Fächervergleich", br(),
 
                      tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
                                            .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-                     shiny::sidebarPanel(#############
+                     shiny::sidebarPanel(
                                          width = 3,
                                          mod_beruf_arbeitsmarkt_anforderungen_frauen_ui("mod_beruf_arbeitsmarkt_anforderungen_frauen_ui_1"),
 

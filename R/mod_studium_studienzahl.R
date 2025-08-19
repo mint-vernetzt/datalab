@@ -50,7 +50,7 @@ mod_studium_studienzahl_ui <- function(id){
 
     fluidRow(
       shinydashboard::box(
-        title = "Links zu den Themen dieser Seite",
+        title = "Themenübersicht",
         width = 7,
         p(
           style = "text-align: left; font-size = 16px",tags$a(href="#studium_mint",
@@ -372,7 +372,7 @@ mod_studium_studienzahl_ui <- function(id){
                              tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_studium_fach_1"))
                   ),
                   #neu
-                  tabPanel("Anteil von Frauen an MINT-Fächern", br(),
+                  tabPanel("Frauenanteil im MINT-Fächervergleich", br(),
 
                            tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
                              .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),

@@ -27,7 +27,7 @@ mod_home_start_ui <- function(id){
 
     fluidRow(
       shinydashboard::box(
-       # title = "Auf dieser Seite",
+        title = "Auf dieser Seite",
         width = 7,
         p(
            "Auf dieser Überblickseite geben wir einen ersten Einblick in die vorhandenen Daten und vergleichen die
@@ -45,7 +45,7 @@ mod_home_start_ui <- function(id){
 
     fluidRow(
       shinydashboard::box(
-        title = "Auf dieser Seite",
+        title = "Themenübersicht",
         width = 7,
         p(style = "text-align: left; font-size = 22px",tags$a(href="#alle_mint",
                                                               span(tags$b(span("MINT-Anteil:")))),"ein Drittel MINT in Schule, Studium und Ausbildung, ein knappes Viertel im Beruf."

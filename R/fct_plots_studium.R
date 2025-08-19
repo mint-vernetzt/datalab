@@ -179,7 +179,7 @@ studienzahl_mint <- function(r){
                             paste0("MINT-Anteil in verschiedenen Studierenden-Gruppen in ", regio, " (", testy1, ")"))
 
            df <- df %>%
-             filter(fach != "Alle Nicht MINT-Fächer")
+             dplyr::filter(fach != "Alle Nicht MINT-Fächer")
 
            highcharter::hchart(df, 'bar', highcharter::hcaes(y = wert_ges, x = indikator, group =forcats::fct_rev(fach)))%>%
              highcharter::hc_tooltip(pointFormat = "Anteil: {point.display_rel} % <br> Anzahl: {point.wert}") %>%
@@ -4089,7 +4089,7 @@ plot_mint_faecher_frauen <- function(r){
   )
 
   # filter dataset based on UI inputs
-  if(ebene == "MINT"){
+  if(ebene == "MINT-Fächergruppen"){
 
     if (length(label_w) == 0) {
       stop("Fehler: label_w ist leer und verursacht eine ungültige SQL-Abfrage.")
@@ -4164,7 +4164,7 @@ plot_mint_faecher_frauen <- function(r){
         AND geschlecht = 'Gesamt'
         AND indikator IN ({label_w*})
         AND region = {regio}
-        AND fachbereich = 'Gesamt'
+        AND ((mint_select = 'MINT' AND typ = 'Aggregat') OR fachbereich = 'Nicht MINT')
                                ", .con = con)
 
     alle <- DBI::dbGetQuery(con, df_query)
@@ -4182,7 +4182,7 @@ plot_mint_faecher_frauen <- function(r){
 
 
 
-  if(ebene == "MINT"){
+  if(ebene == "MINT-Fächergruppen"){
 
   df <- df %>%
     # dplyr::anti_join(df, alle, by = c("region", "jahr", "bereich", "indikator", "mint_select", "typ", "fachbereich", "fach")) %>%
@@ -4202,11 +4202,13 @@ plot_mint_faecher_frauen <- function(r){
 
     df <- df %>%
       dplyr::left_join(alle,
-                       by = c("region", "jahr", "bereich", "indikator")) %>%
+                       by = c("region", "jahr", "bereich", "indikator", "fach", "fachbereich",
+                              "typ", "mint_select")) %>%
       dplyr::rename(
         wert = wert.x,
         wert_ges = wert.y
       ) %>%
+      dplyr::select(-geschlecht.x, -geschlecht.y) %>%
       dplyr::mutate(prop = round(wert / wert_ges * 100, 1))
 
   }
@@ -4230,9 +4232,9 @@ plot_mint_faecher_frauen <- function(r){
 
   df <- df[with(df, order(prop, decreasing = FALSE)), ]
 
-  if(ebene == "Übersicht"){
+  if(ebene == "MINT-Fachbereiche"){
     df <- df %>%
-      dplyr::mutate(color = color_fachbereich[fach.x])
+      dplyr::mutate(color = color_fachbereich[fach])
   }else{
     df <- df %>%
       dplyr::mutate(color = color_fach_pie[fach])
@@ -4241,25 +4243,25 @@ plot_mint_faecher_frauen <- function(r){
 
     df <- df[with(df, order(prop, decreasing = TRUE)), ]
 
-    if(ebene == "Übersicht"){
+    if(ebene == "MINT-Fachbereiche"){
       df <- df %>%
-        dplyr::mutate(color = color_fachbereich[fach.x])
+        dplyr::mutate(color = color_fachbereich[fach])
       col <- df$color
       titel <- ifelse(regio == "Saarland",
-                      paste0( "Anteil der ", labelll, " an Nicht-MINT-Fächern im ",regio," (", timerange, ")"),
-                      paste0( "Anteil der ", label_w, " an Nicht-MINT-Fächern im ",regio," (", timerange, ")"))
+                      paste0( "Anteil der weiblichen ", label_w, " nach Fachbereich ",regio," (", timerange, ")"),
+                      paste0( "Anteil der weiblichen ", label_w, " nach Fachbereich im ",regio," (", timerange, ")"))
     }else{
       df <- df %>%
         dplyr::mutate(color = color_fach_balken[fach])
       col <- df$color
       titel <- ifelse(regio == "Saarland",
-                      paste0( "Anteil der ", labelll, " an allen MINT-Fächern im ",regio," (", timerange, ")"),
-                      paste0( "Anteil der ", labelll, " an allen MINT-Fächern im ",regio," (", timerange, ")"))
+                      paste0( "Anteil der weiblichen ", label_w, " in allen MINT-Fächergruppen im ",regio," (", timerange, ")"),
+                      paste0( "Anteil der weiblichen ", label_w, " in allen MINT-Fächergruppen im ",regio," (", timerange, ")"))
 
     }
 
 
-    if (ebene == "MINT"){
+    if (ebene == "MINT-Fächergruppen"){
     out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y=prop, x= fach))%>%
       highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}") %>% #Inhalt für Hover-Box
       highcharter::hc_yAxis(title = list(text=""), labels = list(format = "{value}%")) %>% #x-Achse -->Werte in %
@@ -4302,7 +4304,7 @@ plot_mint_faecher_frauen <- function(r){
       )
 
     } else {
-      out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y=prop, x= fach.x))%>%
+      out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y=prop, x= fach))%>%
         highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}") %>% #Inhalt für Hover-Box
         highcharter::hc_yAxis(title = list(text=""), labels = list(format = "{value}%")) %>% #x-Achse -->Werte in %
         highcharter::hc_xAxis(title= list(text="")

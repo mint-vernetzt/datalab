@@ -1092,7 +1092,7 @@ arbeitsmarkt_faecher_anteil <- function(r) {
       AND bundesland = {regio}
       AND geschlecht = 'Gesamt'
       AND anforderung = 'Gesamt'
-      AND fachbereich IN ('Mathematik', 'Naturwissenschaften', 'Informatik', 'Technik (gesamt)')
+      AND fachbereich IN ('Mathematik, Naturwissenschaften', 'Informatik', 'Technik (gesamt)')
       AND indikator IN ({indikator_choice*})
                                ", .con = con)
 
@@ -3092,7 +3092,7 @@ titel <- paste0("Am häufigsten gewählte MINT-Ausbildungsberufe von weiblichen 
 
 
 
-
+### Tab 5 ----
 
 #' A function to plot a waffle chart
 #'
@@ -3163,7 +3163,7 @@ arbeitsmarkt_faecher_anteil_frauen <- function(r) {
     AND anforderung = 'Gesamt'
     AND geschlecht = 'Gesamt'
     AND bundesland = {regio}
-    AND fachbereich = 'Alle'
+    AND fachbereich IN ('Alle', 'MINT', 'Mathematik, Naturwissenschaften', 'Informatik', 'Technik (gesamt)')
                                ", .con = con)
 
       df_alle <- DBI::dbGetQuery(con, df_query)
@@ -3173,12 +3173,18 @@ arbeitsmarkt_faecher_anteil_frauen <- function(r) {
       df_alle <- df_alle %>%
         dplyr::select(`bundesland`, `jahr`, `geschlecht`, `indikator`, `fachbereich`, `wert`)
 
+      df_andere <- df_alle %>% dplyr::filter(fachbereich=="Alle")
+      df_mint <- df_alle %>% dplyr::filter(fachbereich=="MINT")
+      df_andere$wert <- df_andere$wert - df_mint$wert
+      df_andere$fachbereich[df_andere$fachbereich == "Alle"]<-"Alle Berufsfelder außer MINT"
+      df_alle <- rbind(df_alle, df_andere)
+      df_alle <- df_alle %>% dplyr::filter(fachbereich != "Alle")
 
       df <- df %>%
         dplyr::left_join(df_alle,
-                         dplyr::join_by("bundesland", "jahr", "indikator")) %>%
-        dplyr::select(-fachbereich.y) %>%
-        dplyr::rename(fachbereich = fachbereich.x,
+                         dplyr::join_by("bundesland", "jahr", "indikator", "fachbereich")) %>%
+      #  dplyr::select(-fachbereich.y) %>%
+        dplyr::rename(
                       wert = wert.x,
                       wert_ges = wert.y) %>%
         dplyr::mutate(prop = round(wert/wert_ges * 100,1))

@@ -416,7 +416,7 @@ plot_international_map <- function(r) {
 
 
 plot_international_map_fem <- function(r){
-
+browser()
   # region ui input laden
   label_m <- r$map_l_f
 
@@ -457,9 +457,9 @@ plot_international_map_fem <- function(r){
 
       df1 <- df1 %>%
         tidyr::pivot_wider(values_from = wert, names_from = geschlecht)%>%
-        dplyr::select(-Männer, - Gesamt)%>%
+        dplyr::select(-Männer, -Gesamt)%>%
         dplyr::rename(wert = Frauen)%>%
-        dplyr::mutate(across(wert, ~ round(.,1)))%>%
+        dplyr::mutate(dplyr::across(wert, ~ round(.,1)))%>%
         dplyr::filter( fach == fach_m&
                          jahr == timerange)
 
