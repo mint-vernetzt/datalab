@@ -119,7 +119,7 @@ mod_argumentation_ui <- function(id){
                         href = "https://chatgpt.com/g/g-67e4f41fd91881919a753f4309194bf7-test-mint-datalab-assistent-test",
                         target = "_blank",
                         tags$img(
-                          src = "www/Bild_MINT-DataLab-GPT.png",
+                          src = "www/gpt.png",
                           alt = "MINT-DataLab-GPT Symbolbild",
                           style = "max-width: 30%; height: auto; cursor: pointer;
                           margin: 10px 0px 0px 70px; border-radius: 10px;"
