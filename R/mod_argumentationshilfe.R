@@ -111,7 +111,7 @@ mod_argumentation_ui <- function(id){
                         href = "https://chatgpt.com/g/g-67e4f41fd91881919a753f4309194bf7-test-mint-datalab-assistent-test",
                         target = "_blank",
                         tags$img(
-                          src = "www/Bild_MINT-DataLab-GPT.png",
+                          src = "www/gpt.png",
                           alt = "MINT-DataLab-GPT Symbolbild",
                           style = "max-width: 30%; height: auto; cursor: pointer;
                           margin: 10px 0px 0px 70px; border-radius: 10px;"
@@ -445,7 +445,7 @@ mod_argumentation_ui <- function(id){
           style = "flex: 1; margin-bottom: 15px;",
           fluidRow(
             p(strong(style = "text-align: justify; font-size: 18px; margin-bottom: 15px; margin-left: 15px;",
-                     "3. Wechseln Sie zum MINT-DataLab GPT und folgen den Anweisungen")),
+                     "3. Wechseln Sie zum MINT-DataLab GPT und folgen den Anweisungen.")),
             column(
               width = 6,  # Text in der linken Spalte
 
@@ -496,7 +496,7 @@ mod_argumentation_ui <- function(id){
           style = "flex: 1; margin-bottom: 15px;",
           fluidRow(
             p(strong(style = "text-align: justify; font-size: 18px; margin-left: 15px;",
-                     "4. Ergänzen Sie den KI-Bericht zur Veranschaulichung mit Grafiken")),
+                     "4. Ergänzen Sie den KI-Bericht zur Veranschaulichung mit Grafiken.")),
             column(
               width = 6,
               p(style = "font-size : 15px;",
