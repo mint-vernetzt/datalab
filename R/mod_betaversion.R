@@ -79,7 +79,7 @@ mod_betaversion_ui <- function(id){
           br(),
          tags$b(span("Mehr inhaltliche Dimensionen:")),
           "Zu den Anteilen von MINT und Frauen in MINT sind Daten von internationalen Studierenden und Arbeitskräften, Kompetenzdaten von Schüler:innen sowie erste Arbeitsmarkt-Daten für verschiedenen Altersgruppen hinzugekommen.
-         Wir wollen hier noch weiter ausbauen und z. B. Absolvent*innen-Daten und Stundentafeln der MINT-Schulfächer ergänzen.",
+         Wir wollen hier noch weiter ausbauen und z. B. Absolvent:innen-Daten und Stundentafeln der MINT-Schulfächer ergänzen.",
          br(),
           ),
          p(style = "text-align: justify; font-size = 18px",
