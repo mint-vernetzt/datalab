@@ -49,7 +49,7 @@ mod_international_map_ui <- function(id) {
                        inputId = ns("map_y_oecd"),
                        label = NULL,
                        choices = international_ui_years(region = "OECD"),
-                       selected = "2024"
+                       #selected = "2024"
                      ),
 
                      p("Fachbereich:"),

@@ -48,7 +48,7 @@ mod_international_top10_mint_ui <- function(id){
                        inputId = ns("map_y_oecd_int_top10"),
                        label = NULL,
                        choices = international_ui_years(region = "OECD"),
-                       selected = "2024"
+                       selected = "2020"
                      ),
 
                      p("Fachbereich:"),
