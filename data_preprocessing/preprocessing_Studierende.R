@@ -20,7 +20,7 @@ akro <- "tko"
 #                "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
 # oder optional bei mir ist es anders:
 pfad <- paste0("C:/Users/", akro ,"/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
-
+pfad <- paste0("C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
 # Studierende Domestisch ----
 
 ## studierende ----
@@ -1756,7 +1756,16 @@ usethis::use_data(studierende_mobil_eu_share, overwrite = T)
 
 # pfad <- path_kek
 
-dat_unc <- readr::read_csv(paste0(pfad, "UNESCO001_anteil_MINT_absolv_weltweit.csv"))
+
+dat_unc <- readr::read_csv(paste0(pfad, "UNCESCO0002.csv"))
+# dat_unc <- readr::read_csv(paste0(pfad, "UNESCO001_anteil_MINT_absolv_weltweit.csv"))
+
+dat_unc <- dat_unc %>%
+  rename(Indicator = "indicatorId") %>%
+  rename(Value = "value") %>%
+  rename(Country = geoUnit) %>%
+  rename(Time = year)
+
 
 dat_unc_1<- dat_unc %>%
   dplyr::select(Indicator, Value, Country, Time)%>%
@@ -1768,7 +1777,9 @@ dat_unc_1<- dat_unc %>%
                                                T ~ "nicht mint" ))%>%
   dplyr::mutate(indikator = "Abslovent:innen", bereich = "Studium", quelle = "UNESCO", population= "Weltweit")
 
-dat_unc_1$land <- countrycode::countrycode(dat_unc_1$land, origin = 'country.name' , destination = "country.name.de")
+
+#dat_unc_1$land <- countrycode::countrycode(dat_unc_1$land, origin = 'country.name' , destination = "country.name.de")
+dat_unc_1$land <- countrycode::countrycode(dat_unc_1$land, origin = "iso3c", destination = "country.name.de")
 
 
 studierende_absolventen_weltweit <- dat_unc_1
@@ -1779,6 +1790,8 @@ studierende_absolventen_weltweit <- studierende_absolventen_weltweit[,c("bereich
                                                                         "geschlecht", "land", "jahr", "wert")]
 
 usethis::use_data(studierende_absolventen_weltweit, overwrite = T)
+save(studierende_absolventen_weltweit, file = "studierende_absolventen_weltweit.rda")
+
 
 
 
@@ -1787,6 +1800,9 @@ usethis::use_data(studierende_absolventen_weltweit, overwrite = T)
 #file_path <- paste0("C:/Users/", akro, "/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten")
 
 dat_oecd <- readr::read_csv(paste0(pfad, "OECD006_Anteil_intern_Studis_in_Fach_2.csv"))
+
+dat_oecd <- readr::read_csv(paste0(pfad, "neu.csv"))
+
 
 
 dat_oecd1 <- dat_oecd %>%
