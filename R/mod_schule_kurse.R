@@ -16,7 +16,7 @@ mod_schule_kurse_ui <- function(id){
       div(class = "clean-box",
           column(
             width = 12,
-            img(src='www/Banner_Schule.jpg',
+            img(src='www/Banner_Schule.avif',
                 class = "img-responsive",
                 #height = "150px", width = "150px",
                 alt = "Banner Schule",

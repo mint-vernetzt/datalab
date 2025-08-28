@@ -16,7 +16,7 @@ mod_international_start_ui <- function(id){
       div(class = "clean-box",
           column(
             width = 12,
-            img(src='www/Banner_International.jpg',
+            img(src='www/Banner_International.avif',
                 class = "img-responsive",
                 #height = "150px", width = "150px",
                 alt = "Banner Fokus: MINT international",

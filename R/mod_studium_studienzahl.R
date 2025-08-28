@@ -21,7 +21,7 @@ mod_studium_studienzahl_ui <- function(id){
       div(class = "clean-box",
           column(
             width = 12,
-            img(src='www/Banner_Studium.jpg',
+            img(src='www/Banner_Studium.avif',
                 class = "img-responsive",
                 alt = "Banner Studium",
                 style="display: block; margin-left: auto; margin-right: auto; margin-bottom: 20px;"

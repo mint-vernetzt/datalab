@@ -19,7 +19,7 @@ mod_fachkraft_start_ui <- function(id){
       div(class = "clean-box",
           column(
             width = 12,
-            img(src='www/Banner_Fachkraft.jpg',
+            img(src='www/Banner_Fachkraft.avif',
                 class = "img-responsive",
                 #height = "150px", width = "150px",
                 alt = "Banner Fokus: MINT-Fachkraefte",
