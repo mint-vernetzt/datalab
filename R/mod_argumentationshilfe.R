@@ -276,7 +276,7 @@ mod_argumentation_ui <- function(id){
       ),
       div(id = "region",
 
-        p(strong(style = "text-align: justify; font-size: 18px;",
+        p(strong(style = "text-align: left; font-size: 18px;",
                  "1. Wählen Sie eine Region für die Analyse aus.")),
 
         shinyWidgets::pickerInput(
@@ -324,7 +324,7 @@ mod_argumentation_ui <- function(id){
       div(id = "download_section",
         style = "flex: 1; margin-bottom: 15px;",
 
-        # p(strong(style = "text-align: justify; font-size: 18px;",
+        # p(strong(style = "text-align: left; font-size: 18px;",
         #          "2. Laden Sie die gewünschten Daten herunter")),
         # p(style = "font-size : 15px;", "Als Basis für den Datenbericht sowie
         # die datenbasierte Argumentation haben wir fünf Statistiken aus dem MINT-DataLab ausgewählt.
@@ -339,7 +339,7 @@ mod_argumentation_ui <- function(id){
 
 
         fluidRow(
-          p(strong(style = "text-align: justify; font-size: 18px; margin-left: 15px;",
+          p(strong(style = "text-align: left; font-size: 18px; margin-left: 15px;",
                    "2. Laden Sie die Datengrundlage herunter.")),
           column(
             width = 6,  # Text in der linken Spalte
@@ -444,7 +444,7 @@ mod_argumentation_ui <- function(id){
       div(id = "MINT-DataLab-GPT",
           style = "flex: 1; margin-bottom: 15px;",
           fluidRow(
-            p(strong(style = "text-align: justify; font-size: 18px; margin-bottom: 15px; margin-left: 15px;",
+            p(strong(style = "text-align: left; font-size: 18px; margin-bottom: 15px; margin-left: 15px;",
                      "3. Wechseln Sie zum MINT-DataLab GPT und folgen den Anweisungen.")),
             column(
               width = 6,  # Text in der linken Spalte
@@ -495,7 +495,7 @@ mod_argumentation_ui <- function(id){
       div(id = "grafiken",
           style = "flex: 1; margin-bottom: 15px;",
           fluidRow(
-            p(strong(style = "text-align: justify; font-size: 18px; margin-left: 15px;",
+            p(strong(style = "text-align: left; font-size: 18px; margin-left: 15px;",
                      "4. Ergänzen Sie den KI-Bericht zur Veranschaulichung mit Grafiken.")),
             column(
               width = 6,

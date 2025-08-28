@@ -1,5 +1,5 @@
 funct_footer <- function(){
-  foot <- tags$footer(style="text-align: justify;background-color:white; margin-top:20px;",
+  foot <- tags$footer(style="text-align:left;background-color:white; margin-top:20px;",
 
   div(style="display: inline-block;position: relative;padding: 1em;",
 

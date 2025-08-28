@@ -46,7 +46,7 @@ mod_betaversion_ui <- function(id){
         shinydashboard::box(
           width = 12,
           title = "Wo wir stehen: Betaversion",
-          p(style = "text-align: justify; font-size = 16px",
+          p(style = "text-align: left; font-size = 16px",
             "Update Juni 2024: Seit Januar zeigt das MINT-DataLab auch internationale Vergleichsdaten. Eine weitere neue
             Fokusseite behandelt das Thema Fachkräfte. Hier zeigen wir u.a. Zukunftsszenarien der Fachkräfteentwicklung, welche extra
             für MINTvernetzt berechnet wurden. Außerdem gibt es die ersten Grafiken jetzt auch zum Download.",
@@ -69,9 +69,9 @@ mod_betaversion_ui <- function(id){
         width = 12,
         title = "Woran wir arbeiten: Neuen Datensätze und Darstellungen",
         column(8,
-          p(style = "text-align: justify; font-size = 18px",
+          p(style = "text-align: left; font-size = 18px",
           tags$b(span("Neue Datensätze", style = "color:#154194"))),
-          p(style = "text-align: justify; font-size = 16px",
+          p(style = "text-align: left; font-size = 16px",
           tags$b(span("Mehr Bereiche abdecken:")),
           "Frühkindliche Bildung, außerschulische Bildung und Weiterbildung fehlen noch zum größten Teil im MINT-DataLab.
           Je nach Datenverfügbarkeit bemühen wir uns, diese Bereiche ebenfalls hier zu beleuchten. Bei MINTvernetzt erheben wir selbst Daten zum Bereich außerschulische Bildung.
@@ -82,7 +82,7 @@ mod_betaversion_ui <- function(id){
          Wir wollen hier noch weiter ausbauen und z. B. Absolvent:innen-Daten und Stundentafeln der MINT-Schulfächer ergänzen.",
          br(),
           ),
-         p(style = "text-align: justify; font-size = 18px",
+         p(style = "text-align: left; font-size = 18px",
           tags$b(span("Neue Darstellungen", style = "color:#154194"))),
           tags$b(span("Download-Option für Diagramme:")),
           "Unser Ziel ist es, dass unsere Diagramme bestmöglich weiterverwendet werden können. Deshalb werden wir die Download-Option Schrittweise weiter ausbauen.",
@@ -95,10 +95,10 @@ mod_betaversion_ui <- function(id){
          eine Suchfunktion umzusetzen.",
          br(),br(),
 
-        p(style = "text-align: justify; font-size = 18px",
+        p(style = "text-align: left; font-size = 18px",
           tags$b(span("Fragen oder Feedback?", style = "color:#154194"))),
 
-        p(style = "text-align: justify; font-size = 16px",
+        p(style = "text-align: left; font-size = 16px",
           span("Wir freuen uns immer über Rückfragen oder Feedback ", tags$a(href = "mailto:katharina.brunner@mint-vernetzt.de?subject= Feedback MINT-Datalab", "per Email"),"oder über unsere kurze",
                tags$a(href="https://survey.lamapoll.de/MINT-DataLab_Feedback/", "Umfrage", target="_blank"), "!")
           )

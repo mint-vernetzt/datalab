@@ -16,7 +16,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
         div(class = "clean-box",
             column(
               width = 12,
-              img(src='www/Banner_Ausbildung_Beruf.jpg',
+              img(src='www/Banner_Ausbildung_Beruf.avif',
                   class = "img-responsive",
                   #height = "150px", width = "150px",
                   alt = "Banner Beruf",

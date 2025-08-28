@@ -36,7 +36,7 @@ mod_datenschutz_ui <- function(id){
         tags$h2("Datenschutzerklärung"),
         column(width = 12,
 
-               div(style="text-align:justify", p("
+               div(style="text-align:left", p("
 
 MINTvernetzt ist die Service- und Anlaufstelle für die Community der MINT-Akteur:innen in Deutschland.
 Diese werden durch Vernetzungsräume, Transferangebote und Innovationsimpulse unterstützt, innovative und

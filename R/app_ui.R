@@ -53,7 +53,7 @@ app_ui <- function(request) {
             height = 45
           ),
           "           MINT-DataLab",
-          style = "text-align: justify; color:#154194; font-size: 22; font-family: SourceSans3-Bold;"
+          style = "text-align: left; color:#154194; font-size: 22; font-family: SourceSans3-Bold;"
         )
       ),
 

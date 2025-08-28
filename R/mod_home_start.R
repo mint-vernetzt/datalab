@@ -17,7 +17,7 @@ mod_home_start_ui <- function(id){
          div(class = "clean-box",
              column(
                width = 12,
-               img(src='www/Banner_Alle_Bereiche.jpg',
+               img(src='www/Banner_Alle_Bereiche.avif',
                    class = "img-responsive",
                    alt = "Banner MINT entlang der Bildungskette",
                    style="display: block; margin-left: auto; margin-right: auto; margin-bottom: 20px;"

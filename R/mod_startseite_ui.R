@@ -18,7 +18,7 @@ mod_startseite_start_ui <- function(id){
       div(class = "clean-box",
           column(
             width = 12,
-        img(src='www/Banner_Willkommen.jpg',
+        img(src='www/Banner_Willkommen.avif',
             class = "img-responsive",
             height = "300px",
             alt = "Banner Start",
@@ -41,15 +41,15 @@ mod_startseite_start_ui <- function(id){
             p(),
 
           # Updates ----
-          h2(style = "color: #00a87a;",
+          h2(style = "color: #008F68;",
              "Was ist Neu?"),
           p(style = "font-size: 14px;",
             "-  Erstellen Sie einfach MINT-Berichten durch das neue Angebot \"Datenanalyse mit KI\"", br(),
             "-  Schnellere Ladenzeit der Website",br(),
           ),
-          h2(style = "color: #00a87a;",
+          h2(style = "color: #008F68;",
              "Woran wir aktuell arbeiten:"),
-          p(style = "text-align: justify; font-size: 14px;",
+          p(style = "text-align: left; font-size: 14px;",
             "-  Aktualisierung der Daten",br(),
             "-  Erhöhte Barrierefreiheit", br(),
             "-  Weiterentwicklung des Angebots \"Datenanalyse mit KI\"", br()),
@@ -64,7 +64,7 @@ mod_startseite_start_ui <- function(id){
 
     # Kurzanalysen ----
             h5("Was steckt hinter den MINT-Statistiken?"),
-            p(style = "text-align: justify; font-size = 20px",
+            p(style = "text-align: left; font-size = 20px",
               "Ausgewählte Statistiken bereiten wir in Kurzanalysen auf.
               Hier schauen wir hinter die Zahlen und ordnen sie ein – erklärend,
               lösungsorientiert und wissenschaftlich fundiert.
