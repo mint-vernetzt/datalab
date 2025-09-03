@@ -1994,6 +1994,7 @@ for(i in list){
 
 
 
+
 entgelt_alle <- bind_rows(entgelt_BE, entgelt_TH, entgelt_SL, entgelt_SH, entgelt_SA, entgelt_S, entgelt_BRB, entgelt_BW, entgelt_BY, entgelt_D, entgelt_HB, entgelt_H, entgelt_HH, entgelt_MV, entgelt_NDS, entgelt_NRW, entgelt_RLP)
 entgelt_alle <- entgelt_alle %>%
   mutate(bundesland = case_when(
