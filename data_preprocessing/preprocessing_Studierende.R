@@ -1932,7 +1932,10 @@ usethis::use_data(studierende_intern_oecd, overwrite = T)
 
 # Raus warum?
 # file_path <- paste0("C:/Users/", akro, "/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten")
-#
+
+
+## das wird wohl nicht mehr benutzt ider wie?
+
 # dat_oecd_bg <- read_csv(paste0(file_path, "/", "OECD007_mobile_by_gender_test.csv"))
 
 
@@ -1940,11 +1943,37 @@ usethis::use_data(studierende_intern_oecd, overwrite = T)
 
 ### Rohdaten einlesen -------------------------------------------------------
 
+
+
+
+
+
+
+pfad <- "C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/"
+dat <- read.csv(paste0(pfad,
+                       "OEC123D.csv"),
+                header = TRUE, sep = ",", dec = ".")
+
 dat <- read.csv(paste0(pfad,
                        "OECD005_Anzahl_Studi_Azubi_nach_Fach_Sex.csv"),
                 header = TRUE, sep = ",", dec = ".")
 
 
+
+
+
+
+
+dat <- dat %>%
+  dplyr::select(REF_AREA, Reference.area, EDUCATION_LEV, Sex, EDUCATION_FIELD,
+                TIME_PERIOD, OBS_VALUE) %>%
+  dplyr::rename(land_code = REF_AREA,
+                land = Reference.area,
+                anforderung = EDUCATION_LEV,
+                geschlecht = Sex,
+                fach = EDUCATION_FIELD,
+                jahr = TIME_PERIOD,
+                wert = OBS_VALUE)
 ### Datensatz in passende Form bringen --------------------------------------
 
 dat <- dat %>%
@@ -1985,19 +2014,20 @@ dat <- dat %>%
 # Fachbereich zuweisen - mit Kekelis Funktion
 ## weitere Naturwissenschaften/Ingen-Wissenschaften berechnen
 dat_nw <- dat %>%
-  dplyr::filter(fach %in% c("F050", "F059")) %>%
+  dplyr::filter(fach %in% c("F05", "F059")) %>%
   dplyr::group_by(land_code, land, anforderung, geschlecht, jahr) %>%
   dplyr::summarise(wert = sum(wert)) %>%
   dplyr::ungroup()
 dat_nw$fach <- "F050_59"
 dat_iw <- dat %>%
-  dplyr::filter(fach %in% c("F070", "F079")) %>%
+  dplyr::filter(fach %in% c("F07", "F079")) %>%
   dplyr::group_by(land_code, land, anforderung, geschlecht, jahr) %>%
   dplyr::summarise(wert = sum(wert)) %>%
   dplyr::ungroup()
 dat_iw$fach <- "F070_79"
 ## einzelnen löschen
-dat <- dat %>% filter(!(fach %in% c("F050", "F059", "F070", "F079")))
+dat <- dat %>%
+  dplyr::filter(!(fach %in% c("F05", "F059", "F07", "F079")))
 
 dat <- rbind(dat, dat_iw, dat_nw)
 
@@ -2180,3 +2210,5 @@ studierende_anzahl_oecd <- dat
 
 # speichern
 usethis::use_data(studierende_anzahl_oecd, overwrite = T)
+
+save(studierende_anzahl_oecd, file =  "studierende_anzahl_oecd")
