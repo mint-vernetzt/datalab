@@ -1898,6 +1898,7 @@ list <- c("BA032_2024_Entgelte_MINT_D.xlsb", "BA028_2024_Entgelte_MINT_BE.xlsb",
 
 
 i <- list[1]
+
 for(i in list){
   print(i)
   pfad_i <- paste0(pfad, i)
@@ -1910,129 +1911,94 @@ for(i in list){
   colnames(data)[5:10] <- header2
 
   data <- data[-c(1:3),]
-  #data <- data[,-1] # NEIN - hier steht das Jahr drin!!!
-  #data[data == ""] <- NA # was macht das?
 
-  data_2 <- data %>%
+
+  data <- data %>%
     rename(berufe = `Berufsaggregat MINT`,
-           jahr = Stichtag)
+           jahr = Stichtag) %>%
+    mutate(jahr = format(as.Date(jahr), "%Y"))
 
-  data_2 <- data_2[,-1*5:10]
+  data <- data[,-1*5:10] # nimmt die Veteilung der Entgelte raus, um die Datenmenge zu reduzieren
 
-  data_2 <- data_2 %>%
-    mutate(jahr = )
+  data$berufe[data$berufe == ""] <- NA
+  data$berufe <- zoo::na.locf(data$berufe)
+  data$jahr <- zoo::na.locf(data$jahr)
 
-  data_2$berufe <- zoo::na.locf(data_2$berufe)
-
-  data_2 <- data_2 %>%
-    #tidyr::fill(berufe, .direction = "down") %>% hat aus irgendeinem Grund nicht funktioniert - habe das davor verwendet
+  data <- data %>%
     mutate(
       code = str_extract(berufe, "^\\d+"),
       berufslevel = str_extract(berufe, "(Fachkraft|Fachkräfte|Spezialist|Spezialisten|Experten|Experte)"),
-
-      beruf = str_trim(
-        str_remove_all(berufe, "^\\d+\\s*|(Fachkraft|Fachkräfte|Spezialist|Spezialisten|Experten|Experte)$|\\s*-\\s*")
-      )
+      beruf = berufe %>%
+        stringr::str_remove("^\\d+\\s*") %>%
+        stringr::str_remove("\\s*-?\\s*(Fachkraft|Fachkräfte|Spezialist|Spezialisten|Experten|Experte)\\s*$") %>%
+        stringr::str_replace_all("\\s+-\\s+", " ") %>%
+        stringr::str_squish()
     ) %>%
-    select(-berufe)
-  # %>%
-  #   pivot_longer(
-  #     cols = starts_with("bis") | starts_with("über"),
-  #     names_to = "Einkommensgruppe",
-  #     values_to = "Anzahl"
-  #   )
+    select(-berufe) %>%
+    rename(besch_anzahl = Insgesamt,
+           geschlecht = Geschlecht,
+           wert = `Median in €`)
 
-  data_2$berufsgruppe <- ifelse(is.na(data_2$code),
-                         data_2$beruf,
+
+  data$berufsgruppe <- ifelse(is.na(data$code),
+                         data$beruf,
                          NA)
-  data_2$berufsgruppe <- zoo::na.locf(data_2$berufsgruppe)
+  data$berufsgruppe <- zoo::na.locf(data$berufsgruppe)
 
-  data_2 <- data_2 %>%
-    mutate(beruf = case_when(
-      beruf == "MINTBerufe" ~ "MINT-Berufe",
-      beruf == "Bauund Gebäudetechnik"  ~ "Bau- und Gebäudetechnik",
-      beruf == "Verkehrs, Sicherheitsund Veranstaltungstechnik" ~
-        "Verkehrs-, Sicherheits- und Veranstaltungstechnik",
-      beruf == "Keine MINTBerufe" ~ "Keine MINT-Berufe",
-      beruf == "Technik" ~ "Technik (gesamt)",
-      T ~ beruf
-    ),
-    berufsgruppe = case_when(
-      berufsgruppe == "MINTBerufe" ~ "MINT-Berufe",
-      berufsgruppe == "Bauund Gebäudetechnik"  ~ "Bau- und Gebäudetechnik",
-      berufsgruppe == "Verkehrs, Sicherheitsund Veranstaltungstechnik" ~
-        "Verkehrs-, Sicherheits- und Veranstaltungstechnik",
-      berufsgruppe == "Keine MINTBerufe" ~ "Keine MINT-Berufe",
-      berufsgruppe == "Technik" ~ "Technik (gesamt)",
-      T ~ berufsgruppe
-    ),
+  data <- data %>%
+    mutate(
     berufslevel = case_when(
-      is.na(berufslevel) ~ "Insgesamt",
-      berufslevel == "Fachkraft" ~ "Fachkräfte",
-      berufslevel %in% c("Spezialist", "Spezialisten") ~ "Spezialist:innen",
-      berufslevel %in% c("Experte", "Experten") ~ "Expert:innen",
+      is.na(berufslevel) ~ "Gesamt",
+      berufslevel == "Fachkräfte" ~ "Fachkraft",
+      berufslevel == "Spezialisten" ~ "Spezialist",
+      berufslevel == "Experten" ~ "Experte",
       T ~ berufslevel
     ))
 
-
-  data_2 <- unique(data_2)
-
+  # Bundesland ergänzen
   a <- str_extract(i, "_[A-Za-z]{1,3}\\.")
-  a <- str_extract(a, "_[A-Za-z]{1,3}")
+  a <- str_extract(a, "[A-Za-z]{1,3}")
 
-  data_2 <- data_2 %>%
+  bundesland_key <- c(
+    D = "Deutschland",
+    BW = "Baden-Württemberg",
+    BY = "Bayern",
+    BE = "Berlin",
+    BRB = "Brandenburg",
+    HB = "Bremen",
+    HH = "Hamburg",
+    H = "Hessen",
+    MV = "Mecklenburg-Vorpommern",
+    SL = "Saarland",
+    S = "Sachsen",
+    SA = "Sachsen-Anhalt",
+    SH = "Schleswig-Holstein",
+    TH = "Thüringen",
+    NRW = "Nordrhein-Westfalen",
+    RLP = "Rheinland-Pfalz",
+    NDS = "Niedersachsen"
+  )
+
+
+  data <- data %>%
     mutate(
-      bundesland = a
+      bundesland = bundesland_key[a],
+      bereich = "Arbeitsmarkt"
     )
 
-  obj_name <- paste0("entgelt", a)
-  print(obj_name)
-  assign(obj_name, data_2)
+  data <- data[,c("bereich", "besch_anzahl", "bundesland", "geschlecht", "code",
+                   "berufslevel", "berufsgruppe",
+                   "beruf", "jahr", "wert")]
 
+  obj_name <- paste0("entgelt_", a)
+  assign(obj_name, data)
 
 }
 
-
-
-entgelt_alle <- bind_rows(entgelt_BE, entgelt_TH, entgelt_SL, entgelt_SH, entgelt_SA, entgelt_S, entgelt_BRB, entgelt_BW, entgelt_BY, entgelt_D, entgelt_HB, entgelt_H, entgelt_HH, entgelt_MV, entgelt_NDS, entgelt_NRW, entgelt_RLP)
-entgelt_alle <- entgelt_alle %>%
-  mutate(bundesland = case_when(
-    bundesland == "_D"    ~ "Deutschland",
-    bundesland == "_BE"   ~ "Berlin",
-    bundesland == "_TH"   ~ "Thüringen",
-    bundesland == "_SL"   ~ "Saarland",
-    bundesland == "_SH"   ~ "Schleswig-Holstein",
-    bundesland == "_SA"   ~ "Sachsen-Anhalt",
-    bundesland == "_S"    ~ "Sachsen",
-    bundesland == "_BRB"  ~ "Brandenburg",
-    bundesland == "_BW"   ~ "Baden-Württemberg",
-    bundesland == "_BY"   ~ "Bayern",
-    bundesland == "_HB"   ~ "Bremen",
-    bundesland == "_H"    ~ "Hessen",
-    bundesland == "_HH"   ~ "Hamburg",
-    bundesland == "_MV"   ~ "Mecklenburg-Vorpommern",
-    bundesland == "_NDS"  ~ "Niedersachsen",
-    bundesland == "_NRW"  ~ "Nordrhein-Westfalen",
-    bundesland == "_RLP"  ~ "Rheinland-Pfalz",
-    TRUE ~ bundesland  #
-  )) %>%
-  mutate(Anzahl = case_when(
-    Anzahl == "X" ~ NA,
-    Anzahl == "*" ~ NA,
-    TRUE ~ Anzahl
-  )) %>%
-  mutate(
-    Insgesamt = case_when(
-      Insgesamt == "X" ~ NA,
-      Insgesamt == "*" ~ NA,
-      TRUE ~ Insgesamt
-    )) %>%
-  mutate(`Median in €` = case_when(
-    `Median in €` == "X" ~ NA,
-    `Median in €` == "*" ~ NA,
-    TRUE ~ `Median in €`
-  ))
-
+entgelt_alle <- bind_rows(entgelt_BE, entgelt_TH, entgelt_SL, entgelt_SH,
+                          entgelt_SA, entgelt_S, entgelt_BRB, entgelt_BW,
+                          entgelt_BY, entgelt_D, entgelt_HB, entgelt_H,
+                          entgelt_HH, entgelt_MV, entgelt_NDS, entgelt_NRW, entgelt_RLP)
 
 
 
