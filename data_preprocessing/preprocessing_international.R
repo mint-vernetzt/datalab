@@ -1,12 +1,12 @@
 
 ### internationale Schuldaten ####
 
-# PISA Int'l. ----
+# Erstellt schule_pisa ----
 
 # kab
 # Aug23
 
-## Alle ----
+##### Alle ####
 
 # file_path <- paste0("C:/Users/", akro, "/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten")
 #
@@ -242,14 +242,14 @@ pisa <- bind_rows(pisa1, pisa2)%>%
 usethis::use_data(pisa, overwrite = T)
 
 
-# TIMSS ----
+# Erstellt schule_timss ----
 
 # kab
 # Sep 23
 
-## TIMSS Acheivement----
+##### TIMSS Acheivement----
 
-### Gender ----
+##### Gender ----
 #file_path <- paste0("C:/Users/", akro, "/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten")
 pfad <- paste0("C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
 akro <- "kbr"
@@ -364,7 +364,7 @@ s23 <- timss_gender_transform("TIMSS010_sam.xlsx")
 #timss_gender_old <- bind_rows(l,k)
 timmss_gender <- bind_rows(m23, s23)
 
-### Achievement ----
+#### Achievement ----
 
 # funktion
 
@@ -523,7 +523,7 @@ dat2023a <- rbind(w,u)
 timss_achievement <- bind_rows(timss_achievement, dat2023a)
 
 
-### Home resources ----
+#### Home resources ----
 
 
 # funktion
@@ -761,7 +761,7 @@ timss_res_dat$indikator[timss_res_dat$indikator == "Lower\r\n Socioeconomic Stat
 timss_res_dat <- rbind(timss_res_dat_2, timss_res_dat)
 
 
-### Benchmarks-----
+#### Benchmarks-----
 
 # funktion
 
@@ -1014,7 +1014,7 @@ timss_benchmarks <- rbind(timss_benchmarks, benchmark_temp)
 # timss_benchmarks <- rbind(timss_benchmarks, dat8_long)
 
 
-### TIMSS Merger ----
+#### TIMSS Merger ----
 
 timss <- bind_rows(
   timss_benchmarks %>% mutate(across(wert,~ as.numeric(.))),
@@ -1038,6 +1038,8 @@ timss$jahr <- as.numeric(timss$jahr)
 
 save(timss, file = "schule_timss.rda")
 
+# Internationale Studierendendaten ----
 
+# Erstellt
 
 
