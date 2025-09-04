@@ -1757,7 +1757,7 @@ usethis::use_data(studierende_mobil_eu_share, overwrite = T)
 # pfad <- path_kek
 
 
-dat_unc <- readr::read_csv(paste0(pfad, "UNCESCO0002.csv"))
+dat_unc <- readr::read_csv(paste0(pfad, "UNESCO002_anteil_MINT_absolv_weltweit.csv"))
 # dat_unc <- readr::read_csv(paste0(pfad, "UNESCO001_anteil_MINT_absolv_weltweit.csv"))
 
 dat_unc <- dat_unc %>%
@@ -1993,6 +1993,9 @@ dat$land <- countrycode::countryname(dat$land, destination = "country.name.de")
 
 
 # Anforderungsniveau zuweisen
+# filtern am ende auf:
+# [1] "kurzes tertiäres Bildungsprogramm (allgemeinbildend)" "Promotion (ISCED 8)"
+# [3] "Bachelor oder vergleichbar (akademisch)"              "Master oder vergleichbar (akademisch)"
 dat <- dat %>%
   dplyr::mutate(anforderung = dplyr::case_when(
     anforderung ==  "ISCED11_35" ~ "Erstausbildung (ISCED 35)",
