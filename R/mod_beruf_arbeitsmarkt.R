@@ -563,7 +563,101 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                     # ))
         )
 
+            ))),
+
+
+
+
+# Box 5 ----
+
+fluidRow( id="beruf_mint",
+          shinydashboard::box(
+            title = "Hier eine interessanten Titel einfügen",
+            width = 12,
+            column(
+              width = 8,
+              p("Hier einen interessanten Text rein")
+            ),
+            column(
+              width = 12,
+
+              tabsetPanel(type = "tabs",
+                          # Tab 1
+                          tabPanel("Aktuelle Entgelt-Anteile", br(),
+
+                                   shiny::sidebarPanel(
+                                     width = 3,
+                                     tags$style(".well {background-color:#FFFFFF;}"),
+                                     tags$head(tags$style(HTML(".small-box {height: 140px}"))),
+                                     mod_beruf_arbeitsmarkt_entgelt_vergleich_ui("mod_beruf_arbeitsmarkt_entgelt_vergleich_ui_1"),
+                                   ),
+                                   shiny::mainPanel(
+                                     width = 9,
+                                     shinycssloaders::withSpinner(htmlOutput(ns("plot_entgelt_vergleich")),
+                                                                  color = "#154194"),
+
+                                     shinyBS::bsPopover(id = "h_beruf_mint_3_entgel", title = "",
+                                                        content = paste0("Ah ja"),
+                                                        placement = "top",
+                                                        trigger = "hover"),
+                                     tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_beruf_mint_3_entgel")
+                                   )
+                          ),
+                          # Tab 2
+                          tabPanel("MINT-Anteil im Zeitverlauf", br(),
+
+                                   shiny::sidebarPanel(
+                                     width = 3,
+                                     tags$style(".well {background-color:#FFFFFF;}"),
+                                     tags$head(tags$style(HTML(".small-box {height: 140px}"))),
+                                     mod_beruf_arbeitsmarkt_entgelt_verlauf_ui("mod_beruf_arbeitsmarkt_entgelt_verlauf_ui_1"),
+                                   ),
+                                   shiny::mainPanel(
+                                     width = 9,
+                                     shinycssloaders::withSpinner(htmlOutput(ns("plot_entgelt_verlauf")),
+                                                                  color = "#154194"),
+
+                                     shinyBS::bsPopover(id = "h_beruf_mint_2__entgelt", title = "",
+                                                        content = paste0(""),
+                                                        placement = "top",
+                                                        trigger = "hover"),
+                                     tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_beruf_mint_2__entgelt"),
+
+                                   )
+                          ),
+
+                          tabPanel("Balkendiagramm", br(),
+
+                                   shiny::sidebarPanel(
+                                     width = 3,
+                                     tags$style(".well  {background-color:#FFFFFF;}"),
+                                     tags$head(tags$style(HTML(".small-box {height: 140px}"))),
+                                     mod_beruf_arbeitsmarkt_balken_entgelt_ui("mod_beruf_arbeitsmarkt_balken_entgelt_ui_1"),
+
+                                   ),
+                                   shiny::mainPanel(
+                                     width = 9,
+                                     shinycssloaders::withSpinner(htmlOutput(ns("plot_balken_entgelt")),
+                                                                  color = "#154194"),
+
+                                     shinyBS::bsPopover(id="h_studium_international_2_entgelt", title="",
+                                                        content = paste0("  "),
+                                                        placement = "top",
+                                                        trigger = "hover"),
+                                     tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_studium_international_2_entgelt"))
+
+                          ),
+
+
+              )
             )))
+
+
+
+
+
+
+
 
     ,funct_footer()
     )
@@ -957,6 +1051,181 @@ mod_beruf_arbeitsmarkt_server <- function(id, r){
    output$fachbereich_beruf_arbeitsmarkt_landkreis_verlauf <- renderUI({
      arbeitsmarkt_lk_verlauf(r)
    })
+
+
+
+
+
+
+
+
+
+
+
+
+   # Box 5 ----
+   # Tab
+   output$plot_entgelt_vergleich <- renderUI({
+     entgelte_vergleich_1(r)
+   })
+
+   output$plot_entgelt_verlauf <- renderUI({
+     entgelte_verlauf_1(r)
+   })
+
+   output$plot_balken_entgelt <- renderUI({
+     entgelte_balken_1(r)
+   })
+
+
+
+
+
+
+
+   # ##
+   # output$plot_arbeitsmarkt_faecher_anteil_frauen <- renderUI({
+   #   arbeitsmarkt_faecher_anteil_frauen(r)
+   # })
+   #
+   #
+   # output$plot_einstieg_verlauf <- renderUI({
+   #   plot_list <- beruf_verlauf_single(r)
+   #   r$plot_einstieg_verlauf <- plot_list
+   #
+   #   r$plot_einstieg_verlauf_title <- get_plot_title(
+   #     plot = r$plot_einstieg_verlauf
+   #   )
+   #
+   #   plot_list
+   # })
+   #
+   # output$download_btn_plot_einstieg_verlauf <- downloadHandler(
+   #   contentType = "image/png",
+   #   filename = function() {r$plot_einstieg_verlauf_title},
+   #   content = function(file) {
+   #     # creating the file with the screenshot and prepare it to download
+   #
+   #     add_caption_and_download(
+   #       hc = r$plot_einstieg_verlauf,
+   #       filename =  r$plot_einstieg_verlauf_title,
+   #       width = 700,
+   #       height = 400)
+   #
+   #     file.copy(r$plot_einstieg_verlauf_title, file)
+   #     file.remove(r$plot_einstieg_verlauf_title)
+   #   }
+   # )
+   #
+   #
+   # # Tab 3
+   #
+   # output$plot_einstieg_vergleich <- renderUI({
+   #   plot_list <- beruf_einstieg_vergleich(r)
+   #   plot_list
+   # })
+   #
+   #
+   #
+   # # Tab 4
+   # output$plot_arbeitsmarkt_waffle_gender <- renderPlot({
+   #   arbeitsmarkt_anforderungen_gender(r)
+   # })
+   #
+   # # Tab 5
+   #
+   # output$plot_arbeitsmarkt_bl_gender <- renderUI({
+   #   plot_list <- arbeitsmarkt_bl_gender(r)
+   #
+   #
+   #   # return plots
+   #   out <- highcharter::hw_grid(
+   #     plot_list,
+   #     ncol = 2)
+   #   out
+   #
+   # })
+   #
+   #
+   #
+   # # Tab 6
+   #
+   #
+   # output$plot_beruf_arbeitsmarkt_bl_gender_verlauf <- renderUI({
+   #   plot_list <- arbeitsmarkt_bl_gender_verlauf(r)
+   #   r$plot_beruf_arbeitsmarkt_bl_gender_verlauf <- plot_list
+   #
+   #   r$plot_beruf_arbeitsmarkt_bl_gender_verlauf_title <- get_plot_title(
+   #     plot = r$plot_beruf_arbeitsmarkt_bl_gender_verlauf
+   #   )
+   #
+   #   plot_list
+   # })
+   #
+   # output$download_btn_plot_beruf_arbeitsmarkt_bl_gender_verlauf <- downloadHandler(
+   #   contentType = "image/png",
+   #   filename = function() {r$plot_beruf_arbeitsmarkt_bl_gender_verlauf_title},
+   #   content = function(file) {
+   #     # creating the file with the screenshot and prepare it to download
+   #
+   #     add_caption_and_download(
+   #       hc = r$plot_beruf_arbeitsmarkt_bl_gender_verlauf,
+   #       filename =  r$plot_beruf_arbeitsmarkt_bl_gender_verlauf_title,
+   #       width = 700,
+   #       height = 400)
+   #
+   #     file.copy(r$plot_beruf_arbeitsmarkt_bl_gender_verlauf_title, file)
+   #     file.remove(r$plot_beruf_arbeitsmarkt_bl_gender_verlauf_title)
+   #   }
+   # )
+   #
+   #
+   #
+   #
+   # # Tab 7
+   #
+   # output$plot_beruf_arbeitsmarkt_mint_bulas <- renderUI({
+   #   arbeitsmarkt_mint_bulas(r)
+   # })
+   #
+   # output$plot_beruf_arbeitsmarkt_bl_verlauf  <- renderUI({
+   #   plot_list <- arbeitsmarkt_bl_verlauf(r)
+   #   r$plot_beruf_arbeitsmarkt_bl_verlauf <- plot_list
+   #
+   #   r$plot_beruf_arbeitsmarkt_bl_verlauf_title <- get_plot_title(
+   #     plot = r$plot_beruf_arbeitsmarkt_bl_verlauf
+   #   )
+   #
+   #   plot_list
+   # })
+   #
+   # output$download_btn_plot_beruf_arbeitsmarkt_bl_verlauf <- downloadHandler(
+   #   contentType = "image/png",
+   #   filename = function() {r$plot_beruf_arbeitsmarkt_bl_verlauf_title},
+   #   content = function(file) {
+   #     # creating the file with the screenshot and prepare it to download
+   #
+   #     add_caption_and_download(
+   #       hc = r$plot_beruf_arbeitsmarkt_bl_verlauf,
+   #       filename =  r$plot_beruf_arbeitsmarkt_bl_verlauf_title,
+   #       width = 700,
+   #       height = 400)
+   #
+   #     file.copy(r$plot_beruf_arbeitsmarkt_bl_verlauf_title, file)
+   #     file.remove(r$plot_beruf_arbeitsmarkt_bl_verlauf_title)
+   #
+   #   })
+
+
+
+
+
+
+
+
+
+
+
 
 
   })

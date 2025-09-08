@@ -398,6 +398,8 @@ df_query <- glue::glue_sql("
   ORDER BY jahr
 ", .con = con)
 
+    browser()
+
     selection <- DBI::dbGetQuery(con, jahr_query) %>%
       dplyr::pull(jahr)
 

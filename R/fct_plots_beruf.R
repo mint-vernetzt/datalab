@@ -3757,4 +3757,46 @@ arbeitsmarkt_lk_verlauf <- function(r){
 }
 
 
+## Box 5 ---------------
+
+### Tab 1 --------
+
+entgelte_vergleich_1 <- function(r) {
+
+
+
+  inf <- r$ansicht_arbeitsmarkt_entgelt_vergleich
+  inf2 <- r$date_arbeitsmarkt_entgelt_vergleich
+  inf3 <- r$region_arbeitsmarkt_entgelt_vergleich
+  inf4 <- r$abs_zahlen_arbeitsmarkt_entgelt_vergleich
+
+
+}
+
+
+
+entgelte_verlauf_1 <- function(r) {
+
+
+  info1 <- r$date_arbeitsmarkt_entgelt_verlauf
+  inf2 <- r$region_arbeitsmarkt_entgelt_verlauf
+  in3 <- r$indikator_arbeitsmarkt_entgelt_verlauf_2
+  info__4 <- r$abs_zahlen_arbeitsmarkt_entgelt_verlauf
+
+
+
+}
+
+
+
+entgelte_balken_1 <- function(r) {
+
+  # inf1 <- r$ansicht_balken_entgelt
+  inf2 <- r$date_balken_entgelt
+  in_3 <- r$states_balken_entgelt
+  i_44 <- r$status_balken_entgelt
+
+  it <- r$abs_zahlen_balken_entgelt
+}
+
 

@@ -1058,13 +1058,18 @@ dat <- read.csv(paste0(pfad, "EUROSTAT006_hrst_st_nsecsex2__custom_17955862_line
 
 
 dat <- dat %>%
-  dplyr::select(category, sex, geo, TIME_PERIOD, unit, OBS_VALUE) %>%
+  dplyr::select(category, sex, geo, TIME_PERIOD, unit, OBS_VALUE, age, nace_r2) %>%
   dplyr::rename(land = geo,
                 indikator = category,
                 jahr = TIME_PERIOD,
                 variable = unit,
                 geschlecht = sex,
-                wert = OBS_VALUE)
+                wert = OBS_VALUE,
+                ) %>%
+  dplyr::filter(
+    nace_r2 == "C",
+    age == "Y15-74"
+  )
 
 # Land zuweisen / übersetzen
 dat$land <- countrycode::countrycode(dat$land, origin = "eurostat", destination = "country.name.de")
@@ -1082,7 +1087,7 @@ dat <- dat %>%
     ),
     variable = dplyr::case_when(
       variable == "THS_PER" ~ "Anzahl in Tsd.",
-      variable == "PC_POP" ~ "Anteil an Gesamtbevölkerung",
+      variable == "PC_EMP" ~ "Anteil an Gesamtbevölkerung",
       variable == "PC_ACT" ~ "Anteil an arbeitender Bevölkerung"
     ),
     geschlecht = dplyr::case_when(
@@ -1401,7 +1406,7 @@ library(purrr)
 library(readr)
 library(countrycode)
 
-dat_eust <- read_csv(paste0(pfad,"EUROSTAT003_custom_intern_studis_educ_uoe_mobs01__custom_7521082_linear.csv.gz"))
+#dat_eust <- read_csv(paste0(pfad,"EUROSTAT003_custom_intern_studis_educ_uoe_mobs01__custom_7521082_linear.csv.gz"))
 
 dat_eust <-  read_csv(paste0(pfad,"EUROSTAT005_educ_uoe_mobs01__custom_17945314_linear_2_0.csv"))
 
@@ -1504,7 +1509,7 @@ dat_eust1_3 <- dat_eust1 %>%
 studierende_mobil_eu_absolut <- dat_eust1_2
 
 
-save(studierende_mobil_eu_absolut, file = "studierende_mobil_eu_absolut")
+save(studierende_mobil_eu_absolut, file = "studierende_mobil_eu_absolut.rda")
 usethis::use_data(studierende_mobil_eu_absolut, overwrite = T)
 
 
@@ -1790,8 +1795,12 @@ usethis::use_data(arbeitsmarkt_anzahl_azubis_oecd, overwrite = T)
 
 pfad <- "C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/"
 
+#dat <- read.csv(paste0(pfad,
+#                       "OECD005_Anzahl_Studi_Azubi_nach_Fach_Sex.csv"),
+#                header = TRUE, sep = ",", dec = ".")
+
 dat <- read.csv(paste0(pfad,
-                       "OECD005_Anzahl_Studi_Azubi_nach_Fach_Sex.csv"),
+                       "OECD008_studis_azubis_nach_fach.csv"),
                 header = TRUE, sep = ",", dec = ".")
 
 
@@ -1806,18 +1815,18 @@ dat <- dat %>%
                 fach = EDUCATION_FIELD,
                 jahr = TIME_PERIOD,
                 wert = OBS_VALUE)
-### Datensatz in passende Form bringen --------------------------------------
 
-dat <- dat %>%
-  dplyr::select(COUNTRY, Country, EDUCATION_LEV, Gender, EDUCATION_FIELD,
-                Year, Value) %>%
-  dplyr::rename(land_code = COUNTRY,
-                land = Country,
-                anforderung = EDUCATION_LEV,
-                geschlecht = Gender,
-                fach = EDUCATION_FIELD,
-                jahr = Year,
-                wert = Value)
+
+# dat <- dat %>%
+#   dplyr::select(COUNTRY, Country, EDUCATION_LEV, Gender, EDUCATION_FIELD,
+#                 Year, Value) %>%
+#   dplyr::rename(land_code = COUNTRY,
+#                 land = Country,
+#                 anforderung = EDUCATION_LEV,
+#                 geschlecht = Gender,
+#                 fach = EDUCATION_FIELD,
+#                 jahr = Year,
+#                 wert = Value)
 
 # Land zuweisen / übersetzen
 
@@ -2046,7 +2055,193 @@ studierende_anzahl_oecd <- dat
 # speichern
 usethis::use_data(studierende_anzahl_oecd, overwrite = T)
 
-save(studierende_anzahl_oecd, file =  "studierende_anzahl_oecd")
+save(studierende_anzahl_oecd, file =  "studierende_anzahl_oecd.rda")
+
+
+
+
+
+
+
+
+
+
+
+iscedf13_transform_kurz <- function(dat) {
+
+  # fächer benennen
+
+  dat <- dat %>%
+    mutate(fach = case_when(stringr::str_ends("F00", dat$fach)~ "Allgemeine Bildungsgänge und Qualifikationen",
+                            stringr::str_ends("F01", dat$fach)~ "Pädagogik",
+                            stringr::str_ends("F02", dat$fach) ~ "Geisteswissenschaften und Künste",
+                            stringr::str_ends("F03", dat$fach) ~ "Sozialwissenschaften, Journalismus und Informationswesen",
+                            stringr::str_ends("F04", dat$fach) ~ "Wirtschaft, Verwaltung und Recht",
+                            stringr::str_ends("F05", dat$fach) ~ "Naturwissenschaften, Mathematik und Statistik",
+                            stringr::str_ends("F06", dat$fach) ~ "Informatik & Kommunikationstechnologie",
+                            stringr::str_ends("F07", dat$fach) ~ "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
+                            stringr::str_ends("F08", dat$fach) ~ "Landwirtschaft, Forstwirtschaft, Fischerei und Tiermedizin",
+                            stringr::str_ends("F09", dat$fach) ~ "Gesundheit, Medizin und Sozialwesen",
+                            stringr::str_ends("F10", dat$fach) ~ "Dienstleistungen",
+
+                            stringr::str_ends("F05T07", dat$fach) ~ "MINT",
+                            stringr::str_detect("TOTAL", dat$fach) ~ "Alle",
+                            stringr::str_detect("_T", dat$fach) ~ "Alle",
+                            stringr::str_ends("UNK", dat$fach) ~ "Unbekannt",
+                            stringr::str_ends("F99", dat$fach) ~ "Unbekannt",
+                            T ~ dat$fach))
+
+  return(dat)
+}
+
+##
+
+
+
+
+
+#### Erstelle arbeitsmarkt_anfaenger_absolv_oecd -------------
+
+pfad <- "C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/"
+
+
+# akro <- "kbr"
+#data <- read.csv(paste0(pfad,"OECD003_Anteil_Absol_nach_Feld_an_allen_Feldern_OECD.csv"),
+#               header = TRUE, sep = ",", dec = ".")
+
+dat <- read.csv(paste0(pfad,"OECD008_studis_azubis_nach_fach.csv"),
+                header = TRUE, sep = ",", dec = ".")
+
+
+
+# dat <- dat %>%
+#   dplyr::select(COUNTRY, Country, Indicator, EDUCATION_LEV, Gender, EDUCATION_FIELD,
+#                 Year, Value) %>%
+#   dplyr::rename(land_code = COUNTRY,
+#                 land = Country,
+#                 anforderung = EDUCATION_LEV,
+#                 geschlecht = Gender,
+#                 fach = EDUCATION_FIELD,
+#                 variable = Indicator,
+#                 jahr = Year,
+#                 wert = Value)
+
+
+
+
+
+dat <- dat %>%
+  dplyr::select(REF_AREA, Reference.area, EDUCATION_LEV, Sex, EDUCATION_FIELD,
+                TIME_PERIOD, OBS_VALUE, Measure, STRUCTURE_NAME) %>%
+  dplyr::rename(land_code = REF_AREA,
+                land = Reference.area,
+                anforderung = EDUCATION_LEV,
+                variable = STRUCTURE_NAME,
+                geschlecht = Sex,
+                fach = EDUCATION_FIELD,
+                jahr = TIME_PERIOD,
+                wert = OBS_VALUE) %>%
+  dplyr::filter(
+    Measure == "Students enrolled"
+  ) %>%
+  select(-Measure)
+
+# Land zuweisen / übersetzen
+dat_agg <- dat %>%
+  dplyr::filter(land_code %in% c("E22", "OAVG")) %>%
+  dplyr::mutate(land = dplyr::case_when(
+    land_code == "E22" ~ "OECD-Mitglieder aus der EU",
+    land_code == "OAVG" ~ "OECD"
+  ))
+dat <- dat %>% dplyr::filter(!(land_code %in% c("E22", "OAVG")))
+dat$land <- countrycode::countryname(dat$land, destination = "country.name.de")
+
+dat <- rbind(dat, dat_agg)
+
+# Anforderungsniveau zuweisen
+dat <- dat %>%
+  dplyr::mutate(anforderung = dplyr::case_when(
+    anforderung ==  "ISCED11_35" ~ "Erstausbildung (ISCED 35)",
+    anforderung ==  "ISCED11_45" ~ "Ausbildung (ISCED 45)",
+    anforderung ==  "ISCED11_5" ~ "kurzes tertiäres Bildungsprogramm (ISCED 5)",
+    anforderung ==  "ISCED11_6" ~ "Bachelor oder vergleichbar (ISCED 6)",
+    anforderung ==  "ISCED11_7" ~ "Master oder vergleichbar (ISCED 7)",
+    anforderung ==  "ISCED11_8" ~ "Promotion (ISCED 8)",
+    anforderung == "ISCED11_5T8" ~ "tertiäre Bildung (gesamt)"
+  ))
+
+# Fachbereich zuweisen - mit Kekelis Funktion
+dat <- iscedf13_transform_lang(dat)
+
+# übersetzen
+dat <- dat %>%
+  dplyr::mutate(
+    geschlecht = dplyr::case_when(
+      geschlecht == "Male" ~ "Männer",
+      geschlecht == "Female" ~ "Frauen",
+      geschlecht == "Total" ~ "Gesamt",
+      T ~ geschlecht
+    ),
+    variable = dplyr::case_when(
+      variable == "Distribution of new entrants by field of education" ~
+        "Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern",
+      variable == "Share of graduates by field" ~
+        "Anteil Absolvent*innen nach Fach an allen Fächern",
+      variable == "Share of graduates by gender in fields of education" ~
+        "Frauen-/Männeranteil Absolvent*innen nach Fachbereichen",
+      variable == "Share of new entrants for each field of education by gender" ~
+        "Frauen-/Männeranteil Ausbildungs-/Studiumsanfänger*innen nach Fachbereichen",
+      variable == "Number of enrolled students, graduates and new entrants by field of education"
+      T ~ variable
+    )
+  )
+
+# missings ausfiltern
+dat <- na.omit(dat)
+
+# bereich ergänze und in Reihenfolge bringen
+dat$bereich <- "Arbeitsmarkt"
+dat$typ <- "In Prozent"
+dat$quelle <- "OECD"
+dat$population <- "OECD"
+# dat$indikator <- "Alle"
+
+
+# Spalten in logische Reihenfolge bringen
+dat<- dat[,c("bereich", "quelle", "variable", "typ", "fach",
+             "geschlecht", "population", "land", "jahr", "anforderung", "wert")]
+colnames(dat)[5] <- "fachbereich"
+
+# mint berechnen
+mint <- dat %>%
+  dplyr::filter(!(grepl("Frauen-/Männ", variable))) %>%
+  dplyr::filter(fachbereich %in% c("Naturwissenschaften, Mathematik und Statistik",
+                                   "Informatik & Kommunikationstechnologie",
+                                   "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe")) %>%
+  dplyr::group_by(bereich, quelle, variable, typ, geschlecht, population, land, jahr, anforderung) %>%
+  dplyr::summarise(wert = sum(wert)) %>%
+  dplyr::mutate(fachbereich = "MINT") %>%
+  dplyr::ungroup()
+nicht_mint <- dat %>%
+  dplyr::filter(!(grepl("Frauen-/Männ", variable))) %>%
+  dplyr::filter(!(fachbereich %in% c("Naturwissenschaften, Mathematik und Statistik",
+                                     "Informatik & Kommunikationstechnologie",
+                                     "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
+                                     "Alle"))) %>%
+  dplyr::group_by(bereich, quelle, variable, typ, geschlecht, population, land, jahr, anforderung) %>%
+  dplyr::summarise(wert = sum(wert)) %>%
+  dplyr::mutate(fachbereich = "Alle Bereiche außer MINT") %>%
+  dplyr::ungroup()
+
+dat <- rbind(dat, mint, nicht_mint)
+
+# umbenennen
+arbeitsmarkt_anfaenger_absolv_oecd <- dat
+
+# speichern
+save(arbeitsmarkt_anfaenger_absolv_oecd, file = "arbeitsmarkt_anfaenger_absolv_oecd.rda")
+usethis::use_data(arbeitsmarkt_anfaenger_absolv_oecd, overwrite = T)
+
 
 
 

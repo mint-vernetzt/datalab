@@ -408,8 +408,8 @@ mod_international_start_ui <- function(id){
 
                                       shiny::sidebarPanel(
                                         width = 3,
-                                        #p("LOREM"),
-                                        mod_international_arbeitsmarkt_vergleich_ui("international_arbeitsmarkt_vergleich_1"),
+                                        # p("LOREM"),
+                                        # mod_international_arbeitsmarkt_vergleich_ui("international_arbeitsmarkt_vergleich_1"),
 
                                       ),
                                       shiny::mainPanel(

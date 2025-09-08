@@ -2460,15 +2460,22 @@ plot_international_map_arb <- function(r) {
     WHERE geschlecht = 'Gesamt'
     AND jahr = {inpy}
     AND indikator = {inpp}
-    AND variable = 'Anteil an arbeitender Bevölkerung'
+    AND variable = 'Anteil an Gesamtbevölkerung'
                                ", .con = con)
 
     data1 <- DBI::dbGetQuery(con, df_query)
 
 
+
     data1 <- data1 %>%
       tidyr::pivot_wider(names_from = variable, values_from = wert)%>%
-      dplyr::rename(wert="Anteil an arbeitender Bevölkerung")
+      dplyr::rename(wert="Anteil an Gesamtbevölkerung")
+
+
+
+
+
+
 
     # für hover vorbereiten
     data1$display_rel <- prettyNum(round(data1$wert,1), big.mark = ".", decimal.mark = ",")
@@ -2500,6 +2507,7 @@ plot_international_map_arb <- function(r) {
                          dplyr::mutate(land=dplyr::case_when(land == "Tschechien" ~ "Tschechische Republik",
                                                       T ~ .$land)), by= "land")%>%
       dplyr::mutate(alpha2= toupper(alpha2))
+
 
 
 
@@ -2775,7 +2783,7 @@ plot_international_map_arb_gender <- function(r) {
     WHERE geschlecht IN ('Gesamt','Frauen')
     AND jahr = {inpy}
     AND indikator = {inpp}
-    AND variable = 'Anteil an arbeitender Bevölkerung'
+    AND variable = 'Anteil an Gesamtbevölkerung'
                                ", .con = con)
 
     data1 <- DBI::dbGetQuery(con, df_query)
@@ -3173,14 +3181,14 @@ plot_international_top10_mint_arb <- function(r) {
     WHERE geschlecht = 'Gesamt'
     AND jahr = {inpy}
     AND indikator = {inpp}
-    AND variable = 'Anteil an arbeitender Bevölkerung'
+    AND variable = 'Anteil an Gesamtbevölkerung'
                                ", .con = con)
 
     data1 <- DBI::dbGetQuery(con, df_query)
 
     data1 <- data1 %>%
       tidyr::pivot_wider(names_from = variable, values_from = wert)%>%
-      dplyr::rename(wert="Anteil an arbeitender Bevölkerung")%>%
+      dplyr::rename(wert="Anteil an Gesamtbevölkerung")%>%
       dplyr::mutate(display_rel=prettyNum(.$wert, big.mark = ".", decimal.mark = ","))
 
 
@@ -3771,7 +3779,7 @@ plot_international_top10_mint_arb_gender <- function(r) {
     WHERE geschlecht IN ('Gesamt', 'Frauen')
     AND jahr = {inpy}
     AND indikator = {inpp}
-    AND variable = 'Anteil an arbeitender Bevölkerung'
+    AND variable = 'Anteil an Gesamtbevölkerung'
                                ", .con = con)
 
     data1 <- DBI::dbGetQuery(con, df_query)
@@ -4483,6 +4491,8 @@ plot_international_arbeitsmarkt_vergleiche <- function(r) {
   AND fachbereich = {fach_m}
 
                                ", .con = con)
+
+  browser()
 
   tmp_df <- DBI::dbGetQuery(con, df_query)
 
