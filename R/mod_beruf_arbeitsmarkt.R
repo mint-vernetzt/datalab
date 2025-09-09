@@ -648,6 +648,25 @@ fluidRow( id="beruf_mint",
 
                           ),
 
+                          tabPanel("top 10 entgel", br(),
+
+                                   shiny::sidebarPanel(
+                                     width = 3,
+                                     mod_beruf_arbeitsmarkt_top_entgelt_ui("mod_beruf_arbeitsmarkt_top_entgelt_ui_1"),
+                                   ),
+                                   shiny::mainPanel(
+                                     width = 9,
+                                     shinycssloaders::withSpinner(htmlOutput(ns("plot_top_entgelte")),
+                                                                  color = "#154194"),
+
+                                     br(),
+                                     shinyBS::bsPopover(id="h_studium_fach_entgelte1", title="",
+                                                        content = paste0("I"),
+                                                        placement = "top",
+                                                        trigger = "hover"),
+                                     tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_studium_fach_entgelte1"))
+                          ),
+
 
               )
             )))
@@ -1078,6 +1097,26 @@ mod_beruf_arbeitsmarkt_server <- function(id, r){
    })
 
 
+
+   output$plot_top_entgelte <- renderUI({
+
+     plot_list <- plot_ranking_top_entgeltee(r)
+     # r$plot_top_faecher_left <- plot_list[[1]]
+     # r$plot_top_faecher_right <- plot_list[[2]]
+     #
+     # r$plot_top_faecher_left_title <- get_plot_title(
+     #   plot = r$plot_top_faecher_left
+     # )
+     # r$plot_top_faecher_right_title <- get_plot_title(
+     #   plot = r$plot_top_faecher_right
+     # )
+
+     # return plots
+     out <- highcharter::hw_grid(
+       plot_list,
+       ncol = 2)
+
+   })
 
 
 

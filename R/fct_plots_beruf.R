@@ -3800,3 +3800,15 @@ entgelte_balken_1 <- function(r) {
 }
 
 
+
+
+plot_ranking_top_entgeltee <- function(r) {
+
+  info1 <- r$date_top_entgelt
+  inf22 <- r$states_top_entgelt
+  inf23 <- r$subject_top_entgelt
+  inf_4 <- r$subject_abs_rel_engelt
+
+}
+
+

@@ -5211,7 +5211,7 @@ plot_auslaender_mint_zeit <- function(r){
 
       if (status_select == "Absolvent:innen"){
 
-        df <- df[with(df, order(wert, decreasing = TRUE)), ]############################################
+        df <- df[with(df, order(wert, decreasing = TRUE)), ]
 
         titel <- paste0("Anteil internationaler Absolvent:innen an allen Absolvent:innen in ", fach_help , " in ", bl_select )
 
@@ -5266,7 +5266,7 @@ plot_auslaender_mint_zeit <- function(r){
 
       } else {
 
-        df <- df[with(df, order(wert, decreasing = TRUE)), ]##########################################
+        df <- df[with(df, order(wert, decreasing = TRUE)), ]
 
         titel <- paste0("Anteil internationaler ", help, " an allen ", help2, " in ", fach_help , " in ", bl_select )
 
@@ -5357,7 +5357,7 @@ plot_auslaender_mint_zeit <- function(r){
 
       if (status_select == "Absolvent:innen"){
 
-        df <- df[with(df, order(wert, decreasing = TRUE)), ]#########################################
+        df <- df[with(df, order(wert, decreasing = TRUE)), ]
 
         titel <- paste0("Anzahl internationaler Absolvent:innen in ", fach_help, " in ", bl_select)
 
@@ -5411,7 +5411,7 @@ plot_auslaender_mint_zeit <- function(r){
 
       } else {
 
-        df <- df[with(df, order(wert, decreasing = TRUE)), ]##########################################
+        df <- df[with(df, order(wert, decreasing = TRUE)), ]
 
         titel <- paste0("Anzahl internationaler ", help, " in ", fach_help, " in ", bl_select)
 
