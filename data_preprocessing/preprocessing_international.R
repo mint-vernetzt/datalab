@@ -94,6 +94,7 @@ pisa_extract <- function(pisa_list_dat, pisa_list_sheeet) {
 
   dat_pisa_g2<- dat_pisa_g1[-c(1:2),]
 
+
   dat_pisa_g3 <- dat_pisa_g2 %>%
     mutate(across(`Year/Study`, ~ zoo::na.locf(.)))
   # %>%
@@ -1807,14 +1808,20 @@ dat <- read.csv(paste0(pfad,
 
 dat <- dat %>%
   dplyr::select(REF_AREA, Reference.area, EDUCATION_LEV, Sex, EDUCATION_FIELD,
-                TIME_PERIOD, OBS_VALUE) %>%
+                TIME_PERIOD, OBS_VALUE, MEASURE) %>%
   dplyr::rename(land_code = REF_AREA,
                 land = Reference.area,
                 anforderung = EDUCATION_LEV,
                 geschlecht = Sex,
                 fach = EDUCATION_FIELD,
                 jahr = TIME_PERIOD,
-                wert = OBS_VALUE)
+                wert = OBS_VALUE) %>%
+  dplyr::filter(
+    MEASURE == "ENRL"
+  ) %>%
+  dplyr::select(
+    -MEASURE
+  )
 
 
 # dat <- dat %>%
@@ -2030,9 +2037,9 @@ dat$indikator <- ifelse(dat$anforderung == "kurzes tertiäres Bildungsprogramm (
                           dat$anforderung == "tertiäre Bildung (gesamt)", "Alle", dat$indikator)
 
 # filtern nach akademisch
-dat <- dat %>%
-  dplyr::filter(indikator == "akademisch") %>%
-  dplyr::select(-indikator)
+# dat <- dat %>%
+#   dplyr::filter(indikator == "akademisch") %>%
+#   dplyr::select(-indikator)
 
 # missings ausfiltern
 dat <- na.omit(dat)
@@ -2191,7 +2198,7 @@ dat <- dat %>%
         "Frauen-/Männeranteil Absolvent*innen nach Fachbereichen",
       variable == "Share of new entrants for each field of education by gender" ~
         "Frauen-/Männeranteil Ausbildungs-/Studiumsanfänger*innen nach Fachbereichen",
-      variable == "Number of enrolled students, graduates and new entrants by field of education"
+      variable == "Number of enrolled students, graduates and new entrants by field of education",
       T ~ variable
     )
   )

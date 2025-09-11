@@ -57,30 +57,26 @@ mod_beruf_arbeitsmarkt_entgelt_verlauf_ui <- function(id){
       multiple = FALSE,
       selected = c("Deutschland")
     ),
-    p("Beschäftigtengruppe:"),
+    p("Berufslevel:"),
     shinyWidgets::pickerInput(
       inputId = ns("indikator_arbeitsmarkt_entgelt_verlauf_2"),
-      choices = c("Auszubildende",
-                  "Auszubildende mit neuem Lehrvertrag" = "Auszubildende (1. Jahr)",
-                  "Beschäftigte",
-                  "ausländische Auszubildende",
-                  "ausländische Beschäftigte",
-                  "Beschäftigte 25-55",
-                  "Beschäftigte u25",
-                  "Beschäftigte ü55"),
-      multiple = TRUE,
-      options = list(`actions-box` = TRUE,
-                     `deselect-all-text` = "Alle abwählen",
-                     `select-all-text` = "Alle auswählen"),
-      selected = c("Beschäftigte", "Auszubildende"),
+      choices = c("Gesamt",
+                  "Fachkraft",
+                  "Spezialist",
+                  "Experte"),
+      selected = c("Gesamt"),
+      multiple = FALSE
     ),
-    p("Darstellungsart:"),
-    shinyWidgets::radioGroupButtons(
+
+    p("Geschlecht:"),
+    shinyWidgets::pickerInput(
       inputId = ns("abs_zahlen_arbeitsmarkt_entgelt_verlauf"),
-      choices = c("In Prozent", "Anzahl"),
-      justified = TRUE,
-      checkIcon = list(yes = icon("ok",
-                                  lib = "glyphicon"))
+      choices = c("Ingesamt",
+                  "Männer",
+                  "Frauen"
+      ),
+      multiple = FALSE,
+      selected = c("Insgesamt")
     ),
     br(),
     shinyBS::bsPopover(id="ih_beruf_mint_2_entge", title="",

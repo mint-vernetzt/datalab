@@ -31,8 +31,8 @@ mod_beruf_arbeitsmarkt_entgelt_vergleich_ui <- function(id){
     shinyWidgets::sliderTextInput(
       inputId = ns("date_arbeitsmarkt_entgelt_vergleich"),
       label = NULL,
-      choices = 2013:2023,
-      selected = 2023
+      choices = 2013:2022,
+      selected =2022
     ),
     p("Region:"),
     shinyWidgets::pickerInput(
@@ -60,33 +60,36 @@ mod_beruf_arbeitsmarkt_entgelt_vergleich_ui <- function(id){
       multiple = FALSE,
       selected = c("Deutschland")
     ),
+    p("Geschlecht:"),
+    shinyWidgets::pickerInput(
+      inputId = ns("beruf_arbeitsmarkt_entgel_geschlecht"),
+      choices = c("Insgesamt",
+                  "Frauen",
+                  "Männer"),
+      multiple = FALSE,
+      selected = "Insgesamt"
+    ),
+    p("Berufslevel:"),
+    shinyWidgets::pickerInput(
+      inputId = ns("beruf_arbeitsmarkt_entgelt_berufslev"),
+      choices = c("Gesamt",
+                  "Fachkraft",
+                  "Spezialist",
+                  "Experte"),
+      selected = c("Gesamt"),
+      multiple = FALSE
+    ),
 
-    p("Beschäftigtengruppe:"),
-                     shinyWidgets::pickerInput(
-                       inputId = ns("indikator_arbeitsmarkt_einsteig_vergleich_balken"),
-                       choices = c("Auszubildende",
-                                   "Auszubildende mit neuem Lehrvertrag" = "Auszubildende (1. Jahr)",
-                                   "Beschäftigte",
-                                   "ausländische Auszubildende",
-                                   "ausländische Beschäftigte",
-                                   "Beschäftigte 25-55",
-                                   "Beschäftigte u25",
-                                   "Beschäftigte ü55"),
-                       multiple = TRUE,
-                       options = list(`actions-box` = TRUE,
-                                      `deselect-all-text` = "Alle abwählen",
-                                      `select-all-text` = "Alle auswählen"),
-                       selected = c("Beschäftigte", "Auszubildende"),
-                     ),
 
-                     p("Darstellungsart:"),
-                     shinyWidgets::radioGroupButtons(
-                       inputId = ns("abs_zahlen_arbeitsmarkt_entgelt_vergleich"),
-                       choices = c("In Prozent", "Anzahl"),
-                       justified = TRUE,
-                       checkIcon = list(yes = icon("ok",
-                                                   lib = "glyphicon"))
-                     ),
+
+                     # p("Darstellungsart:"),
+                     # shinyWidgets::radioGroupButtons(
+                     #   inputId = ns("abs_zahlen_arbeitsmarkt_entgelt_vergleich"),
+                     #   choices = c("In Prozent", "Anzahl"),
+                     #   justified = TRUE,
+                     #   checkIcon = list(yes = icon("ok",
+                     #                               lib = "glyphicon"))
+                     # ),
                      shinyBS::bsPopover(id="ih_beruf_mint_3_entgel", title="",
                                         content = paste0("Ohhhhh"),
                                         trigger = "hover"),
@@ -101,15 +104,25 @@ mod_beruf_arbeitsmarkt_entgelt_vergleich_ui <- function(id){
 mod_beruf_arbeitsmarkt_entgelt_vergleich_server <- function(id, r){
   moduleServer( id, function(input, output, session){
 
-    observeEvent(input$ansicht_arbeitsmarkt_entgelt_vergleich, {  #wieso einsteig?
-      r$ansicht_arbeitsmarkt_entgelt_vergleich <- input$ansicht_arbeitsmarkt_entgelt_vergleich
-    })
+
     observeEvent(input$date_arbeitsmarkt_entgelt_vergleich, {
       r$date_arbeitsmarkt_entgelt_vergleich <- input$date_arbeitsmarkt_entgelt_vergleich
     })
+
+
     observeEvent(input$region_arbeitsmarkt_entgelt_vergleich, {
       r$region_arbeitsmarkt_entgelt_vergleich <- input$region_arbeitsmarkt_entgelt_vergleich
     })
+
+    observeEvent(input$beruf_arbeitsmarkt_entgelt_berufslev, {
+      r$beruf_arbeitsmarkt_entgelt_berufslev <- input$beruf_arbeitsmarkt_entgelt_berufslev
+    })
+
+    observeEvent(input$beruf_arbeitsmarkt_entgel_geschlecht, {
+      r$beruf_arbeitsmarkt_entgel_geschlecht <- input$beruf_arbeitsmarkt_entgel_geschlecht
+    })
+
+
 
 
 
@@ -123,9 +136,9 @@ mod_beruf_arbeitsmarkt_entgelt_vergleich_server <- function(id, r){
     # })
 
 
-    observeEvent(input$abs_zahlen_arbeitsmarkt_entgelt_vergleich, {
-      r$abs_zahlen_arbeitsmarkt_entgelt_vergleich <- input$abs_zahlen_arbeitsmarkt_entgelt_vergleich
-    })
+    # observeEvent(input$abs_zahlen_arbeitsmarkt_entgelt_vergleich, {
+    #   r$abs_zahlen_arbeitsmarkt_entgelt_vergleich <- input$abs_zahlen_arbeitsmarkt_entgelt_vergleich
+    # })
 
   })
 }

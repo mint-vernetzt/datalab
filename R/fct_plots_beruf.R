@@ -3763,31 +3763,73 @@ arbeitsmarkt_lk_verlauf <- function(r){
 
 entgelte_vergleich_1 <- function(r) {
 
+  geschlecht <- r$beruf_arbeitsmarkt_entgel_geschlecht
+  datum <- r$date_arbeitsmarkt_entgelt_vergleich
+  land <- r$region_arbeitsmarkt_entgelt_vergleich
+  berufsleb <- r$beruf_arbeitsmarkt_entgelt_berufslev
 
 
-  inf <- r$ansicht_arbeitsmarkt_entgelt_vergleich
-  inf2 <- r$date_arbeitsmarkt_entgelt_vergleich
-  inf3 <- r$region_arbeitsmarkt_entgelt_vergleich
-  inf4 <- r$abs_zahlen_arbeitsmarkt_entgelt_vergleich
+  df_query <- glue::glue_sql("
+  SELECT *
+  FROM arbeitsmarkt_entgelte
+  WHERE geschlecht = {geschlecht}
+  AND jahr = {datum}
+  AND bundesland = {land}
+  AND berufslevel = {berufsleb}
+                               ", .con = con)
+
+#   browser()
+
+  df <- DBI::dbGetQuery(con, df_query)
+
+  df1 <- df %>%
+    dplyr::filter(stringr::str_detect(wert, "^[0-9.,]+$")) %>%
+    dplyr::filter(berufsgruppe == beruf)
+
+  # df1$wert <- as.numeric(df1$wert) #wert ist charakterS
+  # df1$berufsgruppe <- as.character(df1$berufsgruppe)
+
+  titel <- paste0("MINT-Anteil in")
+  tooltip <- paste('Wert {point.x}')
+  format <- "{wert}"
+
+  quelle <- "Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
 
-}
+  out <- balkenbuilder(df1, titel, x = "wert", y = "berufsgruppe", group = "berufsgruppe", tooltip = tooltip,  color =  c("#b16fab","#b16fab"), format = format , quelle = quelle)
+
+  return(out)
 
 
+  }
+
+### Tab 2 -------
 
 entgelte_verlauf_1 <- function(r) {
 
 
-  info1 <- r$date_arbeitsmarkt_entgelt_verlauf
-  inf2 <- r$region_arbeitsmarkt_entgelt_verlauf
-  in3 <- r$indikator_arbeitsmarkt_entgelt_verlauf_2
-  info__4 <- r$abs_zahlen_arbeitsmarkt_entgelt_verlauf
+  datum <- r$date_arbeitsmarkt_entgelt_verlauf
+  land <- r$region_arbeitsmarkt_entgelt_verlauf
+  berufsleb <- r$indikator_arbeitsmarkt_entgelt_verlauf_2
+  ### brauchts net
+  geschlecht <- r$abs_zahlen_arbeitsmarkt_entgelt_verlauf
+
+  df_query <- glue::glue_sql("
+  SELECT *
+  FROM arbeitsmarkt_entgelte
+  WHERE geschlecht = {geschlecht}
+  AND jahr = {datum}
+  AND bundesland = {land}
+  AND berufslevel = {berufsleb}
+                               ", .con = con)
+
+  df <- DBI::dbGetQuery(con, df_query)
 
 
 
 }
 
-
+### Tab 3 -------
 
 entgelte_balken_1 <- function(r) {
 
@@ -3797,9 +3839,12 @@ entgelte_balken_1 <- function(r) {
   i_44 <- r$status_balken_entgelt
 
   it <- r$abs_zahlen_balken_entgelt
+
+  out <- balkenbuilder()
+
 }
 
-
+### Tab 4 -------
 
 
 plot_ranking_top_entgeltee <- function(r) {

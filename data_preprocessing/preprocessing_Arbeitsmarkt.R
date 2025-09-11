@@ -4012,14 +4012,65 @@ usethis::use_data(arbeitsmarkt_fachkraefte , overwrite = T)
 
 
 
-
-
-
-
-
-
-
-
+#
+#
+# ## Erstellt Gehaltsdaten------
+#
+#
+#
+#
+#
+# pfad <- "C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/"
+# # akro <- "kbr"
+# data <- read.csv(paste0(pfad, "EA0001_349270_Entgelte_MINT_D.xlsb"),
+#                  header = TRUE, sep = ",", dec = ".")
+#
+# dat <- readxlsb::read_xlsb(paste0(pfad, "EA0001_349270_Entgelte_MINT_D.xlsb"), sheet = "Entgelt_MINT")
+#
+#
+# dat1 <- dat[-c(1:14),]
+# dat2 <- dat1[,-c(4:10)]
+#
+#
+#
+#
+#
+#
+# dat3 <-  dat2 %>%
+#   dplyr::mutate(across(everything(), ~ dplyr::na_if(.x, ""))) %>%
+#   dplyr::rename(
+#     jahr         = X,
+#     variable     = X.1,
+#     geschlecht   = X.2,
+#     mediangehalt = Beschäftigungsstatistik
+#   ) %>%
+#   dplyr::mutate(
+#     jahr         = lubridate::year(as.Date(jahr)),
+#     mediangehalt = as.numeric(mediangehalt)
+#   ) %>%
+#   tidyr::fill(jahr, variable, .direction = "down") %>%
+#   dplyr::mutate(
+#     beruf = dplyr::case_when(
+#       stringr::str_detect(variable, "Fachkraft$") ~ "Fachkraft",
+#       stringr::str_detect(variable, "Spezialist$") ~ "Spezialist",
+#       stringr::str_detect(variable, "Experten$")   ~ "Experten",
+#       stringr::str_detect(variable, "Experte$")   ~ "Experte",
+#       stringr::str_detect(variable, "Fachkräfte$")   ~ "Fachkräfte",
+#       stringr::str_detect(variable, "Spezialisten$")   ~ "Spezialisten",
+#       TRUE ~ NA_character_
+#     ),
+#     variable = variable |>
+#       stringr::str_remove("-?\\s*Fachkraft$") |>
+#       stringr::str_remove("-?\\s*Spezialist$") |>
+#       stringr::str_remove("-?\\s*Spezialisten$") |>
+#       stringr::str_remove("-?\\s*Experten$") |>
+#       stringr::str_remove("-?\\s*Experte$") |>
+#       stringr::str_remove("-?\\s*Fachkräfte$") |>
+#       stringr::str_trim()
+#   ) %>%
+#   dplyr::mutate(
+#     variable = stringr::str_remove(variable, "^\\d{5}\\s+")
+#   )
 
 
 

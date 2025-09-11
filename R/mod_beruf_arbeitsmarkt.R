@@ -1085,8 +1085,15 @@ mod_beruf_arbeitsmarkt_server <- function(id, r){
    # Box 5 ----
    # Tab
    output$plot_entgelt_vergleich <- renderUI({
-     entgelte_vergleich_1(r)
-   })
+    plot_list <- entgelte_vergleich_1(r)
+
+    plot_list
+     })
+
+
+
+
+
 
    output$plot_entgelt_verlauf <- renderUI({
      entgelte_verlauf_1(r)
