@@ -3784,7 +3784,8 @@ entgelte_vergleich_1 <- function(r) {
 
   df1 <- df %>%
     dplyr::filter(stringr::str_detect(wert, "^[0-9.,]+$")) %>%
-    dplyr::filter(berufsgruppe == beruf)
+    dplyr::filter(berufsgruppe == beruf) %>%
+    dplyr::mutate(wert = as.numeric(wert))
 
   # df1$wert <- as.numeric(df1$wert) #wert ist charakterS
   # df1$berufsgruppe <- as.character(df1$berufsgruppe)
@@ -3796,7 +3797,15 @@ entgelte_vergleich_1 <- function(r) {
   quelle <- "Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
 
-  out <- balkenbuilder(df1, titel, x = "wert", y = "berufsgruppe", group = "berufsgruppe", tooltip = tooltip,  color =  c("#b16fab","#b16fab"), format = format , quelle = quelle)
+
+
+
+######################################################  browser()
+
+  df1$wert <- as.numeric(df1$wert)
+  df1$berufsgruppe <- as.character(df1$berufsgruppe)
+
+  out <- balkenbuilder(df1, titel, x = "wert", y = "berufsgruppe", tooltip = tooltip,  color =  c("#b16fab","#b16fab"), format = format , quelle = quelle)
 
   return(out)
 
@@ -3814,16 +3823,56 @@ entgelte_verlauf_1 <- function(r) {
   ### brauchts net
   geschlecht <- r$abs_zahlen_arbeitsmarkt_entgelt_verlauf
 
+  datum1 <- datum[1]:datum[2]
+
+
+  if(geschlecht == "Ingesamt") {
+    geschlecht <- "Insgesamt"
+  }
+
   df_query <- glue::glue_sql("
   SELECT *
   FROM arbeitsmarkt_entgelte
   WHERE geschlecht = {geschlecht}
-  AND jahr = {datum}
+  AND jahr IN  ({datum1*})
   AND bundesland = {land}
   AND berufslevel = {berufsleb}
                                ", .con = con)
 
+
+
   df <- DBI::dbGetQuery(con, df_query)
+
+
+  df <- df %>%
+    dplyr::mutate(wertq = readr::parse_number(wert))
+
+
+  df <- na.omit(df)
+
+  df <- df %>%
+    dplyr::filter(
+      berufsgruppe %in% c("MINT-Berufe", "Insgesamt", "Keine MINT-Berufe", "Informatik","Technik", "Mathematik, Naturwissenschaften")
+    )
+
+
+
+
+
+  titel <- "ff"
+  tooltip <-"%"
+  format <- "{value:, f}"
+  color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
+             "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
+
+  quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+
+  browser()
+
+
+
+
+  out <- linebuilder(df, titel, x = "jahr", y = "wertq", group = "berufsgruppe", tooltip, format, color, quelle = quelle)
 
 
 

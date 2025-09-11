@@ -593,7 +593,7 @@ fluidRow( id="beruf_mint",
                                    ),
                                    shiny::mainPanel(
                                      width = 9,
-                                     shinycssloaders::withSpinner(htmlOutput(ns("plot_entgelt_vergleich")),
+                                     shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_entgelt_vergleich")),
                                                                   color = "#154194"),
 
                                      shinyBS::bsPopover(id = "h_beruf_mint_3_entgel", title = "",
@@ -1084,12 +1084,20 @@ mod_beruf_arbeitsmarkt_server <- function(id, r){
 
    # Box 5 ----
    # Tab
-   output$plot_entgelt_vergleich <- renderUI({
-    plot_list <- entgelte_vergleich_1(r)
 
-    plot_list
-     })
+   output$plot_entgelt_vergleich <- highcharter::renderHighchart({
+     entgelte_vergleich_1(r)
+   })
 
+   # output$plot_entgelt_vergleich <- renderUI({
+   #   plot_list <- entgelte_vergleich_1(r)
+   #   highcharter::highchartOutput("hc_tmp")
+   # })
+   #
+   # output$hc_tmp <- highcharter::renderHighchart({
+   #   entgelte_vergleich_1(r)
+   # })
+   #
 
 
 
