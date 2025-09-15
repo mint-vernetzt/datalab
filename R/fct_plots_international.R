@@ -2556,13 +2556,18 @@ plot_international_map_arb <- function(r) {
 
       df_query <- glue::glue_sql("
       SELECT *
-      FROM arbeitsmarkt_beschaeftigte_eu
+      FROM arbeitsmarkt_anzahl_azubis_oecd
       WHERE jahr = {inpy}
-      AND fachbereich IN ('MINT','Informatik & Kommunikationstechnologie','Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe','Naturwissenschaften, Mathematik und Statistik','Alle')
+      AND fach IN ('MINT','Informatik & Kommunikationstechnologie','Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe','Naturwissenschaften, Mathematik und Statistik','Alle')
       AND geschlecht = 'Gesamt'
                                ", .con = con)
 
+
+      browser()
+
       data1 <- DBI::dbGetQuery(con, df_query)
+
+
 
       data1 <- data1 %>%
         dplyr::mutate(display_rel= prettyNum(round(.$wert, 1), big.mark = ".", decimal.mark = ","))
@@ -2573,8 +2578,7 @@ plot_international_map_arb <- function(r) {
         # fitlern für spezifischen fachbereich und mit geo mapping joinen
         data_map <- data1 %>%
           dplyr::filter(anforderung == "Ausbildung (ISCED 45)" &
-                          variable == "Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern" &
-                          fachbereich == inpf)%>%
+                          fach == inpf)%>%
           dplyr::inner_join(countries_names, by = "land") %>%
           dplyr::mutate(alpha2 = toupper(alpha2))
 
@@ -2815,6 +2819,9 @@ plot_international_map_arb_gender <- function(r) {
 
     data2 <- DBI::dbGetQuery(con, df_query)
 
+
+
+
     data2 <- data2 %>%
       tidyr::pivot_wider(names_from = variable, values_from = wert)%>%
       dplyr::mutate(across(`Anzahl in Tsd.`, ~ as.numeric(.)*1000))%>%
@@ -2887,6 +2894,9 @@ plot_international_map_arb_gender <- function(r) {
                                ", .con = con)
 
       data1 <- DBI::dbGetQuery(con, df_query)
+
+      browser()
+
 
 
 
@@ -3022,7 +3032,7 @@ plot_international_map_arb_gender <- function(r) {
     else {
 
       # ui input für Betrachtungsweise filtern
-      inpbe <- r$map_betr_oecd_arb_gender
+   ####   # inpbe <- r$map_betr_oecd_arb_gender
 
 
 
@@ -3031,15 +3041,15 @@ plot_international_map_arb_gender <- function(r) {
       SELECT *
       FROM arbeitsmarkt_anzahl_azubis_oecd
       WHERE geschlecht IN ('Gesamt', 'Frauen')
-      AND indikator = 'berufsorientiert'
       AND jahr = {inpy}
+      AND Measure = 'Students enrolled'
       AND fach IN ('MINT', 'Informatik & Kommunikationstechnologie','Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe','Naturwissenschaften, Mathematik und Statistik','Alle')
                                ", .con = con)
 
       data_fva <- DBI::dbGetQuery(con, df_query)
 
 
-      data_fva <- data_fva %>%
+      data_fva1 <- data_fva %>%
         tidyr::pivot_wider(values_from = wert, names_from = geschlecht)%>%
         # Errechnen der relativen Häufigkeit
         dplyr::mutate(wert= round(Frauen/Gesamt *100,1))%>%
@@ -3057,13 +3067,13 @@ plot_international_map_arb_gender <- function(r) {
       SELECT *
       FROM arbeitsmarkt_anzahl_azubis_oecd
       WHERE geschlecht = 'Frauen'
-      AND indikator = 'berufsorientiert'
       AND jahr = {inpy}
-            AND fach IN ('MINT', 'Informatik & Kommunikationstechnologie','Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe','Naturwissenschaften, Mathematik und Statistik','Alle')
+      AND fach IN ('MINT', 'Informatik & Kommunikationstechnologie','Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe','Naturwissenschaften, Mathematik und Statistik','Alle')
+      AND Measure = 'Students enrolled'
                                ", .con = con)
-
+      #
       data_fvf1 <- DBI::dbGetQuery(con, df_query)
-
+      #
       data_fvf1 <- data_fvf1 %>%
         tidyr::pivot_wider(values_from = wert, names_from = fach)%>%
         # Relative Häufigkeit errechenn
@@ -3079,15 +3089,15 @@ plot_international_map_arb_gender <- function(r) {
                             names_to = "fach") %>%
         # Wert für hover vorbereiten
         dplyr::mutate(display_rel= prettyNum(.$wert, big.mark = ".", decimal.mark = ","))
-
-
+      #
+      #
       df_query <- glue::glue_sql("
       SELECT *
       FROM arbeitsmarkt_anzahl_azubis_oecd
       WHERE geschlecht = 'Frauen'
-      AND indikator = 'berufsorientiert'
       AND jahr = {inpy}
             AND fach IN ('MINT', 'Informatik & Kommunikationstechnologie','Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe','Naturwissenschaften, Mathematik und Statistik','Alle')
+      AND Measure = 'Students enrolled'
                                ", .con = con)
 
       data_fvf2 <- DBI::dbGetQuery(con, df_query)
@@ -3114,70 +3124,92 @@ plot_international_map_arb_gender <- function(r) {
         dplyr::mutate(alpha2 = toupper(alpha2))
 
 
-      # Für die erste Betrachtungsweise
-      if (inpbe == "Anteil von Frauen an Allen"){
 
-        # Daten zuweisen
-        data1 <- data_fva
 
-        # Titel vorbereiten
-        title_oecd_2_1 <- if(inpp == "Auszubildende (ISCED 45)"){
-          paste0("weiblichen Auszubildenden (ISCED 45) an allen Auszubildenden in ", inpf)
-        } else if(inpp == "In Meisterlehre (< 880 Std. Vorbereitung, ISCED 55)"){
-          paste0("weiblichen Meisterlehrlingen (< 880 Std. Vorbereitung, ISCED 55) an allen Meisterlehrlingen in ", inpf)
-        } else if(inpp == "Auszubildende in Erstausbildung (ISCED 35)"){
-          paste0("weiblichen Auszubildenden in Erstausbildung (ISCED 35) an allen Auszubildenden in Erstausbildung in ", inpf)
-        }else if (inpp == "In Meister-/Technikerlehre (> 880 Std. Vorbereitung, ISCED 65)"){
-          paste0("weiblichen Meister-/Technikerlehrlingen (> 880 Std. Vorbereitung, ISCED 65) an allen Meister-/Technikerlehrlingen in ", inpf)
-        }
-
-      } # Falls zwite Betrachtungsweise gewählt wird
-      else if(inpbe == "Anteil an Frauen von Frauen"){
+      # # Für die erste Betrachtungsweise
+      # if (inpbe == "Anteil von Frauen an Allen"){
+      #
+      #   # Daten zuweisen
+      #   data1 <- data_fva
+      #
+      #   # Titel vorbereiten
+      #   title_oecd_2_1 <- if(inpp == "Auszubildende (ISCED 45)"){
+      #     paste0("weiblichen Auszubildenden (ISCED 45) an allen Auszubildenden in ", inpf)
+      #   } else if(inpp == "In Meisterlehre (< 880 Std. Vorbereitung, ISCED 55)"){
+      #     paste0("weiblichen Meisterlehrlingen (< 880 Std. Vorbereitung, ISCED 55) an allen Meisterlehrlingen in ", inpf)
+      #   } else if(inpp == "Auszubildende in Erstausbildung (ISCED 35)"){
+      #     paste0("weiblichen Auszubildenden in Erstausbildung (ISCED 35) an allen Auszubildenden in Erstausbildung in ", inpf)
+      #   }else if (inpp == "In Meister-/Technikerlehre (> 880 Std. Vorbereitung, ISCED 65)"){
+      #     paste0("weiblichen Meister-/Technikerlehrlingen (> 880 Std. Vorbereitung, ISCED 65) an allen Meister-/Technikerlehrlingen in ", inpf)
+      #   }
+      #
+      # } # Falls zwite Betrachtungsweise gewählt wird
+      # else if(inpbe == "Anteil an Frauen von Frauen"){
 
 
         # Daten zuweisen
         data1 <- data_fvf3
 
+        title_oecd_2_1 <- paste0("Auszubildenden (ISCED 45) in ", inpf, " an allen weiblichen Auszubildenden")
+
         # Titel vorbereiten
-        title_oecd_2_1 <- if(inpp == "Auszubildende (ISCED 45)"){
-          paste0("Auszubildenden (ISCED 45) in ", inpf, " an allen weiblichen Auszubildenden")
-        } else if(inpp == "In Meisterlehre (< 880 Std. Vorbereitung, ISCED 55)"){
-          paste0("Meisterlehrlingen (< 880 Std. Vorbereitung, ISCED 55) in ", inpf, " an allen weiblichen Meisterlehrlingen")
-        } else if(inpp == "Auszubildende in Erstausbildung (ISCED 35)"){
-          paste0("Auszubildenden in Erstausbildung (ISCED 35) in ", inpf, " an allen weiblichen Auszubildenden in Erstausbildung")
-        }else if (inpp == "In Meister-/Technikerlehre (> 880 Std. Vorbereitung, ISCED 65)"){
-          paste0("Meister-/Technikerlehrlingen (> 880 Std. Vorbereitung, ISCED 65) in ",inpf, " allen weiblichen Meister-/Technikerlehrlingen" )
-        }
+        # title_oecd_2_1 <- if(inpp == "Auszubildende (ISCED 45)"){
+        #   paste0("Auszubildenden (ISCED 45) in ", inpf, " an allen weiblichen Auszubildenden")
+        # } else if(inpp == "In Meisterlehre (< 880 Std. Vorbereitung, ISCED 55)"){
+        #   paste0("Meisterlehrlingen (< 880 Std. Vorbereitung, ISCED 55) in ", inpf, " an allen weiblichen Meisterlehrlingen")
+        # } else if(inpp == "Auszubildende in Erstausbildung (ISCED 35)"){
+        #   paste0("Auszubildenden in Erstausbildung (ISCED 35) in ", inpf, " an allen weiblichen Auszubildenden in Erstausbildung")
+        # }else if (inpp == "In Meister-/Technikerlehre (> 880 Std. Vorbereitung, ISCED 65)"){
+        #   paste0("Meister-/Technikerlehrlingen (> 880 Std. Vorbereitung, ISCED 65) in ",inpf, " allen weiblichen Meister-/Technikerlehrlingen" )
+        # }
       }
 
 
       # Für spezifischere Indikator filtern
-      if (inpp == "Auszubildende (ISCED 45)"){
+      if (inpp == "Ausbildung (ISCED 45)"){
 
         data_map <- data1 %>%
           dplyr::filter(anforderung=="Ausbildung (ISCED 45)"&
                           fach == inpf)
 
 
-      } else if(inpp == "Auszubildende in Erstausbildung (ISCED 35)"){
+      }
+      if(inpp == "kurzes tertiäres Bildungsprogramm (ISCED 5)"){
 
         data_map <- data1 %>%
-          dplyr::filter(anforderung=="Erstausbildung (ISCED 35)"&
-                          fach == inpf)
-
-      } else if(inpp == "In Meisterlehre (< 880 Std. Vorbereitung, ISCED 55)") {
-
-        data_map <- data1 %>%
-          dplyr::filter(anforderung=="kurzes tertiäres Bildungsprogramm (berufsorientiert)"&
-                          fach == inpf)
-
-      } else if(inpp == "In Meister-/Technikerlehre (> 880 Std. Vorbereitung, ISCED 65)"){
-
-        data_map <- data1 %>%
-          dplyr::filter(anforderung== "Bachelor oder vergleichbar (berufsorientiert)"&
+          dplyr::filter(anforderung=="kurzes tertiäres Bildungsprogramm (ISCED 5)"&
                           fach == inpf)
 
       }
+      if(inpp == "Bachelor oder vergleichbar (ISCED 6)") {
+
+        data_map <- data1 %>%
+          dplyr::filter(anforderung=="Bachelor oder vergleichbar (ISCED 6)"&
+                          fach == inpf)
+
+      }
+      if(inpp == "Master oder vergleichbar (ISCED 7)"){
+
+        data_map <- data1 %>%
+          dplyr::filter(anforderung== "Master oder vergleichbar (ISCED 7)"&
+                          fach == inpf)
+
+      }
+      if(inpp == "tertiäre Bildung (gesamt)"){
+
+        data_map <- data1 %>%
+          dplyr::filter(anforderung== "tertiäre Bildung (gesamt)"&
+                          fach == inpf)
+
+      }
+      if(inpp == "Promotion (ISCED 8)"){
+
+        data_map <- data1 %>%
+          dplyr::filter(anforderung== "Promotion (ISCED 8)"&
+                          fach == inpf)
+
+      }
+
 
 
         # plot
@@ -3197,7 +3229,7 @@ plot_international_map_arb_gender <- function(r) {
 
 
 
-  }
+
 
 
 
@@ -4762,7 +4794,9 @@ plot_international_arbeitsmarkt_vergleiche <- function(r) {
   fach_m <- r$vergleich_f_int_arbeitsmarkt
 
   variable_set <- c("Anteil Absolvent*innen nach Fach an allen Fächern",
-                    "Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern")
+                    "Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern",
+                    "Anzahl der Absolvent:innen",
+                    "Anzahl der Neustudierenden")
 
 
   df_query <- glue::glue_sql("
@@ -4778,9 +4812,10 @@ plot_international_arbeitsmarkt_vergleiche <- function(r) {
 
                                ", .con = con)
 
-  browser()
 
   tmp_df <- DBI::dbGetQuery(con, df_query)
+
+  tmp_df <- unique(tmp_df)
 
 
 

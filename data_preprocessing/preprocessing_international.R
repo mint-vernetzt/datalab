@@ -1668,14 +1668,17 @@ dat <- read.csv(paste0(pfad,"OECD008_studis_azubis_nach_fach.csv"),
 
 dat <- dat %>%
   dplyr::select(REF_AREA, Reference.area, EDUCATION_LEV, Sex, EDUCATION_FIELD,
-                TIME_PERIOD, OBS_VALUE) %>%
+                TIME_PERIOD, OBS_VALUE, Measure) %>%
   dplyr::rename(land_code = REF_AREA,
                 land = Reference.area,
                 anforderung = EDUCATION_LEV,
                 geschlecht = Sex,
                 fach = EDUCATION_FIELD,
                 jahr = TIME_PERIOD,
-                wert = OBS_VALUE)
+                wert = OBS_VALUE) %>%
+  dplyr::filter(
+    Measure %in% c("Graduates", "New entrants", "Students enrolled")
+  )
 
 #dat <- dat %>%
 #  dplyr::select(COUNTRY, Country, EDUCATION_LEV, Gender, EDUCATION_FIELD,
@@ -1716,18 +1719,18 @@ dat <- dat %>%
 ## weitere Naturwissenschaften/Ingen-Wissenschaften berechnen
 dat_nw <- dat %>%
   dplyr::filter(fach %in% c("F050", "F059")) %>%
-  dplyr::group_by(land_code, land, anforderung, geschlecht, jahr) %>%
+  dplyr::group_by(land_code, land, anforderung, geschlecht, jahr, Measure) %>%
   dplyr::summarise(wert = sum(wert)) %>%
   dplyr::ungroup()
 dat_nw$fach <- "F050_59"
 dat_iw <- dat %>%
   dplyr::filter(fach %in% c("F070", "F079")) %>%
-  dplyr::group_by(land_code, land, anforderung, geschlecht, jahr) %>%
+  dplyr::group_by(land_code, land, anforderung, geschlecht, jahr, Measure) %>%
   dplyr::summarise(wert = sum(wert)) %>%
   dplyr::ungroup()
 dat_iw$fach <- "F070_79"
 ## einzelnen löschen
-dat <- dat %>% filter(!(fach %in% c("F050", "F059", "F070", "F079")))
+dat <- dat %>% dplyr::filter(!(fach %in% c("F050", "F059", "F070", "F079")))
 
 dat <- rbind(dat, dat_iw, dat_nw)
 
@@ -1767,7 +1770,7 @@ dat$typ <- "Anzahl"
 
 # Spalten in logische Reihenfolge bringen
 dat<- dat[,c("bereich", "quelle", "typ", "indikator", "fach",
-             "geschlecht", "population", "land", "jahr", "anforderung", "wert")]
+             "geschlecht", "population", "land", "jahr", "anforderung", "wert", "Measure")]
 
 
 # aus irgendeinem Grund sind hinter den absoluten Anzhalen an Studis Kommastellen teils - auch schon in Rohdaten
@@ -2149,9 +2152,8 @@ dat <- dat %>%
                 jahr = TIME_PERIOD,
                 wert = OBS_VALUE) %>%
   dplyr::filter(
-    Measure == "Students enrolled"
-  ) %>%
-  select(-Measure)
+    Measure %in% c("Graduates", "New entrants", "Students enrolled")
+  )
 
 # Land zuweisen / übersetzen
 dat_agg <- dat %>%
@@ -2180,6 +2182,8 @@ dat <- dat %>%
 # Fachbereich zuweisen - mit Kekelis Funktion
 dat <- iscedf13_transform_lang(dat)
 
+
+
 # übersetzen
 dat <- dat %>%
   dplyr::mutate(
@@ -2198,9 +2202,12 @@ dat <- dat %>%
         "Frauen-/Männeranteil Absolvent*innen nach Fachbereichen",
       variable == "Share of new entrants for each field of education by gender" ~
         "Frauen-/Männeranteil Ausbildungs-/Studiumsanfänger*innen nach Fachbereichen",
-      variable == "Number of enrolled students, graduates and new entrants by field of education",
+      Measure == "Graduates"     ~ "Anzahl der Absolvent:innen",
+      Measure == "New entrants"  ~ "Anzahl der Neustudierenden",
+      Measure == "Students enrolled" ~ "Anzahl der Studierenden",
       T ~ variable
     )
+
   )
 
 # missings ausfiltern
@@ -2216,7 +2223,7 @@ dat$population <- "OECD"
 
 # Spalten in logische Reihenfolge bringen
 dat<- dat[,c("bereich", "quelle", "variable", "typ", "fach",
-             "geschlecht", "population", "land", "jahr", "anforderung", "wert")]
+             "geschlecht", "population", "land", "jahr", "anforderung", "wert", "Measure")]
 colnames(dat)[5] <- "fachbereich"
 
 # mint berechnen
@@ -2225,7 +2232,7 @@ mint <- dat %>%
   dplyr::filter(fachbereich %in% c("Naturwissenschaften, Mathematik und Statistik",
                                    "Informatik & Kommunikationstechnologie",
                                    "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe")) %>%
-  dplyr::group_by(bereich, quelle, variable, typ, geschlecht, population, land, jahr, anforderung) %>%
+  dplyr::group_by(bereich, quelle, variable, typ, geschlecht, population, land, jahr, anforderung, Measure) %>%
   dplyr::summarise(wert = sum(wert)) %>%
   dplyr::mutate(fachbereich = "MINT") %>%
   dplyr::ungroup()
@@ -2235,7 +2242,7 @@ nicht_mint <- dat %>%
                                      "Informatik & Kommunikationstechnologie",
                                      "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
                                      "Alle"))) %>%
-  dplyr::group_by(bereich, quelle, variable, typ, geschlecht, population, land, jahr, anforderung) %>%
+  dplyr::group_by(bereich, quelle, variable, typ, geschlecht, population, land, jahr, anforderung, Measure) %>%
   dplyr::summarise(wert = sum(wert)) %>%
   dplyr::mutate(fachbereich = "Alle Bereiche außer MINT") %>%
   dplyr::ungroup()

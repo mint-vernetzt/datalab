@@ -238,7 +238,8 @@ international_ui_faecher <- function(region = "EU") {
   SELECT DISTINCT fachbereich,
   FROM arbeitsmarkt_anfaenger_absolv_oecd
   WHERE geschlecht = 'Gesamt'
-  AND variable IN ('Anteil Absolvent*innen nach Fach an allen Fächern', 'Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern')
+  AND variable IN ('Anteil Absolvent*innen nach Fach an allen Fächern','Anzahl der Absolvent:innen' ,
+                    'Anzahl der Neustudierenden',  'Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern')
 ", .con = con)
 
 
@@ -393,12 +394,13 @@ df_query <- glue::glue_sql("
     AND jahr >= 2013
     AND variable IN (
       'Anteil Absolvent*innen nach Fach an allen Fächern',
-      'Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern'
+      'Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern',
+      'Anzahl der Absolvent:innen'
     )
   ORDER BY jahr
 ", .con = con)
 
-    browser()
+   ### browser()
 
     selection <- DBI::dbGetQuery(con, jahr_query) %>%
       dplyr::pull(jahr)
@@ -434,7 +436,7 @@ international_ui_country <- function(type = "arbeit", n = NA) {
   FROM arbeitsmarkt_anfaenger_absolv_oecd
   WHERE geschlecht = 'Gesamt'
   AND jahr = {year}
-  AND variable IN ('Anteil Absolvent*innen nach Fach an allen Fächern','Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern')
+  AND variable IN ( 'Anzahl der Neustudierenden'   , 'Anzahl der Absolvent:innen', 'Anteil Absolvent*innen nach Fach an allen Fächern','Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern')
 ", .con = con)
 
     tmp_df <- DBI::dbGetQuery(con, df_query)
@@ -445,7 +447,7 @@ international_ui_country <- function(type = "arbeit", n = NA) {
       tmp_df <- tmp_df %>%
         dplyr::filter(
           fachbereich == "MINT" &
-            variable == "Anteil Absolvent*innen nach Fach an allen Fächern") %>%
+            variable == "Anzahl der Absolvent:innen") %>%
         dplyr::group_by(land) %>%
         dplyr::summarise(wert = sum(wert)) %>%
         dplyr::arrange(desc(wert)) %>%

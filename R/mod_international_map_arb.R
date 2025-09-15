@@ -38,8 +38,8 @@ mod_international_map_arb_ui <- function(id) {
                        inputId = ns("map_y_eu_arb"),
                        label = NULL,
                        choices = c("2013", "2014", "2015", "2016", "2017",
-                                   "2018", "2019", "2020", "2021", "2022" ),
-                       selected = "2022"
+                                   "2018", "2019", "2020", "2021", "2022", "2023" ),
+                       selected = "2023"
                      )),
 
 
@@ -66,8 +66,8 @@ mod_international_map_arb_ui <- function(id) {
                      shinyWidgets::sliderTextInput(
                        inputId = ns("map_y_oecd_arb"),
                        label = NULL,
-                       choices = c("2015", "2016", "2017", "2018", "2019", "2020"),
-                       selected = "2020"
+                       choices = c("2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023"),
+                       selected = "2023"
                      ),
 
                      p("Fachbereich:"),
@@ -86,8 +86,8 @@ mod_international_map_arb_ui <- function(id) {
                                       shinyWidgets::sliderTextInput(
                                         inputId = ns("map_y_oecd2_arb"),
                                         label = NULL,
-                                        choices = c("2015", "2016", "2017", "2018", "2019", "2020"),
-                                        selected = "2020"
+                                        choices = c("2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023"),
+                                        selected = "2023"
                                       ),
 
                                       p("Fachbereich:"),

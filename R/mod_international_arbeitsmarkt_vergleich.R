@@ -14,7 +14,8 @@ mod_international_arbeitsmarkt_vergleich_ui <- function(id){
     shinyWidgets::sliderTextInput(
       inputId = ns("vergleich_y_int_arbeitsmarkt"),
       label = NULL,
-      choices = international_ui_years(region = "arbeit")
+      choices = international_ui_years(region = "arbeit"),
+      selected = 2023
     ),
     p("Länder:"),
     tags$head(
@@ -28,6 +29,7 @@ mod_international_arbeitsmarkt_vergleich_ui <- function(id){
     shinyWidgets::pickerInput(
       inputId = ns("vergleich_l_int_arbeitsmarkt"),
       choices = international_ui_country(n = NA_integer_),
+      selected = "Deutschland",
       options = list(`actions-box` = TRUE,
                      `live-search` = TRUE),
       multiple = TRUE
@@ -36,6 +38,7 @@ mod_international_arbeitsmarkt_vergleich_ui <- function(id){
     shinyWidgets::pickerInput(
       inputId = ns("vergleich_f_int_arbeitsmarkt"),
       choices = international_ui_faecher(region = "arbeit"),
+      selected = "MINT",
       multiple = FALSE
     ),
     br(),

@@ -408,13 +408,13 @@ mod_international_start_ui <- function(id){
 
                                       shiny::sidebarPanel(
                                         width = 3,
-                                        # p("LOREM"),
-                                        # mod_international_arbeitsmarkt_vergleich_ui("international_arbeitsmarkt_vergleich_1"),
+                                        p("Was was hier nochmal der Titel? "),
+                                        mod_international_arbeitsmarkt_vergleich_ui("international_arbeitsmarkt_vergleich_1"),
 
                                       ),
                                       shiny::mainPanel(
                                         width = 9,
-                                        shinycssloaders::withSpinner(htmlOutput(ns("plot_international_arbeitsmarkt_vergleiche_1")),
+                                        shinycssloaders::withSpinner(highcharter::highchartOutput("plot_international_arbeitsmarkt_vergleiche_1"),
                                                                      color = "#154194"),
 
                                         shinyBS::bsPopover(id = "h_beruf_international_ho", title = "",
@@ -874,34 +874,44 @@ mod_international_start_server <- function(id, r){
       }
     )
 
-    # tab 5
-    output$plot_international_arbeitsmarkt_vergleiche_1 <- renderUI({
-      plot <- plot_international_arbeitsmarkt_vergleiche(r)
 
-      r$plot_international_arbeitsmarkt_vergleiche_1 <- plot
-      r$plot_international_arbeitsmarkt_vergleiche_1_title <- get_plot_title(
-        plot = r$plot_international_arbeitsmarkt_vergleiche_1
-      )
 
-      plot
+    output$plot_international_arbeitsmarkt_vergleiche_1 <- highcharter::renderHighchart({
+      plot_international_arbeitsmarkt_vergleiche(r)
     })
 
-    output$download_btn_plot_international_arbeitsmarkt_vergleiche_1 <- downloadHandler(
-      contentType = "image/png",
-      filename = function() {r$plot_international_arbeitsmarkt_vergleiche_1_title},
-      content = function(file) {
-        # creating the file with the screenshot and prepare it to download
-        add_caption_and_download(
-          hc = r$plot_international_arbeitsmarkt_vergleiche_1,
-          filename =  r$plot_international_arbeitsmarkt_vergleiche_1_title,
-          width = 700,
-          height = 400,
-          with_labels = FALSE)
+    # tab 5
 
-        file.copy(r$plot_international_arbeitsmarkt_vergleiche_1_title, file)
-        file.remove(r$plot_international_arbeitsmarkt_vergleiche_1_title)
-      }
-    )
+
+
+
+    # output$plot_international_arbeitsmarkt_vergleiche_1 <- renderUI({
+    #   plot <- plot_international_arbeitsmarkt_vergleiche(r)
+    #
+    #   r$plot_international_arbeitsmarkt_vergleiche_1 <- plot
+    #   r$plot_international_arbeitsmarkt_vergleiche_1_title <- get_plot_title(
+    #     plot = r$plot_international_arbeitsmarkt_vergleiche_1
+    #   )
+    #
+    #   plot
+    # })
+
+    # output$download_btn_plot_international_arbeitsmarkt_vergleiche_1 <- downloadHandler(
+    #   contentType = "image/png",
+    #   filename = function() {r$plot_international_arbeitsmarkt_vergleiche_1_title},
+    #   content = function(file) {
+    #     # creating the file with the screenshot and prepare it to download
+    #     add_caption_and_download(
+    #       hc = r$plot_international_arbeitsmarkt_vergleiche_1,
+    #       filename =  r$plot_international_arbeitsmarkt_vergleiche_1_title,
+    #       width = 700,
+    #       height = 400,
+    #       with_labels = FALSE)
+    #
+    #     file.copy(r$plot_international_arbeitsmarkt_vergleiche_1_title, file)
+    #     file.remove(r$plot_international_arbeitsmarkt_vergleiche_1_title)
+    #   }
+    # )
 
    # Box 4 - International Table ----
     #
