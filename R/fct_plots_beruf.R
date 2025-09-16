@@ -3848,11 +3848,14 @@ entgelte_verlauf_1 <- function(r) {
     dplyr::mutate(wertq = readr::parse_number(wert))
 
 
-  df <- na.omit(df)
+#  df <- na.omit(df)
 
   df <- df %>%
     dplyr::filter(
       berufsgruppe %in% c("MINT-Berufe", "Insgesamt", "Keine MINT-Berufe", "Informatik","Technik", "Mathematik, Naturwissenschaften")
+    ) %>%
+    dplyr::filter(
+      berufsgruppe == beruf
     )
 
 
@@ -3860,14 +3863,13 @@ entgelte_verlauf_1 <- function(r) {
 
 
   titel <- "ff"
-  tooltip <-"%"
-  format <- "{value:, f}"
+  tooltip <-"{point.y}"
+  format <- "{wertq}"
   color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
              "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
 
   quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
-  browser()
 
 
 
@@ -3883,13 +3885,45 @@ entgelte_verlauf_1 <- function(r) {
 entgelte_balken_1 <- function(r) {
 
   # inf1 <- r$ansicht_balken_entgelt
-  inf2 <- r$date_balken_entgelt
-  in_3 <- r$states_balken_entgelt
-  i_44 <- r$status_balken_entgelt
+  jahr <- r$date_balken_entgelt
+  bulasa <- r$states_balken_entgelt
+  status <- r$status_balken_entgelt
 
-  it <- r$abs_zahlen_balken_entgelt
+  identi <- r$abs_zahlen_balken_entgelt
 
-  out <- balkenbuilder()
+  jahr <- as.numeric(jahr)
+
+
+
+  df_query <- glue::glue_sql("
+  SELECT *
+  FROM arbeitsmarkt_entgelte
+  WHERE geschlecht = 'Insgesamt'
+  AND jahr = {jahr}
+  AND bundesland = {bulasa}
+  AND berufslevel = {status}
+  AND berufsgruppe IN ({identi*})
+                               ", .con = con)
+
+
+
+  df <- DBI::dbGetQuery(con, df_query)
+
+  df <- df %>%
+    dplyr::filter(
+     beruf == berufsgruppe
+    )
+
+
+
+
+  titel <- paste0("MINT-Anteil in")
+  tooltip <- paste('Wert {point.x}')
+  format <- "{wert}"
+
+  quelle <- ""
+
+  out <- balkenbuilder(df, titel, x = "wert", y = "berufsgruppe", tooltip = tooltip,  color =  c("#b16fab","#b16fab"), format = format , quelle = quelle)
 
 }
 

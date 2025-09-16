@@ -852,6 +852,7 @@ arbeit_fachkraft_ui_years <- function() {
 
   selection <- DBI::dbGetQuery(con, df_query)
 
+
   selection <- selection %>%
     dplyr::pull(jahr) %>%
     unique() %>%

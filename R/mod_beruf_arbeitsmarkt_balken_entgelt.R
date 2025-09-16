@@ -15,8 +15,8 @@ mod_beruf_arbeitsmarkt_balken_entgelt_ui <- function(id){
     shinyWidgets::sliderTextInput(
       inputId = ns("date_balken_entgelt"),
       label = NULL,
-      choices = 2013:2023,
-      selected = c(2017, 2023)
+      choices = 2013:2022,
+      selected = 2022
     ),
     p("Region:"),
     shinyWidgets::pickerInput(
@@ -46,19 +46,19 @@ mod_beruf_arbeitsmarkt_balken_entgelt_ui <- function(id){
     p("Studierendengruppen:"),
     shinyWidgets::pickerInput(
       inputId = ns("status_balken_entgelt"),
-      choices = c("Studierende",
-                  "Studienanfänger:innen (1. Hochschulsemester)",
-                  "Absolvent:innen"
+      choices = c("Gesamt", "Fachkraft", "Spezialist", "Experte"
       ),
-      selected = "Studierende"
+      selected = "Gesamt"
     ),
     p("Darstellungsart:"),
-    shinyWidgets::radioGroupButtons(
+    shinyWidgets::pickerInput(
       inputId = ns("abs_zahlen_balken_entgelt"),
-      choices = c("In Prozent", "Anzahl"),
-      justified = TRUE,
-      checkIcon = list(yes = icon("ok",
-                                  lib = "glyphicon"))
+      choices = c("MINT-Berufe", "Insgesamt", "Mathematik, Naturwissenschaften", "Informatik", "Technik", "Landtechnik", "Produktionstechnik", "Bau-und Gebäudetechnik", "Keine MINT-Berufe", "Verkehrs-, Sicherheits- und Veranstaltungstechnik", "Gesundheitstechnik"),
+      selected = c("MINT-Berufe", "Insgesamt", "Keine MINT-Berufe"),
+      multiple = TRUE,
+      options =  list(
+        "max-options" = 4,
+        "max-options-text" = "<span style='color: red;'>Maximal 4 Indikatoren auswählen</span>")
 
     ),
     br(),

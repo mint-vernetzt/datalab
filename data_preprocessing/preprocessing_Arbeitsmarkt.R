@@ -2529,6 +2529,37 @@ library(dplyr)
 
 
 
+
+
+
+
+
+
+# 2022 und 2024 Lan
+
+
+
+
+
+
+
+
+
+
+
+
+sheets <- c("Fachkräfte", "Spezialisten", "Experten")
+# Vorbereitung 2024, da die Deutschen Daten unterschiedlich sind
+
+
+pfad <- "C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/"
+
+
+
+
+
+
+
 #### Rohdaten einlesen -------------------------------------------------------
 akro <- "kbr"
 pfad <- paste0("C:/Users/", akro,
@@ -2546,7 +2577,8 @@ sheets <- c("Fachkräfte", "Spezialisten", "Experten")
 name <- c("BA014_EPA_2020_Länderergebnisse.xlsx",
           "BA015_2021_Länderergebnisse.xlsx",
           "BA016_2022_Länderergebnisse.xlsx",
-          "BA025_2023_Engpassanalyse_Länder.xlsx")
+          "BA025_2023_Engpassanalyse_Länder.xlsx",
+          "BA046_2024_Länderergebnisse (1).xlsx")
 
 epa20_f <- epa_einlesen(name[1], sheets[1])
 epa20_s <- epa_einlesen(name[1], sheets[2])
@@ -2563,6 +2595,10 @@ epa22_e <- epa_einlesen(name[3], sheets[3])
 epa23_f <- epa_einlesen(name[4], sheets[1])
 epa23_s <- epa_einlesen(name[4], sheets[2])
 epa23_e <- epa_einlesen(name[4], sheets[3])
+
+epa24_f <- epa_einlesen(name[5], sheets[1])
+epa24_s <- epa_einlesen(name[5], sheets[2])
+epa24_e <- epa_einlesen(name[5], sheets[3])
 
 #### Datensatz in passende Form aufbereiten ----------------------------------
 
@@ -2588,6 +2624,8 @@ epa22_f <- epa_zuschneiden(epa22_f)
 epa22_s <- epa_zuschneiden(epa22_s)
 epa22_e <- epa_zuschneiden(epa22_e)
 
+
+
 epa_zuschneiden <- function(df){
   df <- df %>% select(-"...2")
   header <- as.character(df[5,])
@@ -2601,6 +2639,10 @@ epa_zuschneiden <- function(df){
 epa23_f <- epa_zuschneiden(epa23_f)
 epa23_s <- epa_zuschneiden(epa23_s)
 epa23_e <- epa_zuschneiden(epa23_e)
+
+epa24_f <- epa_zuschneiden(epa24_f)
+epa24_s <- epa_zuschneiden(epa24_s)
+epa24_e <- epa_zuschneiden(epa24_e)
 
 
 # ins Long Format bringen
@@ -2620,7 +2662,9 @@ epa23_f <- tidyr::pivot_longer(epa23_f, cols = "Deutschland":"Sachsen", values_t
 epa23_e <- tidyr::pivot_longer(epa23_e, cols = "Deutschland":"Sachsen", values_to = "wert", names_to = "region")
 epa23_s <- tidyr::pivot_longer(epa23_s, cols = "Deutschland":"Sachsen", values_to = "wert", names_to = "region")
 
-
+epa24_f <- tidyr::pivot_longer(epa24_f, cols = "Deutschland":"Sachsen", values_to = "wert", names_to = "region")
+epa24_e <- tidyr::pivot_longer(epa24_e, cols = "Deutschland":"Sachsen", values_to = "wert", names_to = "region")
+epa24_s <- tidyr::pivot_longer(epa24_s, cols = "Deutschland":"Sachsen", values_to = "wert", names_to = "region")
 # zusammenfügen
 epa20_f$anforderung <- "Fachkräfte"
 epa20_e$anforderung <- "Expert*innen"
@@ -2642,6 +2686,10 @@ epa23_e$anforderung <- "Expert*innen"
 epa23_s$anforderung <- "Spezialist*innen"
 epa23 <- rbind(epa23_f, epa23_e, epa23_s)
 
+epa24_f$anforderung <- "Fachkräfte"
+epa24_e$anforderung <- "Expert*innen"
+epa24_s$anforderung <- "Spezialist*innen"
+epa24 <- rbind(epa24_f, epa24_e, epa24_s)
 
 # Spalten ergänzen
 epa20$bereich <- "Arbeitsmarkt"
@@ -2652,9 +2700,11 @@ epa22$bereich <- "Arbeitsmarkt"
 epa22$jahr <- 2022
 epa23$bereich <- "Arbeitsmarkt"
 epa23$jahr <- 2023
+epa24$bereich <- "Arbeitsmarkt"
+epa24$jahr <- 2024
 
 # alles zusammen
-epa <- rbind(epa20, epa21, epa22, epa23)
+epa <- rbind(epa20, epa21, epa22, epa23, epa24)
 
 # Bezeichnungen von Berufen in Text und Code trennen
 epa$beruf_schlüssel <- stringr::str_extract(epa$beruf, "[[:digit:]]+") #zahlen übertragen
@@ -2682,6 +2732,156 @@ epa <- epa %>%
 ### Detaillierte Daten für DE ####
 
 
+## hello turan ---------------
+
+library(dplyr)
+
+
+epa_einlesen <- function(name, sheet_s){
+  df <- readxl::read_excel(paste0(pfad, name),
+                           sheet = sheet_s,
+                           range = "A9:X707")
+  return(df)
+}
+sheets <- c("Fachkräfte", "Spezialisten", "Experten")
+# Vorbereitung 2024, da die Deutschen Daten unterschiedlich sind
+
+
+pfad <- "C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/"
+
+
+# Einlesen der Engpassindikatoren
+name <- "BA045_2024_Deutschland_Engpass (1).xlsx"
+
+deutschland_ep2024_f <- epa_einlesen(name = name, sheets[1])
+deutschland_ep2024_s <- epa_einlesen(name = name, sheets[2])
+deutschland_ep2024_e <- epa_einlesen(name = name, sheets[3])
+
+
+deutschland_ep2024_e <- deutschland_ep2024_e[,-16]
+deutschland_ep2024_f <- deutschland_ep2024_f[,-16]
+deutschland_ep2024_s <- deutschland_ep2024_s[,-16]
+
+deutschland_ep2024_e <- deutschland_ep2024_e[,-c(3:9)]
+deutschland_ep2024_f <- deutschland_ep2024_f[,-c(3:9)]
+deutschland_ep2024_s <- deutschland_ep2024_s[,-c(3:9)]
+
+
+##  Einlesen der Risiko und Ergänzungsindi
+
+name <- "BA047_2024_Deutschland_Risiko_Ergänzung (1).xlsx"
+
+d2eutschland_ep2024_f <- epa_einlesen(name = name, sheets[1])
+d2eutschland_ep2024_s <- epa_einlesen(name = name, sheets[2])
+d2eutschland_ep2024_e <- epa_einlesen(name = name, sheets[3])
+
+d2eutschland_ep2024_e <- d2eutschland_ep2024_e[,-16] ##?
+d2eutschland_ep2024_f <- d2eutschland_ep2024_f[,-16] ##?
+d2eutschland_ep2024_s <- d2eutschland_ep2024_s[,-16] ##
+
+d2eutschland_ep2024_e <- d2eutschland_ep2024_e[,-c(2:9)]
+d2eutschland_ep2024_f <- d2eutschland_ep2024_f[,-c(2:9)]
+d2eutschland_ep2024_s <- d2eutschland_ep2024_s[,-c(2:9)]
+
+
+epa_de24_e <- deutschland_ep2024_e %>%
+  left_join(d2eutschland_ep2024_e,
+            by = c("...1"),
+            suffix = c("_links", "_rechts"))
+
+epa_de24_e <- epa_de24_e %>%
+  dplyr::select(
+    -c("...20_links","...21_links","...22_links","...23_links","...24_links","...21_rechts","...22_rechts","...23_rechts","...24_rechts")
+  )
+
+epa_de24_e  <- epa_de24_e %>%
+  rename_with(~ ifelse(
+    grepl("^\\.\\.\\.[0-9]+$", .x),     # nur ...Zahl
+    gsub("^\\.\\.\\.", "", .x),         # → Zahl behalten
+    gsub("\\.\\.\\d+$", "", .x)         # sonst nur Suffix weg
+  ))
+
+
+
+epa_de24_e <- epa_de24_e %>%
+  dplyr::mutate(
+    "Anzahl der bewerteten Indikatoren...12" = NA,
+    "Punktezahl...13" = NA,
+    "Durchschnittliche Punktezahl...14" = NA
+  ) %>%
+  dplyr::relocate("Anzahl der bewerteten Indikatoren...12", "Punktezahl...13", "Durchschnittliche Punktezahl...14" , .after = 13)
+
+
+
+#
+
+epa_de24_f <- deutschland_ep2024_f %>%
+  left_join(d2eutschland_ep2024_f,
+            by = c("...1"),
+            suffix = c("_links", "_rechts"))
+
+epa_de24_f <- epa_de24_f %>%
+  dplyr::select(
+    -c("...17","...21_links","...22_links","...23_links","...24_links","...21_rechts","...22_rechts","...23_rechts","...24_rechts")
+  )
+
+
+
+epa_de24_f <- epa_de24_f %>%
+  dplyr::mutate(
+    "Anzahl der bewerteten Indikatoren...12" = NA,
+    "Punktezahl...13" = NA,
+    "Durchschnittliche Punktezahl...14" = NA
+  ) %>%
+  dplyr::relocate("Anzahl der bewerteten Indikatoren", "Punktezahl", "Durchschnittliche Punktezahl" , .after = 13)
+
+
+
+
+epa_de24_s <- deutschland_ep2024_s %>%
+  left_join(d2eutschland_ep2024_s,
+            by = c("...1"),
+            suffix = c("_links", "_rechts"))
+
+epa_de24_s <- epa_de24_s %>%
+  dplyr::select(
+    -c("...20_links","...21_links","...22_links","...23_links","...24_links","...21_rechts","...22_rechts","...23_rechts","...24_rechts")
+  )
+
+epa_de24_s<- epa_de24_s %>%
+  rename_with(~ ifelse(
+    grepl("^\\.\\.\\.[0-9]+$", .x),     # nur ...Zahl
+    gsub("^\\.\\.\\.", "", .x),         # → Zahl behalten
+    gsub("\\.\\.\\d+$", "", .x)         # sonst nur Suffix weg
+  ))
+
+
+
+epa_de24_s <- epa_de24_s %>%
+  dplyr::mutate(
+    "Anzahl der bewerteten Indikatoren...12" = NA,
+    "Punktezahl...13" = NA,
+    "Durchschnittliche Punktezahl...14" = NA
+  ) %>%
+  dplyr::relocate("Anzahl der bewerteten Indikatoren", "Punktezahl", "Durchschnittliche Punktezahl" , .after = 13)
+
+
+
+
+
+
+epa_de24_e$jahr <- 2024
+epa_de24_f$jahr <- 2024
+epa_de24_s$jahr <- 2024
+
+#
+
+
+
+
+
+
+
 #### Rohdaten einlesen -------------------------------------------------------
 akro <- "kbr"
 pfad <- paste0("C:/Users/", akro,
@@ -2692,6 +2892,20 @@ pfad <- paste0("C:/Users/", akro,
 ## WICHTIG - man muss hier immer die Aufbereitung "Engpassanalyse" zuvor laufen lassen
 ##          oder man läd epa.rda - baut aufeinander auf
 library(dplyr)
+
+path <- pfad
+sheets <- c("Fachkräfte", "Spezialisten", "Experten")
+# Vorbereitung 2024, da die Deutschen Daten unterschiedlich sind
+
+
+pfad <- "C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/"
+
+sheets <- c("Fachkräfte", "Spezialisten", "Experten")
+# Vorbereitung 2024, da die Deutschen Daten unterschiedlich sind
+
+
+pfad <- "C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/"
+
 
 
 epa_einlesen <- function(name, sheet_s){
@@ -3503,6 +3717,229 @@ epa_de23_e <- epa_aufbereiten_23(epa_de23_e)
 
 
 
+
+
+
+
+
+
+
+
+
+
+### test
+epa_aufbereiten_24 <- function(df){
+
+  # anforderungsniveau und jahr zuweisen
+  if(grepl("_f", deparse(substitute(df)))) df$anforderung <- "Fachkräfte"
+  if(ncol(df) == 26){
+
+  }else{
+    if(grepl("_e", deparse(substitute(df)))) df$anforderung <- "Expert*innen"
+    if(ncol(df) == 26){
+
+    }else{
+      if(grepl("_s", deparse(substitute(df)))) df$anforderung <- "Spezialist*innen"
+    }
+  }
+
+  # leere spalten löschen
+  if(df$anforderung[1] == "Fachkräfte") {
+    df <- df %>% dplyr::select(-c(`...10`))
+  }else{
+    df <- df %>% dplyr::select(-c(`17`, `18`, `19`, `...20_rechts`))
+  }
+
+
+
+
+
+
+
+  if(df$anforderung[1] == "Fachkräfte"){
+    df <- df %>%
+      rename(
+        "beruf" = `...1`,
+        "Anzahl Beschäftigte" = "...2",
+        "Engpassindikator Vakanzzeit" = "Vakanzzeit (Median)...11",
+        "Engpassindikator Arbeitsuchenden-Stellen-Relation" = "Arbeitsuchenden-Stellen-Relation...12",
+        "Engpassindikator Berufssp. Arbeitslosenquote" = "Berufssp. Arbeitslosenquote...13",
+        "Engpassindikator Veränderung des Anteils s.v. pfl. Beschäftigung von Ausländern" = "Veränderung des Anteils s.v. pfl. Beschäftigung von Ausländern...14",
+        "Engpassindikator Abgangsrate aus Arbeitslosigkeit" = "Abgangsrate aus Arbeitslosigkeit...15",
+        #"Engpassindikator Entwicklung der mittleren Entgelte" = "Entwicklung der mittleren Entgelte", ###############
+        "Anzahl Indikatoren Engpassanalyse" = "Anzahl der bewerteten Indikatoren", ################### also iwie fehlt bei mir teilzeitquote, selbstständigk
+        "wert_EPA" = "Durchschnittliche Punktezahl", #davor fehlt Punktezahl?
+        "Risikoindikator Veränderung des Anteils älterer Beschäftigter (60 Jahre und älter)" = "Veränderung des Anteils älterer Beschäftigter (60 Jahre und älter)...13",
+        "Risikoindikator Anteil unb. Ausbildungsstellen an allen gem. Ausbildungsstellen" = "Anteil unb. Ausbildungsstellen an allen gem. Ausbildungsstellen...14",
+        "Risikoindikator Absolventen-Beschäftigten-Relation" = "Absolventen-Beschäftigten-Relation...15", ##breufliche mobilit
+        #"Risikoindikator Substituierbarkeitspotenzial" = "Substituierbarkeitspotenzial",
+        "Anzahl Indikatoren Risikoanalyse" = "Anzahl der bewerteten Indikatoren...12",
+        "wert_Risiko" = "Durchschnittliche Punktezahl...14",
+        "Ergänzungsindikator Berufliche Mobilität" = "Berufliche Mobilität...17",
+        "Ergänzungsindikator Arbeitsstellenbestandsquote" = "Arbeitsstellenbestandsquote...18",
+        "Ergänzungsindikator Teilzeitquote" = "Teilzeitquote...19" )
+
+  }else{
+    df <- df %>%
+      rename(
+        "beruf" = `1`,
+        "Anzahl Beschäftigte" = "2",
+        "Engpassindikator Vakanzzeit" = "Vakanzzeit (Median).",
+        "Engpassindikator Arbeitsuchenden-Stellen-Relation" = "Arbeitsuchenden-Stellen-Relation.",
+        "Engpassindikator Berufssp. Arbeitslosenquote" = "Berufssp. Arbeitslosenquote.",
+        "Engpassindikator Veränderung des Anteils s.v. pfl. Beschäftigung von Ausländern" = "Veränderung des Anteils s.v. pfl. Beschäftigung von Ausländern.",
+        "Engpassindikator Abgangsrate aus Arbeitslosigkeit" = "Abgangsrate aus Arbeitslosigkeit.",
+        "Engpassindikator Entwicklung der mittleren Entgelte" = "Entwicklung der mittleren Entgelte.",
+        "Anzahl Indikatoren Engpassanalyse" = "Anzahl der bewerteten Indikatoren",
+        "wert_EPA" = "Durchschnittliche Punktezahl",
+        "Risikoindikator Veränderung des Anteils älterer Beschäftigter (60 Jahre und älter)" = "Veränderung des Anteils älterer Beschäftigter (60 Jahre und älter).",
+        "Risikoindikator Substituierbarkeitspotenzial" = "Substituierbarkeitspotenzial.",
+        "Anzahl Indikatoren Risikoanalyse" = "Anzahl der bewerteten Indikatoren...12",
+        "wert_Risiko" = "Durchschnittliche Punktezahl...14",
+        "Ergänzungsindikator Berufliche Mobilität" = "Berufliche Mobilität.",
+        "Ergänzungsindikator Arbeitsstellenbestandsquote" = "Arbeitsstellenbestandsquote.",
+        "Ergänzungsindikator Teilzeitquote" = "Teilzeitquote.",
+        "Ergänzungsindikator Selbständigenanteil" = "Selbständigenanteil." )
+  }
+
+  # als numerisch speichern für pivote_longer
+  if(df$anforderung[1] == "Fachkräfte") {
+    df[,c(2, 4:23)] <- sapply(df[,c(2, 4:23)], as.numeric)
+  }else{
+    df[,c(2:20)] <- sapply(df[,c(2:20)], as.numeric)
+  }
+
+  # nicht interessante Spalten noch raus
+  if(df$anforderung[1] == "Fachkräfte") {
+    df <- df %>% dplyr::select(-c("Punktezahl", "Punktezahl...13"))
+  }else{
+    df <- df %>% dplyr::select(-c("Punktezahl", "Punktezahl...13"))
+  }
+
+  # in long-format bringen
+  if(df$anforderung[1] == "Fachkräfte"){
+    df <- tidyr::pivot_longer(df, cols = c("Engpassindikator Vakanzzeit":"Ergänzungsindikator Teilzeitquote"),
+                              values_to = "wert", names_to = "indikator")
+  }else{
+    df <- tidyr::pivot_longer(df, cols = c("Engpassindikator Vakanzzeit":"Ergänzungsindikator Selbständigenanteil"),
+                              values_to = "wert", names_to = "indikator")
+  }
+
+  # indikator ergänzen
+  df <- df %>%
+    dplyr::mutate(kategorie = dplyr::case_when(
+      grepl("Engpass", df$indikator) ~ "Engpassanalyse",
+      grepl("EPA", df$indikator) ~ "Engpassanalyse",
+      grepl("Risiko", df$indikator) ~ "Risikoanalyse",
+      grepl("Ergän", df$indikator) ~ "Ergänzungsindikatoren"
+    )
+    )
+
+  # indikator kürzen
+  df$indikator <- gsub(pattern = "Engpassindikator ", "", df$indikator)
+  df$indikator <- gsub(pattern = "Risikoindikator ", "", df$indikator)
+  df$indikator <- gsub(pattern = "Ergänzungsindikator ", "", df$indikator)
+
+  # gesamtwert wieder als extra Spalte - logischer zum weiterarbeiten damit
+  df_ges <- df %>%
+    dplyr::filter(indikator %in% c("wert_EPA", "wert_Risiko")) %>%
+    dplyr::rename(gesamtwert = wert) %>%
+    dplyr::select(-indikator)
+
+
+
+  if(df$anforderung[1] == "Fachkräfte"){
+    df <- df %>%
+      dplyr::left_join(df_ges, by = c("beruf", "Anzahl Beschäftigte", "jahr", "anforderung", ##keine geregelte berufsausbildung
+                                      "kategorie"),
+                       relationship = "many-to-many")
+  }else{
+    df <- df %>%
+      dplyr::left_join(df_ges, by = c("beruf", "Anzahl Beschäftigte", "jahr", "anforderung",
+                                      "kategorie"),
+                       relationship = "many-to-many")
+  }
+
+  df <- df %>% dplyr::filter(!(indikator %in% c("wert_EPA", "wert_Risiko")))
+
+  # Anzahl vorliegender Indikatoren als extra Spalte - logischer zum weiterarbeiten damit
+  df_anz <- df %>%
+    dplyr::filter(grepl("Anzahl", indikator)) %>%
+    dplyr::rename(indikator_anzahl = wert) %>%
+    dplyr::select(-indikator)
+
+  if(df$anforderung[1] == "Fachkräfte"){
+    df <- df %>%
+      dplyr::left_join(df_anz, by = c("beruf", "Anzahl Beschäftigte", "jahr", "anforderung", #hier au ##keine geregelte berufsausbildung
+                                      "kategorie", "gesamtwert"),
+                       relationship = "many-to-many")
+  }else{
+    df <- df %>%
+      dplyr::left_join(df_anz, by = c("beruf", "Anzahl Beschäftigte", "jahr", "anforderung",
+                                      "kategorie", "gesamtwert"),
+                       relationship = "many-to-many")
+  }
+
+
+  df <- df %>% dplyr::filter(!(grepl("Anzahl", indikator)))
+
+  return(df)
+}
+
+
+epa_de24_f <- epa_aufbereiten_24(epa_de24_f) #achtung es dauert lange !!! 1min-2
+epa_de24_s <- epa_aufbereiten_24(epa_de24_s) #ebenso aber schneller
+epa_de24_e <- epa_aufbereiten_24(epa_de24_e) #
+
+
+epa_de24_s <- epa_de24_s %>%
+  filter(!if_any(beruf ,is.na))
+
+epa_de24_f <- epa_de24_f %>%
+  filter(!if_any(beruf ,is.na))
+
+epa_de24_e <- epa_de24_e %>%
+  filter(!if_any(beruf ,is.na))
+
+#########################################das dauert hier alles lang ja
+
+epa_de24_s <- epa_de24_s %>%
+  dplyr::select(-c("Anzahl Indikatoren Risikoanalyse.x.x","wert_Risiko.x.x","Anzahl Indikatoren Risikoanalyse.y.x", "wert_Risiko.y.x",
+                   "Anzahl Indikatoren Risikoanalyse.x.y","wert_Risiko.x.y", "Anzahl Indikatoren Risikoanalyse.y.y", "wert_Risiko.y.y"))
+
+
+epa_de24_f <- epa_de24_f %>%
+  dplyr::select(-c("Selbständigenanteil...20.x.x" ,"Anzahl Indikatoren Risikoanalyse.x.x", "wert_Risiko.x.x", "Selbständigenanteil...20.y.x" ,
+                   "Anzahl Indikatoren Risikoanalyse.y.x"
+                   , "wert_Risiko.y.x", "Selbständigenanteil...20.x.y" ,
+                   ,"Anzahl Indikatoren Risikoanalyse.x.y" ,"wert_Risiko.x.y",
+                   "Selbständigenanteil...20.y.y" ,"Anzahl Indikatoren Risikoanalyse.y.y" ,"wert_Risiko.y.y"))
+
+epa_de24_f$`Geregelte Berufsausbildung` <- NA
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # alles zusammenfügen und sortieren
 ## Spalten angleichen
 sp_anhängen <- function(df){
@@ -3535,13 +3972,18 @@ epa_de23_f <- sp_anhängen(epa_de23_f)
 epa_de23_s <- sp_anhängen(epa_de23_s)
 epa_de23_e <- sp_anhängen(epa_de23_e)
 
+epa_de24_f <- sp_anhängen(epa_de24_f)
+epa_de24_s <- sp_anhängen(epa_de24_s)
+epa_de24_e <- sp_anhängen(epa_de24_e)
+
 
 ## Zusammenbringen
 epa_detail <- rbind(epa_de19_e, epa_de19_f, epa_de19_s,
                     epa_de20_e, epa_de20_f, epa_de20_s,
                     epa_de21_e, epa_de21_f, epa_de21_s,
                     epa_de22_e, epa_de22_f, epa_de22_s,
-                    epa_de23_e, epa_de23_f, epa_de23_s)
+                    epa_de23_e, epa_de23_f, epa_de23_s,
+                    epa_de24_e, epa_de24_f, epa_de24_s)
 epa_detail <- subset(epa_detail, !(is.na(epa_detail$beruf)))
 
 # Bezeichnungen von Berufen in Text und Code trennen
@@ -3624,7 +4066,7 @@ mint <- mint %>%
   dplyr::select(-`MINT-Tätigkeiten`) %>%
   dplyr::rename(mint_select = indikator)
 mint <- unique(mint)
-epa_detail_t <- epa_detail %>%
+epa_detail <- epa_detail %>% #############################wieso war hier _t in epa_detail
   dplyr::left_join(mint, by = join_by(beruf_schlüssel == Code, anforderung), relationship = "many-to-many")
 epa_detail$mint_select <- ifelse(is.na(epa_detail$mint_select), "Nicht MINT", epa_detail$mint_select)
 
@@ -3707,11 +4149,14 @@ m <- m[, c("bereich", "berufsgruppe", "berufsgruppe_schlüssel", "beruf",
 )]
 
 ## Filtern
-epa_detail <- subset(epa_detail, epa_detail$`Anzahl Beschäftigte`>=500)
+epa_detail <- subset(epa_detail, epa_detail$`Anzahl Beschäftigte`>=500)#######################################hier fliegt raus vllt
 epa_detail$delete <- ifelse(epa_detail$kategorie == "Engpassanalyse" &
                               epa_detail$indikator_anzahl < 4, TRUE, FALSE)
 epa_detail <- subset(epa_detail, epa_detail$delete == FALSE)
-epa_detail <- subset(epa_detail, epa_detail$geregelte_ausbildung == "ja")
+#epa_detail <- subset(epa_detail, epa_detail$geregelte_ausbildung == "ja")
+epa_detail <- subset(epa_detail, (jahr ==  2024) | (geregelte_ausbildung == "ja")
+)
+
 epa_detail <- epa_detail %>%
   dplyr::select(-delete, -geregelte_ausbildung) %>%
   dplyr::rename(anzahl_beschäftigte = `Anzahl Beschäftigte`)

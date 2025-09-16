@@ -994,8 +994,8 @@ plot_fachkraft_epa_bulas <- function(r) {
      regio <- r$regio_fachkraft_epa_bulas20_21
    } else if(timerange == 2022){
      regio <- r$regio_fachkraft_epa_bulas22
-   }else if(timerange == 2023){
-     regio <- r$regio_fachkraft_epa_bulas23
+   }else if(timerange  %in% 2023:2024){
+     regio <- r$regio_fachkraft_epa_bulas23_24
    }
 
    df_query <- glue::glue_sql("
@@ -1007,6 +1007,8 @@ plot_fachkraft_epa_bulas <- function(r) {
    AND anforderung IN ({bf*})
    AND region = {regio}
                                ", .con = con)
+
+
 
    plot_data_raw <- DBI::dbGetQuery(con, df_query)
 

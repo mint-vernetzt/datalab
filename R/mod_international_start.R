@@ -875,10 +875,14 @@ mod_international_start_server <- function(id, r){
     )
 
 
-
     output$plot_international_arbeitsmarkt_vergleiche_1 <- highcharter::renderHighchart({
-      plot_international_arbeitsmarkt_vergleiche(r)
+      highcharter::highchart() %>%
+        highcharter::hc_title(text = "Testplot läuft")
     })
+
+    # output$plot_international_arbeitsmarkt_vergleiche_1 <- highcharter::renderHighchart({
+    #   plot_international_arbeitsmarkt_vergleiche(r)
+    # })
 
     # tab 5
 
