@@ -28,8 +28,8 @@ mod_beruf_arbeitsmarkt_entgelt_verlauf_ui <- function(id){
     shinyWidgets::sliderTextInput(
       inputId = ns("date_arbeitsmarkt_entgelt_verlauf"),
       label = NULL,
-      choices = 2013:2023,
-      selected = c(2017, 2023)
+      choices = 2013:2022,
+      selected = c(2017, 2022)
     ),
     p("Region:"),
     shinyWidgets::pickerInput(

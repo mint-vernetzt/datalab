@@ -1076,17 +1076,11 @@ mod_beruf_arbeitsmarkt_server <- function(id, r){
 
 
 
-
-
-
-
-
-
    # Box 5 ----
    # Tab
 
    output$plot_entgelt_vergleich <- highcharter::renderHighchart({
-     entgelte_vergleich_1(r)
+     out <- entgelte_vergleich_1(r)
    })
 
    # output$plot_entgelt_vergleich <- renderUI({

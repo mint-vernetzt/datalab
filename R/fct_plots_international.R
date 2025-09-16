@@ -4187,20 +4187,96 @@ plot_international_top10_mint_arb_gender <- function(r) {
 
       data1 <- DBI::dbGetQuery(con, df_query)
 
+      data1 <- dplyr::distinct(data1)
 
+      data1 <- unique(data1)
+
+      browser()
 
       data1 <- data1 %>%
-          tidyr::pivot_wider(names_from = fachbereich, values_from = wert)%>%
-        # Durschnittliche relative Häufigkeit aller MINT-Einzelfächer= realtive Häufigkeit MINT
-        dplyr::mutate(MINT = (rowSums(dplyr::select(., "Informatik & Kommunikationstechnologie",
-                                             "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
-                                             "Naturwissenschaften, Mathematik und Statistik"), na.rm = T))/3)%>%
-        tidyr::pivot_longer(c("MINT",
-                               "Informatik & Kommunikationstechnologie",
-                               "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
-                               "Naturwissenschaften, Mathematik und Statistik",
-                               "Alle"), values_to = "wert", names_to = "fachbereich")%>%
-        dplyr::filter(!is.na(.$wert) & wert!=0)
+          tidyr::pivot_wider(names_from = fachbereich, values_from = wert)
+
+
+      data1$MINT <- sapply(data1$MINT, function(x) x[1])
+
+      mint_cols <- c(
+        "Informatik & Kommunikationstechnologie",
+        "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
+        "Naturwissenschaften, Mathematik und Statistik",
+        "Alle"
+      )
+
+      data1 <- data1 %>%
+        dplyr::mutate(across(
+          dplyr::all_of(mint_cols),
+          ~ vapply(.x, function(v) {
+            if (is.null(v) || length(v) == 0) return(NA_real_)
+            val <- v[[1]]
+            suppressWarnings(as.numeric(readr::parse_number(as.character(val))))
+          }, numeric(1))
+        )) %>%
+        dplyr::mutate(MINT = rowSums(dplyr::pick(dplyr::all_of(mint_cols[1:3])), na.rm = TRUE) / 3)
+
+      data1 <- data1 %>%
+        tidyr::pivot_longer(
+          c("MINT",
+            "Informatik & Kommunikationstechnologie",
+            "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
+            "Naturwissenschaften, Mathematik und Statistik",
+            "Alle"),
+          values_to = "wert",
+          names_to = "fachbereich"
+        ) %>%
+        dplyr::filter(!is.na(wert) & wert != 0)
+
+
+
+
+      # data1 <- data1 %>%
+      #   dplyr::mutate(across(
+      #     c("Informatik & Kommunikationstechnologie",
+      #       "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
+      #       "Naturwissenschaften, Mathematik und Statistik"),
+      #     ~ sapply(.x, function(v) as.numeric(v[1]))
+      #   ))
+
+
+#
+#       mint_cols <- c(
+#         "Informatik & Kommunikationstechnologie",
+#         "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
+#         "Naturwissenschaften, Mathematik und Statistik"
+#       )
+#
+#       data1 <- data1 %>%
+#         dplyr::mutate(across(
+#           all_of(mint_cols),
+#           ~ if (is.list(.x)) {
+#             purrr::map_dbl(.x, ~ {
+#               if (is.null(.x) || length(.x) == 0) return(NA_real_)
+#               # nur den ersten Wert nehmen
+#               val <- .x[[1]]
+#               suppressWarnings(as.numeric(readr::parse_number(as.character(val))))
+#             })
+#           } else {
+#             suppressWarnings(as.numeric(readr::parse_number(as.character(.x))))
+#           }
+#         ))
+#
+#
+#
+#       data1 <- data1 %>%
+#       # Durschnittliche relative Häufigkeit aller MINT-Einzelfächer= realtive Häufigkeit MINT
+#         dplyr::mutate(MINT = (rowSums(dplyr::select(., "Informatik & Kommunikationstechnologie",
+#                                              "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
+#                                              "Naturwissenschaften, Mathematik und Statistik"), na.rm = T))/3)
+#       data1 <- data1 %>%
+#         tidyr::pivot_longer(c("MINT",
+#                                "Informatik & Kommunikationstechnologie",
+#                                "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
+#                                "Naturwissenschaften, Mathematik und Statistik",
+#                                "Alle"), values_to = "wert", names_to = "fachbereich")%>%
+#         dplyr::filter(!is.na(.$wert) & wert!=0)
 
       # Filtern nach spez. Indikatoren, geo mapping und wert für hover vorbereiten
       if(inpp == "Anfänger*innen Ausbildung (ISCED 45)"){
@@ -4504,6 +4580,8 @@ plot_international_top10_mint_arb_gender <- function(r) {
 
   # Kodition Durschnittslinie
   avg_line <- r$show_avg_top10_mint_arb_gender
+
+
 
   # Create top 10 plot
   if (avg_line == "Ja"){

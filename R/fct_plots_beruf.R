@@ -3784,30 +3784,103 @@ entgelte_vergleich_1 <- function(r) {
 
   df1 <- df %>%
     dplyr::filter(stringr::str_detect(wert, "^[0-9.,]+$")) %>%
-    dplyr::filter(berufsgruppe == beruf) %>%
-    dplyr::mutate(wert = as.numeric(wert))
+     dplyr::filter(berufsgruppe == beruf) %>%
+     dplyr::mutate(wert = as.numeric(wert))
 
-  # df1$wert <- as.numeric(df1$wert) #wert ist charakterS
-  # df1$berufsgruppe <- as.character(df1$berufsgruppe)
 
-  titel <- paste0("MINT-Anteil in")
-  tooltip <- paste('Wert {point.x}')
-  format <- "{wert}"
+  if(berufsleb == "Gesamt"){
+    berufsleb = "allen Berufsleveln"
+  } else if (berufsleb == "Fachkraft"){
+    berufsleb == "Fachkräften"
+  } else if (berufsleb == "Spezialist"){
+    berufsleb == "Spezialisten"
+  } else if (berufsleb == "Experte"){
+    berufsleb == "Experten"
+  }
+
+
+  if(geschlecht == "Insgesamt"){
+    geschlecht <- "Alle Geschlechter"
+  }
+
+  titel <- paste0("Entgelte von ", berufsleb, " in ", land, " (", datum," , ", geschlecht ,")" )
+  tooltip <- paste('Wert in Euro: {point.y}')
+  format <- "{value}"
 
   quelle <- "Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
 
-
-
-
-######################################################  browser()
+  ##########
+  # browser()
 
   df1$wert <- as.numeric(df1$wert)
-  df1$berufsgruppe <- as.character(df1$berufsgruppe)
+  df1$berufsgruppe <- as.factor(df1$berufsgruppe)
 
-  out <- balkenbuilder(df1, titel, x = "wert", y = "berufsgruppe", tooltip = tooltip,  color =  c("#b16fab","#b16fab"), format = format , quelle = quelle)
+  color =  c("#b16fab")
+
+
+  #out <- balkenbuilder(df1, titel, x = "wert", y = "berufsgruppe", tooltip = tooltip,  color =  c("#b16fab","#b16fab"), format = format , quelle = quelle)
+  out <- highcharter::hchart(df1, 'bar', highcharter::hcaes(y ="wert", x = "berufsgruppe") ) %>%
+    highcharter::hc_tooltip(pointFormat = tooltip) %>%
+    highcharter::hc_yAxis(title = list(text = ""), labels = list(format = format)) %>%
+    highcharter::hc_xAxis(title = list(text = "Entgelte"), labels = list(format ="{value}")  ) %>%
+    highcharter::hc_colors(color) %>%
+    highcharter::hc_title(text = titel,
+                          margin = 45, #
+                          align = "center",
+                          style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
+    highcharter::hc_chart(
+      style = list(fontFamily = "Calibri Regular", fontSize = "14px")
+    ) %>%
+    highcharter::hc_legend(enabled = TRUE, reversed = TRUE)  %>%
+    highcharter::hc_caption(text = quelle,
+                            style = list(fontSize = "11px", color = "gray")) %>%
+    highcharter::hc_exporting(enabled = TRUE,
+                              buttons = list(
+                                contextButton = list(
+                                  menuItems = list("downloadPNG", "downloadCSV",
+                                                   list(
+                                                     text = "Daten für GPT",
+                                                     onclick = htmlwidgets::JS(sprintf(
+                                                       "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle: %s';
+
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+
+   }",
+                                                       gsub("'", "\\\\'", titel),
+                                                       gsub("'", "\\\\'", titel),
+                                                       gsub("'", "\\\\'", quelle)
+                                                     ))
+
+                                                   ))
+                                )
+                              )
+    )
+
+
+
+
+
+
+
+
 
   return(out)
+
 
 
   }
@@ -3858,13 +3931,18 @@ entgelte_verlauf_1 <- function(r) {
       berufsgruppe == beruf
     )
 
+  if(geschlecht == "Insgesamt"){
+    geschlecht = "Alle Geschlechter"
+  }
+  if(berufsleb == "Gesamt") {
+    berufsleb = "Alle Berufslevel"
+  }
 
 
 
-
-  titel <- "ff"
-  tooltip <-"{point.y}"
-  format <- "{wertq}"
+  titel <- paste0("Entwicklung der Entgelte in den verschiedenen Kategorien in ", land, " (", geschlecht, ",", " ", berufsleb, ")")
+  tooltip <-"Wert in Euro {point.y}"
+  format <- "{value}"
   color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
              "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
 
@@ -3872,11 +3950,62 @@ entgelte_verlauf_1 <- function(r) {
 
 
 
+  df <- df[order(df$jahr, decreasing = FALSE), ]
+
+ # out <- linebuilder(df, titel, x = "jahr", y = "wertq", group = "berufsgruppe", tooltip, format, color, quelle = quelle)
 
 
-  out <- linebuilder(df, titel, x = "jahr", y = "wertq", group = "berufsgruppe", tooltip, format, color, quelle = quelle)
 
+  out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = "jahr", y = "wertq", group = "berufsgruppe")) %>%
+    highcharter::hc_tooltip(pointFormat = tooltip) %>%
+    highcharter::hc_yAxis(title = list(text = " "), labels = list(format = format),
+                          style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular")) %>%
+    highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular")) %>%
+    highcharter::hc_title(text = titel,
+                          margin = 45,
+                          align = "center",
+                          style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
+    highcharter::hc_colors(color) %>%
+    highcharter::hc_chart(
+      style = list(fontFamily = "Calibri Regular", fontSize = "14px")
+    )  %>%
+    highcharter::hc_caption(text = quelle,
+                            style = list(fontSize = "11px", color = "gray")) %>%
+    highcharter::hc_exporting(enabled = TRUE,
+                              buttons = list(
+                                contextButton = list(
+                                  menuItems = list("downloadPNG", "downloadCSV",
+                                                   list(
+                                                     text = "Daten für GPT",
+                                                     onclick = htmlwidgets::JS(sprintf(
+                                                       "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
 
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle: %s';
+
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }",
+                                                       gsub("'", "\\\\'", titel),
+                                                       gsub("'", "\\\\'", titel),
+                                                       gsub("'", "\\\\'", quelle)
+                                                     )
+                                                     )
+                                                   )
+                                  )
+                                )
+                              )
+    )
 
 }
 
