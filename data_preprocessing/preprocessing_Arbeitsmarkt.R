@@ -387,6 +387,12 @@ usethis::use_data(arbeitsmarkt, overwrite = T)
 # Erstellt "arbeitsmarkt_detail" - Alle ------------------------------------------
 
 ## Rohdaten einlesen ---------------------------------------------------
+pfad <- "C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/"
+library(dplyr)
+pfad <- "C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/"
+library(dplyr)
+pfad <- "C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/"
+library(dplyr)
 
 library(dplyr)
 
@@ -415,13 +421,54 @@ data_n <- readxl::read_excel(paste0(pfad, "BA009_230717_EA_344636_SvB_Azubi_MINT
 data_n2 <- readxl::read_excel(paste0(pfad, "BA024_240802_EA_357830_SvB_Azubi_MINT.xlsx"),
                               sheet = "Auswertung", col_names = F, range = "A15:AH7520")
 
+#20 24
+data_n3 <- readxl::read_excel(paste0(pfad, "BA049_250820_EA_394801_SvB_Azubi_MINT.xlsx"),
+                              sheet = "Auswertung", col_names = F, range = "A17:AG7522")
+
+library(stringr)
+# Definiere die "verschiebbaren" Werte
+# shift_categories_2 <- c("Helfer", "Fachkraft", "Spezialist", "Experte", "keine Angabe", "MINT-Berufe")
+# shift_categories_3 <- c("Fachkraft", "Spezialist", "Experte",
+#                         "Mathematik", "Naturwissenschaften", "Informatik", "Technik")
+
+
+
+
+# data_n3 <- data_n3 %>%
+#   rowwise() %>%
+#   mutate(
+#     keep_flag = str_detect(`...2`, "^Insgesamt$|^dav\\.|^\\(Z\\.") |
+#       str_detect(`...3`, "^Insgesamt$|^dav\\.|^\\(Z\\."),
+#
+#     `...3` = ifelse(!keep_flag & `...2` %in% shift_categories_2,
+#                    paste(`...3`, `...2`, sep = " "), `...3`),
+#     `...2` = ifelse(!keep_flag & `...2` %in% shift_categories_2, NA, `...2`),
+#
+#     `...5` = ifelse(!keep_flag & `...4` %in% shift_categories_3,
+#                    paste(`...5`, `...4`, sep = " "), `...5`),
+#     `...4` = ifelse(!keep_flag & `...4` %in% shift_categories_3, NA, `...4`)
+#   ) %>%
+#   ungroup()
+
 ## Data wrangling ----------------------------------------------------------
 
 ### Funktion ---------------------------------------------------------------
 
-wrangling_detailliert <- function(data_n){
+wrangling_detailliert <- function(data_n, version = "1"){
   # Spalten zusammenfassen/löschen für 2023
-  data_n$...2 <- dplyr::coalesce(data_n$...5, data_n$...4, data_n$...3, data_n$...2) # MINT/Niveau in eine Spalte
+
+
+  # data_n$...2 <- dplyr::coalesce(
+  #   as.character(data_n$...5),
+  #   as.character(data_n$...4),
+  #   as.character(data_n$...3),
+  #   as.character(data_n$...2)
+  # )
+
+  if (version == "2"){
+    data_n$...2 <- dplyr::coalesce(data_n$...4, data_n$...3, data_n$...2) # MINT/Niveau in eine Spalte
+  } else {
+  data_n$...2 <- dplyr::coalesce(data_n$...5, data_n$...4, data_n$...3, data_n$...2) }
 
   ## Daten von 2022 region formatieren
   data_n1 <- data_n
@@ -525,6 +572,129 @@ wrangling_detailliert <- function(data_n){
   return(data_n)
 }
 
+library(dplyr)
+library(tidyr)
+library(stringr)
+
+wrangling_detailliert <- function(data_n, collapse_23 = FALSE) {
+
+  # ==== 1) Struktur angleichen (n3-Fall: "fehlende" Spalte zwischen ...2 und ...3) ====
+  if (collapse_23) {
+    # alle ...-Spaltenindizes ermitteln
+    dot_cols <- grep("^\\.\\.\\.", names(data_n), value = TRUE)
+    dot_idx  <- suppressWarnings(as.integer(sub("^\\.\\.\\.", "", dot_cols)))
+    max_i    <- max(dot_idx, na.rm = TRUE)
+
+    # Spaltennamen ...max,...4,...3 -> jeweils um +1 verschieben (von oben nach unten, um Kollisionen zu vermeiden)
+    for (k in seq(from = max_i, to = 3L, by = -1L)) {
+      old <- paste0("...", k)
+      new <- paste0("...", k + 1L)
+      if (old %in% names(data_n)) {
+        names(data_n)[names(data_n) == old] <- new
+      }
+    }
+
+    # neue leere ...3 nach ...2 einfügen
+    data_n <- tibble::add_column(data_n, `...3` = NA_character_, .after = 2)
+  }
+
+  # ==== 2) MINT/Niveau in ...2 zusammenführen (immer Typ-robust) ====
+  data_n$`...2` <- dplyr::coalesce(
+    as.character(data_n$`...5`),
+    as.character(data_n$`...4`),
+    as.character(data_n$`...3`),
+    as.character(data_n$`...2`)
+  )
+
+  # ==== 3) Dein bestehendes Region-/Kreis-Wrangling (mit backticks für ...-Spalten) ====
+  data_n1 <- data_n
+  data_n1$`...3` <- data_n1$`...1`
+
+  data_n1 <- data_n1 %>%
+    dplyr::mutate(
+      bundesland = dplyr::case_when(
+        `...1` == "Deutschland" ~ "Deutschland",
+        `...1` == "Westdeutschland" ~ "Westdeutschland (o. Berlin)",
+        `...1` == "Ostdeutschland" ~ "Ostdeutschland (inkl. Berlin)",
+        `...1` == "Baden-Württemberg" ~ "Baden-Württemberg",
+        `...1` == "Bayern" ~ "Bayern",
+        `...1` == "Berlin" ~ "Berlin",
+        `...1` == "Brandenburg" ~ "Brandenburg",
+        `...1` == "Bremen" ~ "Bremen",
+        `...1` == "Hamburg" ~ "Hamburg",
+        `...1` == "Hessen" ~ "Hessen",
+        `...1` == "Mecklenburg-Vorpommern" ~ "Mecklenburg-Vorpommern",
+        `...1` == "Niedersachsen" ~ "Niedersachsen",
+        `...1` == "Nordrhein-Westfalen" ~ "Nordrhein-Westfalen",
+        `...1` == "Rheinland-Pfalz" ~ "Rheinland-Pfalz",
+        `...1` == "Saarland" ~ "Saarland",
+        `...1` == "Sachsen-Anhalt" ~ "Sachsen-Anhalt",
+        `...1` == "Sachsen" ~ "Sachsen",
+        `...1` == "Schleswig-Holstein" ~ "Schleswig-Holstein",
+        `...1` == "Thüringen" ~ "Thüringen",
+        TRUE ~ NA_character_
+      )
+    ) %>%
+    tidyr::separate(`...3`, c("a", "b"), sep = ",", fill = "right") %>%  # falls kein Komma vorhanden
+    dplyr::rename(ort = a)
+
+  # Schlüsselnummer extrahieren & Ort bereinigen
+  data_n1$`...4` <- stringr::str_extract(data_n1$ort, "[[:digit:]]+")
+  data_n1$ort    <- gsub("[[:digit:]]", "", data_n1$ort)
+  data_n1$ort    <- stringr::str_trim(data_n1$ort)
+
+  # Stadt-/Landkreis disambiguieren
+  help <- as.data.frame(table(data_n1$ort)) %>% dplyr::filter(Freq != 1)
+  data_n1$ort <- ifelse(data_n1$ort %in% help$Var1 & grepl("tadt", data_n1$b),
+                        stringr::str_c("Stadt ", data_n1$ort), data_n1$ort)
+  data_n1$ort <- ifelse(data_n1$ort %in% help$Var1 & !grepl("tadt", data_n1$b),
+                        stringr::str_c("Landkreis ", data_n1$ort), data_n1$ort)
+
+  # Oldenburg-Korrektur (Schreibfehler in Originalcode korrigiert)
+  data_n1$ort <- ifelse(grepl("Olde", data_n1$ort), "Stadt Oldenburg", data_n1$ort)
+  data_n1$ort <- ifelse(grepl("Olde", data_n1$ort) & is.na(data_n1$b),
+                        "Landkreis Oldenburg", data_n1$ort)
+
+  data_n <- data_n1 %>%
+    dplyr::rename(
+      schluesselnummer = `...4`,
+      zusatz = b
+    )
+
+  # diese beiden Spalten wie bei dir entfernen
+  data_n <- data_n[, -c(6, 7)]
+
+  # Header wie gehabt
+  header <- c(
+    "region", "fachbereich", "ort", "zusatz", "schluesselnummer",
+    "Beschäftigte", "weibliche Beschäftigte", "Beschäftigte u25", "Beschäftigte ü55",
+    "Beschäftigte (nur SVB)", "weibliche Beschäftigte (nur SVB)",
+    "Beschäftigte u25 (nur SVB)", "Beschäftigte ü55 (nur SVB)",
+    "Auszubildende", "weibliche Auszubildende",
+    "Beschäftigte (nur GFB)", "weibliche Beschäftigte (nur GFB)",
+    "Beschäftigte u25 (nur GFB)", "Beschäftigte ü55 (nur GFB)",
+    "ausländische Beschäftigte", "ausländische weibliche Beschäftigte",
+    "ausländische Beschäftigte u25", "ausländische Beschäftigte ü55",
+    "ausländische Beschäftigte (nur SVB)", "ausländische weibliche Beschäftigte (nur SVB)",
+    "ausländische Beschäftigte u25 (nur SVB)", "ausländische Beschäftigte ü55 (nur SVB)",
+    "ausländische Auszubildende", "ausländische weibliche Auszubildende",
+    "ausländische Beschäftigte (nur GFB)", "ausländische weibliche Beschäftigte (nur GFB)",
+    "ausländische Beschäftigte u25 (nur GFB)", "ausländische Beschäftigte ü55 (nur GFB)",
+    "bundesland"
+  )
+  colnames(data_n) <- header
+
+  # bundesland nach unten auffüllen
+  data_n$bundesland <- stats::ave(
+    data_n$bundesland,
+    cumsum(!is.na(data_n$bundesland)),
+    FUN = function(x) x[1]
+  )
+
+  return(data_n)
+}
+
+
 ### 2013-2020, 2022 -------------------------------------------------------
 
 # 2013-2020
@@ -539,6 +709,11 @@ data_n <- wrangling_detailliert(data_n)
 
 # 2023
 data_n2 <- wrangling_detailliert(data_n2)
+
+## 2024
+
+
+data_n3 <- wrangling_detailliert(data_n3,  collapse = TRUE)
 
 ### 2021 --------------------------------------------------------------------
 
@@ -832,6 +1007,17 @@ data_n2 <- data_n2[,c("bereich", "kategorie", "indikator", "fachbereich", "gesch
                     #, "hinweise", "quelle"
 )]
 
+# 20 24
+data_n3 <- detailliert_aufbereiten(data = data_n3)
+data_n3$jahr <- 2024
+# Spalten in logische Reihenfolge bringen
+data_n3 <- data_n3[,c("bereich", "kategorie", "indikator", "fachbereich", "geschlecht", "bundesland", "landkreis", "landkreis_zusatz", "landkreis_nummer", "jahr", "anforderung", "wert"
+                    #, "hinweise", "quelle"
+)]
+
+
+
+
 # 2013-2020
 data_z <- lapply(names(data_z), function(x) detailliert_aufbereiten(data_z[[x]]))
 data_z <- lapply(1:length(data_z), function(i) {
@@ -849,7 +1035,7 @@ names(data_z) <- paste0("data_", 2013:2020)
 # Erstellt "arbeitsmarkt_detail" - Azubis ------------------------------------------
 
 ## Rohdaten einlesen ---------------------------------------------------
-
+pfad <- "C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/"
 library(dplyr)
 
 #2021
@@ -862,6 +1048,11 @@ data_a22 <- readxl::read_excel(paste0(pfad, "/BA019_230823_EA_SvB_Azub_MINT.xlsx
 #2023
 data_a23 <- readxl::read_excel(paste0(pfad, "/BA022_240731_EA_357830_SvB_Azub_MINT_Dauer.xlsx"),
                                sheet = "Auswertung", col_names = F, range = "A12:L4201")
+
+# 20 24
+data_a24 <- readxl::read_excel(paste0(pfad, "/BA048_250820_EA_394801_SvB_Azub_MINT_Dauer.xlsx"),
+                               sheet = "Auswertung", col_names = F, range = "A12:L4201")
+
 
 # 2013 - 2020
 sheet <- 2013:2020
@@ -1027,6 +1218,8 @@ data_a22 <- wrangling_detailliert(data_a22)
 
 data_a23 <- wrangling_detailliert(data_a23)
 
+data_a24 <- wrangling_detailliert(data_a24)
+
 data_az <- lapply(names(data_az), function(x) wrangling_detailliert(data_az[[x]]))
 names(data_az) <- paste0("data_a", 2013:2020)
 
@@ -1175,6 +1368,11 @@ data_a22$jahr <- 2022
 data_a23 <- azubi_aufbereiten(data_a23)
 data_a23$jahr <- 2023
 
+
+# 20 24
+data_a24 <- azubi_aufbereiten(data_a24)
+data_a24$jahr <- 2024
+
 # 2013 - 2020
 data_az <- lapply(names(data_az), function(x) azubi_aufbereiten(data_az[[x]]))
 data_az <- lapply(1:length(data_az), function(i) {
@@ -1227,6 +1425,8 @@ data_a <- azubi_aufbereiten_2(data_a)
 data_a22 <- azubi_aufbereiten_2(data_a22)
 #2023
 data_a23 <- azubi_aufbereiten_2(data_a23)
+#2024
+data_a24 <- azubi_aufbereiten_2(data_a24)
 #2013-2020
 data_az <- lapply(names(data_az), function(x) azubi_aufbereiten_2(data_az[[x]]))
 names(data_az) <- paste0("data_a", 2013:2020)
@@ -1253,6 +1453,7 @@ data_n <- staedte_anhaengen(data_n)
 data_z <- lapply(names(data_z), function(x) staedte_anhaengen(data_z[[x]]))
 names(data_z) <- paste0("data_", 2013:2020)
 data_n2 <- staedte_anhaengen(data_n2)
+data_n3 <- staedte_anhaengen(data_n3)
 
 
 staedte_anhaengen_azubis <- function(data_a22){
@@ -1273,6 +1474,8 @@ data_az <- lapply(names(data_az), function(x) staedte_anhaengen_azubis(data_az[[
 names(data_az) <- paste0("data_a", 2013:2020)
 data_a23 <- staedte_anhaengen_azubis(data_a23)
 
+data_a24 <- staedte_anhaengen_azubis(data_a24)
+###################################################Data? data n? data n2?
 ## arbeitsmarkt_detailliert Zusammenfügen und speichern -------------------------------
 
 data <- rbind(data_z$data_2013, data_z$data_2014, data_z$data_2015,
@@ -1280,16 +1483,18 @@ data <- rbind(data_z$data_2013, data_z$data_2014, data_z$data_2015,
               data_z$data_2019, data_z$data_2020,
               data,
               data_n,
-              data_n2)
-rm(data_n, data_z, data1, data_n2)
+              data_n2,
+              data_n3)
+rm(data_n, data_z, data1, data_n2, data_n3)
 
 data_a <- rbind(data_az$data_a2013, data_az$data_a2014, data_az$data_a2015,
                 data_az$data_a2016, data_az$data_a2017, data_az$data_a2018,
                 data_az$data_a2019, data_az$data_a2020,
                 data_a,
                 data_a22,
-                data_a23)
-rm(data_a22, data_az, data_a1, data_a23)
+                data_a23,
+                data_a24)
+rm(data_a22, data_az, data_a1, data_a23, data_a24)
 
 data_final <- rbind(data, data_a)
 rm(data, data_a)
@@ -1318,8 +1523,8 @@ data_final$wert <- as.numeric(data_final$wert)
 
 arbeitsmarkt_detail <- data_final
 
-#setwd("C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/02_data/data/")
-setwd("C:/Users/kbr/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/02_data/data/")
+setwd("C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/02_data/data/")
+#setwd("C:/Users/kbr/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/02_data/data/")
 save(arbeitsmarkt_detail, file ="arbeitsmarkt_detail.rda")
 
 # Erstellt "data_naa" -----------------------------------------------------

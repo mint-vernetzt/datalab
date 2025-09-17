@@ -47,7 +47,7 @@ daten_download_q <- function(r){
 
 
   ### Daten Fachkräfte ----
-  timerange <- 2023
+  timerange <- 2024
   fach <- c("MINT gesamt", "Nicht MINT")
   bf <- fachkraft_ui_berufslevel()
 
@@ -202,7 +202,7 @@ daten_download_q <- function(r){
 
   ### Daten Demografie ----
   betrachtung <- "Gruppenvergleich - Balkendiagramm"
-  timerange <- 2023 #L
+  timerange <- 2024 #L
   faecher <- "MINT"
 
 
@@ -275,7 +275,7 @@ AND fachbereich = {faecher}
   query_df <- glue::glue_sql("
   SELECT bundesland, fachbereich, jahr, kategorie, wert
   FROM arbeitsmarkt_detail
-  WHERE jahr IN (2017, 2018, 2019, 2020, 2021, 2022, 2023)
+  WHERE jahr IN (2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024)
     AND bundesland = {regio}
     AND geschlecht = 'Gesamt'
     AND fachbereich IN ('Mathematik, Naturwissenschaften', 'Informatik', 'Technik (gesamt)')
@@ -532,7 +532,7 @@ daten_download <- function(r){
 
 
   ### Daten Fachkräfte ----
-  timerange <- 2023
+  timerange <- 2024
   fach <- c("MINT gesamt", "Nicht MINT")
   bf <- fachkraft_ui_berufslevel()
 
@@ -687,7 +687,7 @@ daten_download <- function(r){
 
     ### Daten Demografie ----
     betrachtung <- "Gruppenvergleich - Balkendiagramm"
-    timerange <- 2023 #L
+    timerange <- 2024 #L
     faecher <- "MINT"
 
 
@@ -758,7 +758,7 @@ AND fachbereich = {faecher}
     query_df <- glue::glue_sql("
   SELECT bundesland, fachbereich, jahr, kategorie, wert
   FROM arbeitsmarkt_detail
-  WHERE jahr IN (2017, 2018, 2019, 2020, 2021, 2022, 2023)
+  WHERE jahr IN (2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024)
     AND bundesland = {regio}
     AND geschlecht = 'Gesamt'
     AND fachbereich IN ('Mathematik, Naturwissenschaften', 'Informatik', 'Technik (gesamt)')
@@ -1180,7 +1180,7 @@ argument_verlauf <- function(r){
 
 argument_fachkraft <- function(r){
 
-  timerange <- 2023
+  timerange <- 2024
   fach <- c("MINT gesamt", "Nicht MINT")
   bf <- fachkraft_ui_berufslevel()
   regio <- r$region_argumentationshilfe
@@ -1795,7 +1795,7 @@ argument_fachkraft <- function(r){
 argument_demografie <- function(r){
 
   betrachtung <- "Gruppenvergleich - Balkendiagramm"
-  timerange <- 2023 #L
+  timerange <- 2024
   regio <- r$region_argumentationshilfe
   faecher <- "MINT"
 
@@ -1922,7 +1922,7 @@ argument_nachwuchs <- function(r){
   query_df <- glue::glue_sql("
   SELECT bundesland, fachbereich, jahr, kategorie, wert
   FROM arbeitsmarkt_detail
-  WHERE jahr IN (2017, 2018, 2019, 2020, 2021, 2022, 2023)
+  WHERE jahr IN (2018, 2019, 2020, 2021, 2022, 2023, 2024)
     AND bundesland = {regio}
     AND geschlecht = 'Gesamt'
     AND fachbereich IN ('Mathematik, Naturwissenschaften', 'Informatik', 'Technik (gesamt)')
