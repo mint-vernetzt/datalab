@@ -4479,29 +4479,33 @@ save(arbeitsmarkt_epa, file = "arbeitsmarkt_epa.rda")
  # pfad <- paste0("C:/Users/", akro,
  #                "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
 
+
+
 ## Daten einlesen
 sheets <- c("Deutschland", "01 Schleswig-Holstein", "02 Hamburg", "03 Niedersachsen",
             "04 Bremen", "05 NRW", "06 Hessen", "07 Rheinland-Pfalz", "08 Baden-Württemberg",
             "09 Bayern", "10 Saarland", "11 Berlin", "12 Brandenburg", "13 Mecklenburg-Vorpommern",
             "14 Sachsen", "15 Sachsen-Anhalt", "16 Thüringen")
+pfad <- "C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/"
 
-de <- readxl::read_excel(paste0(pfad, "BA017_EA_346135_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[1])
-sh <- readxl::read_excel(paste0(pfad, "BA017_EA_346135_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[2])
-ha <- readxl::read_excel(paste0(pfad, "BA017_EA_346135_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[3])
-ni <- readxl::read_excel(paste0(pfad, "BA017_EA_346135_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[4])
-br <- readxl::read_excel(paste0(pfad, "BA017_EA_346135_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[5])
-nr <- readxl::read_excel(paste0(pfad, "BA017_EA_346135_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[6])
-he <- readxl::read_excel(paste0(pfad, "BA017_EA_346135_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[7])
-rp <- readxl::read_excel(paste0(pfad, "BA017_EA_346135_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[8])
-bw <- readxl::read_excel(paste0(pfad, "BA017_EA_346135_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[9])
-by <- readxl::read_excel(paste0(pfad, "BA017_EA_346135_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[10])
-sr <- readxl::read_excel(paste0(pfad, "BA017_EA_346135_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[11])
-be <- readxl::read_excel(paste0(pfad, "BA017_EA_346135_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[12])
-ba <- readxl::read_excel(paste0(pfad, "BA017_EA_346135_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[13])
-mv <- readxl::read_excel(paste0(pfad, "BA017_EA_346135_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[14])
-sa <- readxl::read_excel(paste0(pfad, "BA017_EA_346135_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[15])
-sn <- readxl::read_excel(paste0(pfad, "BA017_EA_346135_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[16])
-th <- readxl::read_excel(paste0(pfad, "BA017_EA_346135_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[17])
+
+de <- readxl::read_excel(paste0(pfad, "BA050_250903_EA_394801_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[1])
+sh <- readxl::read_excel(paste0(pfad, "BA050_250903_EA_394801_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[2])
+ha <- readxl::read_excel(paste0(pfad, "BA050_250903_EA_394801_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[3])
+ni <- readxl::read_excel(paste0(pfad, "BA050_250903_EA_394801_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[4])
+br <- readxl::read_excel(paste0(pfad, "BA050_250903_EA_394801_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[5])
+nr <- readxl::read_excel(paste0(pfad, "BA050_250903_EA_394801_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[6])
+he <- readxl::read_excel(paste0(pfad, "BA050_250903_EA_394801_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[7])
+rp <- readxl::read_excel(paste0(pfad, "BA050_250903_EA_394801_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[8])
+bw <- readxl::read_excel(paste0(pfad, "BA050_250903_EA_394801_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[9])
+by <- readxl::read_excel(paste0(pfad, "BA050_250903_EA_394801_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[10])
+sr <- readxl::read_excel(paste0(pfad, "BA050_250903_EA_394801_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[11])
+be <- readxl::read_excel(paste0(pfad, "BA050_250903_EA_394801_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[12])
+ba <- readxl::read_excel(paste0(pfad, "BA050_250903_EA_394801_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[13])
+mv <- readxl::read_excel(paste0(pfad, "BA050_250903_EA_394801_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[14])
+sa <- readxl::read_excel(paste0(pfad, "BA050_250903_EA_394801_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[15])
+sn <- readxl::read_excel(paste0(pfad, "BA050_250903_EA_394801_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[16])
+th <- readxl::read_excel(paste0(pfad, "BA050_250903_EA_394801_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[17])
 
 
 ## Daten zusammenfügen und region ergänzen
@@ -4528,11 +4532,11 @@ bulas_aufbereiten <- function(dat){
   dat <- dat[-c(1:5, 511:517),]
   header <- c("Gemeldete Arbeitslose", "Gemeldete Stellen", "Arbeitslosen-Stellen-Relation",
               "Abgang (Jahressumme)", "Abgeschlossene Vakanzzeit")
-  header_jahr <- 2013:2022
+  header_jahr <- 2013:2024
   header_ges <- character(length = 40)
   j <- 1
   k <- 5
-  for(i in 2013:2022){
+  for(i in 2013:2024){
     h <- paste0(header, "_", i)
     header_ges[j:k] <- h
     j <- j + 5
@@ -4544,7 +4548,7 @@ bulas_aufbereiten <- function(dat){
 
   dat <- dat[-c(1:4),]
 
-  dat <- tidyr::pivot_longer(dat, cols = "Gemeldete Arbeitslose_2013":"Abgeschlossene Vakanzzeit_2022",
+  dat <- tidyr::pivot_longer(dat, cols = "Gemeldete Arbeitslose_2013":"Abgeschlossene Vakanzzeit_2024",
                              values_to = "wert", names_to = "indikator")
 
   dat$beruf <- dat$fachbereich
@@ -4561,7 +4565,9 @@ bulas_aufbereiten <- function(dat){
       grepl("2019", indikator) ~ 2019,
       grepl("2020", indikator) ~ 2020,
       grepl("2021", indikator) ~ 2021,
-      grepl("2022", indikator) ~ 2022
+      grepl("2022", indikator) ~ 2022,
+      grepl("2023", indikator) ~ 2023,
+      grepl("2024", indikator) ~ 2024
     ),
     bereich = "Arbeitsmarkt",
     anforderung = "Gesamt",
@@ -4650,10 +4656,9 @@ dat$wert <- as.numeric(dat$wert)
 arbeitsmarkt_fachkraefte <- dat
 usethis::use_data(arbeitsmarkt_fachkraefte , overwrite = T)
 
+setwd("C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/02_data/data/")
 
-
-
-
+save(arbeitsmarkt_fachkraefte, file = "arbeitsmarkt_fachkraefte.rda")
 
 
 
