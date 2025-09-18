@@ -2443,7 +2443,10 @@ plot_international_schule_migration <- function(r) {
 plot_international_map_arb <- function(r) {
 
    # ui input für Region laden
-  map_l <- r$map_l_arb
+  #map_l <- r$map_l_arb
+
+
+  map_l <- "EU"
 
   # Falls Region EU ist:
   if(map_l== "EU"){
@@ -2773,7 +2776,9 @@ plot_international_map_arb_gender <- function(r) {
 
 
   # ui input für Region laden
-  inpl <- r$map_l_arb_gender
+  #inpl <- r$map_l_arb_gender
+
+  inpl <- "EU"
 
   # Falls Region EU ist:
   if(inpl== "EU"){
@@ -2867,9 +2872,9 @@ plot_international_map_arb_gender <- function(r) {
     map_selection <- "custom/world"
 
     # ui inputs für oecd laden
-    inpp <- r$map_pers_arb_gender
-    inpy <- r$map_y_arb_gender
-    inpf <- r$map_f_arb_gender
+    #inpp <- r$map_pers_arb_gender
+    #inpy <- r$map_y_arb_gender
+    #inpf <- r$map_f_arb_gender
 
 
     # Falls indiktoren aus datensatz arbeitsmarkt_anfänger_absolv_oecd gewählt werden
@@ -3239,7 +3244,8 @@ plot_international_map_arb_gender <- function(r) {
 plot_international_top10_mint_arb <- function(r) {
 
   # ui input für Region laden
-  map_l <- r$map_l_top10_mint_arb
+ ### map_l <- r$map_l_top10_mint_arb
+  map_l <- "EU"
 
   # falls die Region EU ist:
   if(map_l== "EU"){
@@ -4076,6 +4082,7 @@ plot_international_top10_mint_arb_gender <- function(r) {
   # Input region laden
   inpl <- r$map_l_top10_mint_arb_gender
 
+  inpl <- "EU"
 
   # EU
   if(inpl== "EU"){

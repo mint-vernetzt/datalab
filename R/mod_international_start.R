@@ -408,7 +408,7 @@ mod_international_start_ui <- function(id){
 
                                       shiny::sidebarPanel(
                                         width = 3,
-                                        p("Was was hier nochmal der Titel? "),
+                                     ####   p("Was was hier nochmal der Titel? "),
                                         mod_international_arbeitsmarkt_vergleich_ui("international_arbeitsmarkt_vergleich_1"),
 
                                       ),
@@ -875,14 +875,14 @@ mod_international_start_server <- function(id, r){
     )
 
 
-    output$plot_international_arbeitsmarkt_vergleiche_1 <- highcharter::renderHighchart({
-      highcharter::highchart() %>%
-        highcharter::hc_title(text = "Testplot läuft")
-    })
-
     # output$plot_international_arbeitsmarkt_vergleiche_1 <- highcharter::renderHighchart({
-    #   plot_international_arbeitsmarkt_vergleiche(r)
+    #   highcharter::highchart() %>%
+    #     highcharter::hc_title(text = "Testplot läuft")
     # })
+
+    output$plot_international_arbeitsmarkt_vergleiche_1 <- highcharter::renderHighchart({
+      plot_international_arbeitsmarkt_vergleiche(r)
+    })
 
     # tab 5
 
