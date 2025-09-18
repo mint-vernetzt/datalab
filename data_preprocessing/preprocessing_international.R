@@ -18,6 +18,24 @@ saveRDS(map_selection_international, file="map_selection_international.rds")
 
 
 
+map_selection_german <-  highcharter::download_map_data(url = "countries/de/de-all")
+saveRDS(map_selection_german, file = "map_selection_german.rds")
+
+
+
+state_codes <- c("bw","by","be","bb","hb","hh","he","mv","ni",
+                 "nw","rp","sl","sn","st","sh","th")
+
+
+
+for (code in state_codes) {
+  map_state <- highcharter::download_map_data(paste0("countries/de/de-", code, "-all"))
+  saveRDS(map_state, file = paste0("map_de_", code, ".rds"))
+}
+
+
+
+
 
 ### internationale Schuldaten ####
 

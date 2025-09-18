@@ -1,5 +1,11 @@
 #library(dplyr)
 #library(tidyr)
+map_selection_international <- readRDS("data/map_selection_international.rds")
+map_selection_germany <- readRDS("data/map_selection_german.rds")
+map_selection_europe <- readRDS("data/map_selection_europa.rds")
+
+
+
 
 #' A function to plot a graph.
 #'
@@ -432,8 +438,8 @@ plot_international_map_fem <- function(r){
   # falls region EU
   if(label_m == "EU"){
     # kartenabschnitt für hc definieren
-    map_selection <- "custom/europe"
-    #map_selection <- readRDS("data/map_selection_europa.rds")
+    #map_selection <- "custom/europe"
+    map_selection <- readRDS("data/map_selection_europa.rds")
 
     # Spezifische inputs laden
     timerange <- r$map_y_f
@@ -577,7 +583,7 @@ plot_international_map_fem <- function(r){
     fach_m <- r$map_f_f
 
     # Kartenabschnitt für hc definieren
-    map_selection <- "custom/world"
+    map_selection <- map_selection_international
 
     df_query <- glue::glue_sql("
     SELECT *
@@ -1460,7 +1466,7 @@ plot_international_schule_map <- function(r) {
   if (is.null(fach_m)) { fach_m <- ""}
 
 
-  map_selection <- "custom/world"
+  map_selection <- map_selection_international
 
   if (label_m == "TIMSS") {
     this_ordnung <- ifelse(
@@ -2467,7 +2473,7 @@ plot_international_map_arb <- function(r) {
     # Kartenausschnitt für hc definieren
 
     #map_selection <- readRDS("data/map_selection_europa.rds")
-    map_selection <- "custom/europe"
+    map_selection <- map_selection_europe
 
 
 
@@ -2554,7 +2560,7 @@ plot_international_map_arb <- function(r) {
   else if (map_l== "OECD"){
 
     # Kartenausschnitt
-    map_selection <- "custom/world"
+    map_selection <- map_selection_international
 
     # ui inputs laden
     inpp <- r$map_pers_arb
@@ -2575,12 +2581,12 @@ plot_international_map_arb <- function(r) {
       AND fach IN ('MINT','Informatik & Kommunikationstechnologie','Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe','Naturwissenschaften, Mathematik und Statistik','Alle')
       AND geschlecht = 'Gesamt'
                                ", .con = con)
-
-
-      browser()
-
+#
+#
+     ####################################### browser()
+##########
       data1 <- DBI::dbGetQuery(con, df_query)
-
+###
 
 
       data1 <- data1 %>%
@@ -2799,7 +2805,7 @@ plot_international_map_arb_gender <- function(r) {
     inpp <- r$map_pers_arb_gender_eu
 
     # Kartenabschnitt für hc
-    map_selection <- "custom/europe"
+    map_selection <- map_selection_europe
     #map_selection <- readRDS("data/map_selection_europa.rds")
 
     df_query <- glue::glue_sql("
@@ -2880,7 +2886,7 @@ plot_international_map_arb_gender <- function(r) {
   else if (inpl== "OECD"){
 
     # Kartenausschnitt für hc
-    map_selection <- "custom/world"
+    map_selection <- map_selection_international
 
     # ui inputs für oecd laden
     #inpp <- r$map_pers_arb_gender
@@ -2910,10 +2916,10 @@ plot_international_map_arb_gender <- function(r) {
                                ", .con = con)
 
       data1 <- DBI::dbGetQuery(con, df_query)
-
-      browser()
-
-
+#
+ #     browser()
+#
+#
 
 
       data1 <- data1 %>%
@@ -3268,7 +3274,7 @@ plot_international_top10_mint_arb <- function(r) {
     # Kartenauschnitt für hc
 
     #map_selection <- readRDS("data/map_selection_europa.rds")
-    map_selection <- "custom/europe"
+    map_selection <- map_selection_europe
 
     df_query <- glue::glue_sql("
     SELECT *
@@ -3332,7 +3338,7 @@ title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von ", inpp, "n 
   else if (map_l== "OECD"){
 
     # Kartenausschnitt
-    map_selection <- "custom/world"
+    map_selection <- map_selection_international
 
     # Für OECD spezifischen Indikator laden
     inpp <- r$map_pers_oecd_top10_mint_arb
@@ -4109,7 +4115,7 @@ plot_international_top10_mint_arb_gender <- function(r) {
 
     # Kartenausschnitt
     #map_selection <- readRDS("data/map_selection_europa.rds")
-    map_selection <- "custom/europe"
+    map_selection <- map_selection_europe
 
 
     df_query <- glue::glue_sql("
@@ -4180,7 +4186,7 @@ plot_international_top10_mint_arb_gender <- function(r) {
 
 
     # Kartenausschnitt
-    map_selection <- "custom/world"
+    map_selection <- map_selection_international
 
 
     # ui inputs

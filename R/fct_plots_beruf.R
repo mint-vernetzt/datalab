@@ -1,3 +1,20 @@
+
+
+
+
+map_selection_germany <- readRDS("data/map_selection_german.rds")
+map_selection_europe <- readRDS("data/map_selection_europa.rds")
+map_selection_international <- readRDS("data/map_selection_international.rds")
+
+
+
+
+
+
+
+
+
+
 # Berufswahl MINT ----
 ###Tab 1 ----
 #' A function to plot bar plot
@@ -354,7 +371,7 @@ arbeitsmarkt_mint_bulas <- function(r) {
     tooltip <- "{point.bundesland} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.wert}"
     titel <- paste0("Anteil von ",  title_help, " in MINT an allen ",  title_help, " (", timerange, ")")
     mincolor <- "#f4f5f6"
-    map_selection <- 1
+    map_selection <- map_selection_germany
     maxcolor <- "#b16fab"
     quelle <- "uelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
@@ -1559,7 +1576,7 @@ arbeitsmarkt_bula_faecher <- function(r) {
     titel <- paste0("Anteil von ",  title_help, " in ", faecher, " an allen ",  title_help, " (", timerange, ")")
     mincolor <- "#f4f5f6"
     maxcolor <- "#b16fab"
-    map_selection <- 1
+    map_selection <- map_selection_germany
 
     quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
     out <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection, quelle = quelle)
@@ -2548,7 +2565,7 @@ arbeitsmarkt_wahl_gender <- function(r) {
      titel <- titel_w
      mincolor <- "#fcfcfd"
      maxcolor <- "#b16fab"
-     map_selection <- 1
+     map_selection <- map_selection_germany
      quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
      out_1 <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor,prop=TRUE, wert=FALSE, map=map_selection, quelle = quelle)
 
@@ -2560,7 +2577,7 @@ arbeitsmarkt_wahl_gender <- function(r) {
      titel <- titel_m
      mincolor <- "#fcfcfd"
      maxcolor <- "#b16fab"
-     map_selection <- 1
+     map_selection <- map_selection_germany
      quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
      out_2 <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor,prop=TRUE, wert=FALSE, map=map_selection, quelle = quelle)
 
@@ -3473,10 +3490,34 @@ arbeitsmarkt_lk_detail_map <- function(r) {
   # create plots
 
 
+
+
+
+  state_codes <- data.frame(
+    state = c(
+      "Baden-Württemberg","Bayern","Berlin","Brandenburg","Bremen","Hamburg",
+      "Hessen","Mecklenburg-Vorpommern","Niedersachsen","Nordrhein-Westfalen",
+      "Rheinland-Pfalz","Saarland","Sachsen","Sachsen-Anhalt",
+      "Schleswig-Holstein","Thüringen"
+    ),
+    short = c("bw","by","be","bb","hb","hh","he","mv","ni",
+              "nw","rp","sl","sn","st","sh","th")
+  )
+  state_code <- state_codes %>%
+    dplyr::filter(state == states) %>%
+    dplyr::pull(short)
+
+  # RDS-Datei für das Bundesland laden
+  map_state <- readRDS(paste0("data/map_de_", state_code, ".rds"))
+
+
+
+
   titel <- paste0("Anteil von ", titel_sub1_2, titel_gesamt1, titel_gesamt1_2, " in ", states, " (", timerange, ")")
-  highcharter::hcmap(
-    paste0("countries/de/de-", state_code ,"-all"),
-    data = df1_map,
+  highcharter::highchart(type = "map") %>%
+    highcharter::hc_add_series_map(
+    map = map_state,
+    df = df1_map,
     value = "prob",
     joinBy = c("hc-key","landkreis_nummer"),
     borderColor = "#FAFAFA",
