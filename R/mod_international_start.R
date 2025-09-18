@@ -414,7 +414,7 @@ mod_international_start_ui <- function(id){
                                       ),
                                       shiny::mainPanel(
                                         width = 9,
-                                        shinycssloaders::withSpinner(highcharter::highchartOutput("plot_international_arbeitsmarkt_vergleiche_1"),
+                                        shinycssloaders::withSpinner(htmlOutput("plot_international_arbeitsmarkt_vergleiche_1"),
                                                                      color = "#154194"),
 
                                         shinyBS::bsPopover(id = "h_beruf_international_ho", title = "",
@@ -880,9 +880,19 @@ mod_international_start_server <- function(id, r){
     #     highcharter::hc_title(text = "Testplot läuft")
     # })
 
-    output$plot_international_arbeitsmarkt_vergleiche_1 <- highcharter::renderHighchart({
-      plot_international_arbeitsmarkt_vergleiche(r)
+    # tab 5
+    output$plot_international_arbeitsmarkt_vergleiche_1 <- renderUI({
+      plot <- plot_international_arbeitsmarkt_vergleiche(r)
+
+      r$plot_international_arbeitsmarkt_vergleiche_1 <- plot
+      r$plot_international_arbeitsmarkt_vergleiche_1_title <- get_plot_title(
+        plot = r$plot_international_arbeitsmarkt_vergleiche_1
+      )
+
+      plot
     })
+
+
 
     # tab 5
 
