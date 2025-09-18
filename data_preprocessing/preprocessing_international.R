@@ -1,4 +1,24 @@
 
+
+
+## Karten herunterladen zur internationalen page
+
+options(download.file.method = "libcurl")
+
+
+setwd("C:/Users/tko/Documents/datalab/data/")
+map_selection_europa <- highcharter::download_map_data(url = "custom/europe")
+
+saveRDS(map_selection_europa, file = "map_selection_europa.rds")
+
+
+map_selection_international <- highcharter::download_map_data(url = "custom/world")
+saveRDS(map_selection_international, file="map_selection_international.rds")
+
+
+
+
+
 ### internationale Schuldaten ####
 
 # Erstellt schule_pisa ----
