@@ -35,6 +35,10 @@ h1 {
   margin-block: 20px;
 }
 
+a {
+  color: #154194;
+}
+
 /*
 p {
   font-family: inherit;

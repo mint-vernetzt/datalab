@@ -145,6 +145,9 @@ app_server <- function(input, output, session) {
 
   # Tabspeicher: Merkt sich, welche Tabs bereits gerendert wurden
   tab_loaded <- reactiveValues()
+  # für Footer, da keine Tabs
+  footer_page <- reactiveVal(NULL)
+  footer_loaded <- reactiveValues()
 
 
 # Initiale Tab-Auswahl auf "startseite", wenn keine Auswahl da
@@ -165,6 +168,11 @@ observe({
   mod_international_server("mod_international_ui_1")
   mod_fachkraft_server("fachkraft_ui_1")
 
+  mod_kontakt_server("kontakt_ui_1")
+  mod_impressum_server("impressum_ui_1")
+  mod_datenschutz_server("datenschutz_ui_1")
+  mod_barrierefreiheit_server("barrierefreiheit_ui_1")
+
   # Render einmalig je Tab UI-Ausgabe (Caching)
   output$ui_startseite <- renderUI({ mod_startseite_ui("startseite_ui_1") })
   output$ui_argumentationshilfe <- renderUI({ mod_argumentation_ui("argumentationshilfe_ui_1") })
@@ -176,39 +184,88 @@ observe({
   output$ui_international <- renderUI({ mod_international_ui("mod_international_ui_1") })
   output$ui_fachkraft <- renderUI({ mod_fachkraft_ui("fachkraft_ui_1") })
   output$ui_quellen <- renderUI({ mod_quellen_ui("quellen_ui_1") })
+
   output$ui_kontakt <- renderUI({ mod_kontakt_ui("kontakt_ui_1") })
   output$ui_impressum <- renderUI({ mod_impressum_ui("impressum_ui_1") })
   output$ui_datenschutz <- renderUI({ mod_datenschutz_ui("datenschutz_ui_1") })
+  output$ui_barrierefreiheit <- renderUI({mod_barrierefreiheit_ui("barrierefreiheit_ui_1")})
+
+  # Reaktion auf Footer-Klicks
+  observeEvent(input$footer_nav, {
+    if (is.null(footer_loaded[[input$footer_nav]])) {
+      # nur beim ersten Mal Loader starten
+      session$sendCustomMessage("tabStart", list())
+      footer_loaded[[input$footer_nav]] <- TRUE
+    }
+    footer_page(input$footer_nav)
+  })
+
+  observeEvent(input$tabs, {
+    footer_page(NULL)  # Footer-Modus verlassen
+
+    if (is.null(tab_loaded[[input$tabs]])) {
+      # nur beim ersten Mal Loader starten
+      session$sendCustomMessage("tabStart", list())
+      tab_loaded[[input$tabs]] <- TRUE
+    }
+  })
+
+  # Tab-Klicks
+  observeEvent(input$tabs, {
+    footer_page(NULL)  # Footer-Modus verlassen
+
+    if (is.null(tab_loaded[[input$tabs]])) {
+      # nur beim ersten Mal Loader starten
+      session$sendCustomMessage("tabStart", list())
+      tab_loaded[[input$tabs]] <- TRUE
+    }
+  })
 
   # Dynamisches UI mit Caching der geladenen Tabs
   output$main_tab_ui <- renderUI({
-    req(input$tabs)
 
-    # Nur das erste Mal markieren und generieren
-    if (is.null(tab_loaded[[input$tabs]])) {
-      tab_loaded[[input$tabs]] <- TRUE
+    on.exit({
+      session$onFlushed(function() {
+        session$sendCustomMessage("tabDone", list())#
+      }, once=TRUE)
+    }, add = TRUE)
+
+    if(!is.null(footer_page())) {
+      switch(footer_page(),
+             "impressum" = uiOutput("ui_impressum"),
+             "kontakt" = uiOutput("ui_kontakt"),
+             "datenschutz" = uiOutput("ui_datenschutz"),
+             "barrierefreiheit" = uiOutput("ui_barrierefreiheit")
+      )
+    } else {
+
+        req(input$tabs)
+
+        # Nur das erste Mal markieren und generieren
+        # if (is.null(tab_loaded[[input$tabs]])) {
+        #   tab_loaded[[input$tabs]] <- TRUE
+        # }
+        # # Loader ausblenden, nachdem UI erstellt wurde
+        #  on.exit(session$sendCustomMessage("tabDone", list()))
+
+        # Immer zurückgeben: Die jeweils einmal erzeugte UI-Ausgabe
+        switch(input$tabs,
+               "startseite" = uiOutput("ui_startseite"),
+               "ki-analysehilfe" = uiOutput("ui_argumentationshilfe"),
+               "home" = uiOutput("ui_home"),
+               "schule" = uiOutput("ui_schule"),
+               "studium" = uiOutput("ui_studium"),
+               "beruf" = uiOutput("ui_beruf"),
+               "ausserschulisch" = uiOutput("ui_ausserschulisch"),
+               "international" = uiOutput("ui_international"),
+               "fachkraft" = uiOutput("ui_fachkraft"),
+               "quellen" = uiOutput("ui_quellen"),
+               div("Unbekannter Tab – bitte Navigation nutzen.")
+        )
     }
-    # Loader ausblenden, nachdem UI erstellt wurde
-    session$sendCustomMessage("tabDone", list())
-
-    # Immer zurückgeben: Die jeweils einmal erzeugte UI-Ausgabe
-    switch(input$tabs,
-           "startseite" = uiOutput("ui_startseite"),
-           "ki-analysehilfe" = uiOutput("ui_argumentationshilfe"),
-           "home" = uiOutput("ui_home"),
-           "schule" = uiOutput("ui_schule"),
-           "studium" = uiOutput("ui_studium"),
-           "beruf" = uiOutput("ui_beruf"),
-           "ausserschulisch" = uiOutput("ui_ausserschulisch"),
-           "international" = uiOutput("ui_international"),
-           "fachkraft" = uiOutput("ui_fachkraft"),
-           "quellen" = uiOutput("ui_quellen"),
-           "kontakt" = uiOutput("ui_kontakt"),
-           "impressum" = uiOutput("ui_impressum"),
-           "datenschutz" = uiOutput("ui_datenschutz"),
-           div("Unbekannter Tab – bitte Navigation nutzen.")
-    )
   })
+
+
 }
 
 
