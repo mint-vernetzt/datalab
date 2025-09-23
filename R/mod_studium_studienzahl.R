@@ -72,9 +72,9 @@ mod_studium_studienzahl_ui <- function(id){
       shinydashboard::box(
         title = "Datenquellen",
         width = 5,
-        p("Die amtlichen Statistiken zeigen das aktuellste verfügbare Berichtsjahr 2023."),
-        p(tags$b(span("Studierendenzahlen: Destatis 2024, auf Anfrage. ")),
-          "Daten des Berichtsjahres 2024 ca. ab September 2025 verfügbar."),
+        p("Die amtlichen Statistiken zeigen das aktuellste verfügbare Berichtsjahr 2024."),
+        p(tags$b(span("Studierendenzahlen: Destatis 2025, auf Anfrage. ")),
+          "Daten des Berichtsjahres 2025 sind ca. ab September 2026 verfügbar."),
 
       )
     ),
@@ -88,12 +88,12 @@ mod_studium_studienzahl_ui <- function(id){
         width = 12,
         column(
           width = 8,
-        p("Im Jahr 2023 studieren 37 % MINT-Fächer, 63 % Fächer aus anderen Bereichen.
-        Bei den Studienanfänger:innen ist der Anteil derer, die MINT studieren, bei 37 %.
+        p("Im Jahr 2024 studieren 37 % MINT-Fächer, 63 % Fächer aus anderen Bereichen.
+        Bei den Studienanfänger:innen ist der Anteil derer, die MINT studieren, bei 38 %.
           Unter den Absolvent:innen haben 36 % ein MINT-Studium abgeschlossen."),
         p("Die Zahl an MINT-Studierenden hat sich in den letzten zehn Jahren nur leicht verändert,
-          von 1.035.841 im Jahr 2014 auf 1.049.902 im Jahr 2023. Der MINT-Anteil unter Studienanfänger:innen
-          ist lange konstant gesunken und erstmals von 2021 auf 2022 wieder leicht gestiegen, von 36,5 % auf 37,2 %.")
+          von 1.035.841 im Jahr 2014 auf 1.046.556 im Jahr 2024. Der MINT-Anteil unter Studienanfänger:innen
+          ist lange konstant gesunken und steigt seit 2021 wieder leicht, von 36,5 % (2021) auf 38 % (2024).")
         ),
         column(
           width = 12,

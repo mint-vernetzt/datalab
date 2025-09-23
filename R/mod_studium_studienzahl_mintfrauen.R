@@ -22,8 +22,8 @@ mod_studium_studienzahl_mintfrauen_ui <- function(id){
     shinyWidgets::sliderTextInput(
       inputId = ns("jahr_mint_fach_frauen"),
       label = NULL,
-      choices = 2013:2023,
-      selected = 2023
+      choices = 2013:2024,
+      selected = 2024
     ),
 
     p("Region:"),
