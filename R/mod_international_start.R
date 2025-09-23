@@ -27,7 +27,7 @@ mod_international_start_ui <- function(id){
 
     fluidRow(
       shinydashboard::box(
-        title = "Auf dieser Seite",
+        h2("Auf dieser Seite"),
         width = 7,
         p(style = "text-align: left; font-size = 16px",
           "Auf dieser Fokus-Seite blicken wir über Deutschland hinaus. Hier können Sie in den Bereichen ''Schule'',
@@ -46,18 +46,18 @@ mod_international_start_ui <- function(id){
 
     fluidRow(
       shinydashboard::box(
-        title = "Themenübersicht",
+        h2("Themenübersicht"),
         width = 7,
         p(style = "text-align: left; font-size = 16px",tags$a(href="#schule_international",
-                                                              span(tags$b(span("MINT-Kompetenzen im internationalen Vergleich:")))),
+                                                              span(tags$b(span("→ MINT-Kompetenzen im internationalen Vergleich:")))),
           "Wie schneidet Deutschland im internationalen Vergleich in den MINT-Kompetenztests PISA und TIMSS ab?"
           ),
         p(style = "text-align: left; font-size = 16px",tags$a(href="#studium_international",
-                                                              span(tags$b(span("MINT-Studierende im internationalen Vergleich:")))),
+                                                              span(tags$b(span("→ MINT-Studierende im internationalen Vergleich:")))),
           "Hier können Sie den MINT-Anteil an deutschen Hochschulen international vergleichen."
           ),
         p(style = "text-align: left; font-size = 16px",tags$a(href="#beruf_international",
-                                                              span(tags$b(span("MINT-Beschäftigung im internationalen Vergleich:")))),
+                                                              span(tags$b(span("→ MINT-Beschäftigung im internationalen Vergleich:")))),
           "Hier können Sie den MINT-Anteil im deutschen Arbeitsmarkt international vergleichen."
         )
 
@@ -83,7 +83,7 @@ mod_international_start_ui <- function(id){
     # Schule international ----
     fluidRow(id="schule_international",
              shinydashboard::box(
-               title = "MINT-Kompetenzen im internationalen Vergleich: Wie schneidet Deutschland im internationalen Vergleich in den MINT-Kompetenztests Pisa und TIMSS ab?",
+               h2("MINT-Kompetenzen im internationalen Vergleich: Wie schneidet Deutschland im internationalen Vergleich in den MINT-Kompetenztests Pisa und TIMSS ab?"),
                width = 12,
                column(
                  width = 8,
@@ -183,7 +183,7 @@ mod_international_start_ui <- function(id){
     fluidRow(id="studium_international",
              shinydashboard::box(
 
-               title = "MINT-Studierende im internationalen Vergleich: Hier können Sie den MINT-Anteil an deutschen Hochschulen international vergleichen.",
+               h2("MINT-Studierende im internationalen Vergleich: Hier können Sie den MINT-Anteil an deutschen Hochschulen international vergleichen."),
 
                width = 12,
                column(
@@ -305,7 +305,7 @@ mod_international_start_ui <- function(id){
 
     fluidRow(id="beruf_international",
              shinydashboard::box(
-               title = "MINT-Beschäftigung im internationalen Vergleich: Hier können Sie den MINT-Anteil im deutschen Arbeitsmarkt international vergleichen.",
+               h2("MINT-Beschäftigung im internationalen Vergleich: Hier können Sie den MINT-Anteil im deutschen Arbeitsmarkt international vergleichen."),
                width = 12,
                column(
                  width = 8,

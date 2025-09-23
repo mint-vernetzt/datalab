@@ -64,12 +64,12 @@ app_ui <- function(request) {
           # Setting id makes input$tabs give the tabName of currently-selected tab
           style = "position: fixed;",
           id = "tabs",
-          p("Schnellstart:", style = "color: #154194; font-size: 16px; font-weight: 600;
+          p("Schnellstart:", style = "color: #154194; font-size: 18px; font-weight: 600;
           margin: 20px 0px 0px 10px;"),
           hr(style = "border-top: 2px solid #154194; margin-top: 5px; margin-bottom: 5px;"),
           shinydashboard::menuItem("Übersicht",  tabName = "startseite"),
           shinydashboard::menuItem("Datenanalyse mit KI",  tabName = "ki-analysehilfe"),
-          p("MINT nach Bereichen:", style = "color: #154194; font-size: 16px; font-weight: 600;
+          p("MINT nach Bereichen:", style = "color: #154194; font-size: 18px; font-weight: 600;
           margin: 5px 0px 0px 10px;"),
           hr(style = "border-top: 2px solid #154194; margin-top: 5px; margin-bottom: 5px;"),
           shinydashboard::menuItem("Alle Bildungsbereiche",  tabName = "home"),
@@ -77,13 +77,13 @@ app_ui <- function(request) {
           shinydashboard::menuItem("Studium",  tabName = "studium"),
           shinydashboard::menuItem("Ausbildung & Beruf",  tabName = "beruf"),
 
-          p("Fokusseiten:", style = "color: #154194; font-size: 16px; font-weight: 600;
+          p("Fokusseiten:", style = "color: #154194; font-size: 18px; font-weight: 600;
           margin: 5px 0px 0px 10px;"),
           hr(style = "border-top: 2px solid #154194; margin-top: 5px; margin-bottom: 5px;"),
 
           shinydashboard::menuItem("MINT-Fachkräfte",  tabName = "fachkraft"),
           shinydashboard::menuItem("MINT International", tabName = "international"),
-          p("Daten aus der Community:", style = "color: #B16FAB; font-size: 16px; font-weight: 600;
+          p("Daten aus der Community:", style = "color: #B16FAB; font-size: 18px; font-weight: 600;
           margin: 5px 0px 0px 10px;"),
           hr(style = "border-top: 2px solid #B16FAB; margin-top: 5px; margin-bottom: 5px;"),
           shinydashboard::menuItem("Außerschulische MINT-Bildung", tabName = "ausserschulisch"),

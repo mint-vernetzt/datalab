@@ -27,7 +27,7 @@ mod_home_start_ui <- function(id){
 
     fluidRow(
       shinydashboard::box(
-        title = "Auf dieser Seite",
+        h2("Auf dieser Seite"),
         width = 7,
         p(
            "Auf dieser Überblickseite geben wir einen ersten Einblick in die vorhandenen Daten und vergleichen die
@@ -45,14 +45,14 @@ mod_home_start_ui <- function(id){
 
     fluidRow(
       shinydashboard::box(
-        title = "Themenübersicht",
+        h2("Themenübersicht"),
         width = 7,
         p(style = "text-align: left; font-size = 22px",tags$a(href="#alle_mint",
-                                                              span(tags$b(span("MINT-Anteil:")))),"ein Drittel MINT in Schule, Studium und Ausbildung, ein knappes Viertel im Beruf."
+                                                              span(tags$b(span("→ MINT-Anteil:")))),"ein Drittel MINT in Schule, Studium und Ausbildung, ein knappes Viertel im Beruf."
         ),
 
         p(style = "text-align: left; font-size = 22px",tags$a(href="#alle_frauen",
-                                                                    span(tags$b(span("Frauen in MINT:")))),"Der Frauenanteil nimmt entlang der Bildungskette ab."))
+                                                                    span(tags$b(span("→ Frauen in MINT:")))),"Der Frauenanteil nimmt entlang der Bildungskette ab."))
       ,
 
       shinydashboard::box(
@@ -70,7 +70,7 @@ mod_home_start_ui <- function(id){
 
     fluidRow(id="alle_mint",
       shinydashboard::box(
-        title = "MINT-Anteil: ein Drittel MINT in Schule, Studium und Ausbildung, ein knappes Viertel im Beruf.",
+        h2("MINT-Anteil: ein Drittel MINT in Schule, Studium und Ausbildung, ein knappes Viertel im Beruf."),
         width = 12,
         column(
           width = 8,
@@ -125,7 +125,7 @@ mod_home_start_ui <- function(id){
  # Box 2 ----
     fluidRow(id="alle_frauen",
       shinydashboard::box(
-        title = "Frauen in MINT: Der Frauenanteil nimmt entlang der Bildungskette ab.",
+        h2("Frauen in MINT: Der Frauenanteil nimmt entlang der Bildungskette ab."),
         width = 12,
         column(
           width = 8,

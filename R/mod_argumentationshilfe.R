@@ -111,7 +111,7 @@ mod_argumentation_ui <- function(id){
                         href = "https://chatgpt.com/g/g-67e4f41fd91881919a753f4309194bf7-test-mint-datalab-assistent-test",
                         target = "_blank",
                         tags$img(
-                          src = "www/gpt.png",
+                          src = "www/Bild_MINT-DataLab-GPT.png",
                           alt = "MINT-DataLab-GPT Symbolbild",
                           style = "max-width: 30%; height: auto; cursor: pointer;
                           margin: 10px 0px 0px 70px; border-radius: 10px;"
@@ -344,14 +344,14 @@ mod_argumentation_ui <- function(id){
           column(
             width = 6,  # Text in der linken Spalte
 
-            p(style = "font-size: 15px;",
+            p(
               "Als Basis für den Datenbericht sowie die datenbasierte Argumentation
               haben wir fünf Statistiken aus dem MINT-DataLab ausgewählt.")
           ),
           column(
             width = 5,
             div(style = "margin-left: 30px;",
-            p(style = "font-size: 15px;",
+            p(
               tags$a(href = "#daten_grafiken",
                      style = "color: #000000; text-decoration: underline;",
                      "→ Betrachten Sie die Daten in den interaktiven Grafiken weiter unten auf dieser Seite."))
@@ -449,7 +449,7 @@ mod_argumentation_ui <- function(id){
             column(
               width = 6,  # Text in der linken Spalte
 
-              p(style = "font-size: 15px;",
+              p(
                 "Sobald Sie auf den Link zum MINT-DataLab-GPT klicken, öffnet sich ein Chatfenster in ChatGPT.
                  Wählen Sie aus, ob sie eine Argumentation oder eine Bericht wollen,
                  der MINT-DataLab-GPT führt Sie durch die Erstellung der Analyse.")
@@ -499,7 +499,7 @@ mod_argumentation_ui <- function(id){
                      "4. Ergänzen Sie den KI-Bericht zur Veranschaulichung mit Grafiken.")),
             column(
               width = 6,
-              p(style = "font-size : 15px;",
+              p(
                 "Der Bericht wird anschaulicher, wenn Sie den Texten des MINT-DataLab-GPT Grafiken hinzuzufügen.
                 Laden Sie die passenden Grafiken gesammelt hier herunter oder wählen Sie einzelne Grafiken
                 im folgenden Abschnitt aus und fügen
@@ -664,7 +664,7 @@ mod_argumentation_ui <- function(id){
         # " rechts neben den Grafiken geben Impulse, welche weiteren
         #    Statistiken in einem MINT-Bericht ergänzt werden könnten.", br(),
 
-        "→ Die ", tags$span("grünen Boxen", style = "color: #00a87a;"),
+        "→ Die ", tags$span("grünen Boxen", style = "color: #008F68;"),
         "unter den Grafiken zeigen beispielhaft, wie man anhand
           der Statistiken für die MINT-Bildungsförderung argumentieren kann."
       )
@@ -734,7 +734,7 @@ mod_argumentation_ui <- function(id){
                    width = 3,
                    br(),
                    div(class = "content-box",
-                       style = "width: 250px;
+                       style = "width: 320px;
                               margin-left: 0;
                               background-color: #00a87a30;
                               border: 2px solid #00a87a;
@@ -751,7 +751,7 @@ mod_argumentation_ui <- function(id){
                    width = 3,
                    br(),
                    div(class = "content-box",
-                       style = "width: 250px;
+                       style = "width: 320px;
                               margin-left: 0;
                               background-color: #00a87a30;
                               border: 2px solid #00a87a;
@@ -768,7 +768,7 @@ mod_argumentation_ui <- function(id){
                    width = 3,
                    br(),
                    div(class = "content-box",
-                       style = "width: 250px;
+                       style = "width: 320px;
                               margin-left: 0;
                               background-color: #00a87a30;
                               border: 2px solid #00a87a;
@@ -843,7 +843,7 @@ mod_argumentation_ui <- function(id){
             width = 3,
             br(),
             div(class = "content-box",
-                style = "width: 250px;
+                style = "width: 320px;
                               margin-left: 0;
                               background-color: #00a87a30;
                               border: 2px solid #00a87a;
@@ -861,7 +861,7 @@ mod_argumentation_ui <- function(id){
             width = 3,
             br(),
             div(class = "content-box",
-                style = "width: 250px;
+                style = "width: 320px;
                               margin-left: 0;
                               background-color: #00a87a30;
                               border: 2px solid #00a87a;
@@ -934,7 +934,7 @@ mod_argumentation_ui <- function(id){
             width = 3,
             br(),
             div(class = "content-box",
-                style = "width: 250px;
+                style = "width: 320px;
                               margin-left: 0;
                               background-color: #00a87a30;
                               border: 2px solid #00a87a;
@@ -1001,7 +1001,7 @@ mod_argumentation_ui <- function(id){
             width = 3,
             br(),
             div(class = "content-box",
-                style = "width: 250px;
+                style = "width: 320px;
                               margin-left: 0;
                               background-color: #00a87a30;
                               border: 2px solid #00a87a;
@@ -1019,7 +1019,7 @@ mod_argumentation_ui <- function(id){
             width = 3,
             br(),
             div(class = "content-box",
-                style = "width: 250px;
+                style = "width: 320px;
                               margin-left: 0;
                               background-color: #00a87a30;
                               border: 2px solid #00a87a;
@@ -1036,7 +1036,7 @@ mod_argumentation_ui <- function(id){
             width = 3,
             br(),
             div(class = "content-box",
-                style = "width: 250px;
+                style = "width: 320px;
                               margin-left: 0;
                               background-color: #00a87a30;
                               border: 2px solid #00a87a;
@@ -1108,7 +1108,7 @@ mod_argumentation_ui <- function(id){
             width = 3,
             br(),
             div(class = "content-box",
-                style = "width: 250px;
+                style = "width: 320px;
                               margin-left: 0;
                               background-color: #00a87a30;
                               border: 2px solid #00a87a;
@@ -1125,7 +1125,7 @@ mod_argumentation_ui <- function(id){
             width = 3,
             br(),
             div(class = "content-box",
-                style = "width: 250px;
+                style = "width: 320px;
                               margin-left: 0;
                               background-color: #00a87a30;
                               border: 2px solid #00a87a;

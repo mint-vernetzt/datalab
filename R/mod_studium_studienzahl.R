@@ -31,7 +31,7 @@ mod_studium_studienzahl_ui <- function(id){
 
     fluidRow(
       shinydashboard::box(
-        title = "Auf dieser Seite",
+        h2("Auf dieser Seite"),
         width = 7,
         p(style = "text-align: left; font-size = 16px",
           "Auf dieser Seite zeigen wir statistische Kennzahlen zum Thema MINT-Fächer studieren. Wir zeigen, wie hoch der Anteil
@@ -50,22 +50,22 @@ mod_studium_studienzahl_ui <- function(id){
 
     fluidRow(
       shinydashboard::box(
-        title = "Themenübersicht",
+        h2("Themenübersicht"),
         width = 7,
         p(
           style = "text-align: left; font-size = 16px",tags$a(href="#studium_mint",
-                                                              span(tags$b(span("MINT-Anteil:")))), "Ein Drittel studiert MINT."
+                                                              span(tags$b(span("→ MINT-Anteil:")))), "Ein Drittel studiert MINT."
         ),
 
         p(style = "text-align: left; font-size = 16px",tags$a(href="#studium_fach",
-                                                              span(tags$b(span("M-I-N-T:")))), "Knapp drei Viertel aus MINT studieren Ingenieurwissenschaften/Informatik."
+                                                              span(tags$b(span("→ M-I-N-T:")))), "Knapp drei Viertel aus MINT studieren Ingenieurwissenschaften/Informatik."
 
         ),
         p(style = "text-align: left; font-size = 16px",tags$a(href="#studium_frauen",
-                                                              span(tags$b(span("Frauen in MINT:")))), "Frauen in MINT und vor allem den Ingenieurwissenschaften/Informatik eine Minderheit."
+                                                              span(tags$b(span("→ Frauen in MINT:")))), "Frauen in MINT und vor allem den Ingenieurwissenschaften/Informatik eine Minderheit."
         ),
         p(style = "text-align: left; font-size = 16px",tags$a(href="#studium_internationale_studis",
-                                                              span(tags$b(span("Internationale Studierende:")))), "Ihre Anzahl wächst und am häufigsten studieren sie MINT."
+                                                              span(tags$b(span("→ Internationale Studierende:")))), "Ihre Anzahl wächst und am häufigsten studieren sie MINT."
         )
         ),
 
@@ -84,7 +84,7 @@ mod_studium_studienzahl_ui <- function(id){
 
     fluidRow( id="studium_mint",
       shinydashboard::box(
-        title = "MINT-Anteil: Ein Drittel studiert MINT.",
+        h2("MINT-Anteil: Ein Drittel studiert MINT."),
         width = 12,
         column(
           width = 8,
@@ -180,7 +180,7 @@ mod_studium_studienzahl_ui <- function(id){
 
   fluidRow( id="studium_fach",
       shinydashboard::box(
-        title = "M-I-N-T: Knapp drei Viertel aus dem MINT-Bereich studieren Ingenieurwissenschaften/Informatik.",
+        h2("M-I-N-T: Knapp drei Viertel aus dem MINT-Bereich studieren Ingenieurwissenschaften/Informatik."),
         width = 12,
         column(
           width = 8,
@@ -267,7 +267,7 @@ mod_studium_studienzahl_ui <- function(id){
   # Box 3 ----
     fluidRow(id="studium_frauen",
       shinydashboard::box(
-        title = "Frauen in MINT: Frauen in MINT und vor allem in den Ingenieurwissenschaften/Informatik eine Minderheit.",
+        h2("Frauen in MINT: Frauen in MINT und vor allem in den Ingenieurwissenschaften/Informatik eine Minderheit."),
         width = 12,
         column(
           width = 8,
@@ -399,7 +399,7 @@ mod_studium_studienzahl_ui <- function(id){
 
   fluidRow(id="studium_internationale_studis",
            shinydashboard::box(
-             title = "Internationale Studierende: Ihre Anzahl wächst - und am häufigsten studieren sie MINT.",
+             h2("Internationale Studierende: Ihre Anzahl wächst - und am häufigsten studieren sie MINT."),
              width = 12,
              column(
                width = 8,

@@ -32,9 +32,9 @@ mod_kontakt_ui <- function(id){
     fluidRow(
       shinydashboard::box(
         width = 12,
-        tags$h2("Kontakt und Feedback"),
+        tags$h1("Kontakt und Feedback"),
         column(width = 9,
-               tags$b(span("Wir freuen uns über Feedback!", style = "color:#154194")),
+               tags$h2("Wir freuen uns über Feedback!"),
                br(),
                 p(style = "text-align: left; font-size = 16px",
                  "Das MINT-DataLab wird in den nächsten Jahren schrittweise weiterentwickelt.
@@ -47,12 +47,12 @@ mod_kontakt_ui <- function(id){
                p(style = "text-align: left; font-size = 16px",
                  span("Wir freuen uns über Rückfragen oder Feedback ", tags$a(href = "mailto:katharina.brunner@mint-vernetzt.de?subject= Feedback MINT-Datalab", "per Email"),"oder über unsere kurze",
                       tags$a(href="https://survey.lamapoll.de/MINT-DataLab_Feedback/", "Umfrage", target="_blank"), "!"
-                 ),
+                 )),
                  br(),
                  br(),
                  br(),
                  br(),
-               tags$b(span("Über das MINT-DataLab", style = "color:#154194"))),
+               tags$h2("Über das MINT-DataLab"),
                p(style = "text-align: left; font-size = 16px",
                  "Im MINT-DataLab präsentieren wir statistische Kennzahlen rund um MINT in den Bereichen Schule, Hochschule,
                  Ausbildung und Arbeitsmarkt in Deutschland. Unser Ziel ist es, mit dem MINT-DataLab einen zentralen Ort
