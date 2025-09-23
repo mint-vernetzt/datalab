@@ -210,7 +210,7 @@ background-color:#FCFCFD;
   padding: 10px;
   margin: 10px auto;
   width: 100%;
-  background-color: #00a87a;
+  background-color: #154194;
   color: #FFFFFF;
 
   font-family: SourceSans3-Regular;
@@ -274,6 +274,23 @@ background-color:#FCFCFD;
   }
 }
 
+/* Hintergrund- / Schriftfarbe in Dropdown Menüs */
+.dropdown-menu>.active>a, .dropdown-menu>.active>a:focus, .dropdown-menu>.active>a:hover {
+    color: #fff;
+    text-decoration: none;
+    background-color: #154194;
+    outline: 0;
+}
+
+.dropdown-menu>li>a {
+    color: #000;
+}
+
+.btn-default {
+    background-color: #f4f4f4;
+    color: #000;
+    border-color: #ddd;
+}
 
 /* Anpassung des Popovers und Tooltips */
 

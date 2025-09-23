@@ -66,7 +66,7 @@ mod_schule_kurse_comparison_gender_ui <- function(id){
          multiple = FALSE
        ),
 
-    p("Nicht-MINT als Vergleich anzeigen?", style = "color: #b16fab;"),
+    p("Nicht-MINT als Vergleich anzeigen?", style = "color: #154194;"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("gegenwert_kurse_comparison_gender"),
       choices = c("Ja", "Nein"),

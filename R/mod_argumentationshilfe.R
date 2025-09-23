@@ -66,9 +66,11 @@ mod_argumentation_ui <- function(id){
             p("Bei dieser Frage können Sie sich von KI unterstützen lassen: dem MINT-DataLab-GPT"),
 
             strong("Der Chatbot unterstützt konkret in drei Situationen:"),
-            p(style = "margin-left: 20px; margin-top: 10px;", "1. Er erstellt einen MINT-Bericht für ein ausgewähltes Bundesland"),
-            p(style = "margin-left: 20px;", "2. Er hilft, für MINT-Förderung zu argumentieren"), #Er erstellt eine Argumentation für die Förderung von MINT-Bildung
-            p(style = "margin-left: 20px;", "3. Er hilft, Daten grundlegend zu interpretieren"),
+            tags$ol(
+              tags$li("Er erstellt einen MINT-Bericht für ein ausgewähltes Bundesland"),
+              tags$li("Er hilft, für MINT-Förderung zu argumentieren"),
+              tags$li("Er hilft, Daten grundlegend zu interpretieren"),
+            ),
             br(),
             p("Der MINT-DataLab-GPT kann bei der Interpretation aller Daten im MINT-DataLab assistieren."),
 
@@ -276,11 +278,12 @@ mod_argumentation_ui <- function(id){
       ),
       div(id = "region",
 
-        p(strong(style = "text-align: left; font-size: 18px;",
-                 "1. Wählen Sie eine Region für die Analyse aus.")),
+        # p(strong(style = "text-align: left; font-size: 18px;",
+        #          "1. Wählen Sie eine Region für die Analyse aus.")),
 
         shinyWidgets::pickerInput(
           inputId = ns("region_argumentationshilfe"),
+          label = "1. Wählen Sie eine Region für die Analyse aus.",
           choices = c("Deutschland",
                       "Baden-Württemberg",
                       "Bayern",
@@ -664,7 +667,7 @@ mod_argumentation_ui <- function(id){
         # " rechts neben den Grafiken geben Impulse, welche weiteren
         #    Statistiken in einem MINT-Bericht ergänzt werden könnten.", br(),
 
-        "→ Die ", tags$span("grünen Boxen", style = "color: #008F68;"),
+        "→ Die ", tags$span("grünen Boxen", style = "color: #007655;"),
         "unter den Grafiken zeigen beispielhaft, wie man anhand
           der Statistiken für die MINT-Bildungsförderung argumentieren kann."
       )
