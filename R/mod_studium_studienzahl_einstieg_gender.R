@@ -76,7 +76,7 @@ mod_studium_studienzahl_einstieg_gender_ui <- function(id){
           multiple = FALSE,
           selected = c("Deutschland")
         ),
-        p("Nicht-MINT als Vergleich anzeigen?", style = "color: #b16fab;"),
+        p("Nicht-MINT als Vergleich anzeigen?", style = "color: #154194;"),
         shinyWidgets::radioGroupButtons(
           inputId = ns("gen_gegenwert_pie"),
           choices = c("Ja", "Nein"),

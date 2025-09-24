@@ -9,30 +9,39 @@
   font-family: "SourceSans3-Regular";
 }
 
+
 /* Schriften festlegen */
 
 .h1, .h2, .h3, .h4, .h5,
 .h6, h1, h2, h3, h4, h5, h6 {
   font-family: SourceSans3-Bold;
   color: #154194;
-  font-size: 22px;
+  font-size: 18px;
 }
 
 * {
   font-family: SourceSans3-Regular;
-  font-size: 14px;
+  font-size: 18px;
+}
+
+h1 {
+  font-size: 32px;
+  margin-block: 20px;
 }
 
 h2 {
-  font-size: 22px;
+  font-size: 26px;
   margin-block: 20px;
   margin-top: 20px;
 }
 
-
-h1 {
-  font-size: 28px;
+h3 {
+  font-size: 20px;
   margin-block: 20px;
+}
+
+a {
+  color: #154194;
 }
 
 /*
@@ -73,7 +82,7 @@ background-color: #FFFFFF;
   /* active selected tab in the sidebarmenu */
 .skin-blue .main-sidebar .sidebar .sidebar-menu .active a{
 background-color: #EDF3FF;
-border-left-color: #EDF3FF;
+border-left-color: #154194;
 }
 
   /* other links in the sidebarmenu */
@@ -105,6 +114,26 @@ background-color: #154194;
 background-color:#FCFCFD;
 }
 
+.skin-blue .main-sidebar{
+  width: 270px;
+}
+
+@media (min-width: 768px) {
+    .sidebar-collapse .left-side, .sidebar-collapse .main-sidebar {
+        -webkit-transform: translate(-270px, 0);
+        -ms-transform: translate(-270px,0);
+        -o-transform: translate(-270px,0);
+        transform: translate(-270px, 0);
+    }
+}
+@media (max-width: 767px) {
+    .left-side, .main-sidebar {
+        -webkit-transform: translate(-270px, 0);
+        -ms-transform: translate(-270px,0);
+        -o-transform: translate(-270px,0);
+        transform: translate(-270px, 0);
+    }
+}
 
 /*Tabset*/
 .nav-tabs>li>a {
@@ -115,6 +144,34 @@ background-color:#FCFCFD;
 
 .nav-tabs>li.active>a, .nav-tabs>li.active>a:focus {
   color: #154194;
+}
+
+/* 1) Skin-Blue: dunklen Wrapper-Hintergrund neutralisieren (sonst sieht man ihn als Streifen) */
+.skin-blue .wrapper,
+.skin-blue .left-side {
+  background-color: #FCFCFD; /* passend zu deinem .content-wrapper */
+}
+
+/* 2) Desktop (≥768px): Sidebar-Breite + dazu passende Offsets */
+@media (min-width: 768px) {
+  .main-sidebar { width: 270px; }  /* wähle 270/300 etc. */
+  .content-wrapper,
+  .right-side,
+  .main-footer { margin-left: 270px; }
+
+  /* Header mitziehen, damit Logo/Nav nicht „abklemmen“ */
+  .main-header .logo   { width: 270px; }
+  .main-header .navbar { margin-left: 270px; }
+}
+
+/* 3) Mobile (<768px): absolut sicherstellen, dass nichts Platz für die Sidebar reserviert */
+@media (max-width: 767.98px) {
+  .content-wrapper,
+  .right-side,
+  .main-footer,
+  .main-header .navbar {
+    margin-left: 0 !important;
+  }
 }
 
 
@@ -153,7 +210,7 @@ background-color:#FCFCFD;
   padding: 10px;
   margin: 10px auto;
   width: 100%;
-  background-color: #00a87a;
+  background-color: #154194;
   color: #FFFFFF;
 
   font-family: SourceSans3-Regular;
@@ -217,6 +274,23 @@ background-color:#FCFCFD;
   }
 }
 
+/* Hintergrund- / Schriftfarbe in Dropdown Menüs */
+.dropdown-menu>.active>a, .dropdown-menu>.active>a:focus, .dropdown-menu>.active>a:hover {
+    color: #fff;
+    text-decoration: none;
+    background-color: #154194;
+    outline: 0;
+}
+
+.dropdown-menu>li>a {
+    color: #000;
+}
+
+.btn-default {
+    background-color: #f4f4f4;
+    color: #000;
+    border-color: #ddd;
+}
 
 /* Anpassung des Popovers und Tooltips */
 
