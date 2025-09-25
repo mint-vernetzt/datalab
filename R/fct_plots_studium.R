@@ -84,7 +84,7 @@ studienzahl_mint <- function(r){
           tooltip <-paste('Anteil: {point.display_rel}% <br> Anzahl: {point.wert}')
           format <- '{point.display_rel}%'
 
-          quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+          quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
 
           highcharter::hw_grid(
@@ -113,7 +113,7 @@ studienzahl_mint <- function(r){
 
 
           ####---
-          quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+          quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
            highcharter::hw_grid(
 
@@ -160,7 +160,7 @@ studienzahl_mint <- function(r){
              style = list(fontFamily = "Calibri Regular", fontSize = "14px")
            ) %>%
            highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
-           highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+           highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
                                    style = list(fontSize = "11px", color = "gray")) %>%
            highcharter::hc_exporting(enabled = TRUE,
                                      buttons = list(
@@ -175,7 +175,7 @@ studienzahl_mint <- function(r){
      var filename = chartTitle + '_' + date + '.txt';
 
      var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle:Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
+     data += '\\nQuelle:Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
 
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
@@ -214,7 +214,7 @@ studienzahl_mint <- function(r){
                style = list(fontFamily = "Calibri Regular", fontSize = "14px")
              ) %>%
              highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
-             highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+             highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
                                      style = list(fontSize = "11px", color = "gray")) %>%
              highcharter::hc_exporting(enabled = TRUE,
                                        buttons = list(
@@ -229,7 +229,7 @@ studienzahl_mint <- function(r){
      var filename = chartTitle + '_' + date + '.txt';
 
      var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle:Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
+     data += '\\nQuelle:Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
 
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
@@ -334,7 +334,7 @@ studienzahl_verlauf_single <- function(r) {
     color <- c("#b16fab", "#154194", "#66cbaf", "#fbbf24", "#AFF3E0", "#2D6BE1", "#008F68", "#8893a7", "#ee7775", "#9d7265", "#35bd97",
                "#bfc6d3", "#5f94f9", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
 
-    quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
     out <- linebuilder(df, titel, x = "jahr", y = "proportion", group = "indikator", tooltip, format, color, quelle = quelle)
 
@@ -358,7 +358,7 @@ studienzahl_verlauf_single <- function(r) {
                     paste0("Anzahl an Studierenden in MINT in ", regio))
     tooltip <- "{point.indikator} <br> Anzahl: {point.display_abs}"
     format <- "{value:, f}"
-    quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt"
+    quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt"
     color <- c("#b16fab", "#154194", "#66cbaf", "#fbbf24", "#AFF3E0", "#2D6BE1", "#008F68", "#8893a7", "#ee7775", "#9d7265", "#35bd97",
                "#bfc6d3", "#5f94f9", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
     out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color, quelle = quelle)
@@ -446,7 +446,7 @@ studierende_bula_mint <- function(r) {
     mincolor <- "#f4f5f6"
     map_selection <- map_selection_germany
     maxcolor <- "#b16fab"
-    quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
     out <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection, quelle = quelle)
 
@@ -528,7 +528,7 @@ studierende_bula_mint <- function(r) {
       format <- "{value}%"
       color <- c("#b16fab", "#154194", "#66cbaf", "#fbbf24", "#AFF3E0", "#2D6BE1", "#008F68", "#8893a7", "#ee7775", "#9d7265", "#35bd97",
                  "#bfc6d3", "#5f94f9", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
-      quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt"
+      quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt"
       out <- linebuilder(df, titel, x = "jahr", y = "prop", group = "region", tooltip, format, color, quelle = quelle)
 
     } else if(absolut_selector=="Anzahl"){
@@ -548,7 +548,7 @@ studierende_bula_mint <- function(r) {
       format <- "{value:, f}"
       color <- c("#b16fab", "#154194", "#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
                  "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
-      quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt"
+      quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt"
       out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "region", tooltip, format, color, quelle = quelle)
     }
 
@@ -641,7 +641,7 @@ studierende_bula_mint <- function(r) {
                             margin = 25,
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
-      highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+      highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
                               style = list(fontSize = "11px", color = "gray")) %>% #Schrift-Formatierung Überschrift
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
@@ -656,7 +656,7 @@ studierende_bula_mint <- function(r) {
      var filename = chartTitle + '_' + date + '.txt';
 
      var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle:Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
+     data += '\\nQuelle:Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
 
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
@@ -692,7 +692,7 @@ studierende_bula_mint <- function(r) {
                             margin = 25,
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
-      highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+      highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
                               style = list(fontSize = "11px", color = "gray")) %>% #Schrift-Formatierung Überschrift
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
@@ -707,7 +707,7 @@ studierende_bula_mint <- function(r) {
      var filename = chartTitle + '_' + date + '.txt';
 
      var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle:Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
+     data += '\\nQuelle:Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
 
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
@@ -1732,7 +1732,7 @@ plot_mint_faecher <- function(r){
     tooltip <- paste('Anteil: {point.prop}% <br> Anzahl: {point.wert}')
     color = as.character(df$color)
 
-    quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
     out <- piebuilder(df, titel, x = "fach", y ="prop", tooltip, color, format='{point.prop}%', quelle = quelle)
 
@@ -1747,7 +1747,7 @@ plot_mint_faecher <- function(r){
       color1 = as.character(df[df$indikator == label_w[1],]$color)
       color2 = as.character(df[df$indikator == label_w[2],]$color)
 
-      quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
       #noch nutzen?
 
@@ -1799,7 +1799,7 @@ plot_mint_faecher <- function(r){
                             margin = 45,
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
-      highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+      highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
                               style = list(fontSize = "11px", color = "gray")) %>%
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
@@ -1814,7 +1814,7 @@ plot_mint_faecher <- function(r){
      var filename = chartTitle + '_' + date + '.txt';
 
      var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle:Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
+     data += '\\nQuelle:Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
 
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
@@ -1848,7 +1848,7 @@ plot_mint_faecher <- function(r){
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
-        highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+        highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
                                 style = list(fontSize = "11px", color = "gray")) %>%
         highcharter::hc_exporting(enabled = TRUE,
                                   buttons = list(
@@ -1863,7 +1863,7 @@ plot_mint_faecher <- function(r){
      var filename = chartTitle + '_' + date + '.txt';
 
      var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle:Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
+     data += '\\nQuelle:Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
 
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
@@ -2036,7 +2036,7 @@ mint_anteile <- function(r) {
     tooltip <- "{point.fach} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.display_abs}"
     format <- "{value} %"
     color <- as.character(colors)
-    que <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    que <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
     out <- linebuilder(df, titel, x = "jahr", y = "prop", group = "fach", tooltip, format, color, quelle=que)
 
 
@@ -2073,7 +2073,7 @@ mint_anteile <- function(r) {
     tooltip <- "{point.fach} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.display_abs}"
     format <- "{value}"
     color <- as.character(colors)
-    quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
     out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "fach", tooltip, format, color, quelle = quelle)
 
   }
@@ -2193,7 +2193,7 @@ plot_studierende_bula_faecher <- function(r){
     mincolor <- "#f4f5f6"
     map_selection <- map_selection_germany
     maxcolor <- "#b16fab"
-    quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
     out <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor,prop=TRUE,
                       wert=FALSE, map=map_selection, quelle = quelle)
@@ -2302,7 +2302,7 @@ plot_studierende_bula_faecher <- function(r){
       format <- "{value}%"
       color <- c("#b16fab", "#154194", "#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#d0a9cd",
                  "#bfc6d3", "#5f94f9", "#B45309")
-      quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
       out <- linebuilder(df, titel, x = "jahr", y = "prop", group = "region", tooltip, format, color, quelle = quelle)
 
 
@@ -2347,7 +2347,7 @@ plot_studierende_bula_faecher <- function(r){
       color <- c("#b16fab", "#154194", "#66cbaf")
 
 
-      quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
       out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "region", tooltip, format, color, quelle = quelle)
 
 
@@ -2440,7 +2440,7 @@ plot_studierende_bula_faecher <- function(r){
       titel <- "Für diese Kombination aus Fächergruppe und Bundesland bzw. Bundesländer liegen keine Daten vor.
         Bitte wählen Sie eine andere Komination oder Fächergruppe aus."
 
-      quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
       out <- linebuilder(df, titel = titel, x = "jahr", y = "wert", group = "region", tooltip = "Anzahl: {point.display_abs}", format = "{value:, f}", quelle = quelle)
 
@@ -2467,7 +2467,7 @@ plot_studierende_bula_faecher <- function(r){
                             margin = 25,
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
-      highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+      highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
                               style = list(fontSize = "11px", color = "gray")) %>%
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
@@ -2481,7 +2481,7 @@ plot_studierende_bula_faecher <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
      var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle:Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
+     data += '\\nQuelle:Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
 
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
@@ -2514,7 +2514,7 @@ plot_studierende_bula_faecher <- function(r){
                               margin = 25,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
-        highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+        highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
                                 style = list(fontSize = "11px", color = "gray")) %>%
         highcharter::hc_exporting(enabled = TRUE,
                                   buttons = list(
@@ -2528,7 +2528,7 @@ plot_studierende_bula_faecher <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
      var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle:Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
+     data += '\\nQuelle:Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
 
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
@@ -2909,7 +2909,7 @@ studienzahl_einstieg_gender <- function(r) {
           tooltip <- paste('Anteil: {point.prop}% <br> Anzahl: {point.display_abs}')
           color <- c("#efe8e6", "#154194")
 
-          quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+          quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
           p1 <- piebuilder(df_p, titel, x = "geschlecht", y ="prop", tooltip, color = color, format = '{point.prop}%', quelle = quelle)
 
@@ -2933,7 +2933,7 @@ studienzahl_einstieg_gender <- function(r) {
              color <- c("#efe8e6", "#154194")
              format <- '{point.prop}%'
 
-             quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+             quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
 
              p1g <- piebuilder(df_g, titel, x = "geschlecht", y = "prop", tooltip, color, format, quelle = quelle)
@@ -2969,7 +2969,7 @@ studienzahl_einstieg_gender <- function(r) {
           format = '{point.prop}%'
           color = c("#efe8e6", "#154194")
 
-          quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+          quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
           p1 <- piebuilder(df_1_pie, titel1, x = "geschlecht", y = "prop", tooltip, color, format, quelle = quelle)
           p2 <- piebuilder(df_2_pie, titel2, x = "geschlecht", y = "prop", tooltip, color, format, quelle = quelle)
@@ -3001,7 +3001,7 @@ studienzahl_einstieg_gender <- function(r) {
             tooltip <- paste('Anteil: {point.prop}% <br> Anzahl: {point.display_abs}')
             format <- '{point.prop}%'
 
-            quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+            quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
             color = c("#efe8e6", "#154194")
 
@@ -3033,7 +3033,7 @@ studienzahl_einstieg_gender <- function(r) {
           color <- c("#efe8e6", "#154194")
           format <- '{point.prop}%'
 
-          quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+          quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
           p1 <- piebuilder(df_1_pie, titel1, x ="geschlecht", y = "prop", tooltip, color, format, quelle = quelle)
           p2 <- piebuilder(df_2_pie, titel2, x ="geschlecht", y = "prop", tooltip, color, format, quelle=quelle)
@@ -3054,7 +3054,7 @@ studienzahl_einstieg_gender <- function(r) {
         tooltip <- paste('Anteil: {point.prop}% <br> Anzahl: {point.display_abs}')
         color <- c("#efe8e6", "#154194")
 
-        quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+        quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
         p1g <- piebuilder(df1_g, titel1, x = "geschlecht", y ="prop", tooltip, color, format= '{point.prop}%', quelle= quelle)
         p2g <- piebuilder(df2_g, titel2, x = "geschlecht", y ="prop", tooltip, color, format= '{point.prop}%', quelle = quelle)
@@ -3186,7 +3186,7 @@ studienzahl_einstieg_gender <- function(r) {
         style = list(fontFamily = "Calibri Regular", fontSize = "14px")
       ) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = FALSE) %>%
-      highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+      highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
                               style = list(fontSize = "11px", color = "gray")) %>%
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
@@ -3202,7 +3202,7 @@ studienzahl_einstieg_gender <- function(r) {
 
 
      var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle:Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
+     data += '\\nQuelle:Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
 
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
@@ -3311,7 +3311,7 @@ studienzahl_verlauf_single_gender <- function(r) {
       format <- "{value}%"
       color <- c("#b16fab", "#154194", "#66cbaf", "#fcc433")
 
-      quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
       out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color, quelle = quelle)
 
     } else if(length(label_sel)==2){
@@ -3326,7 +3326,7 @@ studienzahl_verlauf_single_gender <- function(r) {
       tooltip <- "Frauenanteil {point.indikator} <br> Wert: {point.display_rel} %"
       format <- "{value}%"
       color <- c("#b16fab", "#154194", "#66cbaf", "#fcc433")
-      quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
       out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color, quelle = quelle)
 
 
@@ -3343,7 +3343,7 @@ studienzahl_verlauf_single_gender <- function(r) {
       tooltip <- "Frauenanteil {point.indikator} <br> Wert: {point.display_rel} %"
       format <- "{value}%"
       color <- c("#b16fab", "#154194", "#66cbaf", "#fcc433")
-      quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
       out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color, quelle = quelle)
 
 
@@ -3357,7 +3357,7 @@ studienzahl_verlauf_single_gender <- function(r) {
       tooltip <- "Frauenanteil {point.indikator} <br> Wert: {point.display_rel} %"
       format <- "{value}%"
       color <- c("#b16fab", "#154194", "#66cbaf", "#fcc433")
-      quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
       out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color, quelle = quelle)
 
 
@@ -3388,7 +3388,7 @@ studienzahl_verlauf_single_gender <- function(r) {
         tooltip <- "{point.indikator} <br> Anzahl: {point.display_abs}"
         format <- "{value:, f}"
         color <- c("#b16fab", "#154194", "#66cbaf", "#fcc433")
-        quell <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+        quell <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
         out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color, quelle = quell)
 
       } else if(length(label_sel)==2){
@@ -3402,7 +3402,7 @@ studienzahl_verlauf_single_gender <- function(r) {
         tooltip <- "{point.indikator} <br> Anzahl: {point.display_abs}"
         format <- "{value:, f}"
         color <- c("#b16fab", "#154194", "#66cbaf", "#fcc433")
-        quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+        quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
         out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color, quelle = quelle)
 
       } else if(length(label_sel) == 3){
@@ -3554,7 +3554,7 @@ studienzahl_choice_gender <- function(r) {
 
       format <- '{point.prop}%'
 
-      quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
       p1 <- piebuilder(df_f, titel, x="fach", y="prop", tooltip, color, format, subtitel, quelle = quelle)
       p2 <- piebuilder(df_m, titelm, x="fach", y="prop", tooltip, color, format, subtitelm, quelle = quelle)
@@ -3567,7 +3567,7 @@ studienzahl_choice_gender <- function(r) {
       format <- '{point.prop}%'
       tooltip <- paste('Anteil: {point.prop}% <br> Anzahl: {point.wert}')
 
-      quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
       out <- piebuilder(df, titel, x = "fach", y ="prop", tooltip, color, format, quelle=quelle)
 
@@ -3644,7 +3644,7 @@ studienzahl_choice_gender <- function(r) {
       color <- c("#b16fab", "#154194", "#66cbaf", "#fbbf24",
                  "#AFF3E0","#2D6BE1","#008F68","#8893a7", "#ee7775", "#9d7265", "#35bd97",
                  "#bfc6d3", "#5f94f9",  "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
-      quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
       out <- linebuilder(df, titel, x = "jahr", y = "prop", group = "indikator", tooltip, format, color, quelle = quelle)
 
 
@@ -3669,7 +3669,7 @@ studienzahl_choice_gender <- function(r) {
       format <- "{value:, f}"
       color <- c("#b16fab", "#154194", "#66cbaf", "#fbbf24","#AFF3E0","#2D6BE1","#008F68","#8893a7", "#ee7775", "#9d7265", "#35bd97",
                  "#bfc6d3", "#5f94f9",  "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
-      quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
       out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color, quelle = quelle)
 
 
@@ -3793,7 +3793,7 @@ plot_ranking_top_faecher <- function(r) {
         style = list(fontFamily = "Calibri Regular", fontSize = "14px")
       ) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
-      highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+      highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
                               style = list(fontSize = "11px", color = "gray")) %>%
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
@@ -3808,7 +3808,7 @@ plot_ranking_top_faecher <- function(r) {
      var filename = chartTitle + '_' + date + '.txt';
 
      var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle:Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
+     data += '\\nQuelle:Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
 
 
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
@@ -3848,7 +3848,7 @@ plot_ranking_top_faecher <- function(r) {
         style = list(fontFamily = "Calibri Regular", fontSize = "14px")
       ) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
-      highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+      highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
                               style = list(fontSize = "11px", color = "gray")) %>%
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
@@ -3863,7 +3863,7 @@ plot_ranking_top_faecher <- function(r) {
      var filename = chartTitle + '_' + date + '.txt';
 
      var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle:Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
+     data += '\\nQuelle:Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
 
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
@@ -3922,7 +3922,7 @@ plot_ranking_top_faecher <- function(r) {
         style = list(fontFamily = "Calibri Regular", fontSize = "14px")
       ) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
-      highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+      highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
                               style = list(fontSize = "11px", color = "gray")) %>%
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
@@ -3937,7 +3937,7 @@ plot_ranking_top_faecher <- function(r) {
      var filename = chartTitle + '_' + date + '.txt';
 
      var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle:Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
+     data += '\\nQuelle:Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
 
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
@@ -3976,7 +3976,7 @@ plot_ranking_top_faecher <- function(r) {
         style = list(fontFamily = "Calibri Regular", fontSize = "14px")
       ) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
-      highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+      highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
                               style = list(fontSize = "11px", color = "gray")) %>%
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
@@ -3992,7 +3992,7 @@ plot_ranking_top_faecher <- function(r) {
 
 
      var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle:Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
+     data += '\\nQuelle:Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
 
 
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
@@ -4590,7 +4590,7 @@ plot_auslaender_mint <- function(r){
             style = list(fontFamily = "Calibri Regular", fontSize = "14px")
           ) %>%
           highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
-          highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+          highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
                                   style = list(fontSize = "11px", color = "gray")) %>%
           highcharter::hc_exporting(enabled = TRUE,
                                     buttons = list(
@@ -4605,7 +4605,7 @@ plot_auslaender_mint <- function(r){
      var filename = chartTitle + '_' + date + '.txt';
 
      var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle:Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
+     data += '\\nQuelle:Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
 
 
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
@@ -4655,7 +4655,7 @@ plot_auslaender_mint <- function(r){
             style = list(fontFamily = "Calibri Regular", fontSize = "14px")
           ) %>%
           highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
-          highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+          highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
                                   style = list(fontSize = "11px", color = "gray")) %>%
           highcharter::hc_exporting(enabled = TRUE,
                                     buttons = list(
@@ -4670,7 +4670,7 @@ plot_auslaender_mint <- function(r){
      var filename = chartTitle + '_' + date + '.txt';
 
      var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle:Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
+     data += '\\nQuelle:Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
 
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
@@ -4731,7 +4731,7 @@ plot_auslaender_mint <- function(r){
             style = list(fontFamily = "Calibri Regular", fontSize = "14px")
           ) %>%
           highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
-          highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+          highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
                                   style = list(fontSize = "11px", color = "gray")) %>%
           highcharter::hc_exporting(enabled = TRUE,
                                     buttons = list(
@@ -4746,7 +4746,7 @@ plot_auslaender_mint <- function(r){
      var filename = chartTitle + '_' + date + '.txt';
 
      var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle:Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
+     data += '\\nQuelle:Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
 
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
@@ -4793,7 +4793,7 @@ plot_auslaender_mint <- function(r){
             style = list(fontFamily = "Calibri Regular", fontSize = "14px")
           ) %>%
           highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
-          highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+          highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
                                   style = list(fontSize = "11px", color = "gray")) %>%
           highcharter::hc_exporting(enabled = TRUE,
                                     buttons = list(
@@ -4808,7 +4808,7 @@ plot_auslaender_mint <- function(r){
      var filename = chartTitle + '_' + date + '.txt';
 
      var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle:Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
+     data += '\\nQuelle:Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
 
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
@@ -4863,7 +4863,7 @@ plot_auslaender_mint <- function(r){
              style = list(fontFamily = "Calibri Regular", fontSize = "14px")
            ) %>%
            highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
-           highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+           highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
                                    style = list(fontSize = "11px", color = "gray")) %>%
            highcharter::hc_exporting(enabled = TRUE,
                                      buttons = list(
@@ -4879,7 +4879,7 @@ plot_auslaender_mint <- function(r){
 
 
      var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle:Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
+     data += '\\nQuelle:Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
 
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
@@ -4921,7 +4921,7 @@ plot_auslaender_mint <- function(r){
              style = list(fontFamily = "Calibri Regular", fontSize = "14px")
            ) %>%
            highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
-           highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+           highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
                                    style = list(fontSize = "11px", color = "gray")) %>%
            highcharter::hc_exporting(enabled = TRUE,
                                      buttons = list(
@@ -4937,7 +4937,7 @@ plot_auslaender_mint <- function(r){
 
 
      var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle:Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
+     data += '\\nQuelle:Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
 
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
@@ -4993,7 +4993,7 @@ plot_auslaender_mint <- function(r){
               style = list(fontFamily = "Calibri Regular", fontSize = "14px")
             ) %>%
             highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
-            highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+            highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
                                     style = list(fontSize = "11px", color = "gray")) %>%
             highcharter::hc_exporting(enabled = TRUE,
                                       buttons = list(
@@ -5009,7 +5009,7 @@ plot_auslaender_mint <- function(r){
 
 
      var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle:Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
+     data += '\\nQuelle:Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
 
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
@@ -5043,7 +5043,7 @@ plot_auslaender_mint <- function(r){
               style = list(fontFamily = "Calibri Regular", fontSize = "14px")
             ) %>%
             highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
-            highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+            highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
                                     style = list(fontSize = "11px", color = "gray")) %>%
             highcharter::hc_exporting(enabled = TRUE,
                                       buttons = list(
@@ -5058,7 +5058,7 @@ plot_auslaender_mint <- function(r){
      var filename = chartTitle + '_' + date + '.txt';
 
      var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle:Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
+     data += '\\nQuelle:Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
 
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
@@ -5210,7 +5210,7 @@ plot_auslaender_mint_zeit <- function(r){
         tooltip <- "{point.ausl_detect} <br> Anteil: {point.display_rel} %"
         format <- "{value} %"
         color <- c("#154194", "#66cbaf")
-        quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt"
+        quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt"
         out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "ausl_detect", tooltip, format, color, quelle = quelle)
 
 
@@ -5219,7 +5219,7 @@ plot_auslaender_mint_zeit <- function(r){
         titel <-  paste0("Anteil internationaler ", help, " an allen ", help2, " in ", fach_help , " in ", bl_select )
         tooltip <- "{point.ausl_detect} <br> Anteil: {point.display_rel} %"
         format <- "{value} %"
-        quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt"
+        quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt"
         color <- c("#154194", "#66cbaf")
         out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "ausl_detect", tooltip, format, color, quelle = quelle)
       }
@@ -5250,7 +5250,7 @@ plot_auslaender_mint_zeit <- function(r){
             style = list(fontFamily = "Calibri Regular", fontSize = "14px")
           ) %>%
           highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
-          highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+          highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
                                   style = list(fontSize = "11px", color = "gray")) %>%
           highcharter::hc_exporting(enabled = TRUE,
                                     buttons = list(
@@ -5265,7 +5265,7 @@ plot_auslaender_mint_zeit <- function(r){
      var filename = chartTitle + '_' + date + '.txt';
 
      var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle:Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
+     data += '\\nQuelle:Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
 
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
@@ -5304,7 +5304,7 @@ plot_auslaender_mint_zeit <- function(r){
             style = list(fontFamily = "Calibri Regular", fontSize = "14px")
           ) %>%
           highcharter::hc_legend(enabled = TRUE, reversed = T)%>%
-          highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+          highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
                                   style = list(fontSize = "11px", color = "gray")) %>%
           highcharter::hc_exporting(enabled = TRUE,
                                     buttons = list(
@@ -5319,7 +5319,7 @@ plot_auslaender_mint_zeit <- function(r){
      var filename = chartTitle + '_' + date + '.txt';
 
      var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle:Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
+     data += '\\nQuelle:Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
 
 
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
@@ -5357,7 +5357,7 @@ plot_auslaender_mint_zeit <- function(r){
         tooltip <- "{point.ausl_detect} <br> Anzahl: {point.display_abs}"
         format <- "{value:, f}"
         color <- c("#154194", "#66cbaf")
-        quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt"
+        quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt"
         out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "ausl_detect", tooltip, format, color, quelle = quelle)
 
       } else {
@@ -5366,7 +5366,7 @@ plot_auslaender_mint_zeit <- function(r){
         tooltip <- "{point.ausl_detect} <br> Anzahl: {point.display_abs}"
         format <- "{value:, f}"
         color <- c("#154194", "#66cbaf")
-        quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt"
+        quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt"
         out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "ausl_detect", tooltip, format, color, quelle = quelle)
       }
 
@@ -5396,7 +5396,7 @@ plot_auslaender_mint_zeit <- function(r){
             style = list(fontFamily = "Calibri Regular", fontSize = "14px")
           ) %>%
           highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
-          highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+          highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
                                   style = list(fontSize = "11px", color = "gray")) %>%
           highcharter::hc_exporting(enabled = TRUE,
                                     buttons = list(
@@ -5411,7 +5411,7 @@ plot_auslaender_mint_zeit <- function(r){
      var filename = chartTitle + '_' + date + '.txt';
 
      var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle:Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
+     data += '\\nQuelle:Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
 
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
@@ -5447,7 +5447,7 @@ plot_auslaender_mint_zeit <- function(r){
             style = list(fontFamily = "Calibri Regular", fontSize = "14px")
           ) %>%
           highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
-          highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+          highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
                                   style = list(fontSize = "11px", color = "gray")) %>%
           highcharter::hc_exporting(enabled = TRUE,
                                     buttons = list(
@@ -5462,7 +5462,7 @@ plot_auslaender_mint_zeit <- function(r){
      var filename = chartTitle + '_' + date + '.txt';
 
      var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle:Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
+     data += '\\nQuelle:Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
 
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
@@ -5572,7 +5572,7 @@ studierende_international_bula_mint <- function(r) {
     map_selection <- map_selection_germany
     maxcolor <- "#b16fab"
 
-    quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
     out <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection, quelle=quelle)
 
@@ -5664,7 +5664,7 @@ studierende_international_bula_mint <- function(r) {
       tooltip <- paste0("{point.region} <br> Wert: {point.display_rel} % <br>Veränderung zwischen ", timerange[1],
                         " und ", timerange[2], ": {point.display_diff} %")
       format <- "{value}%"
-      quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt"
+      quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt"
       color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
                  "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
       out <- linebuilder(df, titel, x = "jahr", y = "prop", group = "region", tooltip, format, color, quelle = quelle)
@@ -5704,7 +5704,7 @@ studierende_international_bula_mint <- function(r) {
       format <-  "{value:, f}"
       color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
                  "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
-      quel123 <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt"
+      quel123 <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt"
       out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "region", tooltip, format, color, quelle = quel123)
 
 
@@ -5800,7 +5800,7 @@ studierende_international_bula_mint <- function(r) {
                             margin = 25,
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px"))   %>%
-      highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+      highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
                               style = list(fontSize = "11px", color = "gray")) %>%
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
@@ -5816,7 +5816,7 @@ studierende_international_bula_mint <- function(r) {
 
 
      var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle:Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
+     data += '\\nQuelle:Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
 
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {

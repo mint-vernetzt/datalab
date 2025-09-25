@@ -25,7 +25,7 @@ mod_quellen_ui <- function(id){
     fluidRow(
       shinydashboard::box(
         width = 9,
-        title = "Definition MINT",
+        h2("Definition MINT"),
                 p(style = "text-align: left; font-size = 16px",
           "MINT ist eine Abkürzung aus den Anfangsbuchstaben bestimmter Schul- und Studienfächer bzw. Berufe.
           Sie steht als Sammelbegriff für die Felder Mathematik, Informatik, Naturwissenschaften und Technik.",
@@ -112,7 +112,7 @@ mod_quellen_ui <- function(id){
     fluidRow(
       shinydashboard::box(
         width = 9,
-        title = "Datenpool und Quellen",
+        h2("Datenpool und Quellen"),
         p(style = "text-align: left; font-size = 16px",
           "Ziel dieses Projektes ist es, die vorhandenen Statistiken über MINT in Deutschland in einem Datenpools zu bündeln
           und über das MINT-DataLab zur weiteren Nutzung zur Verfügung zu stellen. Die Basis unseres Datenpool sind die amtlichen Statistiken aus Deutschland,
@@ -128,7 +128,7 @@ mod_quellen_ui <- function(id){
     fluidRow(
       shinydashboard::box(
         width = 9,
-        title = "Zitationshinweis",
+        h2("Zitationshinweis"),
         p(style = "text-align: left; font-size = 16px",
           "Inhalte des MINT-DataLab können mit folgender Quellenangabe weitergenutzt werden:
           \"MINT-DataLab von MINTvernetzt. https://www.mint-vernetzt.de/mint-datalab/\" (mit Abrufdatum).
@@ -140,7 +140,7 @@ mod_quellen_ui <- function(id){
     fluidRow(
       shinydashboard::box(
         width = 9,
-        title = "Nutzungsbedingungen der Daten und Quellenangabe",
+        h2("Nutzungsbedingungen der Daten und Quellenangabe"),
         p(style = "text-align: left; font-size = 16px",
           "Die Nutzungsbedingungen der Datengeber:innen erlauben die Verwendung der Daten und die grafische Aufbereitung
           sowie die auszugsweise Weitergabe. Eine vollständige Weitergabe der überlassenen Datensätze ist nicht gestattet.

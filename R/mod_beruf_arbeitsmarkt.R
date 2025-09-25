@@ -28,7 +28,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
 
       fluidRow(
         shinydashboard::box(
-          title = "Auf dieser Seite",
+          h2("Auf dieser Seite"),
           width = 7,
           p(style = "text-align: left; font-size = 16px",
             "Auf dieser Seite zeigen wir statistische Kennzahlen rund um MINT im Bereich Arbeitsmarkt.
@@ -48,24 +48,28 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
 
       fluidRow(
         shinydashboard::box(
-          title = "Themenübersicht",
+          h2("Themenübersicht"),
           width = 7,
           p(style = "text-align: left; font-size = 16px",tags$a(href="#beruf_mint",
+
             span(tags$b(span("MINT-Anteil:")))),"Jede:r Fünfte arbeitet in MINT-Berufen."
+
             ),
           p(style = "text-align: left; font-size = 16px",tags$a(href="#beruf_fach",
-            span(tags$b(span("M-I-N-T:")))),"MINT oder IT - über 90 % sind in Informatik- oder Technikberufen tätig."
+            span(tags$b(span("→ M-I-N-T:")))),"MINT oder IT - über 90 % sind in Informatik- oder Technikberufen tätig."
 
             ),
           p(style = "text-align: left; font-size = 16px",tags$a(href="#beruf_frauen",
-            span(tags$b(span("Frauen in MINT:")))),"Frauenanteil in MINT-Berufen bei 18 %."
+
+            span(tags$b(span("→ Frauen in MINT:")))),"Frauenanteil in MINT-Berufen bei 18 %."
             ),
           p(style = "text-align: left; font-size = 16px",tags$a(href="#beruf_regional",
-            span(tags$b(span("Regionale Daten:")))),"MINT-Daten aus Ihrem Landkreis."
-            ),
-          p(style = "text-align: left; font-size = 16px",tags$a(href="#beruf_entgelt",
-            span(tags$b(span("Entgelte: ")))),"In MINT-Berufen verdient man überdurchschnittlich gut."
-          )),
+            span(tags$b(span("→ Regionale Daten:")))),"MINT-Daten aus Ihrem Landkreis."
+            )),
+           p(style = "text-align: left; font-size = 16px",tags$a(href="#beruf_entgelt",
+                    span(tags$b(span("→ Entgelte: ")))),"In MINT-Berufen verdient man überdurchschnittlich gut."
+                  )),
+
 
         shinydashboard::box(
           title = "Datenquellen",
@@ -82,7 +86,9 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
 
     fluidRow( id="beruf_mint",
       shinydashboard::box(
-        title = "MINT-Anteil: Jede:r Fünfte arbeitet in MINT-Berufen.",
+
+        h2("MINT-Anteil: Jede:r Fünfte arbeitet in MINT-Berufen."),
+
         width = 12,
         column(
           width = 8,
@@ -187,7 +193,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
 
     fluidRow(id="beruf_fach",
       shinydashboard::box(
-        title = "M-I-N-T: MINT oder I/T - über 90 % sind in Informatik- oder Technikberufen tätig.",
+        h2("M-I-N-T: MINT oder I/T - über 90 % sind in Informatik- oder Technikberufen tätig."),
         width = 12,
         column(
           width = 8,
@@ -276,7 +282,9 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
 
     fluidRow(id="beruf_frauen",
       shinydashboard::box(
-        title = "Frauen in MINT: Frauenanteil in MINT-Berufen bei 18 %.",
+
+        h2("Frauen in MINT: Frauenanteil in MINT-Berufen bei 18 %."),
+
         width = 12,
         column(
           width = 8,
@@ -454,7 +462,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
 
     fluidRow(id="beruf_regional",
       shinydashboard::box(
-        title = "Regionale Daten: MINT-Daten aus Ihrem Landkreis.",
+        h2("Regionale Daten: MINT-Daten aus Ihrem Landkreis."),
         width = 12,
         column(
           width = 8,

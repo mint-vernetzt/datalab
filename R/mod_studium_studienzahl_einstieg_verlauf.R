@@ -31,8 +31,8 @@ mod_studium_studienzahl_einstieg_verlauf_ui <- function(id){
     shinyWidgets::sliderTextInput(
       inputId = ns("date_studienzahl_einstieg_verlauf"),
       label = NULL,
-      choices = 2013:2023,
-      selected = c(2016,2023)
+      choices = 2013:2024,
+      selected = c(2017,2024)
     ),
 
     p("Region:"),
