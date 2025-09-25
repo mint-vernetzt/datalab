@@ -1,8 +1,8 @@
 #library(dplyr)
 #library(tidyr)
-map_selection_international <- readRDS("data/map_selection_international.rds")
-map_selection_germany <- readRDS("data/map_selection_german.rds")
-map_selection_europe <- readRDS("data/map_selection_europa.rds")
+map_selection_international <- readRDS("data/map_data/map_selection_international.rds")
+map_selection_germany <- readRDS("data/map_data/map_selection_german.rds")
+map_selection_europe <- readRDS("data/map_data/map_selection_europa.rds")
 
 
 
@@ -178,7 +178,7 @@ plot_international_map <- function(r) {
   if (label_m == "Weltweit") {
     #map_selection <- highcharter::download_map_data(url = "custom/world", showinfo = FALSE)
 
-    map_selection <- readRDS("data/map_selection_international.rds")
+    map_selection <- readRDS("data/map_data/map_selection_international.rds")
 
 
     fach_m <- "Alle MINT-Fächer"
@@ -202,7 +202,7 @@ plot_international_map <- function(r) {
 
   } else if (label_m == "OECD") {
 
-    map_selection <- readRDS("data/map_selection_international.rds")
+    map_selection <- readRDS("data/map_data/map_selection_international.rds")
     #map_selection <- highcharter::download_map_data(url = "custom/world", showinfo = FALSE)
 
     fach_m <- r$map_f_int_studium_oec_d
@@ -257,7 +257,7 @@ plot_international_map <- function(r) {
 
 #    map_selection <- highcharter::download_map_data(url = "custom/europe", showinfo = FALSE)
 
-    map_selection <- readRDS("data/map_selection_europa.rds")
+    map_selection <- readRDS("data/map_data/map_selection_europa.rds")
 
 
     fach_m <- r$map_f_int_studium_e_u
@@ -439,7 +439,7 @@ plot_international_map_fem <- function(r){
   if(label_m == "EU"){
     # kartenabschnitt für hc definieren
     #map_selection <- "custom/europe"
-    map_selection <- readRDS("data/map_selection_europa.rds")
+    map_selection <- readRDS("data/map_data/map_selection_europa.rds")
 
     # Spezifische inputs laden
     timerange <- r$map_y_f
@@ -1552,7 +1552,7 @@ plot_international_schule_map <- function(r) {
     dplyr::inner_join(countries_names, by = "land") %>%
     dplyr::mutate(alpha2 = toupper(alpha2))
 
- map_selection <- readRDS("data/map_selection_international.rds")
+ map_selection <- readRDS("data/map_data/map_selection_international.rds")
  #map_selection <- highcharter::download_map_data(url = "custom/world", showinfo = FALSE)
 
  #zu komplex / different

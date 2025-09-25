@@ -5,7 +5,7 @@
 
 
 
-map_selection_germany <- readRDS("data/map_selection_german.rds")
+map_selection_germany <- readRDS("data/map_data/map_selection_german.rds")
 
 # Wer wählt MINT ----
 

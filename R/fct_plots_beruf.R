@@ -2,9 +2,9 @@
 
 
 
-map_selection_germany <- readRDS("data/map_selection_german.rds")
-map_selection_europe <- readRDS("data/map_selection_europa.rds")
-map_selection_international <- readRDS("data/map_selection_international.rds")
+map_selection_germany <- readRDS("data/map_data/map_selection_german.rds")
+map_selection_europe <- readRDS("data/map_data/map_selection_europa.rds")
+map_selection_international <- readRDS("data/map_data/map_selection_international.rds")
 
 
 
@@ -3508,7 +3508,7 @@ arbeitsmarkt_lk_detail_map <- function(r) {
     dplyr::pull(short)
 
   # RDS-Datei für das Bundesland laden
-  map_state <- readRDS(paste0("data/map_de_", state_code, ".rds"))
+  map_state <- readRDS(paste0("data/map_data/map_de_", state_code, ".rds"))
 
 
 
@@ -3854,10 +3854,12 @@ entgelte_vergleich_1 <- function(r) {
   ##########
   # browser()
 
+
   df1$wert <- as.numeric(df1$wert)
   df1$berufsgruppe <- as.factor(df1$berufsgruppe)
 
   color =  c("#b16fab")
+
 
 
   #out <- balkenbuilder(df1, titel, x = "wert", y = "berufsgruppe", tooltip = tooltip,  color =  c("#b16fab","#b16fab"), format = format , quelle = quelle)
@@ -3958,6 +3960,8 @@ entgelte_verlauf_1 <- function(r) {
   df <- DBI::dbGetQuery(con, df_query)
 
 
+
+
   df <- df %>%
     dplyr::mutate(wertq = readr::parse_number(wert))
 
@@ -3966,7 +3970,8 @@ entgelte_verlauf_1 <- function(r) {
 
   df <- df %>%
     dplyr::filter(
-      berufsgruppe %in% c("MINT-Berufe", "Insgesamt", "Keine MINT-Berufe", "Informatik","Technik", "Mathematik, Naturwissenschaften")
+      berufsgruppe %in% c("MINT-Berufe", "Insgesamt", "Keine MINT-Berufe",
+                          "Informatik","Technik", "Mathematik, Naturwissenschaften", "Produktionstechnik", "Bau- und Gebäudetechnik", "Gesundheitstechnik")
     ) %>%
     dplyr::filter(
       berufsgruppe == beruf

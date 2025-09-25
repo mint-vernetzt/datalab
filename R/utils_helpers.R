@@ -7,9 +7,9 @@
 
 
 
-map_selection_germany <- readRDS("data/map_selection_german.rds")
-map_selection_europe <- readRDS("data/map_selection_europa.rds")
-map_selection_international <- readRDS("data/map_selection_international.rds")
+map_selection_germany <- readRDS("data/map_data/map_selection_german.rds")
+map_selection_europe <- readRDS("data/map_data/map_selection_europa.rds")
+map_selection_international <- readRDS("data/map_data/map_selection_international.rds")
 
 
 
@@ -2320,7 +2320,7 @@ if(prop==FALSE && wert == FALSE){
     dplyr::pull(short)
 
 
-  map_state <- readRDS(paste0("data/map_de_", state_code, ".rds"))
+  map_state <- readRDS(paste0("data/map_data/map_de_", state_code, ".rds"))
 
 
 
