@@ -31,8 +31,8 @@ mod_impressum_ui <- function(id){
     fluidRow(
       shinydashboard::box(
         width = 12,
-        tags$h2("Impressum"),
-        p(style = "text-align: justify; font-size = 16px",
+        tags$h1("Impressum"),
+        p(style = "text-align:left; font-size = 16px",
           span("Angaben erfolgen nach § 5 TMG", br(),
                br(),
               "Stifterverband für die Deutsche Wissenschaft e.V.", br(),

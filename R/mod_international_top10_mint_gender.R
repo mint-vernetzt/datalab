@@ -28,7 +28,7 @@ mod_international_top10_mint_gender_ui <- function(id){
                        inputId = ns("map_y_eu_top10_mint_gender_ui"),
                        label = NULL,
                        choices = international_ui_years(region = "EU"),
-                       selected = "2021"
+                       selected = "2023"
                      ),
 
                      p("Fachbereich:"),
@@ -45,7 +45,7 @@ mod_international_top10_mint_gender_ui <- function(id){
                        inputId = ns("map_y_oecd_top10_mint_gender_ui"),
                        label = NULL,
                        choices = international_ui_years(region = "OECD"),
-                       selected = "2020"
+                       selected = "2023"
                      ),
 
                      p("Fachbereich:"),

@@ -22,7 +22,7 @@ mod_home_start_einstieg_gender_ui <- function(id){
     shinyWidgets::sliderTextInput(
       inputId = ns("date_start_comparison_mint_gender"),
       label = NULL,
-      choices = 2013:2023,
+      choices = 2013:2024,
       selected = 2023
     ),
 
@@ -71,7 +71,7 @@ mod_home_start_einstieg_gender_ui <- function(id){
              ),
 
     br(),
-    p("Nicht-MINT als Vergleich anzeigen?", style = "color: #b16fab;"),
+    p("Nicht-MINT als Vergleich anzeigen?", style = "color: #154194;"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("gegenwert_start_comparison_gender"),
       choices = c("Ja", "Nein"),

@@ -18,7 +18,7 @@ mod_ausserschulisch_start_ui <- function(id){
       div(class = "clean-box",
           column(
             width = 12,
-        img(src='www/Banner_Außerschulisch.jpg',
+        img(src='www/Banner_Außerschulisch.avif',
             class = "img-responsive",
             #height = "150px", width = "150px",
             alt = "Banner Außerschulisch",
@@ -30,7 +30,7 @@ mod_ausserschulisch_start_ui <- function(id){
 
     fluidRow(
       shinydashboard::box(
-        title = "Auf dieser Seite",
+        h2("Auf dieser Seite"),
         width = 7,
         p(style = "text-align: left; font-size = 16px",
           "Auf dieser Seite zeigen wir Daten aus dem außerschulischen MINT-Bildungsbereich.
@@ -59,17 +59,17 @@ mod_ausserschulisch_start_ui <- function(id){
 
     fluidRow(
       shinydashboard::box(
-        title = "Themenübersicht",
+        h2("Themenübersicht"),
         width = 7,
         p(style = "text-align: left; font-size = 16px",tags$a(href="#ausserschulisch_community_plattform",
-                                                              span(tags$b(span("Außerschulische MINT-Akteur:innen:")))),"Unsere MINTverentzt-Community in Zahlen."
+                                                              span(tags$b(span("→ Außerschulische MINT-Akteur:innen:")))),"Unsere MINTverentzt-Community in Zahlen."
         ),
         p(style = "text-align: left; font-size = 16px",tags$a(href="#ausserschulisch_mintvernetzt_befragung",
-                                                              span(tags$b(span("MINTvernetzt Befragungen:")))),"Was sagt die Community über sich und MINT in Deutschland."
+                                                              span(tags$b(span("→ MINTvernetzt Befragungen:")))),"Was sagt die Community über sich und MINT in Deutschland."
 
         ),
         p(style = "text-align: left; font-size = 16px",tags$a(href="#ausserschulisch_skf",
-                                                              span(tags$b(span("Frühkindliche Bildung:")))),"Zahl der MINT-aktiven Einrichtungen bei Stiftung Kinder forschen wächst stetig."
+                                                              span(tags$b(span("→ Frühkindliche Bildung:")))),"Zahl der MINT-aktiven Einrichtungen bei Stiftung Kinder forschen wächst stetig."
         )
         # ,
         # p(style = "text-align: left; font-size = 16px",tags$a(href="#ausserschulisch_community_daten",
@@ -89,16 +89,14 @@ mod_ausserschulisch_start_ui <- function(id){
 
 
     # Trennlinie
-    p("Daten von MINTvernetzt", style = "color: #00A87A;
-      font-size: 22px; font-family: 'SourceSans3-Bold';
-      margin-top: 20px;"),
+    h1("Daten von MINTvernetzt", style = "color: #00A87A;"), #font-size: 22px; font-family: 'SourceSans3-Bold'; margin-top: 20px;"
     hr(style = "border-top: 3px solid #00A87A; margin-top: 5px;"),
 
     # Community Plattform ----
 
     fluidRow( id="ausserschulisch_community_plattform",
               shinydashboard::box(
-                title = "Außerschulische MINT-Akteur:innen: Unsere Community in Zahlen.",
+                h2("Außerschulische MINT-Akteur:innen: Unsere Community in Zahlen."),
                 width = 12,
                 column(
                   width = 8,
@@ -221,7 +219,7 @@ mod_ausserschulisch_start_ui <- function(id){
 
     fluidRow( id="ausserschulisch_mintvernetzt_befragung",
               shinydashboard::box(
-                title = "MINTvernetzt Befragungen: Was sagt die MINTvernetzt-Community?",
+                h2("MINTvernetzt Befragungen: Was sagt die MINTvernetzt-Community?"),
                 width = 12,
                 column(
                   width = 8,
@@ -409,15 +407,13 @@ mod_ausserschulisch_start_ui <- function(id){
     ),
 
     # Trennlinie
-    p("Daten von MINT-Bildungsakteur:innen", style = "color: #00A87A;
-      font-size: 22px; font-family: 'SourceSans3-Bold';
-      margin-top: 20px;"),
+    h1("Daten von MINT-Bildungsakteur:innen", style = "color: #00A87A;"), #font-size: 22px; font-family: 'SourceSans3-Bold'; margin-top: 20px;"
     hr(style = "border-top: 3px solid #00A87A; margin-top: 5px;"),
 
     # SKf ----
     fluidRow(id="ausserschulisch_skf",
              shinydashboard::box(
-               title = "Frühkindliche Bildung: Zahl der MINT-aktiven Einrichtungen bei Stiftung Kinder forschen wächst stetig.",
+               h2("Frühkindliche Bildung: Zahl der MINT-aktiven Einrichtungen bei Stiftung Kinder forschen wächst stetig."),
                width = 12,
                column(
                  width = 8,

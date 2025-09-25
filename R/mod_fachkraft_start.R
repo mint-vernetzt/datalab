@@ -19,7 +19,7 @@ mod_fachkraft_start_ui <- function(id){
       div(class = "clean-box",
           column(
             width = 12,
-            img(src='www/Banner_Fachkraft.jpg',
+            img(src='www/Banner_Fachkraft.avif',
                 class = "img-responsive",
                 #height = "150px", width = "150px",
                 alt = "Banner Fokus: MINT-Fachkraefte",
@@ -31,7 +31,7 @@ mod_fachkraft_start_ui <- function(id){
 
     fluidRow(
       shinydashboard::box(
-        title = "Auf dieser Seite",
+        h2("Auf dieser Seite"),
         width = 7,
         p(style = "text-align: left; font-size = 16px",
           "Das ist eine unserer Fokus-Seiten. Hier schauen wir auf das Thema MINT-Fachkräfte.
@@ -57,19 +57,19 @@ mod_fachkraft_start_ui <- function(id){
 
     fluidRow(
       shinydashboard::box(
-        title = "Themenübersicht",
+        h2("Themenübersicht"),
         width = 7,
         p(
           style = "text-align: left; font-size = 16px",tags$a(href="#fachkraft-zukunft",
-                                                              span(tags$b(span("Fachkräfte-Zukunftsszenarien:")))), "Zukunftsszenarien der MINT-Fachkräfte"
+                                                              span(tags$b(span("→ Fachkräfte-Zukunftsszenarien:")))), "Zukunftsszenarien der MINT-Fachkräfte"
         ),
 
         p(style = "text-align: left; font-size = 16px",tags$a(href="#fachkraft-berufsgruppen",
-                                                              span(tags$b(span("Berufsgruppen:")))), "aktueller Fachkräftebedarf in MINT"
+                                                              span(tags$b(span("→ Berufsgruppen:")))), "aktueller Fachkräftebedarf in MINT"
 
         ),
         p(style = "text-align: left; font-size = 16px",tags$a(href="#fachkraft-berufe",
-                                                              span(tags$b(span("Berufsebene:")))), "aktueller Fachkräftebedarf in MINT"
+                                                              span(tags$b(span("→ Berufsebene:")))), "aktueller Fachkräftebedarf in MINT"
         )
       ),
 
@@ -146,7 +146,7 @@ mod_fachkraft_start_ui <- function(id){
         });
       ")),
       shinydashboard::box(
-        title = "Zukunftsszenarien der MINT-Fachkräfte",
+        h2("Zukunftsszenarien der MINT-Fachkräfte"),
         width = 12,
         column(
           width = 8,
@@ -279,7 +279,7 @@ mod_fachkraft_start_ui <- function(id){
       fluidRow(
         id="fachkraft-berufsgruppen",
         shinydashboard::box(
-          title = "Berufsgruppen: aktueller Fachkräftebedarf in MINT",
+          h2("Berufsgruppen: aktueller Fachkräftebedarf in MINT"),
           width = 12,
           column(
             width = 8,
@@ -439,7 +439,7 @@ div(class = "content-box",
     fluidRow(
       id = "fachkraft-berufe",
       shinydashboard::box(
-        title = "Berufsebene: aktueller Fachkräftebedarf in MINT",
+        h2("Berufsebene: aktueller Fachkräftebedarf in MINT"),
         width = 12,
         column(
           width = 8,

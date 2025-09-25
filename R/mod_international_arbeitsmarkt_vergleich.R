@@ -15,7 +15,7 @@ mod_international_arbeitsmarkt_vergleich_ui <- function(id){
       inputId = ns("vergleich_y_int_arbeitsmarkt"),
       label = NULL,
       choices = international_ui_years(region = "arbeit"),
-      selected = "2020"
+      selected = 2023
     ),
     p("Länder:"),
     tags$head(
@@ -29,7 +29,7 @@ mod_international_arbeitsmarkt_vergleich_ui <- function(id){
     shinyWidgets::pickerInput(
       inputId = ns("vergleich_l_int_arbeitsmarkt"),
       choices = international_ui_country(n = NA_integer_),
-      selected = international_ui_country(n = 10),
+      selected = "Deutschland",
       options = list(`actions-box` = TRUE,
                      `live-search` = TRUE),
       multiple = TRUE

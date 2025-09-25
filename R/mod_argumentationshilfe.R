@@ -34,7 +34,7 @@ mod_argumentation_ui <- function(id){
       div(class = "clean-box",
           column(
             width = 12,
-            img(src='www/Banner_KI-Analysehilfe.png',
+            img(src='www/Banner_KI-Analysehilfe.avif',
                 class = "img-responsive",
                 height = "300px",
                 alt = "Banner KI-Analysehilfe",
@@ -66,9 +66,11 @@ mod_argumentation_ui <- function(id){
             p("Bei dieser Frage können Sie sich von KI unterstützen lassen: dem MINT-DataLab-GPT"),
 
             strong("Der Chatbot unterstützt konkret in drei Situationen:"),
-            p(style = "margin-left: 20px; margin-top: 10px;", "1. Er erstellt einen MINT-Bericht für ein ausgewähltes Bundesland"),
-            p(style = "margin-left: 20px;", "2. Er hilft, für MINT-Förderung zu argumentieren"), #Er erstellt eine Argumentation für die Förderung von MINT-Bildung
-            p(style = "margin-left: 20px;", "3. Er hilft, Daten grundlegend zu interpretieren"),
+            tags$ol(
+              tags$li("Er erstellt einen MINT-Bericht für ein ausgewähltes Bundesland"),
+              tags$li("Er hilft, für MINT-Förderung zu argumentieren"),
+              tags$li("Er hilft, Daten grundlegend zu interpretieren"),
+            ),
             br(),
             p("Der MINT-DataLab-GPT kann bei der Interpretation aller Daten im MINT-DataLab assistieren."),
 
@@ -276,11 +278,12 @@ mod_argumentation_ui <- function(id){
       ),
       div(id = "region",
 
-        p(strong(style = "text-align: justify; font-size: 18px;",
-                 "1. Wählen Sie eine Region für die Analyse aus.")),
+        # p(strong(style = "text-align: left; font-size: 18px;",
+        #          "1. Wählen Sie eine Region für die Analyse aus.")),
 
         shinyWidgets::pickerInput(
           inputId = ns("region_argumentationshilfe"),
+          label = "1. Wählen Sie eine Region für die Analyse aus.",
           choices = c("Deutschland",
                       "Baden-Württemberg",
                       "Bayern",
@@ -324,7 +327,7 @@ mod_argumentation_ui <- function(id){
       div(id = "download_section",
         style = "flex: 1; margin-bottom: 15px;",
 
-        # p(strong(style = "text-align: justify; font-size: 18px;",
+        # p(strong(style = "text-align: left; font-size: 18px;",
         #          "2. Laden Sie die gewünschten Daten herunter")),
         # p(style = "font-size : 15px;", "Als Basis für den Datenbericht sowie
         # die datenbasierte Argumentation haben wir fünf Statistiken aus dem MINT-DataLab ausgewählt.
@@ -339,19 +342,19 @@ mod_argumentation_ui <- function(id){
 
 
         fluidRow(
-          p(strong(style = "text-align: justify; font-size: 18px; margin-left: 15px;",
+          p(strong(style = "text-align: left; font-size: 18px; margin-left: 15px;",
                    "2. Laden Sie die Datengrundlage herunter.")),
           column(
             width = 6,  # Text in der linken Spalte
 
-            p(style = "font-size: 15px;",
+            p(
               "Als Basis für den Datenbericht sowie die datenbasierte Argumentation
               haben wir fünf Statistiken aus dem MINT-DataLab ausgewählt.")
           ),
           column(
             width = 5,
             div(style = "margin-left: 30px;",
-            p(style = "font-size: 15px;",
+            p(
               tags$a(href = "#daten_grafiken",
                      style = "color: #000000; text-decoration: underline;",
                      "→ Betrachten Sie die Daten in den interaktiven Grafiken weiter unten auf dieser Seite."))
@@ -444,12 +447,12 @@ mod_argumentation_ui <- function(id){
       div(id = "MINT-DataLab-GPT",
           style = "flex: 1; margin-bottom: 15px;",
           fluidRow(
-            p(strong(style = "text-align: justify; font-size: 18px; margin-bottom: 15px; margin-left: 15px;",
-                     "3. Wechseln Sie zum MINT-DataLab GPT und folgen den Anweisungen")),
+            p(strong(style = "text-align: left; font-size: 18px; margin-bottom: 15px; margin-left: 15px;",
+                     "3. Wechseln Sie zum MINT-DataLab GPT und folgen den Anweisungen.")),
             column(
               width = 6,  # Text in der linken Spalte
 
-              p(style = "font-size: 15px;",
+              p(
                 "Sobald Sie auf den Link zum MINT-DataLab-GPT klicken, öffnet sich ein Chatfenster in ChatGPT.
                  Wählen Sie aus, ob sie eine Argumentation oder eine Bericht wollen,
                  der MINT-DataLab-GPT führt Sie durch die Erstellung der Analyse.")
@@ -495,11 +498,11 @@ mod_argumentation_ui <- function(id){
       div(id = "grafiken",
           style = "flex: 1; margin-bottom: 15px;",
           fluidRow(
-            p(strong(style = "text-align: justify; font-size: 18px; margin-left: 15px;",
-                     "4. Ergänzen Sie den KI-Bericht zur Veranschaulichung mit Grafiken")),
+            p(strong(style = "text-align: left; font-size: 18px; margin-left: 15px;",
+                     "4. Ergänzen Sie den KI-Bericht zur Veranschaulichung mit Grafiken.")),
             column(
               width = 6,
-              p(style = "font-size : 15px;",
+              p(
                 "Der Bericht wird anschaulicher, wenn Sie den Texten des MINT-DataLab-GPT Grafiken hinzuzufügen.
                 Laden Sie die passenden Grafiken gesammelt hier herunter oder wählen Sie einzelne Grafiken
                 im folgenden Abschnitt aus und fügen
@@ -664,7 +667,7 @@ mod_argumentation_ui <- function(id){
         # " rechts neben den Grafiken geben Impulse, welche weiteren
         #    Statistiken in einem MINT-Bericht ergänzt werden könnten.", br(),
 
-        "→ Die ", tags$span("grünen Boxen", style = "color: #00a87a;"),
+        "→ Die ", tags$span("grünen Boxen", style = "color: #007655;"),
         "unter den Grafiken zeigen beispielhaft, wie man anhand
           der Statistiken für die MINT-Bildungsförderung argumentieren kann."
       )
@@ -734,7 +737,7 @@ mod_argumentation_ui <- function(id){
                    width = 3,
                    br(),
                    div(class = "content-box",
-                       style = "width: 250px;
+                       style = "width: 320px;
                               margin-left: 0;
                               background-color: #00a87a30;
                               border: 2px solid #00a87a;
@@ -751,7 +754,7 @@ mod_argumentation_ui <- function(id){
                    width = 3,
                    br(),
                    div(class = "content-box",
-                       style = "width: 250px;
+                       style = "width: 320px;
                               margin-left: 0;
                               background-color: #00a87a30;
                               border: 2px solid #00a87a;
@@ -768,7 +771,7 @@ mod_argumentation_ui <- function(id){
                    width = 3,
                    br(),
                    div(class = "content-box",
-                       style = "width: 250px;
+                       style = "width: 320px;
                               margin-left: 0;
                               background-color: #00a87a30;
                               border: 2px solid #00a87a;
@@ -843,7 +846,7 @@ mod_argumentation_ui <- function(id){
             width = 3,
             br(),
             div(class = "content-box",
-                style = "width: 250px;
+                style = "width: 320px;
                               margin-left: 0;
                               background-color: #00a87a30;
                               border: 2px solid #00a87a;
@@ -861,7 +864,7 @@ mod_argumentation_ui <- function(id){
             width = 3,
             br(),
             div(class = "content-box",
-                style = "width: 250px;
+                style = "width: 320px;
                               margin-left: 0;
                               background-color: #00a87a30;
                               border: 2px solid #00a87a;
@@ -934,7 +937,7 @@ mod_argumentation_ui <- function(id){
             width = 3,
             br(),
             div(class = "content-box",
-                style = "width: 250px;
+                style = "width: 320px;
                               margin-left: 0;
                               background-color: #00a87a30;
                               border: 2px solid #00a87a;
@@ -1001,7 +1004,7 @@ mod_argumentation_ui <- function(id){
             width = 3,
             br(),
             div(class = "content-box",
-                style = "width: 250px;
+                style = "width: 320px;
                               margin-left: 0;
                               background-color: #00a87a30;
                               border: 2px solid #00a87a;
@@ -1019,7 +1022,7 @@ mod_argumentation_ui <- function(id){
             width = 3,
             br(),
             div(class = "content-box",
-                style = "width: 250px;
+                style = "width: 320px;
                               margin-left: 0;
                               background-color: #00a87a30;
                               border: 2px solid #00a87a;
@@ -1036,7 +1039,7 @@ mod_argumentation_ui <- function(id){
             width = 3,
             br(),
             div(class = "content-box",
-                style = "width: 250px;
+                style = "width: 320px;
                               margin-left: 0;
                               background-color: #00a87a30;
                               border: 2px solid #00a87a;
@@ -1108,7 +1111,7 @@ mod_argumentation_ui <- function(id){
             width = 3,
             br(),
             div(class = "content-box",
-                style = "width: 250px;
+                style = "width: 320px;
                               margin-left: 0;
                               background-color: #00a87a30;
                               border: 2px solid #00a87a;
@@ -1125,7 +1128,7 @@ mod_argumentation_ui <- function(id){
             width = 3,
             br(),
             div(class = "content-box",
-                style = "width: 250px;
+                style = "width: 320px;
                               margin-left: 0;
                               background-color: #00a87a30;
                               border: 2px solid #00a87a;

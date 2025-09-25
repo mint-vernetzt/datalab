@@ -1,3 +1,20 @@
+
+
+
+
+map_selection_germany <- readRDS("data/map_data/map_selection_german.rds")
+map_selection_europe <- readRDS("data/map_data/map_selection_europa.rds")
+map_selection_international <- readRDS("data/map_data/map_selection_international.rds")
+
+
+
+
+
+
+
+
+
+
 # Berufswahl MINT ----
 ###Tab 1 ----
 #' A function to plot bar plot
@@ -115,7 +132,7 @@ beruf_einstieg_vergleich <- function(r) {
     tooltip <- paste('Anteil: {point.percentage:.0f} % <br> Anzahl: {point.wert}')
     format <- '{point.percentage:.0f}%'
     color <- c("#b16fab","#efe8e6")
-    quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
 
    out <- piebuilder(df, titel, x="fachbereich", y = "proportion", tooltip, color, format, quelle=quelle)
@@ -139,7 +156,7 @@ beruf_einstieg_vergleich <- function(r) {
       color <- c("#efe8e6","#b16fab")
       tooltip <- "{point.fachbereich} <br> Anteil: {point.y} % <br> Anzahl: {point.wert}"
 
-      quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
       out <- balkenbuilder(df, titel, x="indikator", y = "proportion", group = "fachbereich",
                            tooltip, format, color, stacking = "percent",
@@ -158,7 +175,7 @@ beruf_einstieg_vergleich <- function(r) {
                       paste0("Beschäftigte in MINT in unterschiedlichen Beschäftigtengruppen im ", regio, " (Anzahl,", timerange, ")"),
                       paste0("Beschäftigte in MINT in unterschiedlichen Beschäftigtengruppen in ", regio, " (Anzahl,", timerange, ")"))
 
-      quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
       out <- balkenbuilder(df, titel, x="indikator", y="wert",group=NULL, tooltip = "Anzahl: {point.wert_disp}", format = "{value:, f}", color = "#b16fab", quelle = quelle)
 
@@ -241,7 +258,7 @@ beruf_verlauf_single <- function(r) {
                "#5f94f9", "#007655", "#d0a9cd")
 
     # plot
-    quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
 
     out <- linebuilder(df, titel, x = "jahr", y = "prop", group = "indikator", tooltip, format, color, quelle = quelle)
@@ -268,7 +285,7 @@ beruf_verlauf_single <- function(r) {
     color <- c("#b16fab", "#154194","#66cbaf", "#35bd97", "#5d335a",
                "#5f94f9", "#007655", "#d0a9cd", "#112c5f")
 
-    quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
     out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color, quelle = quelle)
 
@@ -354,9 +371,9 @@ arbeitsmarkt_mint_bulas <- function(r) {
     tooltip <- "{point.bundesland} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.wert}"
     titel <- paste0("Anteil von ",  title_help, " in MINT an allen ",  title_help, " (", timerange, ")")
     mincolor <- "#f4f5f6"
-    map_selection <- 1
+    map_selection <- map_selection_germany
     maxcolor <- "#b16fab"
-    quelle <- "uelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "uelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
     out <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection, quelle = quelle)
 
@@ -435,7 +452,7 @@ arbeitsmarkt_mint_bulas <- function(r) {
                              ifelse(df$bundesland == "Westdeutschland (o. Berlin)", "#d3a4d7", "#A9A9A9")))))
 
 
-    quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
     if (darstellung == "In Prozent"){
     out <- balkenbuilder(df, titel, x="bundesland", y="prop", group = NULL, tooltip = "Anteil: {point.display_rel} % <br> Anzahl: {point.wert}", format = "{value}%", color = "#b16fab", optional = optional, quelle = quelle)
@@ -507,7 +524,7 @@ arbeitsmarkt_mint_bulas <- function(r) {
       color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
                  "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
 
-      quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
       out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "bundesland", tooltip, format, color, quelle = quelle)
 
@@ -531,7 +548,7 @@ arbeitsmarkt_mint_bulas <- function(r) {
       color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
                  "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
 
-      quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
       out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "bundesland", tooltip, format, color, quelle = quelle)
 
     }
@@ -1183,7 +1200,7 @@ arbeitsmarkt_faecher_anteil <- function(r) {
       format <- '{point.prop_disp}%'
       color <- as.character(df$color)
 
-      quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
       out <- piebuilder(df, titel, x="fachbereich", y = "prop", tooltip, color, format, quelle = quelle)
 
@@ -1207,8 +1224,8 @@ arbeitsmarkt_faecher_anteil <- function(r) {
       color2 <- as.character(df_2$color)
 
       #
-      quelle_eins <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
-      quelle_zwei <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      quelle_eins <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      quelle_zwei <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
       out_1 <- piebuilder(df_1, titel1, x="fachbereich", y = "prop", tooltip, color1, format, quelle= quelle_eins)
       out_2 <- piebuilder(df_2, titel2, x="fachbereich", y = "prop", tooltip, color2, format, quelle = quelle_zwei)
@@ -1324,7 +1341,7 @@ arbeitsmarkt_faecher_anteil <- function(r) {
 
 
 
-    quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
     if(darstellung == "In Prozent"){
     out <- balkenbuilder(df, titel, x="fachbereich", y = "prop", group=NULL, tooltip, format, color, optional, quelle = quelle)
@@ -1441,7 +1458,7 @@ beruf_verlauf_faecher <- function(r) {
     tooltip <- "{point.fachbereich} <br> Anteil: {point.prop_disp} %"
     format <- "{value} %"
     color <- as.character(colors)
-    quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
     out <- linebuilder(df, titel, x = "jahr", y = "prop", group = "fachbereich", tooltip, format, color, quelle = quelle)
 
   } else if(absolut_selector == "Anzahl") {
@@ -1475,7 +1492,7 @@ beruf_verlauf_faecher <- function(r) {
 
     format <- "{value:, f}"
     color <- as.character(colors)
-    quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
     out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "fachbereich", tooltip, format, color, quelle = quelle)
 
 
@@ -1559,9 +1576,9 @@ arbeitsmarkt_bula_faecher <- function(r) {
     titel <- paste0("Anteil von ",  title_help, " in ", faecher, " an allen ",  title_help, " (", timerange, ")")
     mincolor <- "#f4f5f6"
     maxcolor <- "#b16fab"
-    map_selection <- 1
+    map_selection <- map_selection_germany
 
-    quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
     out <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection, quelle = quelle)
 
 
@@ -1644,7 +1661,7 @@ arbeitsmarkt_bula_faecher <- function(r) {
       colors = ifelse(df$bundesland == "Deutschland", "#b16fab",
                       ifelse(df$bundesland == "Ostdeutschland (inkl. Berlin)", "#d3a4d7",
                              ifelse(df$bundesland == "Westdeutschland (o. Berlin)", "#d3a4d7", "#A9A9A9")))))
-    quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
     if(darstellung12 == "In Prozent"){
     out <- balkenbuilder(df, titel, x= "bundesland", y="prop", group=NULL, tooltip, format, color, optional=optional, quelle = quelle)
@@ -1735,7 +1752,7 @@ arbeitsmarkt_bula_faecher <- function(r) {
       format <- "{value} %"
       color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
                  "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
-      quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
       out <- linebuilder(df, titel, x = "jahr", y = "prop", group = "bundesland", tooltip, format, color, quelle = quelle)
 
 
@@ -1763,7 +1780,7 @@ arbeitsmarkt_bula_faecher <- function(r) {
       format <- "{value:, f}"
       color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
                  "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
-      quelle2 <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      quelle2 <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
       out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "bundesland", tooltip, format, color, quelle = quelle2)
 
 
@@ -2078,7 +2095,7 @@ arbeitsmarkt_einstieg_pie_gender <- function(r) {
      tooltip <- 'Anteil: {point.prop_disp}% <br> Anzahl: {point.wert_disp}'
      format <- '{point.prop_disp}%'
 
-     quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+     quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
      p1 <- piebuilder(df_p, titel, x="geschlecht", y = "proportion", tooltip, color, format, quelle = quelle)
      out <- p1
@@ -2093,7 +2110,7 @@ arbeitsmarkt_einstieg_pie_gender <- function(r) {
        format <- '{point.prop_disp}%'
        color <- c("#efe8e6", "#154194")
 
-       quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+       quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
        p1g <- piebuilder(df_g, titel1, x="geschlecht", y = "proportion", tooltip, color, format, quelle = quelle)
 
@@ -2128,7 +2145,7 @@ arbeitsmarkt_einstieg_pie_gender <- function(r) {
      color <- c("#efe8e6", "#154194")
      format <- '{point.prop_disp}%'
 
-     quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+     quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
      p1 <- piebuilder(df_1_pie, titel1, x="geschlecht", y = "proportion", tooltip, color, format, quelle=quelle)
      p2 <- piebuilder(df_2_pie, titel2, x="geschlecht", y = "proportion", tooltip, color, format, quelle = quelle)
@@ -2152,7 +2169,7 @@ arbeitsmarkt_einstieg_pie_gender <- function(r) {
        color <- c("#efe8e6", "#154194")
        format <- '{point.prop_disp}%'
 
-       quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+       quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
        p1g <- piebuilder(df1_g, titel1, x="geschlecht", y = "proportion", tooltip, color, format, quelle=quelle)
        p2g <- piebuilder(df2_g, titel2, x="geschlecht", y = "proportion", tooltip, color, format, quelle=quelle)
@@ -2201,7 +2218,7 @@ arbeitsmarkt_einstieg_pie_gender <- function(r) {
    color = c("#154194", "#efe8e6")
 
 
-   quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+   quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
    out <- balkenbuilder(df, titel, x = "indi_fach", y="proportion", group = "geschlecht", tooltip = tooltip, format = format, color = color, reverse = FALSE, stacking = stacking, TF=FALSE, quelle = quelle)
 
@@ -2311,7 +2328,7 @@ arbeitsmarkt_einstieg_verlauf_gender <- function(r) {
     format <- "{value}%"
     color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
                "#bfc6d3", "#5f94f9")
-    quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
     out <- linebuilder(df, titel, x = "jahr", y = "prop", group = "indikator", tooltip, format, color, quelle = quelle)
 
 
@@ -2355,7 +2372,7 @@ arbeitsmarkt_einstieg_verlauf_gender <- function(r) {
     format <- "{value:, f}"
     color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
                "#bfc6d3", "#5f94f9")
-    quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
     out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color, quelle = quelle)
 
   }
@@ -2467,7 +2484,7 @@ arbeitsmarkt_wahl_gender <- function(r) {
      tooltip <- paste('Anteil: {point.prop_disp}% <br> Anzahl: {point.wert_disp}')
      format <- '{point.prop_disp}%'
 
-     quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+     quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
      out_1 <- piebuilder(df_f, titel1, x="fachbereich", y = "prop", tooltip, color1, format, subtitel = subtitel1, quelle=quelle)
      out_2 <- piebuilder(df_m, titel2, x="fachbereich", y = "prop", tooltip, color2, format, subtitel = subtitel2, quelle=quelle)
@@ -2548,8 +2565,8 @@ arbeitsmarkt_wahl_gender <- function(r) {
      titel <- titel_w
      mincolor <- "#fcfcfd"
      maxcolor <- "#b16fab"
-     map_selection <- 1
-     quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+     map_selection <- map_selection_germany
+     quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
      out_1 <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor,prop=TRUE, wert=FALSE, map=map_selection, quelle = quelle)
 
 
@@ -2560,8 +2577,8 @@ arbeitsmarkt_wahl_gender <- function(r) {
      titel <- titel_m
      mincolor <- "#fcfcfd"
      maxcolor <- "#b16fab"
-     map_selection <- 1
-     quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+     map_selection <- map_selection_germany
+     quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
      out_2 <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor,prop=TRUE, wert=FALSE, map=map_selection, quelle = quelle)
 
 
@@ -2650,7 +2667,7 @@ arbeitsmarkt_wahl_gender <- function(r) {
                   "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
 
 
-       quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+       quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
        out <- linebuilder(df, titel, x = "jahr", y = "prop", group = "bundesland", tooltip, format, color, quelle = quelle)
 
 
@@ -2681,7 +2698,7 @@ arbeitsmarkt_wahl_gender <- function(r) {
       format <- "{value:, f}"
       color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
                  "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
-      quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
       out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "bundesland", tooltip, format, color, quelle = quelle)
 
      }
@@ -3225,7 +3242,7 @@ arbeitsmarkt_faecher_anteil_frauen <- function(r) {
       ))
 
 
-      quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
       out <- balkenbuilder(df, titel, x="fachbereich", y = "prop", group=NULL, tooltip, format, color, optional, quelle = quelle)
 
 
@@ -3468,15 +3485,39 @@ arbeitsmarkt_lk_detail_map <- function(r) {
   df1_map$wert <- prettyNum(df1_map$wert, big.mark = ".", decimal.mark = ",")
   domain_1 <- ifelse(domain_1 == "Alle", "alle Berufsbereiche", domain_1)
 
-  quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+  quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
   # create plots
 
 
+
+
+
+  state_codes <- data.frame(
+    state = c(
+      "Baden-Württemberg","Bayern","Berlin","Brandenburg","Bremen","Hamburg",
+      "Hessen","Mecklenburg-Vorpommern","Niedersachsen","Nordrhein-Westfalen",
+      "Rheinland-Pfalz","Saarland","Sachsen","Sachsen-Anhalt",
+      "Schleswig-Holstein","Thüringen"
+    ),
+    short = c("bw","by","be","bb","hb","hh","he","mv","ni",
+              "nw","rp","sl","sn","st","sh","th")
+  )
+  state_code <- state_codes %>%
+    dplyr::filter(state == states) %>%
+    dplyr::pull(short)
+
+  # RDS-Datei für das Bundesland laden
+  map_state <- readRDS(paste0("data/map_data/map_de_", state_code, ".rds"))
+
+
+
+
   titel <- paste0("Anteil von ", titel_sub1_2, titel_gesamt1, titel_gesamt1_2, " in ", states, " (", timerange, ")")
-  highcharter::hcmap(
-    paste0("countries/de/de-", state_code ,"-all"),
-    data = df1_map,
+  highcharter::highchart(type = "map") %>%
+    highcharter::hc_add_series_map(
+    map = map_state,
+    df = df1_map,
     value = "prob",
     joinBy = c("hc-key","landkreis_nummer"),
     borderColor = "#FAFAFA",
@@ -3504,7 +3545,7 @@ arbeitsmarkt_lk_detail_map <- function(r) {
     highcharter::hc_legend(layout = "horizontal", floating = FALSE,
                            verticalAlign = "bottom"
     ) %>%
-    highcharter::hc_caption(text = "Quelle der Daten: Bundesagentur für Arbeit, 2024 freier Download, eigene Berechnungen durch MINTvernetzt.",
+    highcharter::hc_caption(text = "Quelle der Daten: Bundesagentur für Arbeit, 2025 freier Download, eigene Berechnungen durch MINTvernetzt.",
                             style = list(fontSize = "11px", color = "gray")) %>%
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(
@@ -3520,7 +3561,7 @@ arbeitsmarkt_lk_detail_map <- function(r) {
 
 
      var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle:Quelle der Daten: Bundesagentur für Arbeit, 2024 freier Download, eigene Berechnungen durch MINTvernetzt.';
+     data += '\\nQuelle:Quelle der Daten: Bundesagentur für Arbeit, 2025 freier Download, eigene Berechnungen durch MINTvernetzt.';
 
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
@@ -3644,7 +3685,7 @@ arbeitsmarkt_lk_detail_vergleich <- function(r){
   }
 
 
-  quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+  quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
   out <- balkenbuilder3(df_compare, titel, x="landkreis", y="display_value", tooltip, format, color, optional = optional, optional2 = my_hc_size, quelle= quelle)
 
 
@@ -3723,7 +3764,7 @@ arbeitsmarkt_lk_verlauf <- function(r){
     color <- c("#b16fab", "#154194", "#66cbaf","#fbbf24", "#ee7775", "#35bd97",
                "#d0a9cd", "#5f94f0", "#fca5a5", "#fde68a", "#007655", "#dc6262",
                "#9d7265", "#5d335a", "#bfc6d3",  "#B45309","#d4c1bb", "#112c5f", "#8893a7")
-    quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
     out <- linebuilder(df, titel, x = "jahr", y = "prop", group = "landkreis", tooltip, format, color, quelle = quelle)
 
 
@@ -3750,11 +3791,347 @@ arbeitsmarkt_lk_verlauf <- function(r){
     color <- c("#b16fab", "#154194", "#66cbaf","#fbbf24", "#ee7775", "#35bd97",
                "#d0a9cd", "#5f94f0", "#fca5a5", "#fde68a", "#007655", "#dc6262",
                "#9d7265", "#5d335a", "#bfc6d3",  "#B45309","#d4c1bb", "#112c5f", "#8893a7")
-    queleeee <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    queleeee <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
     out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "landkreis", tooltip, format, color, quelle=queleeee)
 
   }
 }
 
+
+## Box 5 ---------------
+
+### Tab 1 --------
+
+entgelte_vergleich_1 <- function(r) {
+
+  geschlecht <- r$beruf_arbeitsmarkt_entgel_geschlecht
+  datum <- r$date_arbeitsmarkt_entgelt_vergleich
+  land <- r$region_arbeitsmarkt_entgelt_vergleich
+  # berufsleb <- r$beruf_arbeitsmarkt_entgelt_berufslev
+  berufsleb <- "Gesamt"
+
+
+ ##)
+
+  df_query <- glue::glue_sql("
+  SELECT *
+  FROM arbeitsmarkt_entgelte
+  WHERE geschlecht = {geschlecht}
+  AND jahr = {datum}
+  AND bundesland = {land}
+  AND berufslevel = 'Gesamt'
+                               ", .con = con)
+
+#   browser()
+
+  df <- DBI::dbGetQuery(con, df_query)
+
+  df1 <- df %>%
+    dplyr::filter(stringr::str_detect(wert, "^[0-9.,]+$")) %>%
+     dplyr::filter(berufsgruppe == beruf) %>%
+     dplyr::mutate(wert = round(as.numeric(wert)),0)
+
+ df1 <- df1[with(df1, order(wert, decreasing = TRUE)),]
+
+  if(berufsleb == "Gesamt"){
+    berufsleb <- "alle Berufslevel"
+  } else if (berufsleb == "Fachkraft"){
+    berufsleb <- "Fachkräften"
+  } else if (berufsleb == "Spezialist"){
+    berufsleb <- "Spezialisten"
+  } else if (berufsleb == "Experte"){
+    berufsleb <- "Experten"
+  }
+
+
+  if(geschlecht == "Insgesamt"){
+    geschlecht <- "alle Geschlechter"
+  }
+
+  titel <- paste0("Mittleres Entgelt nach Berufsfeldern in ", land, " ", datum,
+                  " (", berufsleb, ", ", geschlecht, ")" )
+  tooltip <- paste('Wert in Euro: {point.y}')
+  format <- "{value}"
+
+  quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+
+
+  ##########
+
+
+  df1$wert <- as.numeric(df1$wert)
+  df1$berufsgruppe <- as.factor(df1$berufsgruppe)
+
+#clear
+  df1 <-  df1 %>%
+    dplyr::filter(!(grepl("technik$", berufsgruppe, ignore.case = TRUE) & berufsgruppe != "Technik"))
+
+
+
+
+
+  df1$color <- ifelse(df1$berufsgruppe %in% c("Insgesamt",
+                                              "MINT-Berufe", "Keine MINT-Berufe"),
+                      "#b16fab", "#efe8e6")
+
+
+
+  #out <- balkenbuilder(df1, titel, x = "wert", y = "berufsgruppe", tooltip = tooltip,  color =  c("#b16fab","#b16fab"), format = format , quelle = quelle)
+  out <- highcharter::hchart(df1, 'bar', highcharter::hcaes(y ="wert", x = "berufsgruppe", color = color) ) %>%
+    highcharter::hc_tooltip(pointFormat = tooltip) %>%
+    highcharter::hc_yAxis(title = list(text = ""), labels = list(format = format)) %>%
+    highcharter::hc_xAxis(title = list(text = ""), labels = list(format ="{value}")  ) %>%
+  ############  highcharter::hc_colors(color) %>%
+    highcharter::hc_title(text = titel,
+                          margin = 45, #
+                          align = "center",
+                          style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
+    highcharter::hc_chart(
+      style = list(fontFamily = "Calibri Regular", fontSize = "14px")
+    ) %>%
+    highcharter::hc_legend(enabled = TRUE, reversed = TRUE)  %>%
+    highcharter::hc_caption(text = quelle,
+                            style = list(fontSize = "11px", color = "gray")) %>%
+    highcharter::hc_exporting(enabled = TRUE,
+                              buttons = list(
+                                contextButton = list(
+                                  menuItems = list("downloadPNG", "downloadCSV",
+                                                   list(
+                                                     text = "Daten für GPT",
+                                                     onclick = htmlwidgets::JS(sprintf(
+                                                       "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle: %s';
+
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+
+   }",
+                                                       gsub("'", "\\\\'", titel),
+                                                       gsub("'", "\\\\'", titel),
+                                                       gsub("'", "\\\\'", quelle)
+                                                     ))
+
+                                                   ))
+                                )
+                              )
+    )
+
+
+
+
+
+
+
+
+
+  return(out)
+
+
+
+  }
+
+### Tab 2 -------
+
+entgelte_verlauf_1 <- function(r) {
+
+
+  datum <- r$date_arbeitsmarkt_entgelt_verlauf
+  land <- r$region_arbeitsmarkt_entgelt_verlauf
+  #berufsleb <- r$indikator_arbeitsmarkt_entgelt_verlauf_2
+  berufsleb <- "Gesamt"
+  geschlecht <- r$abs_zahlen_arbeitsmarkt_entgelt_verlauf
+
+  datum1 <- datum[1]:datum[2]
+
+
+  if(geschlecht == "Ingesamt") {
+    geschlecht <- "Insgesamt"
+  }
+
+  df_query <- glue::glue_sql("
+  SELECT *
+  FROM arbeitsmarkt_entgelte
+  WHERE geschlecht = {geschlecht}
+  AND jahr IN  ({datum1*})
+  AND bundesland = {land}
+  AND berufslevel = {berufsleb}
+                               ", .con = con)
+
+
+
+  df <- DBI::dbGetQuery(con, df_query)
+
+
+
+
+  df <- df %>%
+    dplyr::mutate(wertq = readr::parse_number(wert))
+
+
+#  df <- na.omit(df)
+
+  df <- df %>%
+    dplyr::filter(
+      berufsgruppe %in% c("MINT-Berufe", "Insgesamt", "Keine MINT-Berufe",
+                          "Informatik","Technik", "Mathematik, Naturwissenschaften")
+    ) %>%
+    dplyr::filter(
+      berufsgruppe == beruf
+    )
+
+  if(geschlecht == "Insgesamt"){
+    geschlecht = "alle Geschlechter"
+  }
+  if(berufsleb == "Gesamt") {
+    berufsleb = "alle Berufslevel"
+  }
+
+
+
+
+
+  ###
+
+
+
+  titel <- paste0("Entwicklung der Entgelte in den verschiedenen Kategorien in ", land, " (", geschlecht, ",", " ", berufsleb, ")")
+  tooltip <-"Wert in Euro {point.y}"
+  format <- "{value}"
+  color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
+             "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
+
+  quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+
+
+
+  df <- df[order(df$jahr, decreasing = FALSE), ]
+
+ # out <- linebuilder(df, titel, x = "jahr", y = "wertq", group = "berufsgruppe", tooltip, format, color, quelle = quelle)
+
+
+
+  out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = "jahr", y = "wertq", group = "berufsgruppe")) %>%
+    highcharter::hc_tooltip(pointFormat = tooltip) %>%
+    highcharter::hc_yAxis(title = list(text = " "), labels = list(format = format),
+                          style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular")) %>%
+    highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular")) %>%
+    highcharter::hc_title(text = titel,
+                          margin = 45,
+                          align = "center",
+                          style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
+    highcharter::hc_colors(color) %>%
+    highcharter::hc_chart(
+      style = list(fontFamily = "Calibri Regular", fontSize = "14px")
+    )  %>%
+    highcharter::hc_caption(text = quelle,
+                            style = list(fontSize = "11px", color = "gray")) %>%
+    highcharter::hc_exporting(enabled = TRUE,
+                              buttons = list(
+                                contextButton = list(
+                                  menuItems = list("downloadPNG", "downloadCSV",
+                                                   list(
+                                                     text = "Daten für GPT",
+                                                     onclick = htmlwidgets::JS(sprintf(
+                                                       "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle: %s';
+
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }",
+                                                       gsub("'", "\\\\'", titel),
+                                                       gsub("'", "\\\\'", titel),
+                                                       gsub("'", "\\\\'", quelle)
+                                                     )
+                                                     )
+                                                   )
+                                  )
+                                )
+                              )
+    )
+
+}
+
+### Tab 3 -------
+
+entgelte_balken_1 <- function(r) {
+
+  # inf1 <- r$ansicht_balken_entgelt
+  jahr <- r$date_balken_entgelt
+  bulasa <- r$states_balken_entgelt
+  status <- r$status_balken_entgelt
+
+  identi <- r$abs_zahlen_balken_entgelt
+
+  jahr <- as.numeric(jahr)
+
+
+
+  df_query <- glue::glue_sql("
+  SELECT *
+  FROM arbeitsmarkt_entgelte
+  WHERE geschlecht = 'Insgesamt'
+  AND jahr = {jahr}
+  AND bundesland = {bulasa}
+  AND berufslevel = {status}
+  AND berufsgruppe IN ({identi*})
+                               ", .con = con)
+
+
+
+  df <- DBI::dbGetQuery(con, df_query)
+
+  df <- df %>%
+    dplyr::filter(
+     beruf == berufsgruppe
+    )
+
+
+
+
+  titel <- paste0("MINT-Anteil in")
+  tooltip <- paste('Wert {point.x}')
+  format <- "{wert}"
+
+  quelle <- ""
+
+  out <- balkenbuilder(df, titel, x = "wert", y = "berufsgruppe", tooltip = tooltip,  color =  c("#b16fab","#b16fab"), format = format , quelle = quelle)
+
+}
+
+### Tab 4 -------
+
+
+plot_ranking_top_entgeltee <- function(r) {
+
+  info1 <- r$date_top_entgelt
+  inf22 <- r$states_top_entgelt
+  inf23 <- r$subject_top_entgelt
+  inf_4 <- r$subject_abs_rel_engelt
+
+}
 
 

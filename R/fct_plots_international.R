@@ -1,5 +1,11 @@
 #library(dplyr)
 #library(tidyr)
+map_selection_international <- readRDS("data/map_data/map_selection_international.rds")
+map_selection_germany <- readRDS("data/map_data/map_selection_german.rds")
+map_selection_europe <- readRDS("data/map_data/map_selection_europa.rds")
+
+
+
 
 #' A function to plot a graph.
 #'
@@ -170,7 +176,10 @@ plot_international_map <- function(r) {
 
 
   if (label_m == "Weltweit") {
-    map_selection <- highcharter::download_map_data(url = "custom/world", showinfo = FALSE)
+    #map_selection <- highcharter::download_map_data(url = "custom/world", showinfo = FALSE)
+
+    map_selection <- readRDS("data/map_data/map_selection_international.rds")
+
 
     fach_m <- "Alle MINT-Fächer"
 
@@ -192,7 +201,9 @@ plot_international_map <- function(r) {
 
 
   } else if (label_m == "OECD") {
-    map_selection <- highcharter::download_map_data(url = "custom/world", showinfo = FALSE)
+
+    map_selection <- readRDS("data/map_data/map_selection_international.rds")
+    #map_selection <- highcharter::download_map_data(url = "custom/world", showinfo = FALSE)
 
     fach_m <- r$map_f_int_studium_oec_d
     if (is.null(fach_m)) { fach_m <- ""}
@@ -207,7 +218,7 @@ plot_international_map <- function(r) {
     WHERE geschlecht = 'Gesamt'
     AND jahr = {timerange}
     AND ebene = 1
-    AND anforderung IN ('Bachelor oder vergleichbar (akademisch)', 'Master oder vergleichbar (akademisch)', 'Promotion (ISCED 8)')
+    AND anforderung IN ('Bachelor oder vergleichbar (ISCED 6)', 'Master oder vergleichbar (ISCED 7)', 'Promotion (ISCED 8)')
                                ", .con = con)
 
     df_filtered <- DBI::dbGetQuery(con, df_query)
@@ -243,7 +254,10 @@ plot_international_map <- function(r) {
 
 
   } else if (label_m == "EU") {
-    map_selection <- highcharter::download_map_data(url = "custom/europe", showinfo = FALSE)
+
+#    map_selection <- highcharter::download_map_data(url = "custom/europe", showinfo = FALSE)
+
+    map_selection <- readRDS("data/map_data/map_selection_europa.rds")
 
 
     fach_m <- r$map_f_int_studium_e_u
@@ -424,7 +438,8 @@ plot_international_map_fem <- function(r){
   # falls region EU
   if(label_m == "EU"){
     # kartenabschnitt für hc definieren
-    map_selection <- "custom/europe"
+    #map_selection <- "custom/europe"
+    map_selection <- readRDS("data/map_data/map_selection_europa.rds")
 
     # Spezifische inputs laden
     timerange <- r$map_y_f
@@ -568,33 +583,39 @@ plot_international_map_fem <- function(r){
     fach_m <- r$map_f_f
 
     # Kartenabschnitt für hc definieren
-    map_selection <- "custom/world"
+    map_selection <- map_selection_international
 
     df_query <- glue::glue_sql("
     SELECT *
     FROM studierende_anzahl_oecd
-    WHERE geschlecht IN ('Frauen', 'Gesamt')
-    AND jahr = {timerange}
-    AND ebene = '1'
-    AND anforderung IN ('Bachelor oder vergleichbar (akademisch)', 'Master oder vergleichbar (akademisch)', 'Promotion (ISCED 8)')
+    WHERE jahr = {timerange}
+    AND anforderung IN ('Bachelor oder vergleichbar (ISCED 6)', 'Master oder vergleichbar (ISCED 7)', 'Promotion (ISCED 8)')
                                ", .con = con)
 
-    df_filteredd <- DBI::dbGetQuery(con, df_query)
-    df_filtered <- df_filteredd
+    df_filtered <- DBI::dbGetQuery(con, df_query)
 
-    df_filtered <- df_filtered %>%
+
+
+    df_filtered$wert <- as.numeric(df_filtered$wert)
+
+
+    df_filtered <- unique(df_filtered)
+
+
+    df_filtered_1 <- df_filtered %>%
       tidyr::pivot_wider(names_from = anforderung, values_from = wert)%>%
       # Zahl d. Studierenden ist hier Summe aus master + bachelor + Promovierende
-      dplyr::mutate(wert = rowSums(dplyr::select(., "Bachelor oder vergleichbar (akademisch)",
-                                                 "Master oder vergleichbar (akademisch)",
+      dplyr::mutate(wert = rowSums(dplyr::select(., "Bachelor oder vergleichbar (ISCED 6)",
+                                                 "Master oder vergleichbar (ISCED 7)",
                                                  "Promotion (ISCED 8)"), na.rm= T ))%>%
-      dplyr::select(- c("Bachelor oder vergleichbar (akademisch)",
-                        "Master oder vergleichbar (akademisch)",
+      dplyr::select(- c("Bachelor oder vergleichbar (ISCED 6)",
+                        "Master oder vergleichbar (ISCED 7)",
                         "Promotion (ISCED 8)"))
 
 
 
     # Frauenanzahl für beide Betrachtungsweien errechnen
+
 
     # Frauen von Allen
     df_share_fem <- df_filtered %>%
@@ -771,8 +792,7 @@ plot_international_top10 <- function(r) {
     FROM studierende_anzahl_oecd
     WHERE geschlecht = 'Gesamt'
     AND jahr = {timerange}
-    AND ebene = '1'
-    AND anforderung IN ('Bachelor oder vergleichbar (akademisch)', 'Master oder vergleichbar (akademisch)', 'Promotion (ISCED 8)')
+    AND anforderung IN ('Bachelor oder vergleichbar (ISCED 6)', 'Master oder vergleichbar (ISCED 7)', 'Promotion (ISCED 8)')
                                ", .con = con)
 
     df_filtered <- DBI::dbGetQuery(con, df_query)
@@ -872,6 +892,7 @@ df <- df %>%
 
 
 
+
   plot_top <- highcharter::hchart(
     df %>% dplyr::arrange(desc(wert)) %>% dplyr::slice(1:10),
     'bar',
@@ -938,7 +959,7 @@ plot_international_top10_gender <- function(r) {
     WHERE geschlecht = 'Frauen'
     AND ebene = 1
     AND jahr = {timerange}
-    AND anforderung IN ('Bachelor oder vergleichbar (akademisch)','Master oder vergleichbar (akademisch)','Promotion (ISCED 8)')
+    AND anforderung IN ('Bachelor oder vergleichbar (ISCED 6)','Master oder vergleichbar (ISCED 7)','Promotion (ISCED 8)')
 
                                ", .con = con)
 
@@ -982,10 +1003,8 @@ plot_international_top10_gender <- function(r) {
     df_query <- glue::glue_sql("
     SELECT *
     FROM studierende_anzahl_oecd
-    WHERE fachbereich = {fach_m}
-    AND jahr = {timerange}
-    AND ebene = 1
-    AND anforderung IN ('Bachelor oder vergleichbar (akademisch)', 'Master oder vergleichbar (akademisch)','Promotion (ISCED 8)')
+    WHERE jahr = {timerange}
+    AND anforderung IN ('Bachelor oder vergleichbar (ISCED 6)', 'Master oder vergleichbar (ISCED 7)', 'Promotion (ISCED 8)')
                                ", .con = con)
 
     df_filtered <- DBI::dbGetQuery(con, df_query)
@@ -1124,6 +1143,7 @@ plot_international_top10_gender <- function(r) {
     titel2 <- paste0(t_quelle1, "Länder mit dem niedrigsten Frauenanteil unter Studierenden in ",
                      t_fach, " (", timerange, ")")
   }
+
 
 
   # Create top 10 plot
@@ -1446,7 +1466,7 @@ plot_international_schule_map <- function(r) {
   if (is.null(fach_m)) { fach_m <- ""}
 
 
-  map_selection <- "custom/world"
+  map_selection <- map_selection_international
 
   if (label_m == "TIMSS") {
     this_ordnung <- ifelse(
@@ -1532,8 +1552,8 @@ plot_international_schule_map <- function(r) {
     dplyr::inner_join(countries_names, by = "land") %>%
     dplyr::mutate(alpha2 = toupper(alpha2))
 
-
- map_selection <- highcharter::download_map_data(url = "custom/world", showinfo = FALSE)
+ map_selection <- readRDS("data/map_data/map_selection_international.rds")
+ #map_selection <- highcharter::download_map_data(url = "custom/world", showinfo = FALSE)
 
  #zu komplex / different
   # plot
@@ -2438,7 +2458,10 @@ plot_international_schule_migration <- function(r) {
 plot_international_map_arb <- function(r) {
 
    # ui input für Region laden
-  map_l <- r$map_l_arb
+  #map_l <- r$map_l_arb
+
+
+  map_l <- "EU"
 
   # Falls Region EU ist:
   if(map_l== "EU"){
@@ -2448,7 +2471,9 @@ plot_international_map_arb <- function(r) {
     inpp <- r$map_pers_arb_eu
 
     # Kartenausschnitt für hc definieren
-    map_selection <- "custom/europe"
+
+    #map_selection <- readRDS("data/map_selection_europa.rds")
+    map_selection <- map_selection_europe
 
 
 
@@ -2460,15 +2485,22 @@ plot_international_map_arb <- function(r) {
     WHERE geschlecht = 'Gesamt'
     AND jahr = {inpy}
     AND indikator = {inpp}
-    AND variable = 'Anteil an arbeitender Bevölkerung'
+    AND variable = 'Anteil an Gesamtbevölkerung'
                                ", .con = con)
 
     data1 <- DBI::dbGetQuery(con, df_query)
 
 
+
     data1 <- data1 %>%
       tidyr::pivot_wider(names_from = variable, values_from = wert)%>%
-      dplyr::rename(wert="Anteil an arbeitender Bevölkerung")
+      dplyr::rename(wert="Anteil an Gesamtbevölkerung")
+
+
+
+
+
+
 
     # für hover vorbereiten
     data1$display_rel <- prettyNum(round(data1$wert,1), big.mark = ".", decimal.mark = ",")
@@ -2503,6 +2535,7 @@ plot_international_map_arb <- function(r) {
 
 
 
+
     # Titel vorbereiten
     title_eu <- paste0(inpp, "n", " in MINT-Fächern an allen ", inpp, "n ",inpy )
 
@@ -2527,7 +2560,7 @@ plot_international_map_arb <- function(r) {
   else if (map_l== "OECD"){
 
     # Kartenausschnitt
-    map_selection <- "custom/world"
+    map_selection <- map_selection_international
 
     # ui inputs laden
     inpp <- r$map_pers_arb
@@ -2543,13 +2576,18 @@ plot_international_map_arb <- function(r) {
 
       df_query <- glue::glue_sql("
       SELECT *
-      FROM arbeitsmarkt_beschaeftigte_eu
+      FROM arbeitsmarkt_anzahl_azubis_oecd
       WHERE jahr = {inpy}
-      AND fachbereich IN ('MINT','Informatik & Kommunikationstechnologie','Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe','Naturwissenschaften, Mathematik und Statistik','Alle')
+      AND fach IN ('MINT','Informatik & Kommunikationstechnologie','Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe','Naturwissenschaften, Mathematik und Statistik','Alle')
       AND geschlecht = 'Gesamt'
                                ", .con = con)
-
+#
+#
+     ####################################### browser()
+##########
       data1 <- DBI::dbGetQuery(con, df_query)
+###
+
 
       data1 <- data1 %>%
         dplyr::mutate(display_rel= prettyNum(round(.$wert, 1), big.mark = ".", decimal.mark = ","))
@@ -2560,8 +2598,7 @@ plot_international_map_arb <- function(r) {
         # fitlern für spezifischen fachbereich und mit geo mapping joinen
         data_map <- data1 %>%
           dplyr::filter(anforderung == "Ausbildung (ISCED 45)" &
-                          variable == "Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern" &
-                          fachbereich == inpf)%>%
+                          fach == inpf)%>%
           dplyr::inner_join(countries_names, by = "land") %>%
           dplyr::mutate(alpha2 = toupper(alpha2))
 
@@ -2756,7 +2793,9 @@ plot_international_map_arb_gender <- function(r) {
 
 
   # ui input für Region laden
-  inpl <- r$map_l_arb_gender
+  #inpl <- r$map_l_arb_gender
+
+  inpl <- "EU"
 
   # Falls Region EU ist:
   if(inpl== "EU"){
@@ -2766,8 +2805,8 @@ plot_international_map_arb_gender <- function(r) {
     inpp <- r$map_pers_arb_gender_eu
 
     # Kartenabschnitt für hc
-    map_selection <- "custom/europe"
-
+    map_selection <- map_selection_europe
+    #map_selection <- readRDS("data/map_selection_europa.rds")
 
     df_query <- glue::glue_sql("
     SELECT *
@@ -2775,7 +2814,7 @@ plot_international_map_arb_gender <- function(r) {
     WHERE geschlecht IN ('Gesamt','Frauen')
     AND jahr = {inpy}
     AND indikator = {inpp}
-    AND variable = 'Anteil an arbeitender Bevölkerung'
+    AND variable = 'Anteil an Gesamtbevölkerung'
                                ", .con = con)
 
     data1 <- DBI::dbGetQuery(con, df_query)
@@ -2801,6 +2840,9 @@ plot_international_map_arb_gender <- function(r) {
                                ", .con = con)
 
     data2 <- DBI::dbGetQuery(con, df_query)
+
+
+
 
     data2 <- data2 %>%
       tidyr::pivot_wider(names_from = variable, values_from = wert)%>%
@@ -2844,12 +2886,12 @@ plot_international_map_arb_gender <- function(r) {
   else if (inpl== "OECD"){
 
     # Kartenausschnitt für hc
-    map_selection <- "custom/world"
+    map_selection <- map_selection_international
 
     # ui inputs für oecd laden
-    inpp <- r$map_pers_arb_gender
-    inpy <- r$map_y_arb_gender
-    inpf <- r$map_f_arb_gender
+    #inpp <- r$map_pers_arb_gender
+    #inpy <- r$map_y_arb_gender
+    #inpf <- r$map_f_arb_gender
 
 
     # Falls indiktoren aus datensatz arbeitsmarkt_anfänger_absolv_oecd gewählt werden
@@ -2862,6 +2904,9 @@ plot_international_map_arb_gender <- function(r) {
 
       inpy <- as.numeric(inpy)
 
+
+
+
       df_query <- glue::glue_sql("
       SELECT *
       FROM arbeitsmarkt_anfaenger_absolv_oecd
@@ -2871,12 +2916,53 @@ plot_international_map_arb_gender <- function(r) {
                                ", .con = con)
 
       data1 <- DBI::dbGetQuery(con, df_query)
+#
+ #     browser()
+#
+#
 
 
       data1 <- data1 %>%
-        tidyr::pivot_wider(names_from = fachbereich, values_from = wert)%>%
-        # MINT Anteil errechen: Summe der relativen Häufigekeiten d. Einzelfächer geteilt durc hdie Anzahl der Einzelfcher
-        # d.h. Druchscnitt der relativen Häufigkeit der Einzelfächer
+        tidyr::pivot_wider(names_from = fachbereich, values_from = wert)
+
+
+
+
+      data1$MINT <- sapply(data1$MINT, `[`, 1)
+      data1 <- na.omit(data1)
+      data1[is.na(data1)] <- 0
+      data1$Alle <- lapply(data1$Alle, function(x) if (is.null(x)) 0 else x)
+
+
+
+      data1$Alle <- sapply(
+        data1$Alle,
+        function(x) if (is.null(x)) 0 else x
+      )
+
+      data1$MINT <- sapply(
+        data1$MINT,
+        function(x) if (is.null(x)) 0 else x
+      )
+
+      data1$`Informatik & Kommunikationstechnologie` <- sapply(
+        data1$`Informatik & Kommunikationstechnologie`,
+        function(x) if (is.null(x)) 0 else x
+      )
+      data1$`Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe` <- sapply(
+        data1$`Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe`,
+        function(x) if (is.null(x)) 0 else x
+      )
+      data1$`Naturwissenschaften, Mathematik und Statistik` <- sapply(
+        data1$`Naturwissenschaften, Mathematik und Statistik`,
+        function(x) if (is.null(x)) 0 else x
+      )
+
+
+
+
+
+      data1 <- data1 %>%
         dplyr::mutate(MINT = (rowSums(dplyr::select(., "Informatik & Kommunikationstechnologie",
                                                     "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
                                                     "Naturwissenschaften, Mathematik und Statistik"), na.rm = T))/3)%>%
@@ -2892,9 +2978,7 @@ plot_international_map_arb_gender <- function(r) {
       if(inpp == "Anfänger*innen Ausbildung (ISCED 45)"){
 
         data_map <- data1 %>%
-          dplyr::filter(anforderung == "Ausbildung (ISCED 45)" &
-                          variable == "Frauen-/Männeranteil Ausbildungs-/Studiumsanfänger*innen nach Fachbereichen" &
-                          fachbereich == inpf)%>%
+          dplyr::filter(anforderung == "Ausbildung (ISCED 45)" & fachbereich == inpf)%>%
           dplyr::inner_join(countries_names, by = "land") %>%
           dplyr::mutate(alpha2 = toupper(alpha2))
 
@@ -2970,7 +3054,7 @@ plot_international_map_arb_gender <- function(r) {
     else {
 
       # ui input für Betrachtungsweise filtern
-      inpbe <- r$map_betr_oecd_arb_gender
+   ####   # inpbe <- r$map_betr_oecd_arb_gender
 
 
 
@@ -2979,15 +3063,15 @@ plot_international_map_arb_gender <- function(r) {
       SELECT *
       FROM arbeitsmarkt_anzahl_azubis_oecd
       WHERE geschlecht IN ('Gesamt', 'Frauen')
-      AND indikator = 'berufsorientiert'
       AND jahr = {inpy}
+      AND Measure = 'Students enrolled'
       AND fach IN ('MINT', 'Informatik & Kommunikationstechnologie','Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe','Naturwissenschaften, Mathematik und Statistik','Alle')
                                ", .con = con)
 
       data_fva <- DBI::dbGetQuery(con, df_query)
 
 
-      data_fva <- data_fva %>%
+      data_fva1 <- data_fva %>%
         tidyr::pivot_wider(values_from = wert, names_from = geschlecht)%>%
         # Errechnen der relativen Häufigkeit
         dplyr::mutate(wert= round(Frauen/Gesamt *100,1))%>%
@@ -3005,13 +3089,13 @@ plot_international_map_arb_gender <- function(r) {
       SELECT *
       FROM arbeitsmarkt_anzahl_azubis_oecd
       WHERE geschlecht = 'Frauen'
-      AND indikator = 'berufsorientiert'
       AND jahr = {inpy}
-            AND fach IN ('MINT', 'Informatik & Kommunikationstechnologie','Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe','Naturwissenschaften, Mathematik und Statistik','Alle')
+      AND fach IN ('MINT', 'Informatik & Kommunikationstechnologie','Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe','Naturwissenschaften, Mathematik und Statistik','Alle')
+      AND Measure = 'Students enrolled'
                                ", .con = con)
-
+      #
       data_fvf1 <- DBI::dbGetQuery(con, df_query)
-
+      #
       data_fvf1 <- data_fvf1 %>%
         tidyr::pivot_wider(values_from = wert, names_from = fach)%>%
         # Relative Häufigkeit errechenn
@@ -3027,15 +3111,15 @@ plot_international_map_arb_gender <- function(r) {
                             names_to = "fach") %>%
         # Wert für hover vorbereiten
         dplyr::mutate(display_rel= prettyNum(.$wert, big.mark = ".", decimal.mark = ","))
-
-
+      #
+      #
       df_query <- glue::glue_sql("
       SELECT *
       FROM arbeitsmarkt_anzahl_azubis_oecd
       WHERE geschlecht = 'Frauen'
-      AND indikator = 'berufsorientiert'
       AND jahr = {inpy}
             AND fach IN ('MINT', 'Informatik & Kommunikationstechnologie','Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe','Naturwissenschaften, Mathematik und Statistik','Alle')
+      AND Measure = 'Students enrolled'
                                ", .con = con)
 
       data_fvf2 <- DBI::dbGetQuery(con, df_query)
@@ -3062,70 +3146,92 @@ plot_international_map_arb_gender <- function(r) {
         dplyr::mutate(alpha2 = toupper(alpha2))
 
 
-      # Für die erste Betrachtungsweise
-      if (inpbe == "Anteil von Frauen an Allen"){
 
-        # Daten zuweisen
-        data1 <- data_fva
 
-        # Titel vorbereiten
-        title_oecd_2_1 <- if(inpp == "Auszubildende (ISCED 45)"){
-          paste0("weiblichen Auszubildenden (ISCED 45) an allen Auszubildenden in ", inpf)
-        } else if(inpp == "In Meisterlehre (< 880 Std. Vorbereitung, ISCED 55)"){
-          paste0("weiblichen Meisterlehrlingen (< 880 Std. Vorbereitung, ISCED 55) an allen Meisterlehrlingen in ", inpf)
-        } else if(inpp == "Auszubildende in Erstausbildung (ISCED 35)"){
-          paste0("weiblichen Auszubildenden in Erstausbildung (ISCED 35) an allen Auszubildenden in Erstausbildung in ", inpf)
-        }else if (inpp == "In Meister-/Technikerlehre (> 880 Std. Vorbereitung, ISCED 65)"){
-          paste0("weiblichen Meister-/Technikerlehrlingen (> 880 Std. Vorbereitung, ISCED 65) an allen Meister-/Technikerlehrlingen in ", inpf)
-        }
-
-      } # Falls zwite Betrachtungsweise gewählt wird
-      else if(inpbe == "Anteil an Frauen von Frauen"){
+      # # Für die erste Betrachtungsweise
+      # if (inpbe == "Anteil von Frauen an Allen"){
+      #
+      #   # Daten zuweisen
+      #   data1 <- data_fva
+      #
+      #   # Titel vorbereiten
+      #   title_oecd_2_1 <- if(inpp == "Auszubildende (ISCED 45)"){
+      #     paste0("weiblichen Auszubildenden (ISCED 45) an allen Auszubildenden in ", inpf)
+      #   } else if(inpp == "In Meisterlehre (< 880 Std. Vorbereitung, ISCED 55)"){
+      #     paste0("weiblichen Meisterlehrlingen (< 880 Std. Vorbereitung, ISCED 55) an allen Meisterlehrlingen in ", inpf)
+      #   } else if(inpp == "Auszubildende in Erstausbildung (ISCED 35)"){
+      #     paste0("weiblichen Auszubildenden in Erstausbildung (ISCED 35) an allen Auszubildenden in Erstausbildung in ", inpf)
+      #   }else if (inpp == "In Meister-/Technikerlehre (> 880 Std. Vorbereitung, ISCED 65)"){
+      #     paste0("weiblichen Meister-/Technikerlehrlingen (> 880 Std. Vorbereitung, ISCED 65) an allen Meister-/Technikerlehrlingen in ", inpf)
+      #   }
+      #
+      # } # Falls zwite Betrachtungsweise gewählt wird
+      # else if(inpbe == "Anteil an Frauen von Frauen"){
 
 
         # Daten zuweisen
         data1 <- data_fvf3
 
+        title_oecd_2_1 <- paste0("Auszubildenden (ISCED 45) in ", inpf, " an allen weiblichen Auszubildenden")
+
         # Titel vorbereiten
-        title_oecd_2_1 <- if(inpp == "Auszubildende (ISCED 45)"){
-          paste0("Auszubildenden (ISCED 45) in ", inpf, " an allen weiblichen Auszubildenden")
-        } else if(inpp == "In Meisterlehre (< 880 Std. Vorbereitung, ISCED 55)"){
-          paste0("Meisterlehrlingen (< 880 Std. Vorbereitung, ISCED 55) in ", inpf, " an allen weiblichen Meisterlehrlingen")
-        } else if(inpp == "Auszubildende in Erstausbildung (ISCED 35)"){
-          paste0("Auszubildenden in Erstausbildung (ISCED 35) in ", inpf, " an allen weiblichen Auszubildenden in Erstausbildung")
-        }else if (inpp == "In Meister-/Technikerlehre (> 880 Std. Vorbereitung, ISCED 65)"){
-          paste0("Meister-/Technikerlehrlingen (> 880 Std. Vorbereitung, ISCED 65) in ",inpf, " allen weiblichen Meister-/Technikerlehrlingen" )
-        }
+        # title_oecd_2_1 <- if(inpp == "Auszubildende (ISCED 45)"){
+        #   paste0("Auszubildenden (ISCED 45) in ", inpf, " an allen weiblichen Auszubildenden")
+        # } else if(inpp == "In Meisterlehre (< 880 Std. Vorbereitung, ISCED 55)"){
+        #   paste0("Meisterlehrlingen (< 880 Std. Vorbereitung, ISCED 55) in ", inpf, " an allen weiblichen Meisterlehrlingen")
+        # } else if(inpp == "Auszubildende in Erstausbildung (ISCED 35)"){
+        #   paste0("Auszubildenden in Erstausbildung (ISCED 35) in ", inpf, " an allen weiblichen Auszubildenden in Erstausbildung")
+        # }else if (inpp == "In Meister-/Technikerlehre (> 880 Std. Vorbereitung, ISCED 65)"){
+        #   paste0("Meister-/Technikerlehrlingen (> 880 Std. Vorbereitung, ISCED 65) in ",inpf, " allen weiblichen Meister-/Technikerlehrlingen" )
+        # }
       }
 
 
       # Für spezifischere Indikator filtern
-      if (inpp == "Auszubildende (ISCED 45)"){
+      if (inpp == "Ausbildung (ISCED 45)"){
 
         data_map <- data1 %>%
           dplyr::filter(anforderung=="Ausbildung (ISCED 45)"&
                           fach == inpf)
 
 
-      } else if(inpp == "Auszubildende in Erstausbildung (ISCED 35)"){
+      }
+      if(inpp == "kurzes tertiäres Bildungsprogramm (ISCED 5)"){
 
         data_map <- data1 %>%
-          dplyr::filter(anforderung=="Erstausbildung (ISCED 35)"&
-                          fach == inpf)
-
-      } else if(inpp == "In Meisterlehre (< 880 Std. Vorbereitung, ISCED 55)") {
-
-        data_map <- data1 %>%
-          dplyr::filter(anforderung=="kurzes tertiäres Bildungsprogramm (berufsorientiert)"&
-                          fach == inpf)
-
-      } else if(inpp == "In Meister-/Technikerlehre (> 880 Std. Vorbereitung, ISCED 65)"){
-
-        data_map <- data1 %>%
-          dplyr::filter(anforderung== "Bachelor oder vergleichbar (berufsorientiert)"&
+          dplyr::filter(anforderung=="kurzes tertiäres Bildungsprogramm (ISCED 5)"&
                           fach == inpf)
 
       }
+      if(inpp == "Bachelor oder vergleichbar (ISCED 6)") {
+
+        data_map <- data1 %>%
+          dplyr::filter(anforderung=="Bachelor oder vergleichbar (ISCED 6)"&
+                          fach == inpf)
+
+      }
+      if(inpp == "Master oder vergleichbar (ISCED 7)"){
+
+        data_map <- data1 %>%
+          dplyr::filter(anforderung== "Master oder vergleichbar (ISCED 7)"&
+                          fach == inpf)
+
+      }
+      if(inpp == "tertiäre Bildung (gesamt)"){
+
+        data_map <- data1 %>%
+          dplyr::filter(anforderung== "tertiäre Bildung (gesamt)"&
+                          fach == inpf)
+
+      }
+      if(inpp == "Promotion (ISCED 8)"){
+
+        data_map <- data1 %>%
+          dplyr::filter(anforderung== "Promotion (ISCED 8)"&
+                          fach == inpf)
+
+      }
+
 
 
         # plot
@@ -3145,7 +3251,7 @@ plot_international_map_arb_gender <- function(r) {
 
 
 
-  }
+
 
 
 
@@ -3155,7 +3261,8 @@ plot_international_map_arb_gender <- function(r) {
 plot_international_top10_mint_arb <- function(r) {
 
   # ui input für Region laden
-  map_l <- r$map_l_top10_mint_arb
+ ### map_l <- r$map_l_top10_mint_arb
+  map_l <- "EU"
 
   # falls die Region EU ist:
   if(map_l== "EU"){
@@ -3165,7 +3272,9 @@ plot_international_top10_mint_arb <- function(r) {
     inpp <- r$map_pers_eu_top10_mint_arb
 
     # Kartenauschnitt für hc
-    map_selection <- "custom/europe"
+
+    #map_selection <- readRDS("data/map_selection_europa.rds")
+    map_selection <- map_selection_europe
 
     df_query <- glue::glue_sql("
     SELECT *
@@ -3173,14 +3282,14 @@ plot_international_top10_mint_arb <- function(r) {
     WHERE geschlecht = 'Gesamt'
     AND jahr = {inpy}
     AND indikator = {inpp}
-    AND variable = 'Anteil an arbeitender Bevölkerung'
+    AND variable = 'Anteil an Gesamtbevölkerung'
                                ", .con = con)
 
     data1 <- DBI::dbGetQuery(con, df_query)
 
     data1 <- data1 %>%
       tidyr::pivot_wider(names_from = variable, values_from = wert)%>%
-      dplyr::rename(wert="Anteil an arbeitender Bevölkerung")%>%
+      dplyr::rename(wert="Anteil an Gesamtbevölkerung")%>%
       dplyr::mutate(display_rel=prettyNum(.$wert, big.mark = ".", decimal.mark = ","))
 
 
@@ -3229,7 +3338,7 @@ title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von ", inpp, "n 
   else if (map_l== "OECD"){
 
     # Kartenausschnitt
-    map_selection <- "custom/world"
+    map_selection <- map_selection_international
 
     # Für OECD spezifischen Indikator laden
     inpp <- r$map_pers_oecd_top10_mint_arb
@@ -3270,8 +3379,7 @@ title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von ", inpp, "n 
       if(inpp == "Anfänger*innen Ausbildung (ISCED 45)"){
 
         data_fn <- data1 %>%
-          dplyr::filter(anforderung == "Ausbildung (ISCED 45)" &
-                          variable == "Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern" &
+          dplyr::filter(anforderung == "Ausbildung (ISCED 45)"  &
                           fachbereich == inpf)%>%
           dplyr::inner_join(countries_names, by = "land") %>%
           dplyr::mutate(alpha2 = toupper(alpha2))
@@ -3280,9 +3388,7 @@ title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von ", inpp, "n 
       } else if (inpp == "Anfänger*innen Erstausbildung (ISCED 35)"){
 
         data_fn <- data1 %>%
-          dplyr::filter(anforderung == "Erstausbildung (ISCED 35)" &
-                          variable == "Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern"&
-                          fachbereich == inpf)%>%
+          dplyr::filter(anforderung == "Erstausbildung (ISCED 35)" & fachbereich == inpf)%>%
           dplyr::inner_join(countries_names, by = "land") %>%
           dplyr::mutate(alpha2 = toupper(alpha2))
 
@@ -3290,7 +3396,6 @@ title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von ", inpp, "n 
 
         data_fn <- data1 %>%
           dplyr::filter(anforderung == "Ausbildung (ISCED 45)" &
-                          variable == "Anteil Absolvent*innen nach Fach an allen Fächern"&
                           fachbereich == inpf)%>%
           dplyr::inner_join(countries_names, by = "land") %>%
           dplyr::mutate(alpha2 = toupper(alpha2))
@@ -3299,12 +3404,12 @@ title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von ", inpp, "n 
 
         data_fn <- data1 %>%
           dplyr::filter(anforderung == "Erstausbildung (ISCED 35)" &
-                          variable == "Anteil Absolvent*innen nach Fach an allen Fächern"&
                           fachbereich == inpf)%>%
           dplyr::inner_join(countries_names, by = "land") %>%
           dplyr::mutate(alpha2 = toupper(alpha2))
 
       }
+
 
     # Titel vorbereiten
 
@@ -3349,8 +3454,18 @@ title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von ", inpp, "n 
       inpy <- r$map_y_oecd2_top10_mint_arb
       inpf <- r$map_f_oecd2_top10_mint_arb
 
+
+
+      if (map_l == "Europa") {
+        plotopshov <- "Anteil: {point.display_rel}% <br> Anzahl: {point.display_total}"
+      } else if (map_l == "OECD") {
+        plotopshov <- "{point.y:.1f}"
+      } else {
+        plotopshov <- "{point.y:.1f} %"
+      }
+
       # Hover vorbereiten
-      plotopshov <- "Anteil: {point.display_rel}% <br> Anzahl: {point.display_total}"
+
 
 
 
@@ -3364,6 +3479,7 @@ title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von ", inpp, "n 
                                ", .con = con)
 
       data1 <- DBI::dbGetQuery(con, df_query)
+
 
 
       data1 <- data1 %>%
@@ -3486,6 +3602,11 @@ title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von ", inpp, "n 
   # Create top 10 plot
     if (avg_line == "Ja"){
 
+
+
+
+      if(map_l == "Europa"){
+
       data_avg <- round(mean(data_fn$wert, na.rm = T),1)
       #dies ist schon als funktion automatisiert, too complex
       plot_top <- highcharter::hchart(
@@ -3596,6 +3717,236 @@ title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von ", inpp, "n 
 
 
      out <- list(plot_top, plot_bottom)
+
+      }
+      else if (map_l == "OECD") {
+
+        data_avg <- round(mean(data_fn$wert, na.rm = T),1)
+        #dies ist schon als funktion automatisiert, too complex
+        plot_top <- highcharter::hchart(
+          data_fn %>% dplyr::arrange(desc(wert)) %>% dplyr::slice(1:10),
+          'bar',
+          highcharter::hcaes(y = wert, x = land))%>%
+          highcharter::hc_plotOptions(
+            series = list(
+              borderWidth = 0,
+              dataLabels = list(enabled = TRUE, format = "{point.display_rel}",
+                                style = list(textOutline = "none"))
+            )) %>%
+          highcharter::hc_tooltip(pointFormat = plotopshov )%>%
+          highcharter::hc_yAxis(plotLines = list(
+            list(
+              value = data_avg,
+              color = "#154194",
+              width = 3,
+              zIndex = 4
+            )
+          ),title = list(text = ""),
+          labels = list(format = "{value}"),
+          min = 0,
+          max = max(data_fn$wert, na.rm = T)*1.2)%>%
+          highcharter::hc_xAxis(title = list(text = " ")) %>%
+          highcharter::hc_colors(c("#B16FAB")) %>%
+          highcharter::hc_title(text = title_top,
+                                margin = 10,
+                                align = "center",
+                                style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")
+          ) %>%
+          highcharter::hc_chart(
+            style = list(fontFamily = "Calibri Regular", fontSize = "14px")
+          ) %>%
+          highcharter::hc_caption(text = "Quelle der Daten: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.",
+                                  style = list(fontSize = "11px", color = "gray")) %>%
+          highcharter::hc_legend(enabled = TRUE, reversed = TRUE)
+
+        titel <- title_bot
+
+        #dies ist schon als funktion automatisiert, too complex
+
+        plot_bottom <- highcharter::hchart(
+          data_fn %>% dplyr::arrange(desc(wert)) %>% dplyr::slice_tail(n = 10),
+          'bar',
+          highcharter::hcaes(y = wert, x = land))%>%
+          highcharter::hc_plotOptions(
+            series = list(
+              borderWidth = 0,
+              dataLabels = list(enabled = TRUE, format = "{point.display_rel}",
+                                style = list(textOutline = "none"))
+            )) %>%
+          highcharter::hc_tooltip(pointFormat = plotopshov)%>%
+          highcharter::hc_yAxis(
+            plotLines = list(
+              list(
+                value = data_avg,
+                color = "#154194",
+                width = 3,
+                zIndex = 4
+              )
+            ),title = list(text = ""),
+            labels = list(format = "{value}"),
+            min = 0,
+            max = max(data_fn$wert, na.rm = T)*1.2)%>%
+          highcharter::hc_xAxis(title = list(text = " ")) %>%
+          highcharter::hc_colors(c("#B16FAB")) %>%
+          highcharter::hc_title(text =  title_bot,
+                                margin = 10,
+                                align = "center",
+                                style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")
+          ) %>%
+          highcharter::hc_chart(
+            style = list(fontFamily = "Calibri Regular", fontSize = "14px")
+          ) %>%
+          highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+          highcharter::hc_caption(text = "Quelle der Daten: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.",
+                                  style = list(fontSize = "11px", color = "gray")) %>%
+          highcharter::hc_exporting(enabled = TRUE,
+                                    buttons = list(
+                                      contextButton = list(
+                                        menuItems = list("downloadPNG", "downloadCSV",
+                                                         list(
+                                                           text = "Daten für GPT",
+                                                           onclick = htmlwidgets::JS(sprintf(
+                                                             "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle der Daten: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.';
+
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel),gsub("'", "\\\\'", titel)))))
+                                      )
+                                    )
+          )
+
+
+
+        out <- list(plot_top, plot_bottom)
+
+
+
+      } else {
+        data_avg <- round(mean(data_fn$wert, na.rm = T),1)
+        #dies ist schon als funktion automatisiert, too complex
+        plot_top <- highcharter::hchart(
+          data_fn %>% dplyr::arrange(desc(wert)) %>% dplyr::slice(1:10),
+          'bar',
+          highcharter::hcaes(y = wert, x = land))%>%
+          highcharter::hc_plotOptions(
+            series = list(
+              borderWidth = 0,
+              dataLabels = list(enabled = TRUE, format = "{point.display_rel} %",
+                                style = list(textOutline = "none"))
+            )) %>%
+          highcharter::hc_tooltip(pointFormat = plotopshov )%>%
+          highcharter::hc_yAxis(plotLines = list(
+            list(
+              value = data_avg,
+              color = "#154194",
+              width = 3,
+              zIndex = 4
+            )
+          ),title = list(text = ""),
+          labels = list(format = "{value}%"),
+          min = 0,
+          max = max(data_fn$wert, na.rm = T)*1.2)%>%
+          highcharter::hc_xAxis(title = list(text = " ")) %>%
+          highcharter::hc_colors(c("#B16FAB")) %>%
+          highcharter::hc_title(text = title_top,
+                                margin = 10,
+                                align = "center",
+                                style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")
+          ) %>%
+          highcharter::hc_chart(
+            style = list(fontFamily = "Calibri Regular", fontSize = "14px")
+          ) %>%
+          highcharter::hc_caption(text = "Quelle der Daten: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.",
+                                  style = list(fontSize = "11px", color = "gray")) %>%
+          highcharter::hc_legend(enabled = TRUE, reversed = TRUE)
+
+        titel <- title_bot
+
+        #dies ist schon als funktion automatisiert, too complex
+
+        plot_bottom <- highcharter::hchart(
+          data_fn %>% dplyr::arrange(desc(wert)) %>% dplyr::slice_tail(n = 10),
+          'bar',
+          highcharter::hcaes(y = wert, x = land))%>%
+          highcharter::hc_plotOptions(
+            series = list(
+              borderWidth = 0,
+              dataLabels = list(enabled = TRUE, format = "{point.display_rel} %",
+                                style = list(textOutline = "none"))
+            )) %>%
+          highcharter::hc_tooltip(pointFormat = plotopshov)%>%
+          highcharter::hc_yAxis(
+            plotLines = list(
+              list(
+                value = data_avg,
+                color = "#154194",
+                width = 3,
+                zIndex = 4
+              )
+            ),title = list(text = ""),
+            labels = list(format = "{value}%"),
+            min = 0,
+            max = max(data_fn$wert, na.rm = T)*1.2)%>%
+          highcharter::hc_xAxis(title = list(text = " ")) %>%
+          highcharter::hc_colors(c("#B16FAB")) %>%
+          highcharter::hc_title(text =  title_bot,
+                                margin = 10,
+                                align = "center",
+                                style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")
+          ) %>%
+          highcharter::hc_chart(
+            style = list(fontFamily = "Calibri Regular", fontSize = "14px")
+          ) %>%
+          highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+          highcharter::hc_caption(text = "Quelle der Daten: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.",
+                                  style = list(fontSize = "11px", color = "gray")) %>%
+          highcharter::hc_exporting(enabled = TRUE,
+                                    buttons = list(
+                                      contextButton = list(
+                                        menuItems = list("downloadPNG", "downloadCSV",
+                                                         list(
+                                                           text = "Daten für GPT",
+                                                           onclick = htmlwidgets::JS(sprintf(
+                                                             "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle der Daten: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.';
+
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel),gsub("'", "\\\\'", titel)))))
+                                      )
+                                    )
+          )
+
+
+
+        out <- list(plot_top, plot_bottom)
+
+      }
 
     } else if (avg_line == "Nein") {
 
@@ -3750,6 +4101,7 @@ plot_international_top10_mint_arb_gender <- function(r) {
   # Input region laden
   inpl <- r$map_l_top10_mint_arb_gender
 
+  inpl <- "EU"
 
   # EU
   if(inpl== "EU"){
@@ -3762,7 +4114,8 @@ plot_international_top10_mint_arb_gender <- function(r) {
 
 
     # Kartenausschnitt
-    map_selection <- "custom/europe"
+    #map_selection <- readRDS("data/map_selection_europa.rds")
+    map_selection <- map_selection_europe
 
 
     df_query <- glue::glue_sql("
@@ -3771,7 +4124,7 @@ plot_international_top10_mint_arb_gender <- function(r) {
     WHERE geschlecht IN ('Gesamt', 'Frauen')
     AND jahr = {inpy}
     AND indikator = {inpp}
-    AND variable = 'Anteil an arbeitender Bevölkerung'
+    AND variable = 'Anteil an Gesamtbevölkerung'
                                ", .con = con)
 
     data1 <- DBI::dbGetQuery(con, df_query)
@@ -3833,7 +4186,7 @@ plot_international_top10_mint_arb_gender <- function(r) {
 
 
     # Kartenausschnitt
-    map_selection <- "custom/world"
+    map_selection <- map_selection_international
 
 
     # ui inputs
@@ -3861,20 +4214,94 @@ plot_international_top10_mint_arb_gender <- function(r) {
 
       data1 <- DBI::dbGetQuery(con, df_query)
 
+      data1 <- dplyr::distinct(data1)
 
+      data1 <- unique(data1)
 
       data1 <- data1 %>%
-          tidyr::pivot_wider(names_from = fachbereich, values_from = wert)%>%
-        # Durschnittliche relative Häufigkeit aller MINT-Einzelfächer= realtive Häufigkeit MINT
-        dplyr::mutate(MINT = (rowSums(dplyr::select(., "Informatik & Kommunikationstechnologie",
-                                             "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
-                                             "Naturwissenschaften, Mathematik und Statistik"), na.rm = T))/3)%>%
-        tidyr::pivot_longer(c("MINT",
-                               "Informatik & Kommunikationstechnologie",
-                               "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
-                               "Naturwissenschaften, Mathematik und Statistik",
-                               "Alle"), values_to = "wert", names_to = "fachbereich")%>%
-        dplyr::filter(!is.na(.$wert) & wert!=0)
+          tidyr::pivot_wider(names_from = fachbereich, values_from = wert)
+
+
+      data1$MINT <- sapply(data1$MINT, function(x) x[1])
+
+      mint_cols <- c(
+        "Informatik & Kommunikationstechnologie",
+        "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
+        "Naturwissenschaften, Mathematik und Statistik",
+        "Alle"
+      )
+
+      data1 <- data1 %>%
+        dplyr::mutate(across(
+          dplyr::all_of(mint_cols),
+          ~ vapply(.x, function(v) {
+            if (is.null(v) || length(v) == 0) return(NA_real_)
+            val <- v[[1]]
+            suppressWarnings(as.numeric(readr::parse_number(as.character(val))))
+          }, numeric(1))
+        )) %>%
+        dplyr::mutate(MINT = rowSums(dplyr::pick(dplyr::all_of(mint_cols[1:3])), na.rm = TRUE) / 3)
+
+      data1 <- data1 %>%
+        tidyr::pivot_longer(
+          c("MINT",
+            "Informatik & Kommunikationstechnologie",
+            "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
+            "Naturwissenschaften, Mathematik und Statistik",
+            "Alle"),
+          values_to = "wert",
+          names_to = "fachbereich"
+        ) %>%
+        dplyr::filter(!is.na(wert) & wert != 0)
+
+
+
+
+      # data1 <- data1 %>%
+      #   dplyr::mutate(across(
+      #     c("Informatik & Kommunikationstechnologie",
+      #       "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
+      #       "Naturwissenschaften, Mathematik und Statistik"),
+      #     ~ sapply(.x, function(v) as.numeric(v[1]))
+      #   ))
+
+
+#
+#       mint_cols <- c(
+#         "Informatik & Kommunikationstechnologie",
+#         "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
+#         "Naturwissenschaften, Mathematik und Statistik"
+#       )
+#
+#       data1 <- data1 %>%
+#         dplyr::mutate(across(
+#           all_of(mint_cols),
+#           ~ if (is.list(.x)) {
+#             purrr::map_dbl(.x, ~ {
+#               if (is.null(.x) || length(.x) == 0) return(NA_real_)
+#               # nur den ersten Wert nehmen
+#               val <- .x[[1]]
+#               suppressWarnings(as.numeric(readr::parse_number(as.character(val))))
+#             })
+#           } else {
+#             suppressWarnings(as.numeric(readr::parse_number(as.character(.x))))
+#           }
+#         ))
+#
+#
+#
+#       data1 <- data1 %>%
+#       # Durschnittliche relative Häufigkeit aller MINT-Einzelfächer= realtive Häufigkeit MINT
+#         dplyr::mutate(MINT = (rowSums(dplyr::select(., "Informatik & Kommunikationstechnologie",
+#                                              "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
+#                                              "Naturwissenschaften, Mathematik und Statistik"), na.rm = T))/3)
+#       data1 <- data1 %>%
+#         tidyr::pivot_longer(c("MINT",
+#                                "Informatik & Kommunikationstechnologie",
+#                                "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
+#                                "Naturwissenschaften, Mathematik und Statistik",
+#                                "Alle"), values_to = "wert", names_to = "fachbereich")%>%
+#         dplyr::filter(!is.na(.$wert) & wert!=0)
 
       # Filtern nach spez. Indikatoren, geo mapping und wert für hover vorbereiten
       if(inpp == "Anfänger*innen Ausbildung (ISCED 45)"){
@@ -4179,6 +4606,8 @@ plot_international_top10_mint_arb_gender <- function(r) {
   # Kodition Durschnittslinie
   avg_line <- r$show_avg_top10_mint_arb_gender
 
+
+
   # Create top 10 plot
   if (avg_line == "Ja"){
 
@@ -4468,7 +4897,9 @@ plot_international_arbeitsmarkt_vergleiche <- function(r) {
   fach_m <- r$vergleich_f_int_arbeitsmarkt
 
   variable_set <- c("Anteil Absolvent*innen nach Fach an allen Fächern",
-                    "Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern")
+                    "Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern",
+                    "Anzahl der Absolvent:innen",
+                    "Anzahl der Neustudierenden")
 
 
   df_query <- glue::glue_sql("
@@ -4484,7 +4915,10 @@ plot_international_arbeitsmarkt_vergleiche <- function(r) {
 
                                ", .con = con)
 
+
   tmp_df <- DBI::dbGetQuery(con, df_query)
+
+  tmp_df <- unique(tmp_df)
 
 
 

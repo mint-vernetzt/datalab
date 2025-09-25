@@ -21,8 +21,8 @@ mod_studium_studienzahl_einstieg_gender_ui <- function(id){
     shinyWidgets::sliderTextInput(
       inputId = ns("gen_y"),
       label = NULL,
-      choices = 2013:2023,
-      selected = 2023
+      choices = 2013:2024,
+      selected = 2024
     ),
 
     conditionalPanel(condition = "input.ansicht_gen_mint == 'Einzelansicht - Kuchendiagramm'",
@@ -76,7 +76,7 @@ mod_studium_studienzahl_einstieg_gender_ui <- function(id){
           multiple = FALSE,
           selected = c("Deutschland")
         ),
-        p("Nicht-MINT als Vergleich anzeigen?", style = "color: #b16fab;"),
+        p("Nicht-MINT als Vergleich anzeigen?", style = "color: #154194;"),
         shinyWidgets::radioGroupButtons(
           inputId = ns("gen_gegenwert_pie"),
           choices = c("Ja", "Nein"),

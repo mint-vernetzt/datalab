@@ -35,8 +35,8 @@ mod_beruf_arbeitsmarkt_einstieg_gender_ui <- function(id){
     shinyWidgets::sliderTextInput(
       inputId = ns("date_arbeitsmarkt_einstieg_gender"),
       label = NULL,
-      choices = 2013:2023,
-      selected = 2023
+      choices = 2013:2024,
+      selected = 2024
     ),
     p("Region:"),
     shinyWidgets::pickerInput(
@@ -96,7 +96,7 @@ mod_beruf_arbeitsmarkt_einstieg_gender_ui <- function(id){
                          "max-options" = 2,
                          "max-options-text" = "<span style='color: red;'>Maximal 2 Indikatoren auswählen</span>")
                      ),
-                     p("Nicht-MINT als Vergleich anzeigen?", style = "color: #b16fab;"),
+                     p("Nicht-MINT als Vergleich anzeigen?", style = "color: #154194;"),
                      shinyWidgets::radioGroupButtons(
                        inputId = ns("arbeitsmarkt_gender_gegenwert_pie"),
                        choices = c("Ja", "Nein"),

@@ -16,7 +16,7 @@ mod_quellen_ui <- function(id){
       div(class = "clean-box",
           column(
             width = 12,
-            img(src='www/Banner_Hinweise.jpg',
+            img(src='www/Banner_Hinweise.avif',
                 class = "img-responsive",
                 alt = "Banner Quellen",
                 style="display: block; margin-left: auto; margin-right: auto; margin-bottom: 20px;"
@@ -25,8 +25,8 @@ mod_quellen_ui <- function(id){
     fluidRow(
       shinydashboard::box(
         width = 9,
-        title = "Definition MINT",
-                p(style = "text-align: justify; font-size = 16px",
+        h2("Definition MINT"),
+                p(style = "text-align: left; font-size = 16px",
           "MINT ist eine Abkürzung aus den Anfangsbuchstaben bestimmter Schul- und Studienfächer bzw. Berufe.
           Sie steht als Sammelbegriff für die Felder Mathematik, Informatik, Naturwissenschaften und Technik.",
           br(),br(),
@@ -112,8 +112,8 @@ mod_quellen_ui <- function(id){
     fluidRow(
       shinydashboard::box(
         width = 9,
-        title = "Datenpool und Quellen",
-        p(style = "text-align: justify; font-size = 16px",
+        h2("Datenpool und Quellen"),
+        p(style = "text-align: left; font-size = 16px",
           "Ziel dieses Projektes ist es, die vorhandenen Statistiken über MINT in Deutschland in einem Datenpools zu bündeln
           und über das MINT-DataLab zur weiteren Nutzung zur Verfügung zu stellen. Die Basis unseres Datenpool sind die amtlichen Statistiken aus Deutschland,
           also die Statistiken der Bundesagentur für Arbeit, des Statistischen Bundesamtes (Destatis) und der Kultusministerkonferenz (KMK).
@@ -128,8 +128,8 @@ mod_quellen_ui <- function(id){
     fluidRow(
       shinydashboard::box(
         width = 9,
-        title = "Zitationshinweis",
-        p(style = "text-align: justify; font-size = 16px",
+        h2("Zitationshinweis"),
+        p(style = "text-align: left; font-size = 16px",
           "Inhalte des MINT-DataLab können mit folgender Quellenangabe weitergenutzt werden:
           \"MINT-DataLab von MINTvernetzt. https://www.mint-vernetzt.de/mint-datalab/\" (mit Abrufdatum).
           Unter den interaktiven Grafiken sind jeweils eigene Quellenangaben
@@ -140,8 +140,8 @@ mod_quellen_ui <- function(id){
     fluidRow(
       shinydashboard::box(
         width = 9,
-        title = "Nutzungsbedingungen der Daten und Quellenangabe",
-        p(style = "text-align: justify; font-size = 16px",
+        h2("Nutzungsbedingungen der Daten und Quellenangabe"),
+        p(style = "text-align: left; font-size = 16px",
           "Die Nutzungsbedingungen der Datengeber:innen erlauben die Verwendung der Daten und die grafische Aufbereitung
           sowie die auszugsweise Weitergabe. Eine vollständige Weitergabe der überlassenen Datensätze ist nicht gestattet.
           Bei Interesse an den kompletten Datensätzen müssen die Datengeber:innen direkt kontaktiert werden."

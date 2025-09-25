@@ -16,7 +16,7 @@ mod_international_start_ui <- function(id){
       div(class = "clean-box",
           column(
             width = 12,
-            img(src='www/Banner_International.jpg',
+            img(src='www/Banner_International.avif',
                 class = "img-responsive",
                 #height = "150px", width = "150px",
                 alt = "Banner Fokus: MINT international",
@@ -27,7 +27,7 @@ mod_international_start_ui <- function(id){
 
     fluidRow(
       shinydashboard::box(
-        title = "Auf dieser Seite",
+        h2("Auf dieser Seite"),
         width = 7,
         p(style = "text-align: left; font-size = 16px",
           "Auf dieser Fokus-Seite blicken wir über Deutschland hinaus. Hier können Sie in den Bereichen ''Schule'',
@@ -46,18 +46,18 @@ mod_international_start_ui <- function(id){
 
     fluidRow(
       shinydashboard::box(
-        title = "Themenübersicht",
+        h2("Themenübersicht"),
         width = 7,
         p(style = "text-align: left; font-size = 16px",tags$a(href="#schule_international",
-                                                              span(tags$b(span("MINT-Kompetenzen im internationalen Vergleich:")))),
+                                                              span(tags$b(span("→ MINT-Kompetenzen im internationalen Vergleich:")))),
           "Wie schneidet Deutschland im internationalen Vergleich in den MINT-Kompetenztests PISA und TIMSS ab?"
           ),
         p(style = "text-align: left; font-size = 16px",tags$a(href="#studium_international",
-                                                              span(tags$b(span("MINT-Studierende im internationalen Vergleich:")))),
+                                                              span(tags$b(span("→ MINT-Studierende im internationalen Vergleich:")))),
           "Hier können Sie den MINT-Anteil an deutschen Hochschulen international vergleichen."
           ),
         p(style = "text-align: left; font-size = 16px",tags$a(href="#beruf_international",
-                                                              span(tags$b(span("MINT-Beschäftigung im internationalen Vergleich:")))),
+                                                              span(tags$b(span("→ MINT-Beschäftigung im internationalen Vergleich:")))),
           "Hier können Sie den MINT-Anteil im deutschen Arbeitsmarkt international vergleichen."
         )
 
@@ -70,9 +70,9 @@ mod_international_start_ui <- function(id){
         p(style = "text-align: left; font-size = 16px",
           span(tags$b(span("Schüler:innen-Kompetenz-Daten: OECD, 2023, freier Download (PISA); IEA, 2024, freier Download (TIMSS)."))),
                "Die Ergebnisse der PISA-Erhebung 2025 werden Ende 2026 erwartet, die Ergebnisse von TIMSS 2027 Ende 2028."),
-        p( span(tags$b(span("Vergleichszahlen europaweit: Eurostat, 2023, freier Download.")))),
-        p(span(tags$b(span("Vergleichszahlen der OECD-Staaten: OECD, 2023, freier Download.")))),
-        p(span(tags$b(span("Vergleichszahlen weltweit: UNESCO, 2023, freier Download.")))),
+        p( span(tags$b(span("Vergleichszahlen europaweit: Eurostat, 2025, freier Download.")))),
+        p(span(tags$b(span("Vergleichszahlen der OECD-Staaten: OECD, 2025, freier Download.")))),
+        p(span(tags$b(span("Vergleichszahlen weltweit: UNESCO, 2025, freier Download.")))),
         p("Diese Themenseite wird demnächst überarbeitet, dabei werden die amtlichen
           Statistiken der internationalen Studierenden- und Beschäftigtenzahlen aktualisiert.")
 
@@ -83,7 +83,7 @@ mod_international_start_ui <- function(id){
     # Schule international ----
     fluidRow(id="schule_international",
              shinydashboard::box(
-               title = "MINT-Kompetenzen im internationalen Vergleich: Wie schneidet Deutschland im internationalen Vergleich in den MINT-Kompetenztests Pisa und TIMSS ab?",
+               h2("MINT-Kompetenzen im internationalen Vergleich: Wie schneidet Deutschland im internationalen Vergleich in den MINT-Kompetenztests Pisa und TIMSS ab?"),
                width = 12,
                column(
                  width = 8,
@@ -183,7 +183,7 @@ mod_international_start_ui <- function(id){
     fluidRow(id="studium_international",
              shinydashboard::box(
 
-               title = "MINT-Studierende im internationalen Vergleich: Hier können Sie den MINT-Anteil an deutschen Hochschulen international vergleichen.",
+               h2("MINT-Studierende im internationalen Vergleich: Hier können Sie den MINT-Anteil an deutschen Hochschulen international vergleichen."),
 
                width = 12,
                column(
@@ -305,7 +305,7 @@ mod_international_start_ui <- function(id){
 
     fluidRow(id="beruf_international",
              shinydashboard::box(
-               title = "MINT-Beschäftigung im internationalen Vergleich: Hier können Sie den MINT-Anteil im deutschen Arbeitsmarkt international vergleichen.",
+               h2("MINT-Beschäftigung im internationalen Vergleich: Hier können Sie den MINT-Anteil im deutschen Arbeitsmarkt international vergleichen."),
                width = 12,
                column(
                  width = 8,
@@ -352,7 +352,7 @@ mod_international_start_ui <- function(id){
                                                                    color = "#154194"),
 
                                       shinyBS::bsPopover(id = "h_beruf_international_2", title = "",
-                                                         content = paste0("Ausgebildete umfassen alle Personen mit einem tertiären Bildungsabschluss im Bereich MINT, inkl. Studienabschlüssen.", "<br><br>Aufgrund unterschiedlicher Definitionen von &quotMINT&quot zwischen den datengebenden Organisationen können die Zahlen voneinander abweichen. Näheres dazu unter &quotHinweise und Datenquellen&quot.", "<br><br>Da Eurostat den Begriff &quotBeschäftigte in MINT&quot sehr breit fasst (z. B. inkl. des Gesundheitswesens), betrachten wir hier nur die kleinere Gruppe an Naturwissenschaftler*innen und Ingenieur*innen.", "<br><br>In den OECD-Daten ist für die Zuordnung zu &quotMINT&quot ausschließlich eine Ausbildung oder ein Studium in MINT entscheidend. Der tatsächlich ausgeübte Beruf wird nicht betrachtet"),
+                                                         content = paste0("Ausgebildete umfassen alle Personen mit einem tertiären Bildungsabschluss im Bereich MINT, inkl. Studienabschlüssen.", "<br><br>Aufgrund unterschiedlicher Definitionen von &quotMINT&quot zwischen den datengebenden Organisationen können die Zahlen voneinander abweichen. Näheres dazu unter &quotHinweise und Datenquellen&quot.", "<br><br>Da Eurostat den Begriff &quotBeschäftigte in MINT&quot sehr breit fasst (z. B. inkl. des Gesundheitswesens), betrachten wir hier nur die kleinere Gruppe an Naturwissenschaftler:innen und Ingenieur:innen.", "<br><br>In den OECD-Daten ist für die Zuordnung zu &quotMINT&quot ausschließlich eine Ausbildung oder ein Studium in MINT entscheidend. Der tatsächlich ausgeübte Beruf wird nicht betrachtet"),
                                                          placement = "top",
                                                          trigger = "hover"),
                                       tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_beruf_international_2")
@@ -376,7 +376,7 @@ mod_international_start_ui <- function(id){
 
 
                                         shinyBS::bsPopover(id = "h_beruf_international_3", title = "",
-                                                           content = paste0("Ausgebildete umfassen alle Personen mit einem tertiären Bildungsabschluss im Bereich MINT, inkl. Studienabschlüssen.", "<br><br>Aufgrund unterschiedlicher Definitionen von &quotMINT&quot zwischen den datengebenden Organisationen können die Zahlen voneinander abweichen. Näheres dazu unter &quotHinweise und Datenquellen&quot.", "<br><br>Da Eurostat den Begriff &quotBeschäftigte in MINT&quot sehr breit fasst (z. B. inkl. des Gesundheitswesens), betrachten wir hier nur die kleinere Gruppe an Naturwissenschaftler*innen und Ingenieur*innen.", "<br><br>In den OECD-Daten ist für die Zuordnung zu &quotMINT&quot ausschließlich eine Ausbildung oder ein Studium in MINT entscheidend. Der tatsächlich ausgeübte Beruf wird nicht betrachtet"),
+                                                           content = paste0("Ausgebildete umfassen alle Personen mit einem tertiären Bildungsabschluss im Bereich MINT, inkl. Studienabschlüssen.", "<br><br>Aufgrund unterschiedlicher Definitionen von &quotMINT&quot zwischen den datengebenden Organisationen können die Zahlen voneinander abweichen. Näheres dazu unter &quotHinweise und Datenquellen&quot.", "<br><br>Da Eurostat den Begriff &quotBeschäftigte in MINT&quot sehr breit fasst (z. B. inkl. des Gesundheitswesens), betrachten wir hier nur die kleinere Gruppe an Naturwissenschaftler:innen und Ingenieur:innen.", "<br><br>In den OECD-Daten ist für die Zuordnung zu &quotMINT&quot ausschließlich eine Ausbildung oder ein Studium in MINT entscheidend. Der tatsächlich ausgeübte Beruf wird nicht betrachtet"),
                                                            placement = "top",
                                                            trigger = "hover"),
                                         tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_beruf_international_3")
@@ -398,7 +398,7 @@ mod_international_start_ui <- function(id){
 
 
                                         shinyBS::bsPopover(id = "h_beruf_international_4", title = "",
-                                                           content = paste0("Ausgebildete umfassen alle Personen mit einem tertiären Bildungsabschluss im Bereich MINT, inkl. Studienabschlüssen.", "<br><br>Aufgrund unterschiedlicher Definitionen von &quotMINT&quot zwischen den datengebenden Organisationen können die Zahlen voneinander abweichen. Näheres dazu unter &quotHinweise und Datenquellen&quot.", "<br><br>Da Eurostat den Begriff &quotBeschäftigte in MINT&quot sehr breit fasst (z. B. inkl. des Gesundheitswesens), betrachten wir hier nur die kleinere Gruppe an Naturwissenschaftler*innen und Ingenieur*innen.", "<br><br>In den OECD-Daten ist für die Zuordnung zu &quotMINT&quot ausschließlich eine Ausbildung oder ein Studium in MINT entscheidend. Der tatsächlich ausgeübte Beruf wird nicht betrachtet"),
+                                                           content = paste0("Ausgebildete umfassen alle Personen mit einem tertiären Bildungsabschluss im Bereich MINT, inkl. Studienabschlüssen.", "<br><br>Aufgrund unterschiedlicher Definitionen von &quotMINT&quot zwischen den datengebenden Organisationen können die Zahlen voneinander abweichen. Näheres dazu unter &quotHinweise und Datenquellen&quot.", "<br><br>Da Eurostat den Begriff &quotBeschäftigte in MINT&quot sehr breit fasst (z. B. inkl. des Gesundheitswesens), betrachten wir hier nur die kleinere Gruppe an Naturwissenschaftler:innen und Ingenieur:innen.", "<br><br>In den OECD-Daten ist für die Zuordnung zu &quotMINT&quot ausschließlich eine Ausbildung oder ein Studium in MINT entscheidend. Der tatsächlich ausgeübte Beruf wird nicht betrachtet"),
                                                            placement = "top",
                                                            trigger = "hover"),
                                         tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_beruf_international_4")
@@ -408,13 +408,13 @@ mod_international_start_ui <- function(id){
 
                                       shiny::sidebarPanel(
                                         width = 3,
-                                        #p("LOREM"),
+                                     ####   p("Was was hier nochmal der Titel? "),
                                         mod_international_arbeitsmarkt_vergleich_ui("international_arbeitsmarkt_vergleich_1"),
 
                                       ),
                                       shiny::mainPanel(
                                         width = 9,
-                                        shinycssloaders::withSpinner(htmlOutput(ns("plot_international_arbeitsmarkt_vergleiche_1")),
+                                        shinycssloaders::withSpinner(highcharter::highchartOutput("plot_international_arbeitsmarkt_vergleiche_1"),
                                                                      color = "#154194"),
 
                                         shinyBS::bsPopover(id = "h_beruf_international_ho", title = "",
@@ -874,34 +874,59 @@ mod_international_start_server <- function(id, r){
       }
     )
 
+
+    # output$plot_international_arbeitsmarkt_vergleiche_1 <- highcharter::renderHighchart({
+    #   highcharter::highchart() %>%
+    #     highcharter::hc_title(text = "Testplot läuft")
+    # })
+
     # tab 5
-    output$plot_international_arbeitsmarkt_vergleiche_1 <- renderUI({
+    output$plot_international_arbeitsmarkt_vergleiche_1 <- highcharter::renderHighchart({
+
       plot <- plot_international_arbeitsmarkt_vergleiche(r)
 
-      r$plot_international_arbeitsmarkt_vergleiche_1 <- plot
-      r$plot_international_arbeitsmarkt_vergleiche_1_title <- get_plot_title(
-        plot = r$plot_international_arbeitsmarkt_vergleiche_1
-      )
+      # r$plot_international_arbeitsmarkt_vergleiche_1 <- plot
+      # r$plot_international_arbeitsmarkt_vergleiche_1_title <- get_plot_title(
+      #   plot = r$plot_international_arbeitsmarkt_vergleiche_1
+      # )
 
       plot
     })
 
-    output$download_btn_plot_international_arbeitsmarkt_vergleiche_1 <- downloadHandler(
-      contentType = "image/png",
-      filename = function() {r$plot_international_arbeitsmarkt_vergleiche_1_title},
-      content = function(file) {
-        # creating the file with the screenshot and prepare it to download
-        add_caption_and_download(
-          hc = r$plot_international_arbeitsmarkt_vergleiche_1,
-          filename =  r$plot_international_arbeitsmarkt_vergleiche_1_title,
-          width = 700,
-          height = 400,
-          with_labels = FALSE)
 
-        file.copy(r$plot_international_arbeitsmarkt_vergleiche_1_title, file)
-        file.remove(r$plot_international_arbeitsmarkt_vergleiche_1_title)
-      }
-    )
+
+    # tab 5
+
+
+
+
+    # output$plot_international_arbeitsmarkt_vergleiche_1 <- renderUI({
+    #   plot <- plot_international_arbeitsmarkt_vergleiche(r)
+    #
+    #   r$plot_international_arbeitsmarkt_vergleiche_1 <- plot
+    #   r$plot_international_arbeitsmarkt_vergleiche_1_title <- get_plot_title(
+    #     plot = r$plot_international_arbeitsmarkt_vergleiche_1
+    #   )
+    #
+    #   plot
+    # })
+
+    # output$download_btn_plot_international_arbeitsmarkt_vergleiche_1 <- downloadHandler(
+    #   contentType = "image/png",
+    #   filename = function() {r$plot_international_arbeitsmarkt_vergleiche_1_title},
+    #   content = function(file) {
+    #     # creating the file with the screenshot and prepare it to download
+    #     add_caption_and_download(
+    #       hc = r$plot_international_arbeitsmarkt_vergleiche_1,
+    #       filename =  r$plot_international_arbeitsmarkt_vergleiche_1_title,
+    #       width = 700,
+    #       height = 400,
+    #       with_labels = FALSE)
+    #
+    #     file.copy(r$plot_international_arbeitsmarkt_vergleiche_1_title, file)
+    #     file.remove(r$plot_international_arbeitsmarkt_vergleiche_1_title)
+    #   }
+    # )
 
    # Box 4 - International Table ----
     #

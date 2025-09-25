@@ -29,7 +29,7 @@ mod_international_map_fem_ui <- function(id) {
                        inputId = ns("map_y_eu_f"),
                        label = NULL,
                        choices = international_ui_years(region = "EU"),
-                       selected = "2021"
+                       selected = "2023"
                      ),
 
                      p("Fachbereich:"),
@@ -57,7 +57,7 @@ mod_international_map_fem_ui <- function(id) {
                        inputId = ns("map_y_oecd_f"),
                        label = NULL,
                        choices = international_ui_years(region = "OECD"),
-                       selected = "2020"
+                       selected = "2023"
                      ),
 
                      p("Fachbereich:"),
@@ -66,9 +66,9 @@ mod_international_map_fem_ui <- function(id) {
                        choices = c("MINT",
                                    "---Informatik & Kommunikationstechnologie" = "Informatik & Kommunikationstechnologie",
                                    "---Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe" = "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
-                                   "---Naturwissenschaften, Mathematik und Statistik"= "Naturwissenschaften, Mathematik und Statistik"),
-                       selected = c("MINT"),
-                       multiple = FALSE
+                                   "---Naturwissenschaften, Mathematik und Statistik"= "Naturwissenschaften, Mathematik und Statistik")
+                       #selected = c("MINT"),
+                       #multiple = FALSE
                      ),
 
                      # p("Anforderungsniveau:"),
@@ -84,9 +84,9 @@ mod_international_map_fem_ui <- function(id) {
                      shinyWidgets::pickerInput(
                        inputId = ns("map_betr_oecd_f"),
                        choices = c("Frauenanteil in MINT" = "Anteil von Frauen an Allen",
-                                   "Anteil MINT-Studierende unter Frauen" = "Anteil an Frauen von Frauen"),
-                       selected = c("Frauenanteil in MINT"),
-                       multiple = FALSE
+                                   "Anteil MINT-Studierende unter Frauen" = "Anteil an Frauen von Frauen")
+                       #selected = c("Frauenanteil in MINT"),
+                       #multiple = FALSE
                      )
     ),
 

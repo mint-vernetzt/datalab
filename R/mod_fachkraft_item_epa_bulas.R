@@ -16,7 +16,7 @@ mod_fachkraft_item_epa_bulas_ui <- function(id){
       inputId = ns("y_fachkraft_epa_bulas"),
       label = NULL,
       choices = fachkraft_ui_years(reg="BULA"),
-      selected = "2023"
+      selected = "2024"
     ),
 
     conditionalPanel(
@@ -72,11 +72,11 @@ mod_fachkraft_item_epa_bulas_ui <- function(id){
     ),
 
     conditionalPanel(
-      condition = "input.y_fachkraft_epa_bulas == '2023'",
+      condition = "input.y_fachkraft_epa_bulas == '2023' | input.y_fachkraft_epa_bulas == '2024' ",
       ns = ns,
       p("Bundesland:"),
       shinyWidgets::pickerInput(
-        inputId = ns("regio_fachkraft_epa_bulas23"),
+        inputId = ns("regio_fachkraft_epa_bulas23_24"),
         choices = c("Baden-Württemberg",
                     "Bayern",
                     "Brandenburg / Berlin",
@@ -146,8 +146,8 @@ mod_fachkraft_item_epa_bulas_server <- function(id, r){
       r$regio_fachkraft_epa_bulas22 <- input$regio_fachkraft_epa_bulas22
     })
 
-    observeEvent(input$regio_fachkraft_epa_bulas23, {
-      r$regio_fachkraft_epa_bulas23 <- input$regio_fachkraft_epa_bulas23
+    observeEvent(input$regio_fachkraft_epa_bulas23_24, {
+      r$regio_fachkraft_epa_bulas23_24 <- input$regio_fachkraft_epa_bulas23_24
     })
 
     observeEvent(input$f_fachkraft_epa_bulas, {

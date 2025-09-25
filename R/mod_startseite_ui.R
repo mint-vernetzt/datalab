@@ -18,7 +18,7 @@ mod_startseite_start_ui <- function(id){
       div(class = "clean-box",
           column(
             width = 12,
-        img(src='www/Banner_Willkommen.jpg',
+        img(src='www/Banner_Willkommen.avif',
             class = "img-responsive",
             height = "300px",
             alt = "Banner Start",
@@ -31,7 +31,7 @@ mod_startseite_start_ui <- function(id){
           column(
             width = 8,
             h1("Willkommen im MINT-DataLab von MINTvernetzt!"),
-            p(style = "font-size: 14px;",
+            p(
               "Im MINT-DataLab von MINTvernetzt präsentieren wir statistische Kennzahlen rund um MINT in den Bereichen Schule, Hochschule, Ausbildung und
           Arbeitsmarkt in Deutschland.", br(),
           "Unser Ziel ist es, mit dem MINT-DataLab einen zentralen Ort
@@ -41,18 +41,19 @@ mod_startseite_start_ui <- function(id){
             p(),
 
           # Updates ----
-          h2(style = "color: #00a87a;",
+          h2(style = "color: #008F68;",
              "Was ist Neu?"),
-          p(style = "font-size: 14px;",
-            "-  Erstellen Sie einfach MINT-Berichten durch das neue Angebot \"Datenanalyse mit KI\"", br(),
-            "-  Schnellere Ladenzeit der Website",br(),
+          tags$ul(
+            tags$li("Erstellen Sie einfach MINT-Berichten durch das neue Angebot \"Datenanalyse mit KI\""),
+            tags$li("Aktualisierte Daten im Bereich Studium, Arbeitsmarkt, Fachkräfte und Internationales"),
+            tags$li("Neue Darstellungen zum Thema Entgelte")
           ),
-          h2(style = "color: #00a87a;",
+          h2(style = "color: #008F68;",
              "Woran wir aktuell arbeiten:"),
-          p(style = "text-align: justify; font-size: 14px;",
-            "-  Aktualisierung der Daten",br(),
-            "-  Erhöhte Barrierefreiheit", br(),
-            "-  Weiterentwicklung des Angebots \"Datenanalyse mit KI\"", br()),
+          tags$ul(
+            tags$li("Weiterentwicklung des Angebots \"Datenanalyse mit KI\""),
+            tags$li("Weitere Erhöhung der Barrierefreiheit"),
+            tags$li("Weitere grafische Darstellungen zum Theman Entgelte")),
           p(),      p(),
           p("Bei Fragen oder Anregungen, melden Sie sich jederzeit gerne ",
             tags$a(href = "mailto:katharina.brunner@mint-vernetzt.de?subject= Feedback MINT-Datalab", "per E-Mail"),
@@ -63,8 +64,8 @@ mod_startseite_start_ui <- function(id){
           p(),
 
     # Kurzanalysen ----
-            h5("Was steckt hinter den MINT-Statistiken?"),
-            p(style = "text-align: justify; font-size = 20px",
+            h2("Was steckt hinter den MINT-Statistiken?"),
+            p(
               "Ausgewählte Statistiken bereiten wir in Kurzanalysen auf.
               Hier schauen wir hinter die Zahlen und ordnen sie ein – erklärend,
               lösungsorientiert und wissenschaftlich fundiert.
@@ -76,7 +77,7 @@ mod_startseite_start_ui <- function(id){
               tags$a(href = "https://www.mint-vernetzt.de/mint-datalab/#kurzanalysen",
                      target = "_blank", "Alle Kurzanalysen",
                      class = "btn btn-default",
-                     style = "margin-bottom: 30px; margin-top: 10px;")
+                     style = "margin-bottom: 30px; margin-top: 10px; font-size: 18px")
     ),
 
     column(
@@ -85,7 +86,7 @@ mod_startseite_start_ui <- function(id){
 
       # Lernvideo ----
 
-      h5("Lernvideo zu den MINT-Daten",
+      h2("Lernvideo zu den MINT-Daten",
          style = "margin-top: 40px;"),
       p("Auf dem MINT-Campus haben wir ein Video veröffentlich, in dem wir Statistiken
         zum Thema Frauen in MINT zeigen und einordnen."),

@@ -3,6 +3,10 @@
 #library(dbplyr)
 
 
+
+
+map_selection_germany <- readRDS("data/map_data/map_selection_german.rds")
+
 # Wer wählt MINT ----
 
 
@@ -477,9 +481,11 @@ kurse_mint_map <- function(r) {
     tooltip <- "{point.region} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}"
     titel <- paste0("Anteil von ", help_title, "<br> an allen Grundkursbelegungen ", "(",timerange, ")")
     mincolor <- "#f4f5f6"
-    map_selection <- 1
+    map_selection <- map_selection_germany
     maxcolor <- "#b16fab"
     quelle <- "Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+
+
 
     map1 <- mapbuilder(df1, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection, quelle = quelle)
 
@@ -489,7 +495,7 @@ kurse_mint_map <- function(r) {
     tooltip <- "{point.region} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}"
     titel <- paste0("Anteil von ", help_title, "<br> an allen Leistungskursbelegungen ", "(",timerange, ")")
     mincolor <- "#f4f5f6"
-    map_selection <- 1
+    map_selection <- map_selection_germany
     maxcolor <- "#b16fab"
     quelle <- "Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
@@ -1075,7 +1081,7 @@ kurse_map <- function(r) {
     titel <- paste0("Anteil von ", help_title, "<br> an allen Grundkursbelegungen ", "(",timerange, ")")
     mincolor <- "#fcfcfd"
     maxcolor <- col
-    map_selection <- 1
+    map_selection <- map_selection_germany
     quelle <- "Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
     map1 <- mapbuilder(df1, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection, quelle = quelle)
 
@@ -1091,7 +1097,7 @@ kurse_map <- function(r) {
     titel <- paste0("Anteil von ", help_title, "<br> an allen Leistungskursbelegungen ", "(",timerange, ")")
     mincolor <- "#fcfcfd"
     maxcolor <- col
-    map_selection <- 1
+    map_selection <- map_selection_germany
     quelle <- "Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
     map2 <- mapbuilder(df2, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection, quelle = quelle)
 
@@ -2619,7 +2625,7 @@ kurse_wahl <- function(r) {
     titel <- paste0(help_kurs, "belegungen von Mädchen in ", help_title, " (", timerange, ")")
     mincolor <- "#fcfcfd"
     maxcolor <- as.character(color_fach[subjects])
-    map_selection <- 1
+    map_selection <- map_selection_germany
     quelle <- "Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
     out1 <- mapbuilder(df1, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection, quelle = quelle)
 
@@ -2635,7 +2641,7 @@ kurse_wahl <- function(r) {
       titel <- paste0(help_kurs, "belegungen von Jungen in ", help_title," (", timerange, ")")
       mincolor <- "#fcfcfd"
       maxcolor <- as.character(color_fach[subjects])
-      map_selection <- 1
+      map_selection <- map_selection_germany
       quelle <- "Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
       out2 <- mapbuilder(df2, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection, quelle = quelle)
 

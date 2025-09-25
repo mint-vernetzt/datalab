@@ -16,7 +16,7 @@ mod_fachkraft_item_epa_ui <- function(id){
       inputId = ns("map_y_fachkraft_arbeit_epa"),
       label = NULL,
       choices = fachkraft_ui_years(reg="DE"),
-      selected = "2023"
+      selected = "2024"
     ),
 
     p("Fachbereich:"),

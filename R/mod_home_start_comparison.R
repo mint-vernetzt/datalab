@@ -29,8 +29,8 @@ mod_home_start_comparison_ui <- function(id){
     shinyWidgets::sliderTextInput(
       inputId = ns("date_start_comparison"),
       label = NULL,
-      choices = 2013:2023,
-      selected = c(2015, 2023)
+      choices = 2013:2024,
+      selected = c(2015, 2024)
     ),
 
     p("Region:"),

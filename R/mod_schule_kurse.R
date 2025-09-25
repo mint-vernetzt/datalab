@@ -16,7 +16,7 @@ mod_schule_kurse_ui <- function(id){
       div(class = "clean-box",
           column(
             width = 12,
-            img(src='www/Banner_Schule.jpg',
+            img(src='www/Banner_Schule.avif',
                 class = "img-responsive",
                 #height = "150px", width = "150px",
                 alt = "Banner Schule",
@@ -28,7 +28,7 @@ mod_schule_kurse_ui <- function(id){
 
     fluidRow(
       shinydashboard::box(
-        title = "Auf dieser Seite",
+        h2("Auf dieser Seite"),
         width = 7,
         p(style = "text-align: left; font-size = 16px",
           "Auf dieser Seite zeigen wir, wie hoch der Anteil von MINT-Fächern an allen Schulfächern gemessen an allen gewählten Grund- und Leistungskursen ist.
@@ -51,21 +51,21 @@ mod_schule_kurse_ui <- function(id){
 
     fluidRow(
       shinydashboard::box(
-        title = "Themenübersicht",
+        h2("Themenübersicht"),
         width = 7,
 
         p(style = "text-align: left; font-size = 16px",tags$a(href="#schule_mint",
-                                                              span(tags$b(span("MINT-Anteil:")))),"Ein Drittel der Leistungskursbelegungen sind in MINT."
+                                                              span(tags$b(span("→ MINT-Anteil:")))),"Ein Drittel der Leistungskursbelegungen sind in MINT."
         ),
         p(style = "text-align: left; font-size = 16px",tags$a(href="#schule_fach",
-                                                              span(tags$b(span("M-I-N-T:")))), "Die Hälfte der MINT-Leistungskurse sind in Mathematik."
+                                                              span(tags$b(span("→ M-I-N-T:")))), "Die Hälfte der MINT-Leistungskurse sind in Mathematik."
 
         ),
         p(style = "text-align: left; font-size = 16px",tags$a(href="#schule_frauen",
-                                                              span(tags$b(span("Frauen in MINT:")))),"MINT-Belegungen unter Mädchen und Jungen ungefähr gleich häufig."),
+                                                              span(tags$b(span("→ Frauen in MINT:")))),"MINT-Belegungen unter Mädchen und Jungen ungefähr gleich häufig."),
 
         p(style = "text-align: left; font-size = 16px",tags$a(href="#schule_kompetenz",
-                                                              span(tags$b(span("MINT-Kompetenzen:")))),"MINT-Kompetenzen nehmen weiter ab. IQB-Ergebnisse der letzten Jahre.")
+                                                              span(tags$b(span("→ MINT-Kompetenzen:")))),"MINT-Kompetenzen nehmen weiter ab. IQB-Ergebnisse der letzten Jahre.")
 
       ),
       shinydashboard::box(
@@ -88,7 +88,7 @@ mod_schule_kurse_ui <- function(id){
 
     fluidRow(id="schule_mint",
       shinydashboard::box(
-        title = "MINT-Anteil: Ein Drittel der Leistungskursbelegungen sind in MINT.",
+        h2("MINT-Anteil: Ein Drittel der Leistungskursbelegungen sind in MINT."),
         width = 12,
         column(
           width = 8,
@@ -169,7 +169,7 @@ mod_schule_kurse_ui <- function(id){
 
     fluidRow(id="schule_fach",
       shinydashboard::box(
-        title = "M-I-N-T: Die Hälfte der MINT-Leistungskursbelegungen sind in Mathematik.",
+        h2("M-I-N-T: Die Hälfte der MINT-Leistungskursbelegungen sind in Mathematik."),
         width = 12,
         column(
           width = 8,
@@ -272,7 +272,7 @@ mod_schule_kurse_ui <- function(id){
   # Box 3 ----
     fluidRow(id="schule_frauen",
       shinydashboard::box(
-        title = "Frauen in MINT: MINT-Belegungen unter Mädchen und Jungen ungefähr gleich häufig.",
+        h2("Frauen in MINT: MINT-Belegungen unter Mädchen und Jungen ungefähr gleich häufig."),
         width = 12,
         column(
           width = 8,
@@ -366,7 +366,7 @@ mod_schule_kurse_ui <- function(id){
 
       fluidRow(id="schule_kompetenz",
            shinydashboard::box(
-             title = "MINT-Kompetenzen: MINT-Kompetenzen nehmen weiter ab. IQB-Ergebnisse der letzten Jahre.",
+             h2("MINT-Kompetenzen: MINT-Kompetenzen nehmen weiter ab. IQB-Ergebnisse der letzten Jahre."),
              width = 12,
              column(
                width = 8,

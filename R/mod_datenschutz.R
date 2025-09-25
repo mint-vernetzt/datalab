@@ -33,10 +33,10 @@ mod_datenschutz_ui <- function(id){
     fluidRow(
       shinydashboard::box(
         width = 12,
-        tags$h2("Datenschutzerklärung"),
+        tags$h1("Datenschutzerklärung"),
         column(width = 12,
 
-               div(style="text-align:justify", p("
+               div(style="text-align:left", p("
 
 MINTvernetzt ist die Service- und Anlaufstelle für die Community der MINT-Akteur:innen in Deutschland.
 Diese werden durch Vernetzungsräume, Transferangebote und Innovationsimpulse unterstützt, innovative und
@@ -450,7 +450,7 @@ br(),br(),
 p(tags$b(span("VI. Weitergabe Ihrer Daten an Dritte")),
   br(),
 
-"Um unsere Website für Sie als Nutzer so angenehm und komfortable wie möglich gestalten zu können, setzen
+"Um unsere Website für Sie als Nutzer so angenehm und komfortabel wie möglich gestalten zu können, setzen
 wir vereinzelt Dienste externer Dienstleister ein. Nachfolgenden haben Sie Möglichkeit sich über die
 Datenschutzbestimmungen zum Einsatz und Verwendung der eingesetzten Dienste und Funktionen zu informieren,
 um ggf. auch bei den Dienstleistern Ihre Rechte wahrnehmen zu können. ")))))),

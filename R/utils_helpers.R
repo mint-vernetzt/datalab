@@ -2,6 +2,23 @@
 #library(rlang)
 #library(tidyr)
 
+
+
+
+
+
+map_selection_germany <- readRDS("data/map_data/map_selection_german.rds")
+map_selection_europe <- readRDS("data/map_data/map_selection_europa.rds")
+map_selection_international <- readRDS("data/map_data/map_selection_international.rds")
+
+
+
+
+
+
+
+
+
 #' helpers
 #'
 #' @description A utils function
@@ -238,7 +255,8 @@ international_ui_faecher <- function(region = "EU") {
   SELECT DISTINCT fachbereich,
   FROM arbeitsmarkt_anfaenger_absolv_oecd
   WHERE geschlecht = 'Gesamt'
-  AND variable IN ('Anteil Absolvent*innen nach Fach an allen Fächern', 'Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern')
+  AND variable IN ('Anteil Absolvent*innen nach Fach an allen Fächern','Anzahl der Absolvent:innen' ,
+                    'Anzahl der Neustudierenden',  'Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern')
 ", .con = con)
 
 
@@ -393,10 +411,13 @@ df_query <- glue::glue_sql("
     AND jahr >= 2013
     AND variable IN (
       'Anteil Absolvent*innen nach Fach an allen Fächern',
-      'Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern'
+      'Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern',
+      'Anzahl der Absolvent:innen'
     )
   ORDER BY jahr
 ", .con = con)
+
+   ### browser()
 
     selection <- DBI::dbGetQuery(con, jahr_query) %>%
       dplyr::pull(jahr)
@@ -432,7 +453,7 @@ international_ui_country <- function(type = "arbeit", n = NA) {
   FROM arbeitsmarkt_anfaenger_absolv_oecd
   WHERE geschlecht = 'Gesamt'
   AND jahr = {year}
-  AND variable IN ('Anteil Absolvent*innen nach Fach an allen Fächern','Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern')
+  AND variable IN ( 'Anzahl der Neustudierenden'   , 'Anzahl der Absolvent:innen', 'Anteil Absolvent*innen nach Fach an allen Fächern','Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern')
 ", .con = con)
 
     tmp_df <- DBI::dbGetQuery(con, df_query)
@@ -443,7 +464,7 @@ international_ui_country <- function(type = "arbeit", n = NA) {
       tmp_df <- tmp_df %>%
         dplyr::filter(
           fachbereich == "MINT" &
-            variable == "Anteil Absolvent*innen nach Fach an allen Fächern") %>%
+            variable == "Anzahl der Absolvent:innen") %>%
         dplyr::group_by(land) %>%
         dplyr::summarise(wert = sum(wert)) %>%
         dplyr::arrange(desc(wert)) %>%
@@ -847,6 +868,8 @@ arbeit_fachkraft_ui_years <- function() {
 #####################################################
 
   selection <- DBI::dbGetQuery(con, df_query)
+
+
 
   selection <- selection %>%
     dplyr::pull(jahr) %>%
@@ -2083,12 +2106,13 @@ balkenbuilder3 <- function(df, titel , x, y, tooltip, format, color, optional, o
 
 #mapbuilder
 
-mapbuilder <- function(df, joinby, name, tooltip,titel, mincolor, maxcolor, prop = FALSE, wert = FALSE, map = map_selection, landkarten = FALSE, states=NULL,  quelle="Quelle"){
+mapbuilder <- function(df, joinby, name, tooltip,titel, mincolor, maxcolor, prop = FALSE, wert = FALSE, map = NULL, landkarten = FALSE, states=NULL,  quelle="Quelle", reg = "Deutschland"){
 
 if(prop==FALSE && wert == FALSE){
-  out<- highcharter::hcmap(
-    "countries/de/de-all",
-    data = df,
+  out<- highcharter::highchart(type="map") %>%
+    highcharter::hc_add_series_map(
+    map = map,
+    df = df,
     value = "proportion",
     joinBy = joinby,
     borderColor = "#FAFAFA",
@@ -2148,9 +2172,10 @@ if(prop==FALSE && wert == FALSE){
 
 }
   else if(prop == TRUE && landkarten == FALSE){
-  out<- highcharter::hcmap(
-    "countries/de/de-all",
-    data = df,
+  out<- highcharter::highchart(type="map") %>%
+    highcharter::hc_add_series_map(
+    map = map,
+    df = df,
     value = "prop",
     joinBy = joinby,
     borderColor = "#FAFAFA",
@@ -2212,9 +2237,10 @@ if(prop==FALSE && wert == FALSE){
   else if(wert==TRUE){
 
 
-  out <- highcharter::hcmap(
+  out <- highcharter::highchart(type="map") %>%
+    highcharter::hc_add_series_map(
     map = map,
-    data = df,
+    df = df,
     value = "wert",
     joinBy = joinby,
     borderColor = "#FAFAFA",
@@ -2275,56 +2301,74 @@ if(prop==FALSE && wert == FALSE){
 } else if (landkarten == TRUE && prop == TRUE && !is.null(states))
 {
 
-  useless <- map
+  state_codes <- data.frame(
+    state = c(
+      "Baden-Württemberg","Bayern","Berlin","Brandenburg","Bremen","Hamburg",
+      "Hessen","Mecklenburg-Vorpommern","Niedersachsen","Nordrhein-Westfalen",
+      "Rheinland-Pfalz","Saarland","Sachsen","Sachsen-Anhalt",
+      "Schleswig-Holstein","Thüringen"
+    ),
+    short = c("bw","by","be","bb","hb","hh","he","mv","ni",
+              "nw","rp","sl","sn","st","sh","th")
+  )
   mincolor1 <- mincolor
   maxcolor1 <- maxcolor
 
 
+  state_code <- state_codes %>%
+    dplyr::filter(state == states) %>%
+    dplyr::pull(short)
 
-  state_codes <- data.frame(
-    state = c(
-      "Baden-Württemberg",
-      "Bayern",
-      "Berlin",
-      "Brandenburg",
-      "Bremen",
-      "Hamburg",
-      "Hessen",
-      "Mecklenburg-Vorpommern",
-      "Niedersachsen",
-      "Nordrhein-Westfalen",
-      "Rheinland-Pfalz",
-      "Saarland",
-      "Sachsen",
-      "Sachsen-Anhalt",
-      "Schleswig-Holstein",
-      "Thüringen"
-    ),
-    short = c(
-      "bw",
-      "by",
-      "be",
-      "bb",
-      "hb",
-      "hh",
-      "he",
-      "mv",
-      "ni",
-      "nw",
-      "rp",
-      "sl",
-      "sn",
-      "st",
-      "sh",
-      "th"
-    )
-  )
 
-  state_code <- state_codes %>% dplyr::filter(state == states) %>% dplyr::pull()
+  map_state <- readRDS(paste0("data/map_data/map_de_", state_code, ".rds"))
 
-  out <- highcharter::hcmap(
-    paste0("countries/de/de-", state_code ,"-all"),
-    data = df,
+
+
+  #state_codes <- data.frame(
+  #  state = c(
+  #    "Baden-Württemberg",
+  #    "Bayern",
+  #    "Berlin",
+  #    "Brandenburg",
+  #    "Bremen",
+  #    "Hamburg",
+  #    "Hessen",
+  #    "Mecklenburg-Vorpommern",
+  #    "Niedersachsen",
+  #    "Nordrhein-Westfalen",
+  #    "Rheinland-Pfalz",
+  #    "Saarland",
+  #    "Sachsen",
+  #    "Sachsen-Anhalt",
+  #    "Schleswig-Holstein",
+  #    "Thüringen"
+  #  ),
+  #  short = c(
+  #    "bw",
+  #    "by",
+  #    "be",
+  #    "bb",
+  #    "hb",
+  #    "hh",
+  #    "he",
+  #    "mv",
+   #   "ni",
+  #    "nw",
+   #   "rp",
+    #  "sl",
+     # "sn",
+    #  "st",
+    #  "sh",
+    #  "th"
+    #)
+  #)
+
+  #state_code <- state_codes %>% dplyr::filter(state == states) %>% dplyr::pull()
+
+  out <- highcharter::highchart(type="map") %>%
+    highcharter::hc_add_series_map(
+    map = map_state,
+    df = df,
     value = "prob",
     joinBy = joinby,
     borderColor = "#FAFAFA",

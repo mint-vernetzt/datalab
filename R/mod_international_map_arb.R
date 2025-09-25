@@ -11,20 +11,20 @@ mod_international_map_arb_ui <- function(id) {
 
   ns <- NS(id)
   tagList(
-    p("Region:"),
-    shinyWidgets::pickerInput(
-      inputId = ns("map_l_arb"),
-      choices = c("Europa" = "EU"),#, "OECD"
-      selected = "Europa",
-      multiple = FALSE#,
-    ),
+    # p("Region:"),
+    # shinyWidgets::pickerInput(
+    #   inputId = ns("map_l_arb"),
+    #   choices = c("Europa" = "EU"),#, "OECD"
+    #   selected = "Europa",
+    #   multiple = FALSE#,
+    # ),
 
     #Conditional Panel, um für Lehramt nur sinnvollere Fächer auswählen zu lassen
 
-    conditionalPanel(condition = "input.map_l_arb == 'EU'",
-                     ns = ns,
-
-
+    # conditionalPanel(condition = "input.map_l_arb == 'EU'",
+    #                  ns = ns,
+    #
+    #
                      p("Personengruppe:"),
                      shinyWidgets::pickerInput(
                        inputId = ns("map_pers_eu_arb"),
@@ -38,69 +38,71 @@ mod_international_map_arb_ui <- function(id) {
                        inputId = ns("map_y_eu_arb"),
                        label = NULL,
                        choices = c("2013", "2014", "2015", "2016", "2017",
-                                   "2018", "2019", "2020", "2021", "2022" ),
-                       selected = "2022"
-                     )),
+                                   "2018", "2019", "2020", "2021", "2022", "2023" ),
+                       selected = "2023"
+                     )
+                     # )
+  ,
 
-
-    conditionalPanel(condition = "input.map_l_arb == 'OECD' ",
-                     ns = ns,
-                     p("Personengruppe:"),
-                     shinyWidgets::pickerInput(
-                       inputId = ns("map_pers_oecd_arb"),
-                       choices = c("Anfänger*innen Ausbildung (ISCED 45)",
-                                   "Anfänger*innen Erstausbildung (ISCED 35)",
-                                   "Absolvent*innen Ausbildung (ISCED 45)",
-                                   "Absolvent*innen Erstausbildung (ISCED 35)",
-                                   "Auszubildende (ISCED 45)",
-                                   "Auszubildende in Erstausbildung (ISCED 35)",
-                                   "In Meisterlehre (< 880 Std. Vorbereitung, ISCED 55)",
-                                   "In Meister-/Technikerlehre (> 880 Std. Vorbereitung, ISCED 65)"),
-                       selected = c("Anfänger*innen Ausbildung (ISCED 45)"),
-                       multiple = FALSE#,
-
-                     )),
-                     conditionalPanel(condition = "input.map_l_arb == 'OECD' && input.map_pers_oecd_arb == 'Anfänger*innen Ausbildung (ISCED 45)'||input.map_pers_oecd_arb == 'Anfänger*innen Erstausbildung (ISCED 35)'||input.map_pers_oecd_arb =='Absolvent*innen Ausbildung (ISCED 45)'||input.map_pers_oecd_arb == 'Absolvent*innen Erstausbildung (ISCED 35)' ",
-                                      ns = ns,
-                     p("Jahr:"),
-                     shinyWidgets::sliderTextInput(
-                       inputId = ns("map_y_oecd_arb"),
-                       label = NULL,
-                       choices = c("2015", "2016", "2017", "2018", "2019", "2020"),
-                       selected = "2020"
-                     ),
-
-                     p("Fachbereich:"),
-                     shinyWidgets::pickerInput(
-                       inputId = ns("map_f_oecd_arb"),
-                       choices = c( "MINT",
-                                    "---Informatik & Kommunikationstechnologie"="Informatik & Kommunikationstechnologie",
-                                    "---Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe"="Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
-                                    "---Naturwissenschaften, Mathematik und Statistik" = "Naturwissenschaften, Mathematik und Statistik"),
-                       selected = c("MINT"),
-                       multiple = FALSE#,
-                     )),
-                     conditionalPanel(condition = "input.map_l_arb == 'OECD' && input.map_pers_oecd_arb == 'Auszubildende (ISCED 45)'||input.map_pers_oecd_arb == 'Auszubildende in Erstausbildung (ISCED 35)'||input.map_pers_oecd_arb =='In Meisterlehre (< 880 Std. Vorbereitung, ISCED 55)'||input.map_pers_oecd_arb == 'In Meister-/Technikerlehre (> 880 Std. Vorbereitung, ISCED 65)' ",
-                                      ns = ns,
-                                      p("Jahr:"),
-                                      shinyWidgets::sliderTextInput(
-                                        inputId = ns("map_y_oecd2_arb"),
-                                        label = NULL,
-                                        choices = c("2015", "2016", "2017", "2018", "2019", "2020"),
-                                        selected = "2020"
-                                      ),
-
-                                      p("Fachbereich:"),
-                                      shinyWidgets::pickerInput(
-                                        inputId = ns("map_f_oecd2_arb"),
-                                        choices = c( "MINT",
-                                                     "---Informatik & Kommunikationstechnologie"="Informatik & Kommunikationstechnologie",
-                                                     "---Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe"="Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
-                                                     "---Naturwissenschaften, Mathematik und Statistik" = "Naturwissenschaften, Mathematik und Statistik"),
-                                        selected = c("MINT"),
-                                        multiple = FALSE#,
-                                      ))
-                     ,
+    #
+    # conditionalPanel(condition = "input.map_l_arb == 'OECD' ",
+    #                  ns = ns,
+    #                  p("Personengruppe:"),
+    #                  shinyWidgets::pickerInput(
+    #                    inputId = ns("map_pers_oecd_arb"),
+    #                    choices = c("Anfänger*innen Ausbildung (ISCED 45)",
+    #                                "Anfänger*innen Erstausbildung (ISCED 35)",
+    #                                "Absolvent*innen Ausbildung (ISCED 45)",
+    #                                "Absolvent*innen Erstausbildung (ISCED 35)",
+    #                                "Auszubildende (ISCED 45)",
+    #                                "Auszubildende in Erstausbildung (ISCED 35)",
+    #                                "In Meisterlehre (< 880 Std. Vorbereitung, ISCED 55)",
+    #                                "In Meister-/Technikerlehre (> 880 Std. Vorbereitung, ISCED 65)"),
+    #                    selected = c("Anfänger*innen Ausbildung (ISCED 45)"),
+    #                    multiple = FALSE#,
+    #
+    #                  )),
+    #                  conditionalPanel(condition = "input.map_l_arb == 'OECD' && input.map_pers_oecd_arb == 'Anfänger*innen Ausbildung (ISCED 45)'||input.map_pers_oecd_arb == 'Anfänger*innen Erstausbildung (ISCED 35)'||input.map_pers_oecd_arb =='Absolvent*innen Ausbildung (ISCED 45)'||input.map_pers_oecd_arb == 'Absolvent*innen Erstausbildung (ISCED 35)' ",
+    #                                   ns = ns,
+    #                  p("Jahr:"),
+    #                  shinyWidgets::sliderTextInput(
+    #                    inputId = ns("map_y_oecd_arb"),
+    #                    label = NULL,
+    #                    choices = c("2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023"),
+    #                    selected = "2023"
+    #                  ),
+    #
+    #                  p("Fachbereich:"),
+    #                  shinyWidgets::pickerInput(
+    #                    inputId = ns("map_f_oecd_arb"),
+    #                    choices = c( "MINT",
+    #                                 "---Informatik & Kommunikationstechnologie"="Informatik & Kommunikationstechnologie",
+    #                                 "---Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe"="Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
+    #                                 "---Naturwissenschaften, Mathematik und Statistik" = "Naturwissenschaften, Mathematik und Statistik"),
+    #                    selected = c("MINT"),
+    #                    multiple = FALSE#,
+    #                  )),
+    #                  conditionalPanel(condition = "input.map_l_arb == 'OECD' && input.map_pers_oecd_arb == 'Auszubildende (ISCED 45)'||input.map_pers_oecd_arb == 'Auszubildende in Erstausbildung (ISCED 35)'||input.map_pers_oecd_arb =='In Meisterlehre (< 880 Std. Vorbereitung, ISCED 55)'||input.map_pers_oecd_arb == 'In Meister-/Technikerlehre (> 880 Std. Vorbereitung, ISCED 65)' ",
+    #                                   ns = ns,
+    #                                   p("Jahr:"),
+    #                                   shinyWidgets::sliderTextInput(
+    #                                     inputId = ns("map_y_oecd2_arb"),
+    #                                     label = NULL,
+    #                                     choices = c("2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023"),
+    #                                     selected = "2023"
+    #                                   ),
+    #
+    #                                   p("Fachbereich:"),
+    #                                   shinyWidgets::pickerInput(
+    #                                     inputId = ns("map_f_oecd2_arb"),
+    #                                     choices = c( "MINT",
+    #                                                  "---Informatik & Kommunikationstechnologie"="Informatik & Kommunikationstechnologie",
+    #                                                  "---Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe"="Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
+    #                                                  "---Naturwissenschaften, Mathematik und Statistik" = "Naturwissenschaften, Mathematik und Statistik"),
+    #                                     selected = c("MINT"),
+    #                                     multiple = FALSE#,
+    #                                   ))
+    #                  ,
 
 
     br(),
@@ -121,55 +123,55 @@ mod_international_map_arb_server <- function(id, r){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
-    # region change updates respective sub inputs, which will otherwise
-    # still be the last values.
-    observeEvent(input$map_l_arb, {
-      r$map_l_arb <- input$map_l_arb
-      if (input$map_l_arb == "EU") {
-        r$map_y_arb <- input$map_y_eu_arb
-        #r$map_pers_arb <- input$map_pers_eu_arb
-      }
-      if (input$map_l_arb == "OECD") {
-        r$map_pers_arb <- input$map_pers_oecd_arb
-        if(input$map_pers_oecd_arb %in% c("Anfänger*innen Ausbildung (ISCED 45)",
-                              "Anfänger*innen Erstausbildung (ISCED 35)",
-                              "Absolvent*innen Ausbildung (ISCED 45)",
-                              "Absolvent*innen Erstausbildung (ISCED 35)")){
+    # # region change updates respective sub inputs, which will otherwise
+    # # still be the last values.
+    # observeEvent(input$map_l_arb, {
+    #   r$map_l_arb <- input$map_l_arb
+    #   if (input$map_l_arb == "EU") {
+    #     r$map_y_arb <- input$map_y_eu_arb
+    #     #r$map_pers_arb <- input$map_pers_eu_arb
+    #   }
+    #   if (input$map_l_arb == "OECD") {
+    #     r$map_pers_arb <- input$map_pers_oecd_arb
+    #     if(input$map_pers_oecd_arb %in% c("Anfänger*innen Ausbildung (ISCED 45)",
+    #                           "Anfänger*innen Erstausbildung (ISCED 35)",
+    #                           "Absolvent*innen Ausbildung (ISCED 45)",
+    #                           "Absolvent*innen Erstausbildung (ISCED 35)")){
+    #
+    #       r$map_y_arb <- input$map_y_oecd_arb
+    #       r$map_f_arb <- input$map_f_oecd_arb
+    #
+    #     }else{
+    #
+    #       r$map_y_arb <- input$map_y_oecd2_arb
+    #       r$map_f_arb <- input$map_f_oecd2_arb
+    #
+    #     }
+    #
+    #
+    #   }
+    # })
 
-          r$map_y_arb <- input$map_y_oecd_arb
-          r$map_f_arb <- input$map_f_oecd_arb
-
-        }else{
-
-          r$map_y_arb <- input$map_y_oecd2_arb
-          r$map_f_arb <- input$map_f_oecd2_arb
-
-        }
-
-
-      }
-    })
-
-    observeEvent(input$map_pers_oecd_arb, {
-      r$map_pers_arb <- input$map_pers_oecd_arb
-    })
-
-    observeEvent(input$map_y_oecd_arb, {
-      r$map_y_arb <- input$map_y_oecd_arb
-    })
-
-    observeEvent(input$map_f_oecd_arb, {
-      r$map_f_arb <- input$map_f_oecd_arb
-    })
-
-    observeEvent(input$map_y_oecd2_arb, {
-      r$map_y_arb <- input$map_y_oecd2_arb
-    })
-
-    observeEvent(input$map_f_oecd2_arb, {
-      r$map_f_arb <- input$map_f_oecd2_arb
-    })
-
+    # observeEvent(input$map_pers_oecd_arb, {
+    #   r$map_pers_arb <- input$map_pers_oecd_arb
+    # })
+    #
+    # observeEvent(input$map_y_oecd_arb, {
+    #   r$map_y_arb <- input$map_y_oecd_arb
+    # })
+    #
+    # observeEvent(input$map_f_oecd_arb, {
+    #   r$map_f_arb <- input$map_f_oecd_arb
+    # })
+    #
+    # observeEvent(input$map_y_oecd2_arb, {
+    #   r$map_y_arb <- input$map_y_oecd2_arb
+    # })
+    #
+    # observeEvent(input$map_f_oecd2_arb, {
+    #   r$map_f_arb <- input$map_f_oecd2_arb
+    # })
+    #
 
 
 
