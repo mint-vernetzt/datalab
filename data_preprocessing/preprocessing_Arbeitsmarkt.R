@@ -2099,7 +2099,8 @@ list <- c("BA032_2024_Entgelte_MINT_D.xlsb", "BA028_2024_Entgelte_MINT_BE.xlsb",
           "BA037_2024_Entgelte_MINT_NDS.xlsb", "BA038_2024_Entgelte_MINT_NRW.xlsb",
           "BA039_2024_Entgelte_MINT_RLP.xlsb", "BA040_2024_Entgelte_MINT_S.xlsb",
           "BA041_2024_Entgelte_MINT_SA.xlsb", "BA042_2024_Entgelte_MINT_SH.xlsb",
-          "BA044_2024_Entgelte_MINT_TH.xlsb")
+          "BA044_2024_Entgelte_MINT_TH.xlsb"
+          )
 
 
 i <- list[1]
@@ -2201,9 +2202,131 @@ for(i in list){
 }
 
 entgelt_alle <- bind_rows(entgelt_BE, entgelt_TH, entgelt_SL, entgelt_SH,
-                          entgelt_SA, entgelt_S, entgelt_BRB, entgelt_BW,
+                          entgelt_S, entgelt_SA, entgelt_BRB, entgelt_BW,
                           entgelt_BY, entgelt_D, entgelt_HB, entgelt_H,
                           entgelt_HH, entgelt_MV, entgelt_NDS, entgelt_NRW, entgelt_RLP)
+
+list <- c(
+  "BA051_250820_EA_394801_Entgelte_MINT_D.xlsx", "BA052_250820_EA_394801_Entgelte_MINT_BE.xlsx",
+  "BA064_250820_EA_394801_Entgelte_MINT_SL.xlsx", "BA053_250820_EA_394801_Entgelte_MINT_BR.xlsx",
+  "BA054_250820_EA_394801_Entgelte_MINT_BW.xlsx", "BA055_250820_EA_394801_Entgelte_MINT_BY.xlsx",
+  "BA057_250820_EA_394801_Entgelte_MINT_HE.xlsx", "BA056_250820_EA_394801_Entgelte_MINT_HB.xlsx",
+  "BA058_250820_EA_394801_Entgelte_MINT_HH.xlsx", "BA059_250820_EA_394801_Entgelte_MINT_MV.xlsx",
+  "BA060_250820_EA_394801_Entgelte_MINT_NDS.xlsx", "BA061_250820_EA_394801_Entgelte_MINT_NRW.xlsx",
+  "BA062_250820_EA_394801_Entgelte_MINT_RP.xlsx", "BA065_250820_EA_394801_Entgelte_MINT_SN.xlsx",
+  "BA066_250820_EA_394801_Entgelte_MINT_ST.xlsx", "BA063_250820_EA_394801_Entgelte_MINT_SH.xlsx",
+  "BA067_250820_EA_394801_Entgelte_MINT_TH.xlsx")
+
+i <- list[1]
+
+for(i in list){
+  print(i)
+  pfad_i <- paste0(pfad, i)
+  data <- readxl::read_xlsx(pfad_i, sheet = "Auswertung")
+
+  data <- data[-c(1:8),]
+  header <- data[1,]
+  header2 <- data[2,c(5:10)]
+  colnames(data) <- header
+  colnames(data)[5:10] <- header2
+
+  data <- data[-c(1:3),]
+
+
+  data <- data %>%
+    rename(berufe = `Berufsaggregat MINT`,
+           jahr = Stichtag) %>%
+    mutate(jahr = case_when(
+      jahr == "45291" ~ "2023",
+      jahr == "45657" ~ "2024",
+      T ~ jahr)
+    )
+
+  data <- data[,-1*5:10] # nimmt die Veteilung der Entgelte raus, um die Datenmenge zu reduzieren
+
+  data$berufe[data$berufe == ""] <- NA
+  data$berufe <- zoo::na.locf(data$berufe)
+  data$jahr <- zoo::na.locf(data$jahr)
+
+  data <- data %>%
+    mutate(
+      code = str_extract(berufe, "^\\d+"),
+      berufslevel = str_extract(berufe, "(Fachkraft|Fachkräfte|Spezialist|Spezialisten|Experten|Experte)"),
+      beruf = berufe %>%
+        stringr::str_remove("^\\d+\\s*") %>%
+        stringr::str_remove("\\s*-?\\s*(Fachkraft|Fachkräfte|Spezialist|Spezialisten|Experten|Experte)\\s*$") %>%
+        stringr::str_replace_all("\\s+-\\s+", " ") %>%
+        stringr::str_squish()
+    ) %>%
+    select(-berufe) %>%
+    rename(besch_anzahl = Insgesamt,
+           geschlecht = Geschlecht,
+           wert = `Median in €`)
+
+
+  data$berufsgruppe <- ifelse(is.na(data$code),
+                              data$beruf,
+                              NA)
+  data$berufsgruppe <- zoo::na.locf(data$berufsgruppe)
+
+  data <- data %>%
+    mutate(
+      berufslevel = case_when(
+        is.na(berufslevel) ~ "Gesamt",
+        berufslevel == "Fachkräfte" ~ "Fachkraft",
+        berufslevel == "Spezialisten" ~ "Spezialist",
+        berufslevel == "Experten" ~ "Experte",
+        T ~ berufslevel
+      ))
+
+  # Bundesland ergänzen
+  a <- str_extract(i, "_[A-Za-z]{1,3}\\.")
+  a <- str_extract(a, "[A-Za-z]{1,3}")
+
+  bundesland_key <- c(
+    D = "Deutschland",
+    BW = "Baden-Württemberg",
+    BY = "Bayern",
+    BE = "Berlin",
+    BR = "Brandenburg",
+    HB = "Bremen",
+    HH = "Hamburg",
+    HE = "Hessen",
+    MV = "Mecklenburg-Vorpommern",
+    SL = "Saarland",
+    SN = "Sachsen",
+    ST = "Sachsen-Anhalt",
+    SH = "Schleswig-Holstein",
+    TH = "Thüringen",
+    NRW = "Nordrhein-Westfalen",
+    RP = "Rheinland-Pfalz",
+    NDS = "Niedersachsen"
+  )
+
+
+  data <- data %>%
+    mutate(
+      bundesland = bundesland_key[a],
+      bereich = "Arbeitsmarkt"
+    )
+
+  data <- data[,c("bereich", "besch_anzahl", "bundesland", "geschlecht", "code",
+                  "berufslevel", "berufsgruppe",
+                  "beruf", "jahr", "wert")]
+
+  obj_name <- paste0("entgelt_", a)
+  assign(obj_name, data)
+
+}
+
+entgelt_alle <- bind_rows(entgelt_alle, entgelt_BE, entgelt_TH, entgelt_SL, entgelt_SH,
+                          entgelt_ST, entgelt_SN, entgelt_BR, entgelt_BW,
+                          entgelt_BY, entgelt_D, entgelt_HB, entgelt_HE,
+                          entgelt_HH, entgelt_MV, entgelt_NDS, entgelt_NRW, entgelt_RP)
+
+entgelt_alle <- entgelt_alle %>%
+  mutate(jahr = as.numeric(jahr)) %>%
+  filter(!is.na(jahr))
 
 arbeitsmarkt_entgelte <- entgelt_alle
 save(arbeitsmarkt_entgelte, file = "arbeitsmarkt_entgelte.rda")

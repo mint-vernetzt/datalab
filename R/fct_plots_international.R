@@ -4218,8 +4218,6 @@ plot_international_top10_mint_arb_gender <- function(r) {
 
       data1 <- unique(data1)
 
-      browser()
-
       data1 <- data1 %>%
           tidyr::pivot_wider(names_from = fachbereich, values_from = wert)
 

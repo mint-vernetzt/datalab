@@ -31,8 +31,8 @@ mod_beruf_arbeitsmarkt_entgelt_vergleich_ui <- function(id){
     shinyWidgets::sliderTextInput(
       inputId = ns("date_arbeitsmarkt_entgelt_vergleich"),
       label = NULL,
-      choices = 2013:2022,
-      selected =2022
+      choices = 2013:2024,
+      selected =2024
     ),
     p("Region:"),
     shinyWidgets::pickerInput(
@@ -91,7 +91,7 @@ mod_beruf_arbeitsmarkt_entgelt_vergleich_ui <- function(id){
                      #                               lib = "glyphicon"))
                      # ),
                      shinyBS::bsPopover(id="ih_beruf_mint_3_entgel", title="",
-                                        content = paste0("Ohhhhh"),
+                                        content = paste0("Das höchste mittlere Brutto-Entgelt verdient man in der Informatik (5.902 Euro). Das liegt, genauso wie das mittlere Entgelt in MINT, über dem deutschen Durchschnitt von 4.013 Euro."),
                                         trigger = "hover"),
                      tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_beruf_mint_3_entgel")
 

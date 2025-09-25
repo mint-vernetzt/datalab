@@ -51,18 +51,21 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
           title = "Themenübersicht",
           width = 7,
           p(style = "text-align: left; font-size = 16px",tags$a(href="#beruf_mint",
-            span(tags$b(span("MINT-Anteil:")))),"Etwa ein Viertel arbeitet in MINT-Berufen."
+            span(tags$b(span("MINT-Anteil:")))),"Jede:r Fünfte arbeitet in MINT-Berufen."
             ),
           p(style = "text-align: left; font-size = 16px",tags$a(href="#beruf_fach",
             span(tags$b(span("M-I-N-T:")))),"MINT oder IT - über 90 % sind in Informatik- oder Technikberufen tätig."
 
             ),
           p(style = "text-align: left; font-size = 16px",tags$a(href="#beruf_frauen",
-            span(tags$b(span("Frauen in MINT:")))),"Frauenanteil in MINT-Berufen bei 17 %."
+            span(tags$b(span("Frauen in MINT:")))),"Frauenanteil in MINT-Berufen bei 18 %."
             ),
           p(style = "text-align: left; font-size = 16px",tags$a(href="#beruf_regional",
             span(tags$b(span("Regionale Daten:")))),"MINT-Daten aus Ihrem Landkreis."
-            )),
+            ),
+          p(style = "text-align: left; font-size = 16px",tags$a(href="#beruf_entgelt",
+            span(tags$b(span("Entgelte: ")))),"In MINT-Berufen verdient man überdurchschnittlich gut."
+          )),
 
         shinydashboard::box(
           title = "Datenquellen",
@@ -79,7 +82,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
 
     fluidRow( id="beruf_mint",
       shinydashboard::box(
-        title = "MINT-Anteil: Etwa ein Viertel arbeitet in MINT-Berufen.",
+        title = "MINT-Anteil: Jede:r Fünfte arbeitet in MINT-Berufen.",
         width = 12,
         column(
           width = 8,
@@ -273,17 +276,18 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
 
     fluidRow(id="beruf_frauen",
       shinydashboard::box(
-        title = "Frauen in MINT: Frauenanteil in MINT-Berufen bei 17 %.",
+        title = "Frauen in MINT: Frauenanteil in MINT-Berufen bei 18 %.",
         width = 12,
         column(
           width = 8,
-        p("Der Frauenanteil in MINT-Berufen liegt bei nur 17 %, in Ausbildungen sogar nur bei 13 %.
+        p("Der Frauenanteil in MINT-Berufen liegt bei nur 17,6 %, in Ausbildungen sogar nur bei 13,5 %.
         In \"Nicht-MINT\"-Berufen und -Ausbildungen sind Frauen dagegen die Mehrheit.
-        In den letzten zehn Jahren ist dieser niedrige Frauenanteil nur leicht gestiegen.
+        In den letzten zehn Jahren ist der Frauenanteil nur leicht gestiegen.
         Blickt man auf die absolute Anzahl an weiblichen MINT-Beschäftigten, ist diese in den letzten zehn Jahren allerdings durchaus gewachsen
-        - um knapp 300.000. Das spricht dafür, dass zwar mehr Frauen, aber auch mehr Menschen insgesamt in MINT-Berufen arbeiten."),
+        - um 265.000. Das spricht dafür, dass zwar mehr Frauen, aber auch mehr Menschen insgesamt in MINT-Berufen arbeiten."),
         p("Manche MINT-Ausbildungen sind bei Frauen besonders beliebt.
-          2022 waren die Top-Ausbildungsberufe unter neuen weiblichen Azubis Augenoptiker:in, Mediengestalter:in und Bauzeichner:in (in absoluten Zahlen).")
+          2024 waren die Top-Ausbildungsberufe mit den meisten neuen weiblichen Azubis
+          Augenoptiker:in,  Kfz-Mechatroniker:in und Mediengestalter:in.")
         ),
         column(
           width = 12,
@@ -570,13 +574,16 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
 
 # Box 5 ----
 
-fluidRow( id="beruf_mint",
+fluidRow( id="beruf_entgelt",
           shinydashboard::box(
-            title = "Hier eine interessanten Titel einfügen",
+            title = "Entgelte: In MINT-Berufen verdient man überdurchschnittlich gut.",
             width = 12,
             column(
               width = 8,
-              p("Hier einen interessanten Text rein")
+              p("Das mittlere Brutto-Monatsgehalt (Median) in Deutschland 2024 liegt
+                bei 4.013 Euro bei einer Vollzeitanstellung. Zum Vergleich sind es
+                in MINT-Berufen 4.600 Euro. Betrachtet man die verschiedenen MINT-Berufsfelder, gibt es das höchste
+                mittlere Entgelt im Bereich Informatik, mit 5.900 Euro.")
             ),
             column(
               width = 12,
@@ -597,7 +604,7 @@ fluidRow( id="beruf_mint",
                                                                   color = "#154194"),
 
                                      shinyBS::bsPopover(id = "h_beruf_mint_3_entgel", title = "",
-                                                        content = paste0("Ah ja"),
+                                                        content = paste0("Es wird der Median Bruttoentgelt bei sozialversicherungspflichtiger Vollzeitbeschäftigung dargestellt.", br(),br(), "Der Strichtag der Angabe ist der 31.12. des jeweils betrachteten Jahres."),
                                                         placement = "top",
                                                         trigger = "hover"),
                                      tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_beruf_mint_3_entgel")

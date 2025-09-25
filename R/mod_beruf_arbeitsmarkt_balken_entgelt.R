@@ -15,8 +15,8 @@ mod_beruf_arbeitsmarkt_balken_entgelt_ui <- function(id){
     shinyWidgets::sliderTextInput(
       inputId = ns("date_balken_entgelt"),
       label = NULL,
-      choices = 2013:2022,
-      selected = 2022
+      choices = 2013:2024,
+      selected = 2024
     ),
     p("Region:"),
     shinyWidgets::pickerInput(

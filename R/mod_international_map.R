@@ -67,7 +67,7 @@ mod_international_map_ui <- function(id) {
                        inputId = ns("map_y_ww"),
                        label = NULL,
                        choices = international_ui_years(region = "Weltweit"),
-                       selected = "2024"
+                       selected = "2020"
                      )),
 
     br(),
