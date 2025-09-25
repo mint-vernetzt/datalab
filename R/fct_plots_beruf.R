@@ -3810,6 +3810,8 @@ entgelte_vergleich_1 <- function(r) {
   berufsleb <- r$beruf_arbeitsmarkt_entgelt_berufslev
 
 
+ ##)
+
   df_query <- glue::glue_sql("
   SELECT *
   FROM arbeitsmarkt_entgelte
@@ -3831,13 +3833,13 @@ entgelte_vergleich_1 <- function(r) {
  df1 <- df1[with(df1, order(wert, decreasing = TRUE)),]
 
   if(berufsleb == "Gesamt"){
-    berufsleb = "allen Berufslevel"
+    berufsleb <- "allen Berufslevel"
   } else if (berufsleb == "Fachkraft"){
-    berufsleb == "Fachkräften"
+    berufsleb <- "Fachkräften"
   } else if (berufsleb == "Spezialist"){
-    berufsleb == "Spezialisten"
+    berufsleb <- "Spezialisten"
   } else if (berufsleb == "Experte"){
-    berufsleb == "Experten"
+    berufsleb <- "Experten"
   }
 
 
@@ -3860,16 +3862,24 @@ entgelte_vergleich_1 <- function(r) {
   df1$wert <- as.numeric(df1$wert)
   df1$berufsgruppe <- as.factor(df1$berufsgruppe)
 
-  color =  c("#b16fab")
+#clear
+  df1 <-  df1 %>%
+    filter(!(grepl("technik$", berufsgruppe, ignore.case = TRUE) & berufsgruppe != "Technik"))
+
+
+
+
+
+  df1$color <- ifelse(df1$berufsgruppe %in% c("Insgesamt"                                                               ,   "MINT-Berufe", "Keine MINT-Berufe"), "#b16fab", "#efe8e6")
 
 
 
   #out <- balkenbuilder(df1, titel, x = "wert", y = "berufsgruppe", tooltip = tooltip,  color =  c("#b16fab","#b16fab"), format = format , quelle = quelle)
-  out <- highcharter::hchart(df1, 'bar', highcharter::hcaes(y ="wert", x = "berufsgruppe") ) %>%
+  out <- highcharter::hchart(df1, 'bar', highcharter::hcaes(y ="wert", x = "berufsgruppe", color = color) ) %>%
     highcharter::hc_tooltip(pointFormat = tooltip) %>%
     highcharter::hc_yAxis(title = list(text = ""), labels = list(format = format)) %>%
     highcharter::hc_xAxis(title = list(text = ""), labels = list(format ="{value}")  ) %>%
-    highcharter::hc_colors(color) %>%
+  ############  highcharter::hc_colors(color) %>%
     highcharter::hc_title(text = titel,
                           margin = 45, #
                           align = "center",
@@ -3973,7 +3983,7 @@ entgelte_verlauf_1 <- function(r) {
   df <- df %>%
     dplyr::filter(
       berufsgruppe %in% c("MINT-Berufe", "Insgesamt", "Keine MINT-Berufe",
-                          "Informatik","Technik", "Mathematik, Naturwissenschaften", "Produktionstechnik", "Bau- und Gebäudetechnik", "Gesundheitstechnik")
+                          "Informatik","Technik", "Mathematik, Naturwissenschaften")
     ) %>%
     dplyr::filter(
       berufsgruppe == beruf
@@ -3985,6 +3995,12 @@ entgelte_verlauf_1 <- function(r) {
   if(berufsleb == "Gesamt") {
     berufsleb = "Alle Berufslevel"
   }
+
+
+
+
+
+  ###
 
 
 
