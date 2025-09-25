@@ -65,7 +65,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
             ),
           p(style = "text-align: left; font-size = 16px",tags$a(href="#beruf_regional",
             span(tags$b(span("→ Regionale Daten:")))),"MINT-Daten aus Ihrem Landkreis."
-            )),
+            ),
            p(style = "text-align: left; font-size = 16px",tags$a(href="#beruf_entgelt",
                     span(tags$b(span("→ Entgelte: ")))),"In MINT-Berufen verdient man überdurchschnittlich gut."
                   )),
