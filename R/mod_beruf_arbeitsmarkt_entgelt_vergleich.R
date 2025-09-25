@@ -69,16 +69,16 @@ mod_beruf_arbeitsmarkt_entgelt_vergleich_ui <- function(id){
       multiple = FALSE,
       selected = "Insgesamt"
     ),
-    p("Berufslevel:"),
-    shinyWidgets::pickerInput(
-      inputId = ns("beruf_arbeitsmarkt_entgelt_berufslev"),
-      choices = c("Gesamt",
-                  "Fachkraft",
-                  "Spezialist",
-                  "Experte"),
-      selected = c("Gesamt"),
-      multiple = FALSE
-    ),
+    # p("Berufslevel:"),
+    # shinyWidgets::pickerInput(
+    #   inputId = ns("beruf_arbeitsmarkt_entgelt_berufslev"),
+    #   choices = c("Gesamt",
+    #               "Fachkraft",
+    #               "Spezialist",
+    #               "Experte"),
+    #   selected = c("Gesamt"),
+    #   multiple = FALSE
+    # ),
 
 
 
@@ -114,9 +114,9 @@ mod_beruf_arbeitsmarkt_entgelt_vergleich_server <- function(id, r){
       r$region_arbeitsmarkt_entgelt_vergleich <- input$region_arbeitsmarkt_entgelt_vergleich
     })
 
-    observeEvent(input$beruf_arbeitsmarkt_entgelt_berufslev, {
-      r$beruf_arbeitsmarkt_entgelt_berufslev <- input$beruf_arbeitsmarkt_entgelt_berufslev
-    })
+    # observeEvent(input$beruf_arbeitsmarkt_entgelt_berufslev, {
+    #   r$beruf_arbeitsmarkt_entgelt_berufslev <- input$beruf_arbeitsmarkt_entgelt_berufslev
+    # })
 
     observeEvent(input$beruf_arbeitsmarkt_entgel_geschlecht, {
       r$beruf_arbeitsmarkt_entgel_geschlecht <- input$beruf_arbeitsmarkt_entgel_geschlecht

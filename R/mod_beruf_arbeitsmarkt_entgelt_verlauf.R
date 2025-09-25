@@ -57,16 +57,16 @@ mod_beruf_arbeitsmarkt_entgelt_verlauf_ui <- function(id){
       multiple = FALSE,
       selected = c("Deutschland")
     ),
-    p("Berufslevel:"),
-    shinyWidgets::pickerInput(
-      inputId = ns("indikator_arbeitsmarkt_entgelt_verlauf_2"),
-      choices = c("Gesamt",
-                  "Fachkraft",
-                  "Spezialist",
-                  "Experte"),
-      selected = c("Gesamt"),
-      multiple = FALSE
-    ),
+    # p("Berufslevel:"),
+    # shinyWidgets::pickerInput(
+    #   inputId = ns("indikator_arbeitsmarkt_entgelt_verlauf_2"),
+    #   choices = c("Gesamt",
+    #               "Fachkraft",
+    #               "Spezialist",
+    #               "Experte"),
+    #   selected = c("Gesamt"),
+    #   multiple = FALSE
+    # ),
 
     p("Geschlecht:"),
     shinyWidgets::pickerInput(
@@ -102,9 +102,9 @@ mod_beruf_arbeitsmarkt_entgelt_verlauf_server <- function(id, r){
       r$region_arbeitsmarkt_entgelt_verlauf <- input$region_arbeitsmarkt_entgelt_verlauf
     })
 
-    observeEvent(input$indikator_arbeitsmarkt_entgelt_verlauf_2, {
-      r$indikator_arbeitsmarkt_entgelt_verlauf_2 <- input$indikator_arbeitsmarkt_entgelt_verlauf_2
-    })
+    # observeEvent(input$indikator_arbeitsmarkt_entgelt_verlauf_2, {
+    #   r$indikator_arbeitsmarkt_entgelt_verlauf_2 <- input$indikator_arbeitsmarkt_entgelt_verlauf_2
+    # })
 
     observeEvent(input$abs_zahlen_arbeitsmarkt_entgelt_verlauf, {
       r$abs_zahlen_arbeitsmarkt_entgelt_verlauf <- input$abs_zahlen_arbeitsmarkt_entgelt_verlauf

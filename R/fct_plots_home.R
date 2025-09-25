@@ -70,7 +70,7 @@ home_einstieg <- function(r) {
       titel <- "Schüler:innendaten für 2024 sind noch nicht verfügbar."
       wert <- NA
       jahr <- NA
-      df <- data_frame(wert, jahr)
+      df <- dplyr::data_frame(wert, jahr)
       out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = reorder(jahr, wert), y = wert)) %>%
         highcharter::hc_tooltip(pointFormat = "Anzahl: {point.display_abs}") %>%
         highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular")) %>%
@@ -113,7 +113,7 @@ home_einstieg <- function(r) {
       titel1 <- "Schüler:innendaten für 2024 sind noch nicht verfügbar."
       wert <- NA
       jahr <- NA
-      df_1 <- data_frame(wert, jahr)
+      df_1 <- dplyr::data_frame(wert, jahr)
       out1 <- highcharter::hchart(df_1, 'line', highcharter::hcaes(x = reorder(jahr, wert), y = wert)) %>%
         highcharter::hc_tooltip(pointFormat = "Anzahl: {point.display_abs}") %>%
         highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular")) %>%
@@ -145,7 +145,7 @@ home_einstieg <- function(r) {
       titel2 <- "Schüler:innendaten für 2024 sind noch nicht verfügbar."
       wert <- NA
       jahr <- NA
-      df_2 <- data_frame(wert, jahr)
+      df_2 <- dplyr::data_frame(wert, jahr)
       out2 <- highcharter::hchart(df_2, 'line', highcharter::hcaes(x = reorder(jahr, wert), y = wert)) %>%
         highcharter::hc_tooltip(pointFormat = "Anzahl: {point.display_abs}") %>%
         highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular")) %>%
@@ -493,7 +493,7 @@ home_einstieg_gender <- function(r) {
       titel <- "Schüler:innendaten für 2024 sind noch nicht verfügbar."
       wert <- NA
       jahr <- NA
-      df <- data_frame(wert, jahr)
+      df <- dplyr::data_frame(wert, jahr)
 
       ##LINE leer plot
       out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = reorder(jahr, wert), y = wert)) %>%
@@ -557,7 +557,7 @@ home_einstieg_gender <- function(r) {
       titel1 <- "Schüler:innendaten für 2024 sind noch nicht verfügbar."
       wert <- NA
       jahr <- NA
-      df_1_mint <- data_frame(wert, jahr)
+      df_1_mint <- dplyr::data_frame(wert, jahr)
 
 
       #nrow 0 daher empty line
@@ -580,7 +580,7 @@ home_einstieg_gender <- function(r) {
       titel2 <- "Schüler:innendaten für 2024 sind noch nicht verfügbar."
       wert <- NA
       jahr <- NA
-      df_2_mint <- data_frame(wert, jahr)
+      df_2_mint <- dplyr::data_frame(wert, jahr)
 
       ##empty line plot
       mint2 <- highcharter::hchart(df_2_mint, 'line', highcharter::hcaes(x = reorder(jahr, wert), y = wert, group = indikator)) %>%

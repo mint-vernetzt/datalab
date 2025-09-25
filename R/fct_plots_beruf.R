@@ -3807,7 +3807,8 @@ entgelte_vergleich_1 <- function(r) {
   geschlecht <- r$beruf_arbeitsmarkt_entgel_geschlecht
   datum <- r$date_arbeitsmarkt_entgelt_vergleich
   land <- r$region_arbeitsmarkt_entgelt_vergleich
-  berufsleb <- r$beruf_arbeitsmarkt_entgelt_berufslev
+  # berufsleb <- r$beruf_arbeitsmarkt_entgelt_berufslev
+  berufsleb <- "Gesamt"
 
 
  ##)
@@ -3818,7 +3819,7 @@ entgelte_vergleich_1 <- function(r) {
   WHERE geschlecht = {geschlecht}
   AND jahr = {datum}
   AND bundesland = {land}
-  AND berufslevel = {berufsleb}
+  AND berufslevel = 'Gesamt'
                                ", .con = con)
 
 #   browser()
@@ -3833,7 +3834,7 @@ entgelte_vergleich_1 <- function(r) {
  df1 <- df1[with(df1, order(wert, decreasing = TRUE)),]
 
   if(berufsleb == "Gesamt"){
-    berufsleb <- "allen Berufslevel"
+    berufsleb <- "alle Berufslevel"
   } else if (berufsleb == "Fachkraft"){
     berufsleb <- "Fachkräften"
   } else if (berufsleb == "Spezialist"){
@@ -3856,7 +3857,6 @@ entgelte_vergleich_1 <- function(r) {
 
 
   ##########
-  # browser()
 
 
   df1$wert <- as.numeric(df1$wert)
@@ -3864,13 +3864,15 @@ entgelte_vergleich_1 <- function(r) {
 
 #clear
   df1 <-  df1 %>%
-    filter(!(grepl("technik$", berufsgruppe, ignore.case = TRUE) & berufsgruppe != "Technik"))
+    dplyr::filter(!(grepl("technik$", berufsgruppe, ignore.case = TRUE) & berufsgruppe != "Technik"))
 
 
 
 
 
-  df1$color <- ifelse(df1$berufsgruppe %in% c("Insgesamt"                                                               ,   "MINT-Berufe", "Keine MINT-Berufe"), "#b16fab", "#efe8e6")
+  df1$color <- ifelse(df1$berufsgruppe %in% c("Insgesamt",
+                                              "MINT-Berufe", "Keine MINT-Berufe"),
+                      "#b16fab", "#efe8e6")
 
 
 
@@ -3947,8 +3949,8 @@ entgelte_verlauf_1 <- function(r) {
 
   datum <- r$date_arbeitsmarkt_entgelt_verlauf
   land <- r$region_arbeitsmarkt_entgelt_verlauf
-  berufsleb <- r$indikator_arbeitsmarkt_entgelt_verlauf_2
-  ### brauchts net
+  #berufsleb <- r$indikator_arbeitsmarkt_entgelt_verlauf_2
+  berufsleb <- "Gesamt"
   geschlecht <- r$abs_zahlen_arbeitsmarkt_entgelt_verlauf
 
   datum1 <- datum[1]:datum[2]
@@ -3990,10 +3992,10 @@ entgelte_verlauf_1 <- function(r) {
     )
 
   if(geschlecht == "Insgesamt"){
-    geschlecht = "Alle Geschlechter"
+    geschlecht = "alle Geschlechter"
   }
   if(berufsleb == "Gesamt") {
-    berufsleb = "Alle Berufslevel"
+    berufsleb = "alle Berufslevel"
   }
 
 
