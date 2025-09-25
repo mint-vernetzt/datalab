@@ -450,7 +450,7 @@ br(),br(),
 p(tags$b(span("VI. Weitergabe Ihrer Daten an Dritte")),
   br(),
 
-"Um unsere Website für Sie als Nutzer so angenehm und komfortable wie möglich gestalten zu können, setzen
+"Um unsere Website für Sie als Nutzer so angenehm und komfortabel wie möglich gestalten zu können, setzen
 wir vereinzelt Dienste externer Dienstleister ein. Nachfolgenden haben Sie Möglichkeit sich über die
 Datenschutzbestimmungen zum Einsatz und Verwendung der eingesetzten Dienste und Funktionen zu informieren,
 um ggf. auch bei den Dienstleistern Ihre Rechte wahrnehmen zu können. ")))))),

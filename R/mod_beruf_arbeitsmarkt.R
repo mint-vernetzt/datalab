@@ -639,48 +639,51 @@ fluidRow( id="beruf_entgelt",
                                      tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_beruf_mint_2__entgelt"),
 
                                    )
-                          ),
-
-                          tabPanel("Balkendiagramm", br(),
-
-                                   shiny::sidebarPanel(
-                                     width = 3,
-                                     tags$style(".well  {background-color:#FFFFFF;}"),
-                                     tags$head(tags$style(HTML(".small-box {height: 140px}"))),
-                                     mod_beruf_arbeitsmarkt_balken_entgelt_ui("mod_beruf_arbeitsmarkt_balken_entgelt_ui_1"),
-
-                                   ),
-                                   shiny::mainPanel(
-                                     width = 9,
-                                     shinycssloaders::withSpinner(htmlOutput(ns("plot_balken_entgelt")),
-                                                                  color = "#154194"),
-
-                                     shinyBS::bsPopover(id="h_studium_international_2_entgelt", title="",
-                                                        content = paste0("  "),
-                                                        placement = "top",
-                                                        trigger = "hover"),
-                                     tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_studium_international_2_entgelt"))
-
-                          ),
-
-                          tabPanel("top 10 entgel", br(),
-
-                                   shiny::sidebarPanel(
-                                     width = 3,
-                                     mod_beruf_arbeitsmarkt_top_entgelt_ui("mod_beruf_arbeitsmarkt_top_entgelt_ui_1"),
-                                   ),
-                                   shiny::mainPanel(
-                                     width = 9,
-                                     shinycssloaders::withSpinner(htmlOutput(ns("plot_top_entgelte")),
-                                                                  color = "#154194"),
-
-                                     br(),
-                                     shinyBS::bsPopover(id="h_studium_fach_entgelte1", title="",
-                                                        content = paste0("I"),
-                                                        placement = "top",
-                                                        trigger = "hover"),
-                                     tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_studium_fach_entgelte1"))
-                          ),
+                          )
+                          #
+                          # ,
+                          #
+                          # tabPanel("Balkendiagramm", br(),
+                          #
+                          #          shiny::sidebarPanel(
+                          #            width = 3,
+                          #            tags$style(".well  {background-color:#FFFFFF;}"),
+                          #            tags$head(tags$style(HTML(".small-box {height: 140px}"))),
+                          #            mod_beruf_arbeitsmarkt_balken_entgelt_ui("mod_beruf_arbeitsmarkt_balken_entgelt_ui_1"),
+                          #
+                          #          ),
+                          #          shiny::mainPanel(
+                          #            width = 9,
+                          #            shinycssloaders::withSpinner(htmlOutput(ns("plot_balken_entgelt")),
+                          #                                         color = "#154194"),
+                          #
+                          #            shinyBS::bsPopover(id="h_studium_international_2_entgelt", title="",
+                          #                               content = paste0("  "),
+                          #                               placement = "top",
+                          #                               trigger = "hover"),
+                          #            tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_studium_international_2_entgelt"))
+                          #
+                          # ),
+                          #
+                          # tabPanel("top 10 entgel", br(),
+                          #
+                          #          shiny::sidebarPanel(
+                          #            width = 3,
+                          #            mod_beruf_arbeitsmarkt_top_entgelt_ui("mod_beruf_arbeitsmarkt_top_entgelt_ui_1"),
+                          #          ),
+                          #          shiny::mainPanel(
+                          #            width = 9,
+                          #            shinycssloaders::withSpinner(htmlOutput(ns("plot_top_entgelte")),
+                          #                                         color = "#154194"),
+                          #
+                          #            br(),
+                          #            shinyBS::bsPopover(id="h_studium_fach_entgelte1", title="",
+                          #                               content = paste0("I"),
+                          #                               placement = "top",
+                          #                               trigger = "hover"),
+                          #            tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_studium_fach_entgelte1"))
+                          # ),
+                          ,
 
 
               )
@@ -1116,31 +1119,31 @@ mod_beruf_arbeitsmarkt_server <- function(id, r){
      entgelte_verlauf_1(r)
    })
 
-   output$plot_balken_entgelt <- renderUI({
-     entgelte_balken_1(r)
-   })
+   # output$plot_balken_entgelt <- renderUI({
+   #   entgelte_balken_1(r)
+   # })
 
 
 
-   output$plot_top_entgelte <- renderUI({
-
-     plot_list <- plot_ranking_top_entgeltee(r)
-     # r$plot_top_faecher_left <- plot_list[[1]]
-     # r$plot_top_faecher_right <- plot_list[[2]]
-     #
-     # r$plot_top_faecher_left_title <- get_plot_title(
-     #   plot = r$plot_top_faecher_left
-     # )
-     # r$plot_top_faecher_right_title <- get_plot_title(
-     #   plot = r$plot_top_faecher_right
-     # )
-
-     # return plots
-     out <- highcharter::hw_grid(
-       plot_list,
-       ncol = 2)
-
-   })
+   # output$plot_top_entgelte <- renderUI({
+   #
+   #   plot_list <- plot_ranking_top_entgeltee(r)
+   #   # r$plot_top_faecher_left <- plot_list[[1]]
+   #   # r$plot_top_faecher_right <- plot_list[[2]]
+   #   #
+   #   # r$plot_top_faecher_left_title <- get_plot_title(
+   #   #   plot = r$plot_top_faecher_left
+   #   # )
+   #   # r$plot_top_faecher_right_title <- get_plot_title(
+   #   #   plot = r$plot_top_faecher_right
+   #   # )
+   #
+   #   # return plots
+   #   out <- highcharter::hw_grid(
+   #     plot_list,
+   #     ncol = 2)
+   #
+   # })
 
 
 
