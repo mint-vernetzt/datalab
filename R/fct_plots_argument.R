@@ -9,7 +9,7 @@ daten_download_q <- function(r){
   region_reserve <- r$region_argumentationshilfe
 
   ### Daten Verlauf MINT ----
-  t <- 2017:2023
+  t <- 2017:2024
   absolut_selector <- "Anzahl"
 
   query_df <- glue::glue_sql("
@@ -116,7 +116,7 @@ daten_download_q <- function(r){
 
     # plot_data <- plot_data %>%
     #   mutate(Bereich = "Engpassindikator",
-    #          Quelle = "Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt")
+    #          Quelle = "Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt")
     #
     #
 
@@ -193,7 +193,7 @@ daten_download_q <- function(r){
 
     # plot_data <- plot_data %>%
     #   mutate(Bereich = "Engpassindikator",
-    #          Quelle = "Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt")
+    #          Quelle = "Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt")
     #
 
 
@@ -256,14 +256,14 @@ AND fachbereich = {faecher}
 
   # df <- df %>%
   #   mutate(Bereich = "Demografie MINT",
-  #          Quelle = "Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt")
+  #          Quelle = "Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt")
 
 
   ### Nachwuchs ----
   query_df <- glue::glue_sql("
   SELECT region, fach, jahr, indikator, wert
   FROM studierende_detailliert
-  WHERE jahr IN (2017, 2018, 2019, 2020, 2021, 2022, 2023)
+  WHERE jahr IN (2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024)
     AND region = {regio}
     AND geschlecht = 'Gesamt'
     AND fach IN ('Mathematik, Naturwissenschaften', 'Informatik', 'Ingenieurwissenschaften (ohne Informatik)')
@@ -316,7 +316,7 @@ AND fachbereich = {faecher}
 
   # df_nachwuchs_agg <- df_nachwuchs_agg %>%
   #   mutate(Bereich = "Nachwuchs MINT",
-  #          Quelle = "Destatis, 2024 und Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt")
+  #          Quelle = "Destatis, 2024 und Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt")
   #
   #
 
@@ -418,7 +418,7 @@ AND fachbereich = {faecher}
   # 1. Beschäftigte MINT
   df_beschäftigte_clean <- df_alle %>%
     mutate(Bereich = "Beschäftigte MINT",
-           Quelle = "Statistisches Bundesamt, 2024; Bundesagentur für Arbeit, 2024; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt",
+           Quelle = "Statistisches Bundesamt, 2025 und Bundesagentur für Arbeit, 2025, beides auf Anfrage, eigene Berechnungen durch MINTvernetzt",
            Region = region_reserve)
 
 
@@ -428,7 +428,7 @@ AND fachbereich = {faecher}
   #   mutate(Bereich = "Engpassindikator")
   plot_data_clean <- plot_data %>%
     mutate(Bereich = "Engpassindikator",
-           Quelle = "Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt",
+           Quelle = "Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt",
            Region = save_regio)
 
 
@@ -437,7 +437,7 @@ AND fachbereich = {faecher}
   #   mutate(Bereich = "Demografie MINT")
   df_demografie_clean <- df %>%
     mutate(Bereich = "Demografie MINT",
-           Quelle = "Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt",
+           Quelle = "Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt",
            Region = region_reserve)
 
 
@@ -446,7 +446,7 @@ AND fachbereich = {faecher}
   #   mutate(Bereich = "Nachwuchs MINT")
   df_nachwuchs_clean <- df_nachwuchs_agg %>%
     mutate(Bereich = "Nachwuchs MINT",
-           Quelle = "Destatis, 2024 und Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt")
+           Quelle = "Destatis, 2025 und Bundesagentur für Arbeit, 2025, beides auf Anfrage, eigene Berechnungen durch MINTvernetzt")
 
 
   # 5. Wirkhebel (Prognosen)
@@ -601,7 +601,7 @@ daten_download <- function(r){
 
     # plot_data <- plot_data %>%
     #   mutate(Bereich = "Engpassindikator",
-    #          Quelle = "Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt")
+    #          Quelle = "Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt")
     #
     #
 
@@ -678,7 +678,7 @@ daten_download <- function(r){
 
       # plot_data <- plot_data %>%
       #   mutate(Bereich = "Engpassindikator",
-      #          Quelle = "Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt")
+      #          Quelle = "Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt")
       #
 
 
@@ -739,7 +739,7 @@ AND fachbereich = {faecher}
 
     # df <- df %>%
     #   mutate(Bereich = "Demografie MINT",
-    #          Quelle = "Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt")
+    #          Quelle = "Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt")
 
 
     ### Nachwuchs ----
@@ -799,7 +799,7 @@ AND fachbereich = {faecher}
 
     # df_nachwuchs_agg <- df_nachwuchs_agg %>%
     #   mutate(Bereich = "Nachwuchs MINT",
-    #          Quelle = "Destatis, 2024 und Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt")
+    #          Quelle = "Destatis, 2024 und Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt")
     #
     #
 
@@ -914,7 +914,7 @@ AND fachbereich = {faecher}
     #   mutate(Bereich = "Engpassindikator")
     plot_data_clean <- plot_data %>%
       dplyr::mutate(Bereich = "Engpassindikator",
-             Quelle = "Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt",
+             Quelle = "Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt",
              Region = save_regio)
 
 
@@ -923,7 +923,7 @@ AND fachbereich = {faecher}
     #   mutate(Bereich = "Demografie MINT")
     df_demografie_clean <- df %>%
       dplyr::mutate(Bereich = "Demografie MINT",
-             Quelle = "Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt",
+             Quelle = "Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt",
              Region = region_reserve)
 
 
@@ -932,7 +932,7 @@ AND fachbereich = {faecher}
     #   mutate(Bereich = "Nachwuchs MINT")
     df_nachwuchs_clean <- df_nachwuchs_agg %>%
       dplyr::mutate(Bereich = "Nachwuchs MINT",
-             Quelle = "Destatis, 2024 und Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt")
+             Quelle = "Destatis, 2024 und Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt")
 
 
     # 5. Wirkhebel (Prognosen)
@@ -992,7 +992,7 @@ AND fachbereich = {faecher}
 argument_verlauf <- function(r){
 
   # load UI inputs from reactive value
-  t <- 2017:2023
+  t <- 2017:2024
   absolut_selector <- "Anzahl"
   regio <- r$region_argumentationshilfe
 
@@ -1090,7 +1090,7 @@ argument_verlauf <- function(r){
       highcharter::hc_chart(
         style = list(fontFamily = "Calibri Regular", fontSize = "14px")
       )  %>%
-      highcharter::hc_caption(text = "Quellen: Statistisches Bundesamt, 2024; Bundesagentur für Arbeit, 2024; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+      highcharter::hc_caption(text = "Quellen: Destatis, 2025 und Bundesagentur für Arbeit, 2025, beides auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
                               style = list(fontSize = "11px", color = "gray")) %>%
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
@@ -1104,7 +1104,7 @@ argument_verlauf <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = 'Quelle: Statistisches Bundesamt, 2024; Bundesagentur für Arbeit, 2024; KMK, 2024 – eigene Berechnungen durch MINTvernetzt\\n\\n' + this.getCSV();
+     var data = 'Quelle: Destatis, 2025 und Bundesagentur für Arbeit, 2025, beides auf Anfrage, eigene Berechnungen durch MINTvernetzt\\n\\n' + this.getCSV();
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -1140,7 +1140,7 @@ argument_verlauf <- function(r){
       highcharter::hc_chart(
         style = list(fontFamily = "Calibri Regular", fontSize = "14px")
       )  %>%
-      highcharter::hc_caption(text = "Quellen: Statistisches Bundesamt, 2024; Bundesagentur für Arbeit, 2024; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+      highcharter::hc_caption(text = "Quellen: Destatis, 2025 und Bundesagentur für Arbeit, 2025, beides auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
                               style = list(fontSize = "11px", color = "gray")) %>%
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
@@ -1154,7 +1154,7 @@ argument_verlauf <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = 'Quellen: Statistisches Bundesamt, 2024; Bundesagentur für Arbeit, 2024; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt.\\n\\n' + this.getCSV();
+     var data = 'Quellen: Destatis, 2025 und Bundesagentur für Arbeit, 2025, beides auf Anfrage, eigene Berechnungen durch MINTvernetzt.\\n\\n' + this.getCSV();
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -1315,7 +1315,7 @@ argument_fachkraft <- function(r){
         style = list(fontFamily = "Calibri Regular")
       ) %>%
       highcharter::hc_size(380, 480) %>%
-      highcharter::hc_caption(text = "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+      highcharter::hc_caption(text = "Quelle: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
                               style = list(fontSize = "11px", color = "gray")) %>%
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
@@ -1329,7 +1329,7 @@ argument_fachkraft <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = 'Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.\\n\\n' + this.getCSV();
+     var data = 'Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.\\n\\n' + this.getCSV();
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -1395,7 +1395,7 @@ argument_fachkraft <- function(r){
         style = list(fontFamily = "Calibri Regular")
       )%>%
       highcharter::hc_size(380, 480) %>%
-      highcharter::hc_caption(text = "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+      highcharter::hc_caption(text = "Quelle: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
                               style = list(fontSize = "11px", color = "gray")) %>%
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
@@ -1409,7 +1409,7 @@ argument_fachkraft <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = 'Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.\\n\\n' + this.getCSV();
+     var data = 'Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.\\n\\n' + this.getCSV();
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -1861,7 +1861,7 @@ argument_demografie <- function(r){
       style = list(fontFamily = "Calibri Regular", fontSize = "14px")
     ) %>%
     highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
-    highcharter::hc_caption(text = "    Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt. ",
+    highcharter::hc_caption(text = "    Quelle: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt. ",
                             style = list(fontSize = "11px", color = "gray")) %>%
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(
@@ -1910,7 +1910,7 @@ argument_nachwuchs <- function(r){
   query_df <- glue::glue_sql("
   SELECT region, fach, jahr, indikator, wert
   FROM studierende_detailliert
-  WHERE jahr IN (2017, 2018, 2019, 2020, 2021, 2022, 2023)
+  WHERE jahr IN (2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024)
     AND region = {regio}
     AND geschlecht = 'Gesamt'
     AND fach IN ('Mathematik, Naturwissenschaften', 'Informatik', 'Ingenieurwissenschaften (ohne Informatik)')
@@ -1922,7 +1922,7 @@ argument_nachwuchs <- function(r){
   query_df <- glue::glue_sql("
   SELECT bundesland, fachbereich, jahr, kategorie, wert
   FROM arbeitsmarkt_detail
-  WHERE jahr IN (2018, 2019, 2020, 2021, 2022, 2023, 2024)
+  WHERE jahr IN (2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024)
     AND bundesland = {regio}
     AND geschlecht = 'Gesamt'
     AND fachbereich IN ('Mathematik, Naturwissenschaften', 'Informatik', 'Technik (gesamt)')
@@ -2046,7 +2046,7 @@ argument_nachwuchs <- function(r){
     highcharter::hc_chart(
       style = list(fontFamily = "Calibri Regular", fontSize = "14px")
     )  %>%
-    highcharter::hc_caption(text = "Quelle der Daten: Quelle der Daten: Destatis, 2024 und Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+    highcharter::hc_caption(text = "Quelle: Destatis, 2025 und Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
                             style = list(fontSize = "11px", color = "gray")) %>%
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(
@@ -2060,7 +2060,7 @@ argument_nachwuchs <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = 'Quelle der Daten: Quelle der Daten: Destatis, 2024 und Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.\\n\\n' +  this.getCSV();
+     var data = 'Quelle der Daten: Destatis, 2025 und Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.\\n\\n' +  this.getCSV();
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);

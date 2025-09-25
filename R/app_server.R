@@ -200,15 +200,15 @@ observe({
     footer_page(input$footer_nav)
   })
 
-  observeEvent(input$tabs, {
-    footer_page(NULL)  # Footer-Modus verlassen
-
-    if (is.null(tab_loaded[[input$tabs]])) {
-      # nur beim ersten Mal Loader starten
-      session$sendCustomMessage("tabStart", list())
-      tab_loaded[[input$tabs]] <- TRUE
-    }
-  })
+  # observeEvent(input$tabs, {
+  #   footer_page(NULL)  # Footer-Modus verlassen
+  #
+  #   if (is.null(tab_loaded[[input$tabs]])) {
+  #     # nur beim ersten Mal Loader starten
+  #     session$sendCustomMessage("tabStart", list())
+  #     tab_loaded[[input$tabs]] <- TRUE
+  #   }
+  # })
 
   # Tab-Klicks
   observeEvent(input$tabs, {

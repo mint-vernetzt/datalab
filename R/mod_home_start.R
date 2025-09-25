@@ -58,11 +58,11 @@ mod_home_start_ui <- function(id){
       shinydashboard::box(
         title = "Datenquellen",
         width = 5,
-        p("Die amtlichen Statistiken zeigen das aktuellste verfügbare Berichtsjahr 2023."),
-        p(tags$b(span("Studierendenzahlen: Destatis 2024, auf Anfrage. ")),"Daten des Berichtsjahres 2024 ca. ab September 2025 verfügbar."),
+        p("Die amtlichen Statistiken zeigen die aktuellsten verfügbaren Berichtsjahre 2024 (für Studierenden- und Berufsdaten) und 2023 (für Schuldaten)."),
+        p(tags$b(span("Studierendenzahlen: Destatis 2025, auf Anfrage. ")),"Daten des Berichtsjahres 2025 ca. ab September 2026 verfügbar."),
         p(tags$b(span("Schülerzahlen: KMK 2024, auf Anfrage. ")), "Daten des Berichtjahres 2024 ca. ab Dezember 2025 verfügbar."),
-        p(tags$b(span("Auszubildenden- und Beschäftigtenzahlen: Bundesagentur für Arbeit 2024, auf Anfrage. ")), "Daten des Berichtsjahres
-            2024 ca. ab Juli 2025 verfügbar.")
+        p(tags$b(span("Auszubildenden- und Beschäftigtenzahlen: Bundesagentur für Arbeit 2025, auf Anfrage. ")), "Daten des Berichtsjahres
+            2025 ca. ab Juli 2026 verfügbar.")
         )
       ),
 
@@ -75,9 +75,9 @@ mod_home_start_ui <- function(id){
         column(
           width = 8,
           p("Wie groß ist der MINT-Anteil entlang der Bildungskette von Schule bis Beruf?
-          Rund ein Drittel der Leistungskursbelegungen ist in einem MINT-Fach.
-          37 % der Studierenden und rund ein Drittel der Auszubildenden lernen in MINT.
-          Unter den Beschäftigten ist der MINT-Anteil geringer. Hier üben Stand 2023 rund 23 %
+          Gut ein Drittel der Leistungskursbelegungen ist 2023 in einem MINT-Fach. 2024 lernen
+          37 % der Studierenden und rund ein Drittel der Auszubildenden in MINT.
+          Unter den Beschäftigten ist der MINT-Anteil geringer. Hier üben Stand 2024 rund 23 %
           der sozialversicherungspflichtigen Beschäftigten eine MINT-Tätigkeit aus.
           In den letzten zehn Jahren sind die prozentualen Anteile relativ konstant geblieben.
           Leichte Veränderungen sieht man in den absoluten Zahlen.")
@@ -129,8 +129,8 @@ mod_home_start_ui <- function(id){
         width = 12,
         column(
           width = 8,
-          p("In den MINT-Leistungskursen sind 47 % der Schüler:innen weiblich.
-          In der weiterführenden Bildung, in Ausbildung und Studium, liegt der Frauenanteil bei 13 % beziehungsweise 33 %.
+          p("In den MINT-Leistungskursen sind 2023 46 % der Schüler:innen weiblich.
+          In der weiterführenden Bildung, in Ausbildung und Studium, liegt der Frauenanteil 2024 bei 13 % beziehungsweise 33 %.
           In den MINT-Berufen sind nur 17 % Frauen vertreten. Im Vergleich dazu liegt der Frauenanteil in \"Nicht-MINT\"-Berufen bei 55 %,
           in \"Nicht-MINT\"-Studiengängen sogar bei über 60 %.", br(),
             "In den letzten zehn Jahren gab es diesbezüglich nur geringe Veränderungen.

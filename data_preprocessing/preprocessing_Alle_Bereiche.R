@@ -70,4 +70,8 @@ save(zentral, file = "zentral.rda")
 
 setwd("~/datalab2")
 
+library(DBI)
 
+dbWriteTable(con, 'zentral', zentral, overwrite = TRUE, append = FALSE)
+
+dbDisconnect(con)
