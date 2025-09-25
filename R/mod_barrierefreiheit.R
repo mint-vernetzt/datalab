@@ -130,7 +130,7 @@ mod_barrierefreiheit_ui <- function(id){
           die MINT-Community in Deutschland durch das Bündeln und Aufbereiten
           von MINT-Statistiken in ihrer Arbeit zu unterstützen.
           Weitere Informationen finden Sie auf der MINTvernetzt-Website: ",
-          tags$a(href="https://www.mint-vernetzt.de"),
+          tags$a(href="https://www.mint-vernetzt.de", "https://www.mint-vernetzt.de"),
           br(),  br(),
           tags$b("Hinweis: "), "Diese Erklärung wird regelmäßig überprüft und aktualisiert,
           um den aktuellen Stand der Barrierefreiheit unserer Plattform widerzuspiegeln.")
