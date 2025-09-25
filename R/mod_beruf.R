@@ -51,6 +51,12 @@ mod_beruf_server <- function(id,
   mod_beruf_arbeitsmarkt_landkreis_vergleich_server("mod_beruf_arbeitsmarkt_landkreis_vergleich_ui_1", r)
   mod_beruf_arbeitsmarkt_regional_verlauf_server("mod_beruf_arbeitsmarkt_regional_verlauf_ui_1", r)
 
+  # Box 5
+  mod_beruf_arbeitsmarkt_entgelt_vergleich_server("mod_beruf_arbeitsmarkt_entgelt_vergleich_ui_1", r)
+  mod_beruf_arbeitsmarkt_entgelt_verlauf_server("mod_beruf_arbeitsmarkt_entgelt_verlauf_ui_1", r)
+  mod_beruf_arbeitsmarkt_balken_entgelt_server("mod_beruf_arbeitsmarkt_balken_entgelt_ui_1", r)
+  mod_beruf_arbeitsmarkt_top_entgelt_server("mod_beruf_arbeitsmarkt_top_entgelt_ui_1", r)
+
 }
 
 ## To be copied in the UI

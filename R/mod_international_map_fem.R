@@ -29,7 +29,7 @@ mod_international_map_fem_ui <- function(id) {
                        inputId = ns("map_y_eu_f"),
                        label = NULL,
                        choices = international_ui_years(region = "EU"),
-                       selected = "2021"
+                       selected = "2023"
                      ),
 
                      p("Fachbereich:"),
@@ -57,7 +57,7 @@ mod_international_map_fem_ui <- function(id) {
                        inputId = ns("map_y_oecd_f"),
                        label = NULL,
                        choices = international_ui_years(region = "OECD"),
-                       selected = "2020"
+                       selected = "2023"
                      ),
 
                      p("Fachbereich:"),

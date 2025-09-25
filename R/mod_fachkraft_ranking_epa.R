@@ -15,7 +15,7 @@ mod_fachkraft_ranking_epa_ui <- function(id){
       inputId = ns("fachkraft_ranking_epa_1"),
       label = NULL,
       choices = fachkraft_ui_years(reg="DE"),
-      selected = "2023"
+      selected = "2024"
     ),
 
     p("Indikator"),

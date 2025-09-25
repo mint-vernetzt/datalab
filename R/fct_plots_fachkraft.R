@@ -166,7 +166,7 @@ plot_fachkraft_prognose  <- function(r) {
                           }
                         "))) %>%
     highcharter::hc_tooltip(shared = FALSE, headerFormat = "<b>Fachkräfte-Entwicklung {point.x}</b><br>") %>%
-    highcharter::hc_caption(text = "Vorausberechnung durch das IW Köln, 2024, beauftragt durch MINTvernetzt",
+    highcharter::hc_caption(text = "Vorausberechnung durch das IW Köln, 2025, beauftragt durch MINTvernetzt",
                             style = list(fontSize = "11px", color = "gray")) %>%
     highcharter::hc_credits(enabled = FALSE) %>%
     highcharter::hc_plotOptions(
@@ -848,7 +848,7 @@ plot_fachkraft_epa_item <- function(r) {
       style = list(fontFamily = "Calibri Regular")
     ) %>%
     highcharter::hc_size(380, 480) %>%
-    highcharter::hc_caption(text = "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+    highcharter::hc_caption(text = "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
                               style = list(fontSize = "11px", color = "gray")) %>%
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(
@@ -863,7 +863,7 @@ plot_fachkraft_epa_item <- function(r) {
      var filename = chartTitle + '_' + date + '.txt';
 
      var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle: Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt';
+     data += '\\nQuelle: Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt';
 
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
@@ -935,7 +935,7 @@ plot_fachkraft_epa_item <- function(r) {
         style = list(fontFamily = "Calibri Regular")
       )%>%
       highcharter::hc_size(380, 480) %>%
-      highcharter::hc_caption(text = "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+      highcharter::hc_caption(text = "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
                               style = list(fontSize = "11px", color = "gray")) %>%
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
@@ -950,7 +950,7 @@ plot_fachkraft_epa_item <- function(r) {
      var filename = chartTitle + '_' + date + '.txt';
 
      var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle: Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt';
+     data += '\\nQuelle: Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt';
 
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
@@ -994,8 +994,8 @@ plot_fachkraft_epa_bulas <- function(r) {
      regio <- r$regio_fachkraft_epa_bulas20_21
    } else if(timerange == 2022){
      regio <- r$regio_fachkraft_epa_bulas22
-   }else if(timerange == 2023){
-     regio <- r$regio_fachkraft_epa_bulas23
+   }else if(timerange  %in% 2023:2025){
+     regio <- r$regio_fachkraft_epa_bulas23_24
    }
 
    df_query <- glue::glue_sql("
@@ -1007,6 +1007,8 @@ plot_fachkraft_epa_bulas <- function(r) {
    AND anforderung IN ({bf*})
    AND region = {regio}
                                ", .con = con)
+
+
 
    plot_data_raw <- DBI::dbGetQuery(con, df_query)
 
@@ -1155,7 +1157,7 @@ plot_fachkraft_epa_bulas <- function(r) {
       style = list(fontFamily = "Calibri Regular")
     ) %>%
     highcharter::hc_size(380, 480) %>%
-    highcharter::hc_caption(text = "Quelle der Daten: Bundesagentur für Arbeit, 2024, freier Download, eigene Berechnungen durch MINTvernetzt.",
+    highcharter::hc_caption(text = "Quelle der Daten: Bundesagentur für Arbeit, 2025, freier Download, eigene Berechnungen durch MINTvernetzt.",
                             style = list(fontSize = "11px", color = "gray")) %>%
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(
@@ -1170,7 +1172,7 @@ plot_fachkraft_epa_bulas <- function(r) {
      var filename = chartTitle + '_' + date + '.txt';
 
      var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle: Quelle der Daten: Bundesagentur für Arbeit, 2024,  freier Download, eigene Berechnungen durch MINTvernetzt';
+     data += '\\nQuelle: Quelle der Daten: Bundesagentur für Arbeit, 2025,  freier Download, eigene Berechnungen durch MINTvernetzt';
 
 
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
@@ -1242,7 +1244,7 @@ plot_fachkraft_epa_bulas <- function(r) {
         style = list(fontFamily = "Calibri Regular")
       )%>%
       highcharter::hc_size(380, 480) %>%
-      highcharter::hc_caption(text = "Quelle der Daten: Bundesagentur für Arbeit, 2024, freier Download, eigene Berechnungen durch MINTvernetzt.",
+      highcharter::hc_caption(text = "Quelle der Daten: Bundesagentur für Arbeit, 2025, freier Download, eigene Berechnungen durch MINTvernetzt.",
                               style = list(fontSize = "11px", color = "gray")) %>%
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
@@ -1257,7 +1259,7 @@ plot_fachkraft_epa_bulas <- function(r) {
      var filename = chartTitle + '_' + date + '.txt';
 
      var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle: Quelle der Daten: Bundesagentur für Arbeit, 2024,  freier Download, eigene Berechnungen durch MINTvernetzt';
+     data += '\\nQuelle: Quelle der Daten: Bundesagentur für Arbeit, 2025,  freier Download, eigene Berechnungen durch MINTvernetzt';
 
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
@@ -1502,7 +1504,7 @@ plot_fachkraft_bar_vakanz  <- function(r) {
       )) %>%
     highcharter::hc_yAxis(title = list(text = "")) %>%
     highcharter::hc_xAxis(title = list(text = "")) %>%
-    highcharter::hc_caption(text = "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage; eigene Berechnungen durch MINTvernetzt.",
+    highcharter::hc_caption(text = "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage; eigene Berechnungen durch MINTvernetzt.",
                             style = list(fontSize = "11px", color = "gray")) %>%
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(
@@ -1518,7 +1520,7 @@ plot_fachkraft_bar_vakanz  <- function(r) {
 
 
      var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle: Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage; eigene Berechnungen durch MINTvernetzt';
+     data += '\\nQuelle: Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage; eigene Berechnungen durch MINTvernetzt';
 
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
@@ -1698,7 +1700,7 @@ plot_fachkraft_detail_item  <- function(r) {
       text = paste0("Werte < 1,5                : kein Fachkräfteengpass", br(),
                     "Werte zwischen 1,5 und 1,9 : Anzeichen eines Fachkräfteengpasses", br(),
                     "Werte >= 2,0               : Fachkräfteengpass", br(),
-                    "<span style='font-size:11px; color:gray;'>Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.</span>"),
+                    "<span style='font-size:11px; color:gray;'>Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.</span>"),
       align = "left",
       style = list(color = "grey",
                    useHTML = TRUE,
@@ -1777,7 +1779,7 @@ plot_fachkraft_detail_item  <- function(r) {
       style = list(fontFamily = "Calibri Regular", fontSize = "14px")
     ) %>%
     highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
-    highcharter::hc_caption(text = "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+    highcharter::hc_caption(text = "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
                             style = list(fontSize = "11px", color = "gray")) %>%
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(
@@ -1846,7 +1848,7 @@ plot_fachkraft_detail_item  <- function(r) {
           )
         ),
         title = list(text = "")) %>%
-      highcharter::hc_caption(text = "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+      highcharter::hc_caption(text = "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
                               style = list(fontSize = "11px", color = "gray")) %>%
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
@@ -1862,7 +1864,7 @@ plot_fachkraft_detail_item  <- function(r) {
 
 
      var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle: Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage; eigene Berechnungen durch MINTvernetzt';
+     data += '\\nQuelle: Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage; eigene Berechnungen durch MINTvernetzt';
 
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
@@ -1986,7 +1988,7 @@ plot_fachkraft_ranking_epa  <- function(r) {
 
 
 
-    quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
     out <- balkenbuilder(df, titel, x="beruf", y="wert",group=NULL, tooltip = "Anzahl: {point.wert}", format = "{value:, f}", color = "#EE7775", quelle = quelle)
 

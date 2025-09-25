@@ -15,7 +15,7 @@ mod_fachkraft_item_detail_ui <- function(id){
       inputId = ns("map_y_fachkraft_arbeit_detail"),
       label = NULL,
       choices = fachkraft_ui_years(),
-      selected = "2023"
+      selected = "2024"
     ),
 
     p("Berufslevel:"),

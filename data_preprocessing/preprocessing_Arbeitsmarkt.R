@@ -387,6 +387,12 @@ usethis::use_data(arbeitsmarkt, overwrite = T)
 # Erstellt "arbeitsmarkt_detail" - Alle ------------------------------------------
 
 ## Rohdaten einlesen ---------------------------------------------------
+pfad <- "C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/"
+library(dplyr)
+pfad <- "C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/"
+library(dplyr)
+pfad <- "C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/"
+library(dplyr)
 
 library(dplyr)
 
@@ -415,13 +421,54 @@ data_n <- readxl::read_excel(paste0(pfad, "BA009_230717_EA_344636_SvB_Azubi_MINT
 data_n2 <- readxl::read_excel(paste0(pfad, "BA024_240802_EA_357830_SvB_Azubi_MINT.xlsx"),
                               sheet = "Auswertung", col_names = F, range = "A15:AH7520")
 
+#20 24
+data_n3 <- readxl::read_excel(paste0(pfad, "BA049_250820_EA_394801_SvB_Azubi_MINT.xlsx"),
+                              sheet = "Auswertung", col_names = F, range = "A17:AG7522")
+
+library(stringr)
+# Definiere die "verschiebbaren" Werte
+# shift_categories_2 <- c("Helfer", "Fachkraft", "Spezialist", "Experte", "keine Angabe", "MINT-Berufe")
+# shift_categories_3 <- c("Fachkraft", "Spezialist", "Experte",
+#                         "Mathematik", "Naturwissenschaften", "Informatik", "Technik")
+
+
+
+
+# data_n3 <- data_n3 %>%
+#   rowwise() %>%
+#   mutate(
+#     keep_flag = str_detect(`...2`, "^Insgesamt$|^dav\\.|^\\(Z\\.") |
+#       str_detect(`...3`, "^Insgesamt$|^dav\\.|^\\(Z\\."),
+#
+#     `...3` = ifelse(!keep_flag & `...2` %in% shift_categories_2,
+#                    paste(`...3`, `...2`, sep = " "), `...3`),
+#     `...2` = ifelse(!keep_flag & `...2` %in% shift_categories_2, NA, `...2`),
+#
+#     `...5` = ifelse(!keep_flag & `...4` %in% shift_categories_3,
+#                    paste(`...5`, `...4`, sep = " "), `...5`),
+#     `...4` = ifelse(!keep_flag & `...4` %in% shift_categories_3, NA, `...4`)
+#   ) %>%
+#   ungroup()
+
 ## Data wrangling ----------------------------------------------------------
 
 ### Funktion ---------------------------------------------------------------
 
-wrangling_detailliert <- function(data_n){
+wrangling_detailliert <- function(data_n, version = "1"){
   # Spalten zusammenfassen/löschen für 2023
-  data_n$...2 <- dplyr::coalesce(data_n$...5, data_n$...4, data_n$...3, data_n$...2) # MINT/Niveau in eine Spalte
+
+
+  # data_n$...2 <- dplyr::coalesce(
+  #   as.character(data_n$...5),
+  #   as.character(data_n$...4),
+  #   as.character(data_n$...3),
+  #   as.character(data_n$...2)
+  # )
+
+  if (version == "2"){
+    data_n$...2 <- dplyr::coalesce(data_n$...4, data_n$...3, data_n$...2) # MINT/Niveau in eine Spalte
+  } else {
+  data_n$...2 <- dplyr::coalesce(data_n$...5, data_n$...4, data_n$...3, data_n$...2) }
 
   ## Daten von 2022 region formatieren
   data_n1 <- data_n
@@ -525,6 +572,129 @@ wrangling_detailliert <- function(data_n){
   return(data_n)
 }
 
+library(dplyr)
+library(tidyr)
+library(stringr)
+
+wrangling_detailliert <- function(data_n, collapse_23 = FALSE) {
+
+  # ==== 1) Struktur angleichen (n3-Fall: "fehlende" Spalte zwischen ...2 und ...3) ====
+  if (collapse_23) {
+    # alle ...-Spaltenindizes ermitteln
+    dot_cols <- grep("^\\.\\.\\.", names(data_n), value = TRUE)
+    dot_idx  <- suppressWarnings(as.integer(sub("^\\.\\.\\.", "", dot_cols)))
+    max_i    <- max(dot_idx, na.rm = TRUE)
+
+    # Spaltennamen ...max,...4,...3 -> jeweils um +1 verschieben (von oben nach unten, um Kollisionen zu vermeiden)
+    for (k in seq(from = max_i, to = 3L, by = -1L)) {
+      old <- paste0("...", k)
+      new <- paste0("...", k + 1L)
+      if (old %in% names(data_n)) {
+        names(data_n)[names(data_n) == old] <- new
+      }
+    }
+
+    # neue leere ...3 nach ...2 einfügen
+    data_n <- tibble::add_column(data_n, `...3` = NA_character_, .after = 2)
+  }
+
+  # ==== 2) MINT/Niveau in ...2 zusammenführen (immer Typ-robust) ====
+  data_n$`...2` <- dplyr::coalesce(
+    as.character(data_n$`...5`),
+    as.character(data_n$`...4`),
+    as.character(data_n$`...3`),
+    as.character(data_n$`...2`)
+  )
+
+  # ==== 3) Dein bestehendes Region-/Kreis-Wrangling (mit backticks für ...-Spalten) ====
+  data_n1 <- data_n
+  data_n1$`...3` <- data_n1$`...1`
+
+  data_n1 <- data_n1 %>%
+    dplyr::mutate(
+      bundesland = dplyr::case_when(
+        `...1` == "Deutschland" ~ "Deutschland",
+        `...1` == "Westdeutschland" ~ "Westdeutschland (o. Berlin)",
+        `...1` == "Ostdeutschland" ~ "Ostdeutschland (inkl. Berlin)",
+        `...1` == "Baden-Württemberg" ~ "Baden-Württemberg",
+        `...1` == "Bayern" ~ "Bayern",
+        `...1` == "Berlin" ~ "Berlin",
+        `...1` == "Brandenburg" ~ "Brandenburg",
+        `...1` == "Bremen" ~ "Bremen",
+        `...1` == "Hamburg" ~ "Hamburg",
+        `...1` == "Hessen" ~ "Hessen",
+        `...1` == "Mecklenburg-Vorpommern" ~ "Mecklenburg-Vorpommern",
+        `...1` == "Niedersachsen" ~ "Niedersachsen",
+        `...1` == "Nordrhein-Westfalen" ~ "Nordrhein-Westfalen",
+        `...1` == "Rheinland-Pfalz" ~ "Rheinland-Pfalz",
+        `...1` == "Saarland" ~ "Saarland",
+        `...1` == "Sachsen-Anhalt" ~ "Sachsen-Anhalt",
+        `...1` == "Sachsen" ~ "Sachsen",
+        `...1` == "Schleswig-Holstein" ~ "Schleswig-Holstein",
+        `...1` == "Thüringen" ~ "Thüringen",
+        TRUE ~ NA_character_
+      )
+    ) %>%
+    tidyr::separate(`...3`, c("a", "b"), sep = ",", fill = "right") %>%  # falls kein Komma vorhanden
+    dplyr::rename(ort = a)
+
+  # Schlüsselnummer extrahieren & Ort bereinigen
+  data_n1$`...4` <- stringr::str_extract(data_n1$ort, "[[:digit:]]+")
+  data_n1$ort    <- gsub("[[:digit:]]", "", data_n1$ort)
+  data_n1$ort    <- stringr::str_trim(data_n1$ort)
+
+  # Stadt-/Landkreis disambiguieren
+  help <- as.data.frame(table(data_n1$ort)) %>% dplyr::filter(Freq != 1)
+  data_n1$ort <- ifelse(data_n1$ort %in% help$Var1 & grepl("tadt", data_n1$b),
+                        stringr::str_c("Stadt ", data_n1$ort), data_n1$ort)
+  data_n1$ort <- ifelse(data_n1$ort %in% help$Var1 & !grepl("tadt", data_n1$b),
+                        stringr::str_c("Landkreis ", data_n1$ort), data_n1$ort)
+
+  # Oldenburg-Korrektur (Schreibfehler in Originalcode korrigiert)
+  data_n1$ort <- ifelse(grepl("Olde", data_n1$ort), "Stadt Oldenburg", data_n1$ort)
+  data_n1$ort <- ifelse(grepl("Olde", data_n1$ort) & is.na(data_n1$b),
+                        "Landkreis Oldenburg", data_n1$ort)
+
+  data_n <- data_n1 %>%
+    dplyr::rename(
+      schluesselnummer = `...4`,
+      zusatz = b
+    )
+
+  # diese beiden Spalten wie bei dir entfernen
+  data_n <- data_n[, -c(6, 7)]
+
+  # Header wie gehabt
+  header <- c(
+    "region", "fachbereich", "ort", "zusatz", "schluesselnummer",
+    "Beschäftigte", "weibliche Beschäftigte", "Beschäftigte u25", "Beschäftigte ü55",
+    "Beschäftigte (nur SVB)", "weibliche Beschäftigte (nur SVB)",
+    "Beschäftigte u25 (nur SVB)", "Beschäftigte ü55 (nur SVB)",
+    "Auszubildende", "weibliche Auszubildende",
+    "Beschäftigte (nur GFB)", "weibliche Beschäftigte (nur GFB)",
+    "Beschäftigte u25 (nur GFB)", "Beschäftigte ü55 (nur GFB)",
+    "ausländische Beschäftigte", "ausländische weibliche Beschäftigte",
+    "ausländische Beschäftigte u25", "ausländische Beschäftigte ü55",
+    "ausländische Beschäftigte (nur SVB)", "ausländische weibliche Beschäftigte (nur SVB)",
+    "ausländische Beschäftigte u25 (nur SVB)", "ausländische Beschäftigte ü55 (nur SVB)",
+    "ausländische Auszubildende", "ausländische weibliche Auszubildende",
+    "ausländische Beschäftigte (nur GFB)", "ausländische weibliche Beschäftigte (nur GFB)",
+    "ausländische Beschäftigte u25 (nur GFB)", "ausländische Beschäftigte ü55 (nur GFB)",
+    "bundesland"
+  )
+  colnames(data_n) <- header
+
+  # bundesland nach unten auffüllen
+  data_n$bundesland <- stats::ave(
+    data_n$bundesland,
+    cumsum(!is.na(data_n$bundesland)),
+    FUN = function(x) x[1]
+  )
+
+  return(data_n)
+}
+
+
 ### 2013-2020, 2022 -------------------------------------------------------
 
 # 2013-2020
@@ -539,6 +709,11 @@ data_n <- wrangling_detailliert(data_n)
 
 # 2023
 data_n2 <- wrangling_detailliert(data_n2)
+
+## 2024
+
+
+data_n3 <- wrangling_detailliert(data_n3,  collapse = TRUE)
 
 ### 2021 --------------------------------------------------------------------
 
@@ -832,6 +1007,17 @@ data_n2 <- data_n2[,c("bereich", "kategorie", "indikator", "fachbereich", "gesch
                     #, "hinweise", "quelle"
 )]
 
+# 20 24
+data_n3 <- detailliert_aufbereiten(data = data_n3)
+data_n3$jahr <- 2024
+# Spalten in logische Reihenfolge bringen
+data_n3 <- data_n3[,c("bereich", "kategorie", "indikator", "fachbereich", "geschlecht", "bundesland", "landkreis", "landkreis_zusatz", "landkreis_nummer", "jahr", "anforderung", "wert"
+                    #, "hinweise", "quelle"
+)]
+
+
+
+
 # 2013-2020
 data_z <- lapply(names(data_z), function(x) detailliert_aufbereiten(data_z[[x]]))
 data_z <- lapply(1:length(data_z), function(i) {
@@ -849,7 +1035,7 @@ names(data_z) <- paste0("data_", 2013:2020)
 # Erstellt "arbeitsmarkt_detail" - Azubis ------------------------------------------
 
 ## Rohdaten einlesen ---------------------------------------------------
-
+pfad <- "C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/"
 library(dplyr)
 
 #2021
@@ -862,6 +1048,11 @@ data_a22 <- readxl::read_excel(paste0(pfad, "/BA019_230823_EA_SvB_Azub_MINT.xlsx
 #2023
 data_a23 <- readxl::read_excel(paste0(pfad, "/BA022_240731_EA_357830_SvB_Azub_MINT_Dauer.xlsx"),
                                sheet = "Auswertung", col_names = F, range = "A12:L4201")
+
+# 20 24
+data_a24 <- readxl::read_excel(paste0(pfad, "/BA048_250820_EA_394801_SvB_Azub_MINT_Dauer.xlsx"),
+                               sheet = "Auswertung", col_names = F, range = "A12:L4201")
+
 
 # 2013 - 2020
 sheet <- 2013:2020
@@ -1027,6 +1218,8 @@ data_a22 <- wrangling_detailliert(data_a22)
 
 data_a23 <- wrangling_detailliert(data_a23)
 
+data_a24 <- wrangling_detailliert(data_a24)
+
 data_az <- lapply(names(data_az), function(x) wrangling_detailliert(data_az[[x]]))
 names(data_az) <- paste0("data_a", 2013:2020)
 
@@ -1175,6 +1368,11 @@ data_a22$jahr <- 2022
 data_a23 <- azubi_aufbereiten(data_a23)
 data_a23$jahr <- 2023
 
+
+# 20 24
+data_a24 <- azubi_aufbereiten(data_a24)
+data_a24$jahr <- 2024
+
 # 2013 - 2020
 data_az <- lapply(names(data_az), function(x) azubi_aufbereiten(data_az[[x]]))
 data_az <- lapply(1:length(data_az), function(i) {
@@ -1227,6 +1425,8 @@ data_a <- azubi_aufbereiten_2(data_a)
 data_a22 <- azubi_aufbereiten_2(data_a22)
 #2023
 data_a23 <- azubi_aufbereiten_2(data_a23)
+#2024
+data_a24 <- azubi_aufbereiten_2(data_a24)
 #2013-2020
 data_az <- lapply(names(data_az), function(x) azubi_aufbereiten_2(data_az[[x]]))
 names(data_az) <- paste0("data_a", 2013:2020)
@@ -1253,6 +1453,7 @@ data_n <- staedte_anhaengen(data_n)
 data_z <- lapply(names(data_z), function(x) staedte_anhaengen(data_z[[x]]))
 names(data_z) <- paste0("data_", 2013:2020)
 data_n2 <- staedte_anhaengen(data_n2)
+data_n3 <- staedte_anhaengen(data_n3)
 
 
 staedte_anhaengen_azubis <- function(data_a22){
@@ -1273,6 +1474,8 @@ data_az <- lapply(names(data_az), function(x) staedte_anhaengen_azubis(data_az[[
 names(data_az) <- paste0("data_a", 2013:2020)
 data_a23 <- staedte_anhaengen_azubis(data_a23)
 
+data_a24 <- staedte_anhaengen_azubis(data_a24)
+###################################################Data? data n? data n2?
 ## arbeitsmarkt_detailliert Zusammenfügen und speichern -------------------------------
 
 data <- rbind(data_z$data_2013, data_z$data_2014, data_z$data_2015,
@@ -1280,16 +1483,18 @@ data <- rbind(data_z$data_2013, data_z$data_2014, data_z$data_2015,
               data_z$data_2019, data_z$data_2020,
               data,
               data_n,
-              data_n2)
-rm(data_n, data_z, data1, data_n2)
+              data_n2,
+              data_n3)
+rm(data_n, data_z, data1, data_n2, data_n3)
 
 data_a <- rbind(data_az$data_a2013, data_az$data_a2014, data_az$data_a2015,
                 data_az$data_a2016, data_az$data_a2017, data_az$data_a2018,
                 data_az$data_a2019, data_az$data_a2020,
                 data_a,
                 data_a22,
-                data_a23)
-rm(data_a22, data_az, data_a1, data_a23)
+                data_a23,
+                data_a24)
+rm(data_a22, data_az, data_a1, data_a23, data_a24)
 
 data_final <- rbind(data, data_a)
 rm(data, data_a)
@@ -1318,8 +1523,8 @@ data_final$wert <- as.numeric(data_final$wert)
 
 arbeitsmarkt_detail <- data_final
 
-#setwd("C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/02_data/data/")
-setwd("C:/Users/kbr/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/02_data/data/")
+setwd("C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/02_data/data/")
+#setwd("C:/Users/kbr/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/02_data/data/")
 save(arbeitsmarkt_detail, file ="arbeitsmarkt_detail.rda")
 
 # Erstellt "data_naa" -----------------------------------------------------
@@ -1894,7 +2099,8 @@ list <- c("BA032_2024_Entgelte_MINT_D.xlsb", "BA028_2024_Entgelte_MINT_BE.xlsb",
           "BA037_2024_Entgelte_MINT_NDS.xlsb", "BA038_2024_Entgelte_MINT_NRW.xlsb",
           "BA039_2024_Entgelte_MINT_RLP.xlsb", "BA040_2024_Entgelte_MINT_S.xlsb",
           "BA041_2024_Entgelte_MINT_SA.xlsb", "BA042_2024_Entgelte_MINT_SH.xlsb",
-          "BA044_2024_Entgelte_MINT_TH.xlsb")
+          "BA044_2024_Entgelte_MINT_TH.xlsb"
+          )
 
 
 i <- list[1]
@@ -1996,9 +2202,131 @@ for(i in list){
 }
 
 entgelt_alle <- bind_rows(entgelt_BE, entgelt_TH, entgelt_SL, entgelt_SH,
-                          entgelt_SA, entgelt_S, entgelt_BRB, entgelt_BW,
+                          entgelt_S, entgelt_SA, entgelt_BRB, entgelt_BW,
                           entgelt_BY, entgelt_D, entgelt_HB, entgelt_H,
                           entgelt_HH, entgelt_MV, entgelt_NDS, entgelt_NRW, entgelt_RLP)
+
+list <- c(
+  "BA051_250820_EA_394801_Entgelte_MINT_D.xlsx", "BA052_250820_EA_394801_Entgelte_MINT_BE.xlsx",
+  "BA064_250820_EA_394801_Entgelte_MINT_SL.xlsx", "BA053_250820_EA_394801_Entgelte_MINT_BR.xlsx",
+  "BA054_250820_EA_394801_Entgelte_MINT_BW.xlsx", "BA055_250820_EA_394801_Entgelte_MINT_BY.xlsx",
+  "BA057_250820_EA_394801_Entgelte_MINT_HE.xlsx", "BA056_250820_EA_394801_Entgelte_MINT_HB.xlsx",
+  "BA058_250820_EA_394801_Entgelte_MINT_HH.xlsx", "BA059_250820_EA_394801_Entgelte_MINT_MV.xlsx",
+  "BA060_250820_EA_394801_Entgelte_MINT_NDS.xlsx", "BA061_250820_EA_394801_Entgelte_MINT_NRW.xlsx",
+  "BA062_250820_EA_394801_Entgelte_MINT_RP.xlsx", "BA065_250820_EA_394801_Entgelte_MINT_SN.xlsx",
+  "BA066_250820_EA_394801_Entgelte_MINT_ST.xlsx", "BA063_250820_EA_394801_Entgelte_MINT_SH.xlsx",
+  "BA067_250820_EA_394801_Entgelte_MINT_TH.xlsx")
+
+i <- list[1]
+
+for(i in list){
+  print(i)
+  pfad_i <- paste0(pfad, i)
+  data <- readxl::read_xlsx(pfad_i, sheet = "Auswertung")
+
+  data <- data[-c(1:8),]
+  header <- data[1,]
+  header2 <- data[2,c(5:10)]
+  colnames(data) <- header
+  colnames(data)[5:10] <- header2
+
+  data <- data[-c(1:3),]
+
+
+  data <- data %>%
+    rename(berufe = `Berufsaggregat MINT`,
+           jahr = Stichtag) %>%
+    mutate(jahr = case_when(
+      jahr == "45291" ~ "2023",
+      jahr == "45657" ~ "2024",
+      T ~ jahr)
+    )
+
+  data <- data[,-1*5:10] # nimmt die Veteilung der Entgelte raus, um die Datenmenge zu reduzieren
+
+  data$berufe[data$berufe == ""] <- NA
+  data$berufe <- zoo::na.locf(data$berufe)
+  data$jahr <- zoo::na.locf(data$jahr)
+
+  data <- data %>%
+    mutate(
+      code = str_extract(berufe, "^\\d+"),
+      berufslevel = str_extract(berufe, "(Fachkraft|Fachkräfte|Spezialist|Spezialisten|Experten|Experte)"),
+      beruf = berufe %>%
+        stringr::str_remove("^\\d+\\s*") %>%
+        stringr::str_remove("\\s*-?\\s*(Fachkraft|Fachkräfte|Spezialist|Spezialisten|Experten|Experte)\\s*$") %>%
+        stringr::str_replace_all("\\s+-\\s+", " ") %>%
+        stringr::str_squish()
+    ) %>%
+    select(-berufe) %>%
+    rename(besch_anzahl = Insgesamt,
+           geschlecht = Geschlecht,
+           wert = `Median in €`)
+
+
+  data$berufsgruppe <- ifelse(is.na(data$code),
+                              data$beruf,
+                              NA)
+  data$berufsgruppe <- zoo::na.locf(data$berufsgruppe)
+
+  data <- data %>%
+    mutate(
+      berufslevel = case_when(
+        is.na(berufslevel) ~ "Gesamt",
+        berufslevel == "Fachkräfte" ~ "Fachkraft",
+        berufslevel == "Spezialisten" ~ "Spezialist",
+        berufslevel == "Experten" ~ "Experte",
+        T ~ berufslevel
+      ))
+
+  # Bundesland ergänzen
+  a <- str_extract(i, "_[A-Za-z]{1,3}\\.")
+  a <- str_extract(a, "[A-Za-z]{1,3}")
+
+  bundesland_key <- c(
+    D = "Deutschland",
+    BW = "Baden-Württemberg",
+    BY = "Bayern",
+    BE = "Berlin",
+    BR = "Brandenburg",
+    HB = "Bremen",
+    HH = "Hamburg",
+    HE = "Hessen",
+    MV = "Mecklenburg-Vorpommern",
+    SL = "Saarland",
+    SN = "Sachsen",
+    ST = "Sachsen-Anhalt",
+    SH = "Schleswig-Holstein",
+    TH = "Thüringen",
+    NRW = "Nordrhein-Westfalen",
+    RP = "Rheinland-Pfalz",
+    NDS = "Niedersachsen"
+  )
+
+
+  data <- data %>%
+    mutate(
+      bundesland = bundesland_key[a],
+      bereich = "Arbeitsmarkt"
+    )
+
+  data <- data[,c("bereich", "besch_anzahl", "bundesland", "geschlecht", "code",
+                  "berufslevel", "berufsgruppe",
+                  "beruf", "jahr", "wert")]
+
+  obj_name <- paste0("entgelt_", a)
+  assign(obj_name, data)
+
+}
+
+entgelt_alle <- bind_rows(entgelt_alle, entgelt_BE, entgelt_TH, entgelt_SL, entgelt_SH,
+                          entgelt_ST, entgelt_SN, entgelt_BR, entgelt_BW,
+                          entgelt_BY, entgelt_D, entgelt_HB, entgelt_HE,
+                          entgelt_HH, entgelt_MV, entgelt_NDS, entgelt_NRW, entgelt_RP)
+
+entgelt_alle <- entgelt_alle %>%
+  mutate(jahr = as.numeric(jahr)) %>%
+  filter(!is.na(jahr))
 
 arbeitsmarkt_entgelte <- entgelt_alle
 save(arbeitsmarkt_entgelte, file = "arbeitsmarkt_entgelte.rda")
@@ -2202,101 +2530,7 @@ usethis::use_data(arbeitsmarkt_fachkraefte_oecd, overwrite = T)
 
 ### Rohdaten einlesen -------------------------------------------------------
 # akro <- "kbr"
-dat <- read.csv(paste0(pfad,"OECD002_Anzahl_Absolv_nach_Feld_OECD.csv"),
-                 header = TRUE, sep = ",", dec = ".")
 
-### Datensatz in passende Form bringen --------------------------------------
-
-dat <- dat %>%
-  dplyr::select(COUNTRY, Country, EDUCATION_LEV, Gender, EDUCATION_FIELD, Year, Value) %>%
-  dplyr::rename(land_code = COUNTRY,
-                land = Country,
-                anforderung = EDUCATION_LEV,
-                geschlecht = Gender,
-                fach = EDUCATION_FIELD,
-                jahr = Year,
-                wert = Value)
-
-# Land zuweisen / übersetzen
-dat$land <- countrycode::countryname(dat$land, destination = "country.name.de")
-
-# Anforderungsniveau zuweisen
-dat <- dat %>%
-  dplyr::mutate(anforderung = dplyr::case_when(
-    anforderung ==  "ISCED11_35" ~ "Erstausbildung (ISCED 35)",
-    anforderung ==  "ISCED11_45" ~ "Ausbildung (ISCED 45)",
-    anforderung ==  "ISCED11_5" ~ "kurzes tertiäres Bildungsprogramm (ISCED 5)",
-    anforderung ==  "ISCED11_6" ~ "Bachelor oder vergleichbar (ISCED 6)",
-    anforderung ==  "ISCED11_7" ~ "Master oder vergleichbar (ISCED 7)",
-    anforderung ==  "ISCED11_8" ~ "Promotion (ISCED 8)"
-  ))
-
-# Fachbereich zuweisen - mit Kekelis Funktion
-## MINT aggregieren
-dat_mint <- dat %>%
-  dplyr::filter(fach %in% c("F05", "F06", "F07")) %>%
-  dplyr::group_by(land_code, land, anforderung, geschlecht, jahr) %>%
-  dplyr::summarise(wert = sum(wert)) %>%
-  dplyr::ungroup()
-dat_mint$fach <- "F05T07"
-## Gesamt berechnen
-dat_ges <- dat %>%
-  dplyr::filter(fach %in% c("F00", "F01", "F02", "F3","F04","F05","F06","F07","F08","F09","F10", "F99")) %>%
-  dplyr::group_by(land_code, land, anforderung, geschlecht, jahr) %>%
-  dplyr::summarise(wert = sum(wert)) %>%
-  dplyr::ungroup()
-dat_ges$fach <- "TOTAL"
-## weitere Naturwissenschaften/Ingen-Wissenschaften berechnen
-dat_nw <- dat %>%
-  dplyr::filter(fach %in% c("F050", "F059")) %>%
-  dplyr::group_by(land_code, land, anforderung, geschlecht, jahr) %>%
-  dplyr::summarise(wert = sum(wert)) %>%
-  dplyr::ungroup()
-dat_nw$fach <- "F050_59"
-dat_iw <- dat %>%
-  dplyr::filter(fach %in% c("F070", "F079")) %>%
-  dplyr::group_by(land_code, land, anforderung, geschlecht, jahr) %>%
-  dplyr::summarise(wert = sum(wert)) %>%
-  dplyr::ungroup()
-dat_iw$fach <- "F070_79"
-## einzelnen löschen
-dat <- dat %>% filter(!(fach %in% c("F050", "F059", "F070", "F079")))
-
-dat <- rbind(dat_mint, dat, dat_iw, dat_nw, dat_ges)
-
-## Labels übertragen
-dat <- iscedf13_transform_lang(dat)
-
-# übersetzen
-dat <- dat %>%
-  dplyr::mutate(
-    geschlecht = dplyr::case_when(
-      geschlecht == "Male" ~ "Männer",
-      geschlecht == "Female" ~ "Frauen",
-      geschlecht == "Total" ~ "Gesamt",
-      T ~ geschlecht
-    ))
-
-# missings ausfiltern
-dat <- na.omit(dat)
-
-# bereich ergänze und in Reihenfolge bringen
-dat$bereich <- "Arbeitsmarkt"
-dat$quelle <- "OECD"
-dat$typ <- "Anzahl"
-dat$population <- "OECD"
-
-# Spalten in logische Reihenfolge bringen
-dat<- dat[,c("bereich", "quelle", "typ", "fach",
-               "geschlecht", "population", "land", "jahr", "anforderung", "wert")]
-colnames(dat)[6] <- "fachbereich"
-
-
-# umbenennen
-arbeitsmarkt_absolvent_oecd <- dat
-
-# speichern
-usethis::use_data(arbeitsmarkt_absolvent_oecd, overwrite = T)
 
 ## OECD 3 - Anteil Feld /Frauen von Absolvent*innen--------------------------
 
@@ -2607,137 +2841,8 @@ arbeitsmarkt_anzahl_azubis_oecd <- dat
 usethis::use_data(arbeitsmarkt_anzahl_azubis_oecd, overwrite = T)
 
 
-## EUROSTAT0 - Anzahl Beschäftigte nach Branche -----------------------------
-# macht keinen Sinn für uns - finden kein MINT hier
-# ### Rohdaten einlesen -------------------------------------------------------
-# akro <- "kbr"
-# dat <- read.csv(paste0("C:/Users/", akro,
-#                        "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/EUROSTAT002_custom_Labor_nach_Berufsfeld.csv.gz"),
-#                 header = TRUE, sep = ",", dec = ".")
-#
-# ### Datensatz in passende Form bringen --------------------------------------
-#
-# dat <- dat %>%
-#   dplyr::select(nace_r2, OBS_VALUE, geo, TIME_PERIOD) %>%
-#   dplyr::rename(land = geo,
-#                 jahr = TIME_PERIOD,
-#                 branche = nace_r2,
-#                 wert = OBS_VALUE)
-#
-# # Land zuweisen / übersetzen
-# dat$land <- countrycode::countrycode(dat$land, origin = "eurostat", destination = "country.name.de")
-#
-# # Branchen zuweisen
-# dat <- dat %>%
-#   dplyr::mutate(branche = dplyr::case_when(
-#     branche ==  "B" ~ "Bergbau und Gewinnung von Steinen und Erden",
-#     branche ==  "C" ~ "Verarbeitendes Gewerbe/Herstellung von Waren",
-#     branche ==  "D" ~ "Energieversorgung",
-#     branche ==  "E" ~ "Wasserversorgung; Abwasser- und Abfallentsorgung und Beseitigung von Umweltverschmutzungen",
-#     branche ==  "F" ~ "Baugewerbe/Bau",
-#     branche ==  "G" ~ "Handel; Instandhaltung und Reparatur von Kraftfahrzeugen",
-#     branche ==  "H" ~ "Verkehr und Lagerei",
-#     branche ==  "I" ~ "Gastgewerbe/Beherbergung und Gastronomie",
-#     branche ==  "J" ~ "Information und Kommunikation",
-#     branche ==  "L" ~ "Grundstücks- und Wohnungswesen",
-#     branche ==  "M" ~ "Erbringung von freiberuflichen, wissenschaftlichen und technischen Dienstleistungen",
-#     branche ==  "N" ~ "Erbringung von sonstigen wirtschaftlichen Dienstleistungen",
-#     T ~ branche
-#   ))
-#
-#
-# # missings ausfiltern
-# dat <- na.omit(dat)
-#
-# # bereich ergänze und in Reihenfolge bringen
-# dat$bereich <- "Arbeitsmarkt"
-# dat$indikator <- "Alle"
-# dat$geschlecht <- "Gesamt"
-# dat$anforderung <- "Gesamt"
-# dat$einheit <- "Anzahl"
-# dat <- dat %>% dplyr::rename(fachbereich = anforderung)
-#
-# # Spalten in logische Reihenfolge bringen
-# dat<- dat[,c("bereich", "indikator", "fachbereich", "geschlecht", "land", "jahr", "anforderung", "einheit", "wert")]
-#
-# # umbenennen
-# eurostat1 <- dat
 
 
-## EUROSTAT1 - Anzahl Ingenieure & Wissenschaftler---------------------------
-
-### Rohdaten einlesen -------------------------------------------------------
-# akro <- "kbr"
-
-pfad <- "C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/"
-
-dat <- read.csv(paste0(pfad, "EUROSTAT002_custom_Labor_Tech_and_Scie.csv.gz"),
-                header = TRUE, sep = ",", dec = ".")
-
-### Datensatz in passende Form bringen --------------------------------------
-
-dat <- dat %>%
-  dplyr::select(category, sex, geo, TIME_PERIOD, unit, OBS_VALUE) %>%
-  dplyr::rename(land = geo,
-                indikator = category,
-                jahr = TIME_PERIOD,
-                variable = unit,
-                geschlecht = sex,
-                wert = OBS_VALUE)
-
-# Land zuweisen / übersetzen
-dat$land <- countrycode::countrycode(dat$land, origin = "eurostat", destination = "country.name.de")
-
-# Indikator & Einheit zuweisen
-dat <- dat %>%
-  dplyr::mutate(
-    indikator = dplyr::case_when(
-    indikator ==  "HRST" ~ "Ausgebildete und/oder Beschäftite",
-    indikator ==  "HRSTE" ~ "Ausgebildete",
-    indikator ==  "HRSTO" ~ "Beschäftigte",
-    indikator ==  "HRSTC" ~ "Ausgebildet und Beschäftigt",
-    indikator ==  "SE" ~ "Naturwissenschaftler*innen und Ingenieur*innen",
-    T ~ indikator
-    ),
-    variable = dplyr::case_when(
-      variable == "THS_PER" ~ "Anzahl in Tsd.",
-      variable == "PC_POP" ~ "Anteil an Gesamtbevölkerung",
-      variable == "PC_ACT" ~ "Anteil an arbeitender Bevölkerung"
-    ),
-    geschlecht = dplyr::case_when(
-      geschlecht == "F" ~ "Frauen",
-      geschlecht == "M" ~ "Männer",
-      geschlecht == "T" ~ "Gesamt"
-    )
-  )
-
-
-# missings ausfiltern
-dat <- na.omit(dat)
-
-# bereich ergänze und in Reihenfolge bringen
-dat$bereich <- "Arbeitsmarkt"
-dat$anforderung <- "Gesamt"
-dat$fachbereich <- "MINT"
-dat$quelle <- "EUROSTAT"
-dat$population <- "EU"
-dat$typ <- ifelse(grepl("Anzah", dat$variable), "Anzahl", "In Prozent")
-
-# Spalten in logische Reihenfolge bringen
-dat<- dat[,c("bereich", "quelle", "variable", "typ", "indikator", "fachbereich",
-             "geschlecht", "population", "land", "jahr", "anforderung", "wert")]
-# umbenennen
-arbeitsmarkt_beschaeftigte_eu <- dat
-
-# speichern:
-usethis::use_data(arbeitsmarkt_beschaeftigte_eu , overwrite = T)
-
-
-## internationale Daten zusammenbringen ------------------------------------
-#arbeitsmarkt_international <- rbind(eurostat1, oecd1, oecd2, oecd3, oecd5)
-
-# in shinyapp:
-#usethis::use_data(arbeitsmarkt_international, overwrite = T)
 
 
 
@@ -2749,6 +2854,37 @@ library(dplyr)
 ##  Engpassanalyse -------------------------------------------------------
 
 ### BULA Vergleich ####
+
+
+
+
+
+
+
+
+
+# 2022 und 2024 Lan
+
+
+
+
+
+
+
+
+
+
+
+
+sheets <- c("Fachkräfte", "Spezialisten", "Experten")
+# Vorbereitung 2024, da die Deutschen Daten unterschiedlich sind
+
+
+pfad <- "C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/"
+
+
+
+
 
 
 
@@ -2769,7 +2905,8 @@ sheets <- c("Fachkräfte", "Spezialisten", "Experten")
 name <- c("BA014_EPA_2020_Länderergebnisse.xlsx",
           "BA015_2021_Länderergebnisse.xlsx",
           "BA016_2022_Länderergebnisse.xlsx",
-          "BA025_2023_Engpassanalyse_Länder.xlsx")
+          "BA025_2023_Engpassanalyse_Länder.xlsx",
+          "BA046_2024_Länderergebnisse (1).xlsx")
 
 epa20_f <- epa_einlesen(name[1], sheets[1])
 epa20_s <- epa_einlesen(name[1], sheets[2])
@@ -2786,6 +2923,10 @@ epa22_e <- epa_einlesen(name[3], sheets[3])
 epa23_f <- epa_einlesen(name[4], sheets[1])
 epa23_s <- epa_einlesen(name[4], sheets[2])
 epa23_e <- epa_einlesen(name[4], sheets[3])
+
+epa24_f <- epa_einlesen(name[5], sheets[1])
+epa24_s <- epa_einlesen(name[5], sheets[2])
+epa24_e <- epa_einlesen(name[5], sheets[3])
 
 #### Datensatz in passende Form aufbereiten ----------------------------------
 
@@ -2811,6 +2952,8 @@ epa22_f <- epa_zuschneiden(epa22_f)
 epa22_s <- epa_zuschneiden(epa22_s)
 epa22_e <- epa_zuschneiden(epa22_e)
 
+
+
 epa_zuschneiden <- function(df){
   df <- df %>% select(-"...2")
   header <- as.character(df[5,])
@@ -2824,6 +2967,10 @@ epa_zuschneiden <- function(df){
 epa23_f <- epa_zuschneiden(epa23_f)
 epa23_s <- epa_zuschneiden(epa23_s)
 epa23_e <- epa_zuschneiden(epa23_e)
+
+epa24_f <- epa_zuschneiden(epa24_f)
+epa24_s <- epa_zuschneiden(epa24_s)
+epa24_e <- epa_zuschneiden(epa24_e)
 
 
 # ins Long Format bringen
@@ -2843,7 +2990,9 @@ epa23_f <- tidyr::pivot_longer(epa23_f, cols = "Deutschland":"Sachsen", values_t
 epa23_e <- tidyr::pivot_longer(epa23_e, cols = "Deutschland":"Sachsen", values_to = "wert", names_to = "region")
 epa23_s <- tidyr::pivot_longer(epa23_s, cols = "Deutschland":"Sachsen", values_to = "wert", names_to = "region")
 
-
+epa24_f <- tidyr::pivot_longer(epa24_f, cols = "Deutschland":"Sachsen", values_to = "wert", names_to = "region")
+epa24_e <- tidyr::pivot_longer(epa24_e, cols = "Deutschland":"Sachsen", values_to = "wert", names_to = "region")
+epa24_s <- tidyr::pivot_longer(epa24_s, cols = "Deutschland":"Sachsen", values_to = "wert", names_to = "region")
 # zusammenfügen
 epa20_f$anforderung <- "Fachkräfte"
 epa20_e$anforderung <- "Expert*innen"
@@ -2865,6 +3014,10 @@ epa23_e$anforderung <- "Expert*innen"
 epa23_s$anforderung <- "Spezialist*innen"
 epa23 <- rbind(epa23_f, epa23_e, epa23_s)
 
+epa24_f$anforderung <- "Fachkräfte"
+epa24_e$anforderung <- "Expert*innen"
+epa24_s$anforderung <- "Spezialist*innen"
+epa24 <- rbind(epa24_f, epa24_e, epa24_s)
 
 # Spalten ergänzen
 epa20$bereich <- "Arbeitsmarkt"
@@ -2875,9 +3028,11 @@ epa22$bereich <- "Arbeitsmarkt"
 epa22$jahr <- 2022
 epa23$bereich <- "Arbeitsmarkt"
 epa23$jahr <- 2023
+epa24$bereich <- "Arbeitsmarkt"
+epa24$jahr <- 2024
 
 # alles zusammen
-epa <- rbind(epa20, epa21, epa22, epa23)
+epa <- rbind(epa20, epa21, epa22, epa23, epa24)
 
 # Bezeichnungen von Berufen in Text und Code trennen
 epa$beruf_schlüssel <- stringr::str_extract(epa$beruf, "[[:digit:]]+") #zahlen übertragen
@@ -2905,6 +3060,156 @@ epa <- epa %>%
 ### Detaillierte Daten für DE ####
 
 
+## hello turan ---------------
+
+library(dplyr)
+
+
+epa_einlesen <- function(name, sheet_s){
+  df <- readxl::read_excel(paste0(pfad, name),
+                           sheet = sheet_s,
+                           range = "A9:X707")
+  return(df)
+}
+sheets <- c("Fachkräfte", "Spezialisten", "Experten")
+# Vorbereitung 2024, da die Deutschen Daten unterschiedlich sind
+
+
+pfad <- "C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/"
+
+
+# Einlesen der Engpassindikatoren
+name <- "BA045_2024_Deutschland_Engpass (1).xlsx"
+
+deutschland_ep2024_f <- epa_einlesen(name = name, sheets[1])
+deutschland_ep2024_s <- epa_einlesen(name = name, sheets[2])
+deutschland_ep2024_e <- epa_einlesen(name = name, sheets[3])
+
+
+deutschland_ep2024_e <- deutschland_ep2024_e[,-16]
+deutschland_ep2024_f <- deutschland_ep2024_f[,-16]
+deutschland_ep2024_s <- deutschland_ep2024_s[,-16]
+
+deutschland_ep2024_e <- deutschland_ep2024_e[,-c(3:9)]
+deutschland_ep2024_f <- deutschland_ep2024_f[,-c(3:9)]
+deutschland_ep2024_s <- deutschland_ep2024_s[,-c(3:9)]
+
+
+##  Einlesen der Risiko und Ergänzungsindi
+
+name <- "BA047_2024_Deutschland_Risiko_Ergänzung (1).xlsx"
+
+d2eutschland_ep2024_f <- epa_einlesen(name = name, sheets[1])
+d2eutschland_ep2024_s <- epa_einlesen(name = name, sheets[2])
+d2eutschland_ep2024_e <- epa_einlesen(name = name, sheets[3])
+
+d2eutschland_ep2024_e <- d2eutschland_ep2024_e[,-16] ##?
+d2eutschland_ep2024_f <- d2eutschland_ep2024_f[,-16] ##?
+d2eutschland_ep2024_s <- d2eutschland_ep2024_s[,-16] ##
+
+d2eutschland_ep2024_e <- d2eutschland_ep2024_e[,-c(2:9)]
+d2eutschland_ep2024_f <- d2eutschland_ep2024_f[,-c(2:9)]
+d2eutschland_ep2024_s <- d2eutschland_ep2024_s[,-c(2:9)]
+
+
+epa_de24_e <- deutschland_ep2024_e %>%
+  left_join(d2eutschland_ep2024_e,
+            by = c("...1"),
+            suffix = c("_links", "_rechts"))
+
+epa_de24_e <- epa_de24_e %>%
+  dplyr::select(
+    -c("...20_links","...21_links","...22_links","...23_links","...24_links","...21_rechts","...22_rechts","...23_rechts","...24_rechts")
+  )
+
+epa_de24_e  <- epa_de24_e %>%
+  rename_with(~ ifelse(
+    grepl("^\\.\\.\\.[0-9]+$", .x),     # nur ...Zahl
+    gsub("^\\.\\.\\.", "", .x),         # → Zahl behalten
+    gsub("\\.\\.\\d+$", "", .x)         # sonst nur Suffix weg
+  ))
+
+
+
+epa_de24_e <- epa_de24_e %>%
+  dplyr::mutate(
+    "Anzahl der bewerteten Indikatoren...12" = NA,
+    "Punktezahl...13" = NA,
+    "Durchschnittliche Punktezahl...14" = NA
+  ) %>%
+  dplyr::relocate("Anzahl der bewerteten Indikatoren...12", "Punktezahl...13", "Durchschnittliche Punktezahl...14" , .after = 13)
+
+
+
+#
+
+epa_de24_f <- deutschland_ep2024_f %>%
+  left_join(d2eutschland_ep2024_f,
+            by = c("...1"),
+            suffix = c("_links", "_rechts"))
+
+epa_de24_f <- epa_de24_f %>%
+  dplyr::select(
+    -c("...17","...21_links","...22_links","...23_links","...24_links","...21_rechts","...22_rechts","...23_rechts","...24_rechts")
+  )
+
+
+
+epa_de24_f <- epa_de24_f %>%
+  dplyr::mutate(
+    "Anzahl der bewerteten Indikatoren...12" = NA,
+    "Punktezahl...13" = NA,
+    "Durchschnittliche Punktezahl...14" = NA
+  ) %>%
+  dplyr::relocate("Anzahl der bewerteten Indikatoren", "Punktezahl", "Durchschnittliche Punktezahl" , .after = 13)
+
+
+
+
+epa_de24_s <- deutschland_ep2024_s %>%
+  left_join(d2eutschland_ep2024_s,
+            by = c("...1"),
+            suffix = c("_links", "_rechts"))
+
+epa_de24_s <- epa_de24_s %>%
+  dplyr::select(
+    -c("...20_links","...21_links","...22_links","...23_links","...24_links","...21_rechts","...22_rechts","...23_rechts","...24_rechts")
+  )
+
+epa_de24_s<- epa_de24_s %>%
+  rename_with(~ ifelse(
+    grepl("^\\.\\.\\.[0-9]+$", .x),     # nur ...Zahl
+    gsub("^\\.\\.\\.", "", .x),         # → Zahl behalten
+    gsub("\\.\\.\\d+$", "", .x)         # sonst nur Suffix weg
+  ))
+
+
+
+epa_de24_s <- epa_de24_s %>%
+  dplyr::mutate(
+    "Anzahl der bewerteten Indikatoren...12" = NA,
+    "Punktezahl...13" = NA,
+    "Durchschnittliche Punktezahl...14" = NA
+  ) %>%
+  dplyr::relocate("Anzahl der bewerteten Indikatoren", "Punktezahl", "Durchschnittliche Punktezahl" , .after = 13)
+
+
+
+
+
+
+epa_de24_e$jahr <- 2024
+epa_de24_f$jahr <- 2024
+epa_de24_s$jahr <- 2024
+
+#
+
+
+
+
+
+
+
 #### Rohdaten einlesen -------------------------------------------------------
 akro <- "kbr"
 pfad <- paste0("C:/Users/", akro,
@@ -2915,6 +3220,20 @@ pfad <- paste0("C:/Users/", akro,
 ## WICHTIG - man muss hier immer die Aufbereitung "Engpassanalyse" zuvor laufen lassen
 ##          oder man läd epa.rda - baut aufeinander auf
 library(dplyr)
+
+path <- pfad
+sheets <- c("Fachkräfte", "Spezialisten", "Experten")
+# Vorbereitung 2024, da die Deutschen Daten unterschiedlich sind
+
+
+pfad <- "C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/"
+
+sheets <- c("Fachkräfte", "Spezialisten", "Experten")
+# Vorbereitung 2024, da die Deutschen Daten unterschiedlich sind
+
+
+pfad <- "C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/"
+
 
 
 epa_einlesen <- function(name, sheet_s){
@@ -3726,6 +4045,229 @@ epa_de23_e <- epa_aufbereiten_23(epa_de23_e)
 
 
 
+
+
+
+
+
+
+
+
+
+
+### test
+epa_aufbereiten_24 <- function(df){
+
+  # anforderungsniveau und jahr zuweisen
+  if(grepl("_f", deparse(substitute(df)))) df$anforderung <- "Fachkräfte"
+  if(ncol(df) == 26){
+
+  }else{
+    if(grepl("_e", deparse(substitute(df)))) df$anforderung <- "Expert*innen"
+    if(ncol(df) == 26){
+
+    }else{
+      if(grepl("_s", deparse(substitute(df)))) df$anforderung <- "Spezialist*innen"
+    }
+  }
+
+  # leere spalten löschen
+  if(df$anforderung[1] == "Fachkräfte") {
+    df <- df %>% dplyr::select(-c(`...10`))
+  }else{
+    df <- df %>% dplyr::select(-c(`17`, `18`, `19`, `...20_rechts`))
+  }
+
+
+
+
+
+
+
+  if(df$anforderung[1] == "Fachkräfte"){
+    df <- df %>%
+      rename(
+        "beruf" = `...1`,
+        "Anzahl Beschäftigte" = "...2",
+        "Engpassindikator Vakanzzeit" = "Vakanzzeit (Median)...11",
+        "Engpassindikator Arbeitsuchenden-Stellen-Relation" = "Arbeitsuchenden-Stellen-Relation...12",
+        "Engpassindikator Berufssp. Arbeitslosenquote" = "Berufssp. Arbeitslosenquote...13",
+        "Engpassindikator Veränderung des Anteils s.v. pfl. Beschäftigung von Ausländern" = "Veränderung des Anteils s.v. pfl. Beschäftigung von Ausländern...14",
+        "Engpassindikator Abgangsrate aus Arbeitslosigkeit" = "Abgangsrate aus Arbeitslosigkeit...15",
+        #"Engpassindikator Entwicklung der mittleren Entgelte" = "Entwicklung der mittleren Entgelte", ###############
+        "Anzahl Indikatoren Engpassanalyse" = "Anzahl der bewerteten Indikatoren", ################### also iwie fehlt bei mir teilzeitquote, selbstständigk
+        "wert_EPA" = "Durchschnittliche Punktezahl", #davor fehlt Punktezahl?
+        "Risikoindikator Veränderung des Anteils älterer Beschäftigter (60 Jahre und älter)" = "Veränderung des Anteils älterer Beschäftigter (60 Jahre und älter)...13",
+        "Risikoindikator Anteil unb. Ausbildungsstellen an allen gem. Ausbildungsstellen" = "Anteil unb. Ausbildungsstellen an allen gem. Ausbildungsstellen...14",
+        "Risikoindikator Absolventen-Beschäftigten-Relation" = "Absolventen-Beschäftigten-Relation...15", ##breufliche mobilit
+        #"Risikoindikator Substituierbarkeitspotenzial" = "Substituierbarkeitspotenzial",
+        "Anzahl Indikatoren Risikoanalyse" = "Anzahl der bewerteten Indikatoren...12",
+        "wert_Risiko" = "Durchschnittliche Punktezahl...14",
+        "Ergänzungsindikator Berufliche Mobilität" = "Berufliche Mobilität...17",
+        "Ergänzungsindikator Arbeitsstellenbestandsquote" = "Arbeitsstellenbestandsquote...18",
+        "Ergänzungsindikator Teilzeitquote" = "Teilzeitquote...19" )
+
+  }else{
+    df <- df %>%
+      rename(
+        "beruf" = `1`,
+        "Anzahl Beschäftigte" = "2",
+        "Engpassindikator Vakanzzeit" = "Vakanzzeit (Median).",
+        "Engpassindikator Arbeitsuchenden-Stellen-Relation" = "Arbeitsuchenden-Stellen-Relation.",
+        "Engpassindikator Berufssp. Arbeitslosenquote" = "Berufssp. Arbeitslosenquote.",
+        "Engpassindikator Veränderung des Anteils s.v. pfl. Beschäftigung von Ausländern" = "Veränderung des Anteils s.v. pfl. Beschäftigung von Ausländern.",
+        "Engpassindikator Abgangsrate aus Arbeitslosigkeit" = "Abgangsrate aus Arbeitslosigkeit.",
+        "Engpassindikator Entwicklung der mittleren Entgelte" = "Entwicklung der mittleren Entgelte.",
+        "Anzahl Indikatoren Engpassanalyse" = "Anzahl der bewerteten Indikatoren",
+        "wert_EPA" = "Durchschnittliche Punktezahl",
+        "Risikoindikator Veränderung des Anteils älterer Beschäftigter (60 Jahre und älter)" = "Veränderung des Anteils älterer Beschäftigter (60 Jahre und älter).",
+        "Risikoindikator Substituierbarkeitspotenzial" = "Substituierbarkeitspotenzial.",
+        "Anzahl Indikatoren Risikoanalyse" = "Anzahl der bewerteten Indikatoren...12",
+        "wert_Risiko" = "Durchschnittliche Punktezahl...14",
+        "Ergänzungsindikator Berufliche Mobilität" = "Berufliche Mobilität.",
+        "Ergänzungsindikator Arbeitsstellenbestandsquote" = "Arbeitsstellenbestandsquote.",
+        "Ergänzungsindikator Teilzeitquote" = "Teilzeitquote.",
+        "Ergänzungsindikator Selbständigenanteil" = "Selbständigenanteil." )
+  }
+
+  # als numerisch speichern für pivote_longer
+  if(df$anforderung[1] == "Fachkräfte") {
+    df[,c(2, 4:23)] <- sapply(df[,c(2, 4:23)], as.numeric)
+  }else{
+    df[,c(2:20)] <- sapply(df[,c(2:20)], as.numeric)
+  }
+
+  # nicht interessante Spalten noch raus
+  if(df$anforderung[1] == "Fachkräfte") {
+    df <- df %>% dplyr::select(-c("Punktezahl", "Punktezahl...13"))
+  }else{
+    df <- df %>% dplyr::select(-c("Punktezahl", "Punktezahl...13"))
+  }
+
+  # in long-format bringen
+  if(df$anforderung[1] == "Fachkräfte"){
+    df <- tidyr::pivot_longer(df, cols = c("Engpassindikator Vakanzzeit":"Ergänzungsindikator Teilzeitquote"),
+                              values_to = "wert", names_to = "indikator")
+  }else{
+    df <- tidyr::pivot_longer(df, cols = c("Engpassindikator Vakanzzeit":"Ergänzungsindikator Selbständigenanteil"),
+                              values_to = "wert", names_to = "indikator")
+  }
+
+  # indikator ergänzen
+  df <- df %>%
+    dplyr::mutate(kategorie = dplyr::case_when(
+      grepl("Engpass", df$indikator) ~ "Engpassanalyse",
+      grepl("EPA", df$indikator) ~ "Engpassanalyse",
+      grepl("Risiko", df$indikator) ~ "Risikoanalyse",
+      grepl("Ergän", df$indikator) ~ "Ergänzungsindikatoren"
+    )
+    )
+
+  # indikator kürzen
+  df$indikator <- gsub(pattern = "Engpassindikator ", "", df$indikator)
+  df$indikator <- gsub(pattern = "Risikoindikator ", "", df$indikator)
+  df$indikator <- gsub(pattern = "Ergänzungsindikator ", "", df$indikator)
+
+  # gesamtwert wieder als extra Spalte - logischer zum weiterarbeiten damit
+  df_ges <- df %>%
+    dplyr::filter(indikator %in% c("wert_EPA", "wert_Risiko")) %>%
+    dplyr::rename(gesamtwert = wert) %>%
+    dplyr::select(-indikator)
+
+
+
+  if(df$anforderung[1] == "Fachkräfte"){
+    df <- df %>%
+      dplyr::left_join(df_ges, by = c("beruf", "Anzahl Beschäftigte", "jahr", "anforderung", ##keine geregelte berufsausbildung
+                                      "kategorie"),
+                       relationship = "many-to-many")
+  }else{
+    df <- df %>%
+      dplyr::left_join(df_ges, by = c("beruf", "Anzahl Beschäftigte", "jahr", "anforderung",
+                                      "kategorie"),
+                       relationship = "many-to-many")
+  }
+
+  df <- df %>% dplyr::filter(!(indikator %in% c("wert_EPA", "wert_Risiko")))
+
+  # Anzahl vorliegender Indikatoren als extra Spalte - logischer zum weiterarbeiten damit
+  df_anz <- df %>%
+    dplyr::filter(grepl("Anzahl", indikator)) %>%
+    dplyr::rename(indikator_anzahl = wert) %>%
+    dplyr::select(-indikator)
+
+  if(df$anforderung[1] == "Fachkräfte"){
+    df <- df %>%
+      dplyr::left_join(df_anz, by = c("beruf", "Anzahl Beschäftigte", "jahr", "anforderung", #hier au ##keine geregelte berufsausbildung
+                                      "kategorie", "gesamtwert"),
+                       relationship = "many-to-many")
+  }else{
+    df <- df %>%
+      dplyr::left_join(df_anz, by = c("beruf", "Anzahl Beschäftigte", "jahr", "anforderung",
+                                      "kategorie", "gesamtwert"),
+                       relationship = "many-to-many")
+  }
+
+
+  df <- df %>% dplyr::filter(!(grepl("Anzahl", indikator)))
+
+  return(df)
+}
+
+
+epa_de24_f <- epa_aufbereiten_24(epa_de24_f) #achtung es dauert lange !!! 1min-2
+epa_de24_s <- epa_aufbereiten_24(epa_de24_s) #ebenso aber schneller
+epa_de24_e <- epa_aufbereiten_24(epa_de24_e) #
+
+
+epa_de24_s <- epa_de24_s %>%
+  filter(!if_any(beruf ,is.na))
+
+epa_de24_f <- epa_de24_f %>%
+  filter(!if_any(beruf ,is.na))
+
+epa_de24_e <- epa_de24_e %>%
+  filter(!if_any(beruf ,is.na))
+
+#########################################das dauert hier alles lang ja
+
+epa_de24_s <- epa_de24_s %>%
+  dplyr::select(-c("Anzahl Indikatoren Risikoanalyse.x.x","wert_Risiko.x.x","Anzahl Indikatoren Risikoanalyse.y.x", "wert_Risiko.y.x",
+                   "Anzahl Indikatoren Risikoanalyse.x.y","wert_Risiko.x.y", "Anzahl Indikatoren Risikoanalyse.y.y", "wert_Risiko.y.y"))
+
+
+epa_de24_f <- epa_de24_f %>%
+  dplyr::select(-c("Selbständigenanteil...20.x.x" ,"Anzahl Indikatoren Risikoanalyse.x.x", "wert_Risiko.x.x", "Selbständigenanteil...20.y.x" ,
+                   "Anzahl Indikatoren Risikoanalyse.y.x"
+                   , "wert_Risiko.y.x", "Selbständigenanteil...20.x.y" ,
+                   ,"Anzahl Indikatoren Risikoanalyse.x.y" ,"wert_Risiko.x.y",
+                   "Selbständigenanteil...20.y.y" ,"Anzahl Indikatoren Risikoanalyse.y.y" ,"wert_Risiko.y.y"))
+
+epa_de24_f$`Geregelte Berufsausbildung` <- NA
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # alles zusammenfügen und sortieren
 ## Spalten angleichen
 sp_anhängen <- function(df){
@@ -3758,13 +4300,18 @@ epa_de23_f <- sp_anhängen(epa_de23_f)
 epa_de23_s <- sp_anhängen(epa_de23_s)
 epa_de23_e <- sp_anhängen(epa_de23_e)
 
+epa_de24_f <- sp_anhängen(epa_de24_f)
+epa_de24_s <- sp_anhängen(epa_de24_s)
+epa_de24_e <- sp_anhängen(epa_de24_e)
+
 
 ## Zusammenbringen
 epa_detail <- rbind(epa_de19_e, epa_de19_f, epa_de19_s,
                     epa_de20_e, epa_de20_f, epa_de20_s,
                     epa_de21_e, epa_de21_f, epa_de21_s,
                     epa_de22_e, epa_de22_f, epa_de22_s,
-                    epa_de23_e, epa_de23_f, epa_de23_s)
+                    epa_de23_e, epa_de23_f, epa_de23_s,
+                    epa_de24_e, epa_de24_f, epa_de24_s)
 epa_detail <- subset(epa_detail, !(is.na(epa_detail$beruf)))
 
 # Bezeichnungen von Berufen in Text und Code trennen
@@ -3847,7 +4394,7 @@ mint <- mint %>%
   dplyr::select(-`MINT-Tätigkeiten`) %>%
   dplyr::rename(mint_select = indikator)
 mint <- unique(mint)
-epa_detail_t <- epa_detail %>%
+epa_detail <- epa_detail %>% #############################wieso war hier _t in epa_detail
   dplyr::left_join(mint, by = join_by(beruf_schlüssel == Code, anforderung), relationship = "many-to-many")
 epa_detail$mint_select <- ifelse(is.na(epa_detail$mint_select), "Nicht MINT", epa_detail$mint_select)
 
@@ -3930,11 +4477,14 @@ m <- m[, c("bereich", "berufsgruppe", "berufsgruppe_schlüssel", "beruf",
 )]
 
 ## Filtern
-epa_detail <- subset(epa_detail, epa_detail$`Anzahl Beschäftigte`>=500)
+epa_detail <- subset(epa_detail, epa_detail$`Anzahl Beschäftigte`>=500)#######################################hier fliegt raus vllt
 epa_detail$delete <- ifelse(epa_detail$kategorie == "Engpassanalyse" &
                               epa_detail$indikator_anzahl < 4, TRUE, FALSE)
 epa_detail <- subset(epa_detail, epa_detail$delete == FALSE)
-epa_detail <- subset(epa_detail, epa_detail$geregelte_ausbildung == "ja")
+#epa_detail <- subset(epa_detail, epa_detail$geregelte_ausbildung == "ja")
+epa_detail <- subset(epa_detail, (jahr ==  2024) | (geregelte_ausbildung == "ja")
+)
+
 epa_detail <- epa_detail %>%
   dplyr::select(-delete, -geregelte_ausbildung) %>%
   dplyr::rename(anzahl_beschäftigte = `Anzahl Beschäftigte`)
@@ -4052,29 +4602,33 @@ save(arbeitsmarkt_epa, file = "arbeitsmarkt_epa.rda")
  # pfad <- paste0("C:/Users/", akro,
  #                "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
 
+
+
 ## Daten einlesen
 sheets <- c("Deutschland", "01 Schleswig-Holstein", "02 Hamburg", "03 Niedersachsen",
             "04 Bremen", "05 NRW", "06 Hessen", "07 Rheinland-Pfalz", "08 Baden-Württemberg",
             "09 Bayern", "10 Saarland", "11 Berlin", "12 Brandenburg", "13 Mecklenburg-Vorpommern",
             "14 Sachsen", "15 Sachsen-Anhalt", "16 Thüringen")
+pfad <- "C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/"
 
-de <- readxl::read_excel(paste0(pfad, "BA017_EA_346135_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[1])
-sh <- readxl::read_excel(paste0(pfad, "BA017_EA_346135_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[2])
-ha <- readxl::read_excel(paste0(pfad, "BA017_EA_346135_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[3])
-ni <- readxl::read_excel(paste0(pfad, "BA017_EA_346135_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[4])
-br <- readxl::read_excel(paste0(pfad, "BA017_EA_346135_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[5])
-nr <- readxl::read_excel(paste0(pfad, "BA017_EA_346135_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[6])
-he <- readxl::read_excel(paste0(pfad, "BA017_EA_346135_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[7])
-rp <- readxl::read_excel(paste0(pfad, "BA017_EA_346135_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[8])
-bw <- readxl::read_excel(paste0(pfad, "BA017_EA_346135_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[9])
-by <- readxl::read_excel(paste0(pfad, "BA017_EA_346135_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[10])
-sr <- readxl::read_excel(paste0(pfad, "BA017_EA_346135_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[11])
-be <- readxl::read_excel(paste0(pfad, "BA017_EA_346135_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[12])
-ba <- readxl::read_excel(paste0(pfad, "BA017_EA_346135_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[13])
-mv <- readxl::read_excel(paste0(pfad, "BA017_EA_346135_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[14])
-sa <- readxl::read_excel(paste0(pfad, "BA017_EA_346135_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[15])
-sn <- readxl::read_excel(paste0(pfad, "BA017_EA_346135_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[16])
-th <- readxl::read_excel(paste0(pfad, "BA017_EA_346135_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[17])
+
+de <- readxl::read_excel(paste0(pfad, "BA050_250903_EA_394801_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[1])
+sh <- readxl::read_excel(paste0(pfad, "BA050_250903_EA_394801_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[2])
+ha <- readxl::read_excel(paste0(pfad, "BA050_250903_EA_394801_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[3])
+ni <- readxl::read_excel(paste0(pfad, "BA050_250903_EA_394801_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[4])
+br <- readxl::read_excel(paste0(pfad, "BA050_250903_EA_394801_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[5])
+nr <- readxl::read_excel(paste0(pfad, "BA050_250903_EA_394801_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[6])
+he <- readxl::read_excel(paste0(pfad, "BA050_250903_EA_394801_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[7])
+rp <- readxl::read_excel(paste0(pfad, "BA050_250903_EA_394801_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[8])
+bw <- readxl::read_excel(paste0(pfad, "BA050_250903_EA_394801_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[9])
+by <- readxl::read_excel(paste0(pfad, "BA050_250903_EA_394801_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[10])
+sr <- readxl::read_excel(paste0(pfad, "BA050_250903_EA_394801_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[11])
+be <- readxl::read_excel(paste0(pfad, "BA050_250903_EA_394801_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[12])
+ba <- readxl::read_excel(paste0(pfad, "BA050_250903_EA_394801_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[13])
+mv <- readxl::read_excel(paste0(pfad, "BA050_250903_EA_394801_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[14])
+sa <- readxl::read_excel(paste0(pfad, "BA050_250903_EA_394801_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[15])
+sn <- readxl::read_excel(paste0(pfad, "BA050_250903_EA_394801_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[16])
+th <- readxl::read_excel(paste0(pfad, "BA050_250903_EA_394801_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[17])
 
 
 ## Daten zusammenfügen und region ergänzen
@@ -4101,11 +4655,11 @@ bulas_aufbereiten <- function(dat){
   dat <- dat[-c(1:5, 511:517),]
   header <- c("Gemeldete Arbeitslose", "Gemeldete Stellen", "Arbeitslosen-Stellen-Relation",
               "Abgang (Jahressumme)", "Abgeschlossene Vakanzzeit")
-  header_jahr <- 2013:2022
+  header_jahr <- 2013:2024
   header_ges <- character(length = 40)
   j <- 1
   k <- 5
-  for(i in 2013:2022){
+  for(i in 2013:2024){
     h <- paste0(header, "_", i)
     header_ges[j:k] <- h
     j <- j + 5
@@ -4117,7 +4671,7 @@ bulas_aufbereiten <- function(dat){
 
   dat <- dat[-c(1:4),]
 
-  dat <- tidyr::pivot_longer(dat, cols = "Gemeldete Arbeitslose_2013":"Abgeschlossene Vakanzzeit_2022",
+  dat <- tidyr::pivot_longer(dat, cols = "Gemeldete Arbeitslose_2013":"Abgeschlossene Vakanzzeit_2024",
                              values_to = "wert", names_to = "indikator")
 
   dat$beruf <- dat$fachbereich
@@ -4134,7 +4688,9 @@ bulas_aufbereiten <- function(dat){
       grepl("2019", indikator) ~ 2019,
       grepl("2020", indikator) ~ 2020,
       grepl("2021", indikator) ~ 2021,
-      grepl("2022", indikator) ~ 2022
+      grepl("2022", indikator) ~ 2022,
+      grepl("2023", indikator) ~ 2023,
+      grepl("2024", indikator) ~ 2024
     ),
     bereich = "Arbeitsmarkt",
     anforderung = "Gesamt",
@@ -4223,6 +4779,9 @@ dat$wert <- as.numeric(dat$wert)
 arbeitsmarkt_fachkraefte <- dat
 usethis::use_data(arbeitsmarkt_fachkraefte , overwrite = T)
 
+setwd("C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/02_data/data/")
+
+save(arbeitsmarkt_fachkraefte, file = "arbeitsmarkt_fachkraefte.rda")
 
 
 
@@ -4231,18 +4790,65 @@ usethis::use_data(arbeitsmarkt_fachkraefte , overwrite = T)
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
+#
+#
+# ## Erstellt Gehaltsdaten------
+#
+#
+#
+#
+#
+# pfad <- "C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/"
+# # akro <- "kbr"
+# data <- read.csv(paste0(pfad, "EA0001_349270_Entgelte_MINT_D.xlsb"),
+#                  header = TRUE, sep = ",", dec = ".")
+#
+# dat <- readxlsb::read_xlsb(paste0(pfad, "EA0001_349270_Entgelte_MINT_D.xlsb"), sheet = "Entgelt_MINT")
+#
+#
+# dat1 <- dat[-c(1:14),]
+# dat2 <- dat1[,-c(4:10)]
+#
+#
+#
+#
+#
+#
+# dat3 <-  dat2 %>%
+#   dplyr::mutate(across(everything(), ~ dplyr::na_if(.x, ""))) %>%
+#   dplyr::rename(
+#     jahr         = X,
+#     variable     = X.1,
+#     geschlecht   = X.2,
+#     mediangehalt = Beschäftigungsstatistik
+#   ) %>%
+#   dplyr::mutate(
+#     jahr         = lubridate::year(as.Date(jahr)),
+#     mediangehalt = as.numeric(mediangehalt)
+#   ) %>%
+#   tidyr::fill(jahr, variable, .direction = "down") %>%
+#   dplyr::mutate(
+#     beruf = dplyr::case_when(
+#       stringr::str_detect(variable, "Fachkraft$") ~ "Fachkraft",
+#       stringr::str_detect(variable, "Spezialist$") ~ "Spezialist",
+#       stringr::str_detect(variable, "Experten$")   ~ "Experten",
+#       stringr::str_detect(variable, "Experte$")   ~ "Experte",
+#       stringr::str_detect(variable, "Fachkräfte$")   ~ "Fachkräfte",
+#       stringr::str_detect(variable, "Spezialisten$")   ~ "Spezialisten",
+#       TRUE ~ NA_character_
+#     ),
+#     variable = variable |>
+#       stringr::str_remove("-?\\s*Fachkraft$") |>
+#       stringr::str_remove("-?\\s*Spezialist$") |>
+#       stringr::str_remove("-?\\s*Spezialisten$") |>
+#       stringr::str_remove("-?\\s*Experten$") |>
+#       stringr::str_remove("-?\\s*Experte$") |>
+#       stringr::str_remove("-?\\s*Fachkräfte$") |>
+#       stringr::str_trim()
+#   ) %>%
+#   dplyr::mutate(
+#     variable = stringr::str_remove(variable, "^\\d{5}\\s+")
+#   )
 
 
 

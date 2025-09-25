@@ -25,7 +25,7 @@ mod_fachkraft_bar_vakanz_ui <- function(id){
        inputId = ns("map_y_vakanz_fachkraft_arbeit_bar"),
        label = NULL,
        choices = arbeit_fachkraft_ui_years(),
-       selected = "2022"
+       selected = "2024"
      ),
 
      p("Region:"),
