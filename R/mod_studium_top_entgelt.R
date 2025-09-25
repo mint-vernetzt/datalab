@@ -14,8 +14,8 @@ mod_beruf_arbeitsmarkt_top_entgelt_ui <- function(id){
     shinyWidgets::sliderTextInput(
       inputId = ns("date_top_entgelt"),
       label = NULL,
-      choices = 2013:2023,
-      selected = 2023
+      choices = 2013:2024,
+      selected = 2024
     ),
     # Region
     p("Region:"),

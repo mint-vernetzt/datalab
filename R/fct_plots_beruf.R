@@ -3826,11 +3826,12 @@ entgelte_vergleich_1 <- function(r) {
   df1 <- df %>%
     dplyr::filter(stringr::str_detect(wert, "^[0-9.,]+$")) %>%
      dplyr::filter(berufsgruppe == beruf) %>%
-     dplyr::mutate(wert = as.numeric(wert))
+     dplyr::mutate(wert = round(as.numeric(wert)),0)
 
+ df1 <- df1[with(df1, order(wert, decreasing = TRUE)),]
 
   if(berufsleb == "Gesamt"){
-    berufsleb = "allen Berufsleveln"
+    berufsleb = "allen Berufslevel"
   } else if (berufsleb == "Fachkraft"){
     berufsleb == "Fachkräften"
   } else if (berufsleb == "Spezialist"){
@@ -3841,14 +3842,15 @@ entgelte_vergleich_1 <- function(r) {
 
 
   if(geschlecht == "Insgesamt"){
-    geschlecht <- "Alle Geschlechter"
+    geschlecht <- "alle Geschlechter"
   }
 
-  titel <- paste0("Entgelte von ", berufsleb, " in ", land, " (", datum," , ", geschlecht ,")" )
+  titel <- paste0("Mittleres Entgelt nach Berufsfeldern in ", land, " ", datum,
+                  " (", berufsleb, ", ", geschlecht, ")" )
   tooltip <- paste('Wert in Euro: {point.y}')
   format <- "{value}"
 
-  quelle <- "Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+  quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
 
   ##########
@@ -3864,7 +3866,7 @@ entgelte_vergleich_1 <- function(r) {
   out <- highcharter::hchart(df1, 'bar', highcharter::hcaes(y ="wert", x = "berufsgruppe") ) %>%
     highcharter::hc_tooltip(pointFormat = tooltip) %>%
     highcharter::hc_yAxis(title = list(text = ""), labels = list(format = format)) %>%
-    highcharter::hc_xAxis(title = list(text = "Entgelte"), labels = list(format ="{value}")  ) %>%
+    highcharter::hc_xAxis(title = list(text = ""), labels = list(format ="{value}")  ) %>%
     highcharter::hc_colors(color) %>%
     highcharter::hc_title(text = titel,
                           margin = 45, #
