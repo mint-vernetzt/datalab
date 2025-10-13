@@ -1976,12 +1976,20 @@ plot_fachkraft_ranking_epa  <- function(r) {
     }
 
   }
-  #weitere arbeit
-  wert <- df[10, "wert"]
-  if (wert == df[11, "wert"]){
 
-    df <- df[1:9,]
-  } else if (wert > df[11, "wert"]){
+
+  wert10 <- df[10, "wert"]
+  if (wert10 == df[11, "wert"]){
+
+    cut <- length(df[df$wert > wert10])
+
+    if(cut < 6){
+      df <- df %>% dplyr::filter(wert >= wert10)
+    }else{
+      df <- df %>% dplyr::filter(wert > wert10)
+      }
+
+  } else if (wert10 > df[11, "wert"]){
 
     df <- df[1:10,]
   }
