@@ -504,7 +504,7 @@ div(class = "content-box",
                                           color = "#154194"),
              shinyBS::bsPopover(
                id="fachkraft_engpaesse_ranks", title="",
-               content = paste0("Es werden nur sozialversicherungspflichtige Beschäftigte betrachtet. <br><br>Informationen zur Berechnung und Bedeutung des Engpassindikators finden Sie in der Infobox zur Engpassanalyse. Diese ist in der Beschreibung über der Grafik verlinkt. Es werden lediglich die TOP 10 der Berufe mit dem größten Engpassrisiko angezeigt. Wenn der Engpasswert des zehnten Berufes auf mehrere Berufe entfällt, dann werden diese alle ausgeblendet, um Verzerrungen zu vermeiden und Übersichtlichkeit zu gewährleisten."),
+               content = paste0("Es werden nur sozialversicherungspflichtige Beschäftigte betrachtet. <br><br>Informationen zur Berechnung und Bedeutung des Engpassindikators finden Sie in der Infobox zur Engpassanalyse. Diese ist in der Beschreibung über der Grafik verlinkt. In dieser Grafik werden die Berufsgattungen mit dem höchsten Fachkräfteengpass angezeigt. Da oft mehrere Berufe denselben Engpassindikator vorweisen, variiert die Anzahl der gerankten Berufe. Es werden immer alle Berufsgattungen mit demselben Wert entweder vollständig ein, oder ausgeblendet, um die Ergebnisse nicht zu verzerren."),
                placement = "top",
                trigger = "hover"),
              tags$a(paste0("Hinweis zu den Daten"),

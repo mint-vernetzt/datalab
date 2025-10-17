@@ -1898,8 +1898,6 @@ plot_fachkraft_ranking_epa  <- function(r) {
 
   this_beruf <- r$fachkraft_ranking_epa_2 #Alle Berufe, MINT-Berufe
 
-  ###wenn Gesamt ausgewählt ist, kann man anforderung = Spezialist usw weglassen da man nach allem schaut
-
 
   if(this_beruf == "Alle Berufe"){
 
@@ -1976,16 +1974,32 @@ plot_fachkraft_ranking_epa  <- function(r) {
     }
 
   }
-  #weitere arbeit
-  wert <- df[10, "wert"]
-  if (wert == df[11, "wert"]){
 
-    df <- df[1:9,]
-  } else if (wert > df[11, "wert"]){
+
+  wert10 <- df[10, "wert"]
+  if (wert10 == df[11, "wert"]){
+
+    cut <- length(df[df$wert > wert10])
+
+    if(cut < 6){
+      df <- df %>% dplyr::filter(wert >= wert10)
+    }else{
+      df <- df %>% dplyr::filter(wert > wert10)
+      }
+
+  } else if (wert10 > df[11, "wert"]){
 
     df <- df[1:10,]
   }
 
+  # Ergänzen des Berufslevels
+
+  df <- df %>%
+    dplyr::mutate(beruf = dplyr::case_when(
+      anforderung == "Fachkräfte" ~ paste(beruf, " (nach Grundausbildung)"),
+      anforderung == "Spezialist*innen" ~ paste(beruf, " (nach Weiterbildung, z. B. Meister/Techniker)"),
+      anforderung == "Expert*innen" ~ paste(beruf, " (nach Studium)")
+    ))
 
 
     quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."

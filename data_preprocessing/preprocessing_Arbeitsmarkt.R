@@ -4045,17 +4045,6 @@ epa_de23_e <- epa_aufbereiten_23(epa_de23_e)
 
 
 
-
-
-
-
-
-
-
-
-
-
-### test
 epa_aufbereiten_24 <- function(df){
 
   # anforderungsniveau und jahr zuweisen
@@ -4077,10 +4066,6 @@ epa_aufbereiten_24 <- function(df){
   }else{
     df <- df %>% dplyr::select(-c(`17`, `18`, `19`, `...20_rechts`))
   }
-
-
-
-
 
 
 
@@ -4244,27 +4229,6 @@ epa_de24_f <- epa_de24_f %>%
                    "Selbständigenanteil...20.y.y" ,"Anzahl Indikatoren Risikoanalyse.y.y" ,"wert_Risiko.y.y"))
 
 epa_de24_f$`Geregelte Berufsausbildung` <- NA
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -4587,6 +4551,9 @@ epa <- epa[!is.na(epa$berufsgruppe_schlüssel),]
 epa <- epa[!is.na(epa$wert),]
 epa_detail <- epa_detail[!is.na(epa_detail$wert),]
 
+# Aggregat von Pflegeberufen entfernen (kommt aus Rohdaten, um Doppelzählung zu vermeiden)
+epa_detail <- epa_detail[!(is.na(epa_detail$berufsgruppe) | epa_detail$berufsgruppe == "Legende:"),]
+epa_detail<- epa_detail[!(epa_detail$berufsgruppe == "Pflegeberufe" & is.na(epa_detail$beruf_schlüssel)),]
 
 
 #epa_detail <- rbind(epa_detail, epa)

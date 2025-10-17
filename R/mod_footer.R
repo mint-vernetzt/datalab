@@ -27,13 +27,13 @@ funct_footer <- function(){
   div(style="display: inline-block;position: relative;padding: 1em;",
 
       tags$a(#href="https://www.bmbf.de/bmbf/de/home/home_node.html",
-        img(src='www/BMBF-Logo_transp1.png',
+        img(src='www/BMBFSFJ_logo.svg',
 
             class = "img-responsive",
 
-            height = "200px", width = "200px",
+            height = "250px", width = "250px",
 
-            alt = "Logo BMBF", target="_blank",
+            alt = "Logo BMBFSFJ", target="_blank",
 
             style="display: inline-block; margin-left: auto; margin-right: auto;"))),
 
