@@ -12,15 +12,19 @@ funct_footer <- function(){
 
   div(style="display: inline-block;position: relative;padding: 1em;",
 
-      p(
+      p(style = "font-size: 14px;",
         tags$a("Impressum", href="#shiny-tab-impressum",
-               onclick="Shiny.setInputValue('footer_nav', 'impressum')")," | ",
+               onclick="Shiny.setInputValue('footer_nav', 'impressum')",
+               style = "font-size: 14px;")," | ",
         tags$a("Kontakt", href="#shiny-tab-kontakt",
-               onclick="Shiny.setInputValue('footer_nav', 'kontakt')")," | ",
+               onclick="Shiny.setInputValue('footer_nav', 'kontakt')",
+               style = "font-size: 14px;")," | ",
         tags$a("Datenschutz", href="#shiny-tab-datenschutz",
-               onclick="Shiny.setInputValue('footer_nav', 'datenschutz')"), " | ",
+               onclick="Shiny.setInputValue('footer_nav', 'datenschutz')",
+               style = "font-size: 14px;"), " | ",
         tags$a("Barrierefreiheit", href="#shiny-tab-barrierefreiheit",
-               onclick="Shiny.setInputValue('footer_nav', 'barrierefreiheit')"),
+               onclick="Shiny.setInputValue('footer_nav', 'barrierefreiheit')",
+               style = "font-size: 14px;"),
         HTML('&nbsp;'),HTML('&nbsp;'),
         "Copyright © 2025. Alle Rechte vorbehalten. Stifterverband")),
 
