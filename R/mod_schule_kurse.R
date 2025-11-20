@@ -71,13 +71,13 @@ mod_schule_kurse_ui <- function(id){
       shinydashboard::box(
         title = "Datenquellen",
         width = 5,
-        p("Die amtlichen Statistiken zeigen das aktuellste verfügbare Berichtsjahr 2023."),
+        p("Die amtlichen Statistiken zeigen das aktuellste verfügbare Berichtsjahr 2024."),
         p(style = "text-align: left; font-size = 16px",
-          tags$b(span("Schüler:innenzahlen der Oberstufe: Kultusministerkonferenz (KMK), 2024, auf Anfrage")),
-          "Daten des Berichtjahres 2024 ca. ab Dezember 2025 verfügbar."),
+          tags$b(span("Schüler:innenzahlen der Oberstufe: Kultusministerkonferenz (KMK), 2025, auf Anfrage")),
+          "Daten des Berichtjahres 2025 im Herbst 2026 verfügbar."),
         p(style = "text-align: left; font-size = 16px",
           tags$b(span("Kompetenzdaten in Deutschland: Institut zur Qualitätsentwicklung im Bildungswesen (IQB), 2023, freier Download.")),
-          "Die Auswertung des IQB-Bildungstends 2024 mit Fokus auf MINT wird voraussichtlich im Herbst 2025 veröffentlicht."),
+          "Die Auswertung des IQB-Bildungstends 2024 mit Fokus auf MINT wird voraussichtlich im Herbst 2025 ergänzt."),
         p(style = "text-align: left; font-size = 16px",
           "Weitere Statistiken über die Belegung von MINT-Fächern in anderen Klassenstufen oder Schulformen liegen uns derzeit nicht vor.")
         )
@@ -92,9 +92,9 @@ mod_schule_kurse_ui <- function(id){
         width = 12,
         column(
           width = 8,
-        p("Im Jahr 2023 entfallen 24 % der Grundkursbelegungen auf ein MINT-Fach.
+        p("Im Jahr 2024 entfallen 26 % der Grundkursbelegungen auf ein MINT-Fach.
         Der MINT-Anteil an Leistungskursbelegungen ist noch einmal etwas höher:
-        knapp 32 % der Belegungen sind in MINT."),
+        knapp 31 % der Belegungen sind in MINT."),
         p("Wie viel MINT in grundlegendem und gehobenem Leistungsniveau belegt werden kann,
         ist von den Wahlmöglichkeiten in den Bundesländern abhängig. Das ist bei einer Betrachtung
         einzelner Bundesländer zu berücksichtigen."),
@@ -174,8 +174,8 @@ mod_schule_kurse_ui <- function(id){
         column(
           width = 8,
         p("Zoomt man auf die MINT-Fächer, zeigt sich: In den Leistungskursen heißt
-          MINT zum Großteil Mathematik. 47 % der MINT-Leistungskursbelegungen sind in Mathematik, gefolgt von Biologie (30 %)
-          und Physik (11 %).
+          MINT zu einem Großteil Mathematik. 45 % der MINT-Leistungskursbelegungen sind in Mathematik, gefolgt von Biologie (30 %)
+          und Physik (12 %).
           Kaum Oberstufenbelegungen entfallen dagegen auf Informatik."),
         p("Das hängt mit den Wahlmöglichkeiten in der Oberstufe zusammen.
           Während Mathematik oft ein Pflichtfach für das Abitur ist und auf gehobenem Leistungsniveau
@@ -276,16 +276,14 @@ mod_schule_kurse_ui <- function(id){
         width = 12,
         column(
           width = 8,
-        p("Der Mädchenanteil in MINT-Oberstufenfächern liegt bei gut der Hälfte.
-        In \"Nicht-MINT\"-Fächern machen Mädchen 55 % der Kursteilnehmenden aus.
-        Diese Zahlen zeigen auf subtile Weise, dass insgesamt mehr Jungen als Mädchen auf Gymnasien sind
-        und dass Jungen im Verhältnis etwas wahrscheinlicher MINT wählen."),
+        p("Der Mädchenanteil in MINT-Oberstufenfächern liegt mit 52 % bei gut der Hälfte.
+        In \"Nicht-MINT\"-Fächern machen Mädchen 55 % der Kursteilnehmenden aus."),
         p("Diese ähnliche Kurswahl hängt vielleicht auch mit Kursbelegungsvorgaben zusammen,
         nach denen oft alle mindestens ein oder mehrere MINT-Fächer wählen müssen.
         Was sich unterscheidet, ist, welche MINT-Fächer eher von Jungen oder Mädchen belegt werden.
-          Der Mädchenanteil in Biologie-Leistungs- und -Grundkursen liegt bei um die 60 %.
+          Der Mädchenanteil in Biologie-Leistungs- und -Grundkursen liegt 2024 bei um die 60 %.
           In Physik-Leistungskursen ist der Mädchenanteil dagegen bei knapp einem Viertel,
-          in Informatik-Leistungskursen bei rund 16 %.")
+          in Informatik-Leistungskursen bei rund 17 %.")
         ),
         column(
           width = 12,

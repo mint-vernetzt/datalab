@@ -41,8 +41,8 @@ mod_schule_kurse_map_ui <- function(id){
       shinyWidgets::sliderTextInput(
         inputId = ns("date_map"),
         label = NULL,
-        choices = 2013:2023,
-        selected = 2023
+        choices = 2013:2024,
+        selected = 2024
       ),
       p("Fach/Fächergruppe:"),
       shinyWidgets::pickerInput(
@@ -76,8 +76,8 @@ mod_schule_kurse_map_ui <- function(id){
                      shinyWidgets::sliderTextInput(
                        inputId = ns("date_kurse_verlauf_multiple"),
                        label = NULL,
-                       choices = 2013:2023,
-                       selected = c(2017, 2023)
+                       choices = 2013:2024,
+                       selected = c(2017, 2024)
                      ),
                      p("Kursart:"),
                      shinyWidgets::pickerInput(
@@ -154,8 +154,8 @@ mod_schule_kurse_map_ui <- function(id){
         shinyWidgets::sliderTextInput(
           inputId = ns("date_comparison_bl"),
           label = NULL,
-          choices = 2012:2023,
-          selected = 2023),
+          choices = 2012:2024,
+          selected = 2024),
 
         p("Kursart:"),
         shinyWidgets::pickerInput(
