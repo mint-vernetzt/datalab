@@ -83,7 +83,7 @@ kurse_einstieg_comparison <- function(r) {
       style = list(fontFamily = "Calibri Regular", fontSize = "14px")
     ) %>%
     highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
-   highcharter::hc_caption(text = "Quellen: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+   highcharter::hc_caption(text = "Quellen: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
                            style = list(fontSize = "11px", color = "gray")) %>%
    highcharter::hc_exporting(enabled = TRUE,
                              buttons = list(
@@ -98,7 +98,7 @@ kurse_einstieg_comparison <- function(r) {
      var filename = chartTitle + '_' + date + '.txt';
 
      var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle:Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt';
+     data += '\\nQuelle:Quelle der Daten: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt';
 
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
@@ -129,7 +129,7 @@ kurse_einstieg_comparison <- function(r) {
         style = list(fontFamily = "Calibri Regular", fontSize = "14px")
       ) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
-      highcharter::hc_caption(text = "Quellen: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+      highcharter::hc_caption(text = "Quellen: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
                               style = list(fontSize = "11px", color = "gray")) %>%
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
@@ -144,7 +144,7 @@ kurse_einstieg_comparison <- function(r) {
      var filename = chartTitle + '_' + date + '.txt';
 
      var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle:Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt';
+     data += '\\nQuelle:Quelle der Daten: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt';
 
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
@@ -193,7 +193,7 @@ kurse_einstieg_comparison <- function(r) {
     tooltip <- paste('Anteil: {point.proportion} % <br> Anzahl: {point.wert}')
     format <- "{point.proportion} %"
 
-    quelle <- "Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "Quelle der Daten: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
     out <- piebuilder(df1, titel, x = "fachbereich", y = "proportion", tooltip,  color =  c("#b16fab", "#efe8e6"), format, quelle = quelle)
 
@@ -259,7 +259,7 @@ kurse_verlauf_single <- function(r) {
     format <- "{value}%"
     color <- c("#b16fab", "#154194","#66cbaf")
 
-    quelle <- "Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "Quelle der Daten: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
     out <- linebuilder(df, titel, x = "jahr", y = "prop", group = "indikator", tooltip, format, color, quelle = quelle)
 
 
@@ -276,7 +276,7 @@ kurse_verlauf_single <- function(r) {
     tooltip <- "Anzahl: {point.y}"
     format <-  "{value:, f}"
     color <- c("#b16fab", "#154194","#66cbaf")
-    quelle <- "Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "Quelle der Daten: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
     out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color, quelle = quelle)
 
 
@@ -386,7 +386,7 @@ kurse_mint_map <- function(r) {
       color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
                  "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5")
 
-      quelle <- "Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      quelle <- "Quelle der Daten: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
       out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "region", tooltip, format, color, quelle = quelle)
 
     } else if(absolut_selector =="Anzahl"){
@@ -422,7 +422,7 @@ kurse_mint_map <- function(r) {
       format <-  "{value:, f}"
       color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
                  "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5")
-      quelle <- "Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      quelle <- "Quelle der Daten: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
       out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "region", tooltip, format, color, quelle = quelle)
     }
 
@@ -483,7 +483,7 @@ kurse_mint_map <- function(r) {
     mincolor <- "#f4f5f6"
     map_selection <- map_selection_germany
     maxcolor <- "#b16fab"
-    quelle <- "Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "Quelle der Daten: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
 
 
@@ -497,7 +497,7 @@ kurse_mint_map <- function(r) {
     mincolor <- "#f4f5f6"
     map_selection <- map_selection_germany
     maxcolor <- "#b16fab"
-    quelle <- "Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "Quelle der Daten: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
     map2 <- mapbuilder(df2, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection, quelle = quelle)
 
@@ -613,7 +613,7 @@ kurse_waffle_mint <- function(r) {
     color <- as.character(df$color)
     format <-"{point.proportion}  %"
 
-    quelle <- "Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "Quelle der Daten: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
     out <- piebuilder(df, titel, x = "fachbereich", y = "proportion", tooltip, color, format, quelle = quelle)
 
@@ -757,7 +757,7 @@ kurse_waffle_mint <- function(r) {
         style = list(fontFamily = "Calibri Regular", fontSize = "14px")
       ) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
-      highcharter::hc_caption(text = "Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+      highcharter::hc_caption(text = "Quelle der Daten: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
                               style = list(fontSize = "11px", color = "gray")) %>%
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
@@ -773,7 +773,7 @@ kurse_waffle_mint <- function(r) {
 
 
      var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle:Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt';
+     data += '\\nQuelle:Quelle der Daten: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt';
 
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
@@ -809,7 +809,7 @@ kurse_waffle_mint <- function(r) {
           style = list(fontFamily = "Calibri Regular", fontSize = "14px")
         ) %>%
         highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
-        highcharter::hc_caption(text = "Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+        highcharter::hc_caption(text = "Quelle der Daten: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
                                 style = list(fontSize = "11px", color = "gray")) %>%
         highcharter::hc_exporting(enabled = TRUE,
                                   buttons = list(
@@ -825,7 +825,7 @@ kurse_waffle_mint <- function(r) {
 
 
      var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle:Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt';
+     data += '\\nQuelle:Quelle der Daten: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt';
 
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
@@ -962,7 +962,7 @@ kurse_verlauf_subjects_bl <- function(r) {
     df <- df[with(df, order(region, jahr, decreasing = FALSE)), ]
 
     # plot
-    quelle <- "Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "Quelle der Daten: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
     titel <- paste0("Anteil einzelner Fächer an den ", kurs_help ," in ", states)
     tooltip <-  "{point.fachbereich} <br> Anteil: {point.y} %"
     format <-  "{value}%"
@@ -981,7 +981,7 @@ kurse_verlauf_subjects_bl <- function(r) {
 
     df <- df[with(df, order(region, jahr, decreasing = FALSE)), ]
 
-    quelle2 <- "Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle2 <- "Quelle der Daten: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
     titel <- paste0("Anzahl der ", kurs_help, " in einzelnen Fächern in ", states)
     tooltip <-  "{point.fachbereich} <br> Anzahl: {point.y}"
     format <-  "{value:, f}"
@@ -1082,7 +1082,7 @@ kurse_map <- function(r) {
     mincolor <- "#fcfcfd"
     maxcolor <- col
     map_selection <- map_selection_germany
-    quelle <- "Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "Quelle der Daten: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
     map1 <- mapbuilder(df1, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection, quelle = quelle)
 
 
@@ -1098,7 +1098,7 @@ kurse_map <- function(r) {
     mincolor <- "#fcfcfd"
     maxcolor <- col
     map_selection <- map_selection_germany
-    quelle <- "Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "Quelle der Daten: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
     map2 <- mapbuilder(df2, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection, quelle = quelle)
 
 
@@ -1197,7 +1197,7 @@ kurse_map <- function(r) {
     format <-  "{value}%"
     color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
                "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5")
-    quelle <- "Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "Quelle der Daten: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
     out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "region", tooltip, format, color, quelle = quelle)
 
     } else if(absolut_selector =="Anzahl"){
@@ -1227,7 +1227,7 @@ kurse_map <- function(r) {
       format <-  "{value:, f}"
       color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
                  "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5")
-      quelle <- "Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      quelle <- "Quelle der Daten: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
       out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "region", tooltip, format, color, quelle = quelle)
     }
 
@@ -2069,7 +2069,7 @@ kurse_comparison_gender <- function(r) {
         ),
         annotations = list(
           list(
-            text = "Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+            text = "Quelle der Daten: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
             xref = "paper", yref = "paper",
             x = 0, y = -0.3,
             xanchor = "left", yanchor = "top",
@@ -2179,7 +2179,7 @@ kurse_comparison_gender <- function(r) {
       titelg <- paste0("Mädchen-Anteil in anderen ", titel_help,  " in ", regio, " (", timerange, ")")
       tooltip <- paste('Anteil: {point.proportion}% <br> Anzahl: {point.wert}')
 
-      quelle <- "Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      quelle <- "Quelle der Daten: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
       mint <- piebuilder(df_mint, titel, x = "anzeige_geschlecht", y = "proportion", tooltip, color = c("#154194" ,"#efe8e6"), format='{point.proportion}%', quelle = quelle)
 
@@ -2203,7 +2203,7 @@ kurse_comparison_gender <- function(r) {
       tooltip = paste('Anteil: {point.proportion}% <br> Anzahl: {point.wert}')
 
 
-      quelle <- "Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      quelle <- "Quelle der Daten: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
       out <- piebuilder(df1, titel, x = "anzeige_geschlecht", y = "proportion", tooltip, color = c("#154194" ,"#efe8e6"), format = '{point.proportion}%', quelle = quelle)
 
@@ -2244,7 +2244,7 @@ kurse_comparison_gender <- function(r) {
           style = list(fontFamily = "Calibri Regular", fontSize = "14px")
         ) %>%
         highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
-        highcharter::hc_caption(text = "Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+        highcharter::hc_caption(text = "Quelle der Daten: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
                                 style = list(fontSize = "11px", color = "gray")) %>%
         highcharter::hc_exporting(enabled = TRUE,
                                   buttons = list(
@@ -2260,7 +2260,7 @@ kurse_comparison_gender <- function(r) {
 
 
      var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle:Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt';
+     data += '\\nQuelle:Quelle der Daten: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt';
 
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
@@ -2302,7 +2302,7 @@ kurse_comparison_gender <- function(r) {
           style = list(fontFamily = "Calibri Regular", fontSize = "14px")
         ) %>%
         highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
-        highcharter::hc_caption(text = "Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+        highcharter::hc_caption(text = "Quelle der Daten: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
                                 style = list(fontSize = "11px", color = "gray")) %>%
         highcharter::hc_exporting(enabled = TRUE,
                                   buttons = list(
@@ -2317,7 +2317,7 @@ kurse_comparison_gender <- function(r) {
      var filename = chartTitle + '_' + date + '.txt';
 
      var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle:Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt';
+     data += '\\nQuelle:Quelle der Daten: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt';
 
 
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
@@ -2400,7 +2400,7 @@ kurse_verlauf_gender <- function(r){
     tooltip <-  "{point.indikator} <br> Wert: {point.wert_anzeige}"
     format <-  "{value:, f}"
     color <- colors_mint_vernetzt$general
-    quelle <- "Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "Quelle der Daten: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
     out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color, quelle = quelle)
 
 
@@ -2417,7 +2417,7 @@ kurse_verlauf_gender <- function(r){
     tooltip <-  "{point.indikator} <br> Wert: {point.y}%"
     format <-  "{value}%"
     color <- colors_mint_vernetzt$general
-    quelle <- "Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "Quelle der Daten: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
     out <- linebuilder(df, titel, x = "jahr", y = "proportion", group = "indikator", tooltip, format, color, quelle = quelle)
 
   }
@@ -2522,7 +2522,7 @@ kurse_wahl <- function(r) {
       tooltip <- paste('Anteil: {point.proportion}% <br> Anzahl: {point.wert}')
       color = as.character(df_f$col)
 
-      quelle <- "Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      quelle <- "Quelle der Daten: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
       frauen <- piebuilder(df_f, titelf, x = "fachbereich", y = "proportion", tooltip, color, format = '{point.proportion}%', quelle = quelle)
       männer <- piebuilder(df_m, titelm, x = "fachbereich", y = "proportion", tooltip, color, format = '{point.proportion}%', quelle = quelle)
@@ -2543,7 +2543,7 @@ kurse_wahl <- function(r) {
       format = '{point.proportion}%'
       color = as.character(df_f$col)
 
-      quelle <- "Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      quelle <- "Quelle der Daten: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
       out <- piebuilder(df_f, titel, x = "fachbereich", y = "proportion", tooltip, color, format, quelle=quelle)
 
@@ -2626,7 +2626,7 @@ kurse_wahl <- function(r) {
     mincolor <- "#fcfcfd"
     maxcolor <- as.character(color_fach[subjects])
     map_selection <- map_selection_germany
-    quelle <- "Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "Quelle der Daten: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
     out1 <- mapbuilder(df1, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection, quelle = quelle)
 
     out <- out1
@@ -2642,7 +2642,7 @@ kurse_wahl <- function(r) {
       mincolor <- "#fcfcfd"
       maxcolor <- as.character(color_fach[subjects])
       map_selection <- map_selection_germany
-      quelle <- "Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      quelle <- "Quelle der Daten: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
       out2 <- mapbuilder(df2, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection, quelle = quelle)
 
       out <- highcharter::hw_grid(
