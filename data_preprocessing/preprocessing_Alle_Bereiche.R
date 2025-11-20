@@ -63,9 +63,7 @@ data_studierende$fachbereich[data_studierende$fachbereich == "Gesamt"] <- "Alle"
 
 zentral <- bind_rows(data_schule,  data_arbeitsmarkt,  data_studierende)
 
-#setwd("C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/02_data/data/")
 setwd("C:/Users/kbr/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/02_data/data/")
-setwd("C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/02_data/data/")
 save(zentral, file = "zentral.rda")
 
 setwd("~/datalab2")
@@ -74,4 +72,4 @@ library(DBI)
 
 dbWriteTable(con, 'zentral', zentral, overwrite = TRUE, append = FALSE)
 
-dbDisconnect(con)
+dbDisconnect(con, shutdown = TRUE)

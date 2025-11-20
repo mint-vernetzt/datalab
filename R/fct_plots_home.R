@@ -87,7 +87,7 @@ home_einstieg <- function(r) {
     titel <- paste0(indikator_choice_1, " in ", regio, " (", zeit, ")")
     tooltip <- paste('Anteil: {point.prop_besr} % <br> Anzahl: {point.wert_besr}')
 
-    quelle <- "Quellen: Destatis, 2025; Bundesagentur für Arbeit, 2025; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "Quellen: Destatis, 2025; Bundesagentur für Arbeit, 2025; KMK, 2025, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
     out <- piebuilder(df,titel,  x = "fachbereich", y = "prop", tooltip, quelle = quelle)
 
@@ -98,14 +98,14 @@ home_einstieg <- function(r) {
     df_1 <- df %>% dplyr::filter(indikator == indikator_choice_1[1])
     if(indikator_choice_1[1] == "Leistungskurse") indikator_choice_1[1] <- "Schüler:innen im Leistungskurs"
     titel_1 <- paste0(indikator_choice_1[1], " in ", regio, " (", zeit, ")")
-    quelle <- "Quellen: Destatis, 2025; Bundesagentur für Arbeit, 2025; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "Quellen: Destatis, 2025; Bundesagentur für Arbeit, 2025; KMK, 2025, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
     df_2 <- df %>% dplyr::filter(indikator == indikator_choice_1[2])
     if(indikator_choice_1[2] == "Leistungskurse") indikator_choice_1[2] <- "Schüler:innen im Leistungskurs"
     titel_2 <- paste0(indikator_choice_1[2], " in ", regio, " (", zeit, ")")
 
     tooltip <- paste('Anteil: {point.prop_besr} % <br> Anzahl: {point.wert_besr}')
-    quelle <- "Quellen: Destatis, 2025; Bundesagentur für Arbeit, 2025; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "Quellen: Destatis, 2025; Bundesagentur für Arbeit, 2025; KMK, 2025, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
     if(nrow(df_1) == 0){
 
@@ -132,7 +132,7 @@ home_einstieg <- function(r) {
       format <- '{point.prop_besr}%'
       subtitel <- NULL
 
-      quelle <- "Quellen: Destatis, 2025; Bundesagentur für Arbeit, 2025; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      quelle <- "Quellen: Destatis, 2025; Bundesagentur für Arbeit, 2025; KMK, 2025, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
       out2 <- piebuilder(df_2, titel, x, y, tooltip, color, format, subtitel, quelle = quelle)
 
@@ -160,7 +160,7 @@ home_einstieg <- function(r) {
       tooltip <- paste('Anteil: {point.prop_besr} % <br> Anzahl: {point.wert_besr}')
       color <- c( "#b16fab", "#efe8e6")
       format <- '{point.prop_besr}%'
-      quelle <- "Quellen: Destatis, 2025; Bundesagentur für Arbeit, 2025; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      quelle <- "Quellen: Destatis, 2025; Bundesagentur für Arbeit, 2025; KMK, 2025, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
       out1 = piebuilder(df_1, titel_1, x="fachbereich", y="prop", tooltip, color, format, quelle = quelle)
 
 
@@ -214,7 +214,7 @@ home_einstieg <- function(r) {
         style = list(fontFamily = "Calibri Regular", fontSize = "14px")
       ) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
-     highcharter::hc_caption(text = "Quellen: Destatis, 2025; Bundesagentur für Arbeit, 2025; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+     highcharter::hc_caption(text = "Quellen: Destatis, 2025; Bundesagentur für Arbeit, 2025; KMK, 2025, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
                              style = list(fontSize = "11px", color = "gray")) %>%
      highcharter::hc_exporting(enabled = TRUE,
                                buttons = list(
@@ -229,7 +229,7 @@ home_einstieg <- function(r) {
      var filename = chartTitle + '_' + date + '.txt';
 
      var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle: Quellen: Destatis, 2025; Bundesagentur für Arbeit, 2025; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
+     data += '\\nQuelle: Quellen: Destatis, 2025; Bundesagentur für Arbeit, 2025; KMK, 2025, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
 
 
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
@@ -330,7 +330,7 @@ home_rest_mint_verlauf <- function(r) {
     format <- "{value}%"
     color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24")
 
-    quelle <- "Quellen: Destatis, 2025; Bundesagentur für Arbeit, 2025; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "Quellen: Destatis, 2025; Bundesagentur für Arbeit, 2025; KMK, 2025, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
 
     out <- linebuilder(df, titel1,x="jahr", y="prop", group="indikator", tooltip = tooltip, format, color, quelle = quelle)
@@ -362,7 +362,7 @@ home_rest_mint_verlauf <- function(r) {
 
     format <- "{value:, f}"
     color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24")
-    quelle <- "Quellen: Destatis, 2025; Bundesagentur für Arbeit, 2025; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "Quellen: Destatis, 2025; Bundesagentur für Arbeit, 2025; KMK, 2025, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
     out <- linebuilder(df, titel, x = "jahr", y="wert", group = "indikator", tooltip = tooltip, format, color, quelle = quelle)
 
 
@@ -517,7 +517,7 @@ home_einstieg_gender <- function(r) {
     titel <- paste0(df_mint$titel_help[1], " in ", regio, " (", zeit, ")")
     tooltip <- paste('Anteil: {point.prop_besr}% <br> Anzahl: {point.wert_besr}')
     color = c("#efe8e6", "#154194")
-    quelle <- "Quellen: Destatis, 2025; Bundesagentur für Arbeit, 2025; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "Quellen: Destatis, 2025; Bundesagentur für Arbeit, 2025; KMK, 2025, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
     mint1 <- piebuilder(df_mint, titel, x = "geschlecht", y = "prop", tooltip, color, quelle = quelle)
 
@@ -530,7 +530,7 @@ home_einstieg_gender <- function(r) {
 
      titel <- paste0(df_mint$titel_help2[1], " in ", regio, " (", zeit, ")")
 
-     quelle <- "Quellen: Destatis, 2025; Bundesagentur für Arbeit, 2025; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+     quelle <- "Quellen: Destatis, 2025; Bundesagentur für Arbeit, 2025; KMK, 2025, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
      nmint1 <- piebuilder(df_rest, titel, x = "geschlecht", y = "prop", tooltip, color, quelle = quelle)
 
@@ -599,7 +599,7 @@ home_einstieg_gender <- function(r) {
 
       }else{
 
-    quelle <- "Quellen: Destatis, 2025; Bundesagentur für Arbeit, 2025; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "Quellen: Destatis, 2025; Bundesagentur für Arbeit, 2025; KMK, 2025, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
      mint1 <- piebuilder(df_1_mint, paste0(df_1_mint$titel_help[1], " in ", regio, " (", zeit, ")"),
                          x = "geschlecht", y = "prop",
@@ -665,7 +665,7 @@ home_einstieg_gender <- function(r) {
 
         }else{
 
-      quelle <- "Quellen: Destatis, 2025; Bundesagentur für Arbeit, 2025; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      quelle <- "Quellen: Destatis, 2025; Bundesagentur für Arbeit, 2025; KMK, 2025, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
       nmint1 <- piebuilder(df_1_rest, paste0(df_1_rest$titel_help2[1], " in ", regio, " (", zeit, ")"),
                            x = "geschlecht", y = "prop",
@@ -754,7 +754,7 @@ home_einstieg_gender <- function(r) {
 
       colors <- c("#154194", "#efe8e6")
 
-      quelle <- "Quellen: Destatis, 2025; Bundesagentur für Arbeit, 2025; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      quelle <- "Quellen: Destatis, 2025; Bundesagentur für Arbeit, 2025; KMK, 2025, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
       out <- balkenbuilder(df, titel, x, y, group, tooltip, format="{value}%", color = colors, reverse=reversed, stacking = stacking, quelle = quelle)
 
@@ -797,7 +797,7 @@ home_einstieg_gender <- function(r) {
           style = list(fontFamily = "Calibri Regular", fontSize = "14px")
         ) %>%
         highcharter::hc_legend(enabled = TRUE, reversed = FALSE) %>%
-        highcharter::hc_caption(text = "Quellen: Destatis, 2025; Bundesagentur für Arbeit, 2025; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+        highcharter::hc_caption(text = "Quellen: Destatis, 2025; Bundesagentur für Arbeit, 2025; KMK, 2025, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
                                 style = list(fontSize = "11px", color = "gray")) %>%
         highcharter::hc_exporting(enabled = TRUE,
                                   buttons = list(
@@ -813,7 +813,7 @@ home_einstieg_gender <- function(r) {
 
 
      var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle: Quellen: Destatis, 2025; Bundesagentur für Arbeit, 2025; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
+     data += '\\nQuelle: Quellen: Destatis, 2025; Bundesagentur für Arbeit, 2025; KMK, 2025, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
 
 
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
@@ -983,7 +983,7 @@ home_comparison_line <- function(r) {
     format <- "{value}%"
     color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24")
 
-    quelle <- "Quellen: Destatis, 2025; Bundesagentur für Arbeit, 2025; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "Quellen: Destatis, 2025; Bundesagentur für Arbeit, 2025; KMK, 2025, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
     out <- linebuilder(df, titel, x = "jahr", y = "prop", group="indikator",tooltip, format, quelle = quelle)
 
 
@@ -1009,7 +1009,7 @@ home_comparison_line <- function(r) {
     format <- "{value}"
 
     color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24" )
-    quelle <- "Quellen: Destatis, 2025; Bundesagentur für Arbeit, 2025; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "Quellen: Destatis, 2025; Bundesagentur für Arbeit, 2025; KMK, 2025, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
     out <- linebuilder(df,titel,x="jahr", y="wert", group="indikator", tooltip, format, color, quelle = quelle)
 

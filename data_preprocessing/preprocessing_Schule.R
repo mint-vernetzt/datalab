@@ -74,6 +74,7 @@ pfad <- paste0("C:/Users/", akro,
 
 #pfad <- pfad_kek
 
+### 2021-2023 ----
 data_LK_D  <- read_data(paste0(pfad,"KMK023_Aus_Kurse_2021_Werte.xlsx"), "D" , 2021, "Leistungskurse")
 data_LK_BW <- read_data(paste0(pfad,"KMK023_Aus_Kurse_2021_Werte.xlsx"), "BW", 2021, "Leistungskurse")
 data_LK_BY <- read_data(paste0(pfad,"KMK023_Aus_Kurse_2021_Werte.xlsx"), "BY", 2021, "Leistungskurse")
@@ -184,6 +185,8 @@ data23_GK_SN <- read_data(paste0(pfad, "KNK025_Aus_Kurse_2023.xlsx"), "SN", 2023
 data23_GK_ST <- read_data(paste0(pfad, "KNK025_Aus_Kurse_2023.xlsx"), "ST", 2023, "Grundkurse")
 data23_GK_SH <- read_data(paste0(pfad, "KNK025_Aus_Kurse_2023.xlsx"), "SH", 2023, "Grundkurse")
 data23_GK_TH <- read_data(paste0(pfad, "KNK025_Aus_Kurse_2023.xlsx"), "TH", 2023, "Grundkurse")
+
+
 
 # Zwischen-DFs zusammenfassen
 data <- rbind( data_LK_D     ,
@@ -296,6 +299,81 @@ data <- rbind(data23_LK_D     ,
               data23_GK_SH ,
               data23_GK_TH)
 
+
+### 2024 ----
+
+data_LK_D  <- read_data(paste0(pfad,"KMK026_Aus_Kurse_2024.xlsx"), "D" , 2024, "Leistungskurse")
+data_LK_BW <- read_data(paste0(pfad,"KMK026_Aus_Kurse_2024.xlsx"), "BW", 2024, "Leistungskurse")
+data_LK_BY <- read_data(paste0(pfad,"KMK026_Aus_Kurse_2024.xlsx"), "BY", 2024, "Leistungskurse")
+data_LK_BE <- read_data(paste0(pfad,"KMK026_Aus_Kurse_2024.xlsx"), "BE", 2024, "Leistungskurse")
+data_LK_BB <- read_data(paste0(pfad,"KMK026_Aus_Kurse_2024.xlsx"), "BB", 2024, "Leistungskurse")
+data_LK_HB <- read_data(paste0(pfad,"KMK026_Aus_Kurse_2024.xlsx"), "HB", 2024, "Leistungskurse")
+data_LK_HH <- read_data(paste0(pfad,"KMK026_Aus_Kurse_2024.xlsx"), "HH", 2024, "Leistungskurse")
+data_LK_HE <- read_data(paste0(pfad,"KMK026_Aus_Kurse_2024.xlsx"), "HE", 2024, "Leistungskurse")
+data_LK_MV <- read_data(paste0(pfad,"KMK026_Aus_Kurse_2024.xlsx"), "MV", 2024, "Leistungskurse")
+data_LK_NI <- read_data(paste0(pfad,"KMK026_Aus_Kurse_2024.xlsx"), "NI", 2024, "Leistungskurse")
+data_LK_NW <- read_data(paste0(pfad,"KMK026_Aus_Kurse_2024.xlsx"), "NW", 2024, "Leistungskurse")
+data_LK_RP <- read_data(paste0(pfad,"KMK026_Aus_Kurse_2024.xlsx"), "RP", 2024, "Leistungskurse")
+data_LK_SL <- read_data(paste0(pfad,"KMK026_Aus_Kurse_2024.xlsx"), "SL", 2024, "Leistungskurse")
+data_LK_SN <- read_data(paste0(pfad,"KMK026_Aus_Kurse_2024.xlsx"), "SN", 2024, "Leistungskurse")
+data_LK_ST <- read_data(paste0(pfad,"KMK026_Aus_Kurse_2024.xlsx"), "ST", 2024, "Leistungskurse")
+data_LK_SH <- read_data(paste0(pfad,"KMK026_Aus_Kurse_2024.xlsx"), "SH", 2024, "Leistungskurse")
+data_LK_TH <- read_data(paste0(pfad,"KMK026_Aus_Kurse_2024.xlsx"), "TH", 2024, "Leistungskurse")
+
+data_GK_D  <- read_data(paste0(pfad, "KMK026_Aus_Kurse_2024.xlsx"), "D" , 2024, "Grundkurse")
+data_GK_BW <- read_data(paste0(pfad, "KMK026_Aus_Kurse_2024.xlsx"), "BW", 2024, "Grundkurse")
+data_GK_BY <- read_data(paste0(pfad, "KMK026_Aus_Kurse_2024.xlsx"), "BY", 2024, "Grundkurse")
+data_GK_BE <- read_data(paste0(pfad, "KMK026_Aus_Kurse_2024.xlsx"), "BE", 2024, "Grundkurse")
+data_GK_BB <- read_data(paste0(pfad, "KMK026_Aus_Kurse_2024.xlsx"), "BB", 2024, "Grundkurse")
+data_GK_HB <- read_data(paste0(pfad, "KMK026_Aus_Kurse_2024.xlsx"), "HB", 2024, "Grundkurse")
+data_GK_HH <- read_data(paste0(pfad, "KMK026_Aus_Kurse_2024.xlsx"), "HH", 2024, "Grundkurse")
+data_GK_HE <- read_data(paste0(pfad, "KMK026_Aus_Kurse_2024.xlsx"), "HE", 2024, "Grundkurse")
+data_GK_MV <- read_data(paste0(pfad, "KMK026_Aus_Kurse_2024.xlsx"), "MV", 2024, "Grundkurse")
+data_GK_NI <- read_data(paste0(pfad, "KMK026_Aus_Kurse_2024.xlsx"), "NI", 2024, "Grundkurse")
+data_GK_NW <- read_data(paste0(pfad, "KMK026_Aus_Kurse_2024.xlsx"), "NW", 2024, "Grundkurse")
+data_GK_RP <- read_data(paste0(pfad, "KMK026_Aus_Kurse_2024.xlsx"), "RP", 2024, "Grundkurse")
+data_GK_SL <- read_data(paste0(pfad, "KMK026_Aus_Kurse_2024.xlsx"), "SL", 2024, "Grundkurse")
+data_GK_SN <- read_data(paste0(pfad, "KMK026_Aus_Kurse_2024.xlsx"), "SN", 2024, "Grundkurse")
+data_GK_ST <- read_data(paste0(pfad, "KMK026_Aus_Kurse_2024.xlsx"), "ST", 2024, "Grundkurse")
+data_GK_SH <- read_data(paste0(pfad, "KMK026_Aus_Kurse_2024.xlsx"), "SH", 2024, "Grundkurse")
+data_GK_TH <- read_data(paste0(pfad, "KMK026_Aus_Kurse_2024.xlsx"), "TH", 2024, "Grundkurse")
+
+data <- rbind( data_LK_D     ,
+               data_LK_BW ,
+               data_LK_BY ,
+               data_LK_BE ,
+               data_LK_BB ,
+               data_LK_HB ,
+               data_LK_HH ,
+               data_LK_HE ,
+               data_LK_MV ,
+               data_LK_NI ,
+               data_LK_NW ,
+               data_LK_RP ,
+               data_LK_SL ,
+               data_LK_SN ,
+               data_LK_ST ,
+               data_LK_SH ,
+               data_LK_TH ,
+               data_GK_D  ,
+               data_GK_BW ,
+               data_GK_BY ,
+               data_GK_BE ,
+               data_GK_BB ,
+               data_GK_HB ,
+               data_GK_HH ,
+               data_GK_HE ,
+               data_GK_MV ,
+               data_GK_NI ,
+               data_GK_NW ,
+               data_GK_RP ,
+               data_GK_SL ,
+               data_GK_SN ,
+               data_GK_ST ,
+               data_GK_SH ,
+               data_GK_TH
+)
+
 ## Datensatz in gewünschte From bringe -------------------------------------
 
 # Bundesländer benennen
@@ -370,27 +448,11 @@ data$wert <- ifelse(data$region=="Bayern"&data$indikator=="Leistungskurse"&data$
 #Spalten in logische Reihenfolge bringen
 data <- data[,c("bereich", "hinweise", "quelle", "indikator", "fachbereich", "anzeige_geschlecht",
                     "region", "Jahr", "wert")]
+data <- data %>%
+  rename(jahr = Jahr)
 
-## Datensatz zusammenfügen, anpassen und exportieren --------------------------------------
-
-
-data_z <- readxl::read_excel(paste0(pfad,"Kurse_21_10_22.xlsx"), col_names = T)
-
-#Spalten in gleiche Reihenfolge bringen
-data_z <- data_z[,c("bereich", "hinweise", "quelle", "indikator", "fachbereich", "anzeige_geschlecht",
-                    "region", "Jahr", "wert")]
-
-#neue Daten anhängen
-data_z <- rbind(data_z, data)
-
-#Spaltenbezeichnungen anpassen - für geschlecht vorläufig noch nicht
-data_z <- data_z %>%
-  rename(#geschlecht = anzeige_geschlecht,
-         jahr = Jahr)
-
-# Anpassungen 13.01. kab
 # Oberstufenbelegungen hinzufügen
-data_o <- data_z %>%
+data_o <- data %>%
   group_by(bereich, hinweise, quelle, jahr, region, anzeige_geschlecht, fachbereich) %>%
   summarise(wert = sum(wert, na.rm = TRUE)) %>%
   ungroup() %>%
@@ -399,10 +461,10 @@ data_o <- data_z %>%
            wert == 0 ~ NA,
            T ~ wert
          ))
-data_z <- rbind(data_z, data_o)
+data <- rbind(data, data_o)
 
 #exportieren
-kurse <- data_z %>%
+kurse <- data %>%
   janitor::clean_names() %>%
   janitor::remove_empty() %>%
   dplyr::select(-c("quelle", "hinweise")) %>%
@@ -418,7 +480,7 @@ kurse[kurse$anzeige_geschlecht == "frauen", "anzeige_geschlecht"] <- "Frauen"
 kurse[kurse$anzeige_geschlecht == "gesamt", "anzeige_geschlecht"] <- "Gesamt"
 kurse[kurse$anzeige_geschlecht == "männer", "anzeige_geschlecht"] <- "Männer"
 
-## prep fuktionen übernehmen ----
+## Prep fuktionen übernehmen ----
 
 states_east_west <- list(west = c("Baden-Württemberg", "Bayern", "Bremen", "Hamburg",
                                   "Hessen", "Niedersachsen", "Nordrhein-Westfalen",
@@ -441,33 +503,11 @@ df_incl <- df_incl %>% dplyr::group_by(jahr, anzeige_geschlecht, indikator, fach
 
 names(df_incl)[5] <- "region"
 
-#if(type == "subjects"){
-
-  # df_incl <-  df_incl %>%
-  #   dplyr::group_by(region, fachbereich, indikator, jahr) %>%
-  #   dplyr::mutate(props = wert[anzeige_geschlecht == "Frauen"] +
-  #                   wert[anzeige_geschlecht == "Männer"])
 
   df_incl <- df_incl[, colnames(kurse)]
 
   kurse <- rbind(kurse, df_incl)
 
-# } else {
-#   # # calcualte new "Gesamt"
-#   #  df_incl <-  df_incl %>%
-#   #    dplyr::group_by(region, fachbereich, indikator, jahr) %>%
-#   #    dplyr::mutate(props = wert[anzeige_geschlecht == "Frauen"] +
-#   #                    wert[anzeige_geschlecht == "Männer"])
-#
-#   df_incl <- df_incl[, colnames(kurse)]
-#
-#
-#   kurse <- rbind(kurse, df_incl)
-#
-# }
-
-# share_mint_kurse
-  ## Datensatz so anpassen, dass Funktion nicht mehr benötigt wird
 
 # objekt zum filtern, pivoten aller fächer erstellen
 alle_kurse <- kurse %>%
@@ -491,22 +531,18 @@ kurse <- kurse %>%
     wert == 0 ~NA,
     T ~ wert
   ))
-#writexl::write_xlsx(kurse, "C:/Users/kab/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/02_Prozess/Datenaufbereitung 2023/Zentral/kurse_22.xlsx")
-# USE ----
+
+## Datensatz zusammenfügen, anpassen und exportieren --------------------------------------
 
 
-#usethis::use_data(kurse, overwrite = T)
-#kurse <- dbGetQuery(con, "SELECT * FROM kurse")
-# kurse <- kurse %>% dplyr::mutate(
-#   region = dplyr::case_when(
-#     region == "Westen" ~ "Westdeutschland (o. Berlin)",
-#     region == "Osten" ~ "Ostdeutschland (inkl. Berlin)",
-#     T ~ region
-#   )
-# )
-kurse_neu <- kurse
-load("kurse.rda")
-kurse <- rbind(kurse, kurse_neu)
+library(DBI)
+con <- dbConnect(duckdb::duckdb(), "data/mint_db.duckdb", read_only = TRUE)
+data_z <- dbGetQuery(con, "SELECT * FROM kurse")
+dbDisconnect(con)
+
+#neue Daten anhängen
+kurse <- rbind(data_z, kurse)
+
 save(kurse, file="kurse.rda")
 
 

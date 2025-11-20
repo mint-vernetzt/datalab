@@ -494,7 +494,7 @@ daten_download <- function(r){
   region_reserve <- r$region_argumentationshilfe
 
   ### Daten Verlauf MINT ----
-  t <- 2017:2023
+  t <- 2017:2024
   absolut_selector <- "Anzahl"
 
   query_df <- glue::glue_sql("
@@ -746,7 +746,7 @@ AND fachbereich = {faecher}
     query_df <- glue::glue_sql("
   SELECT region, fach, jahr, indikator, wert
   FROM studierende_detailliert
-  WHERE jahr IN (2017, 2018, 2019, 2020, 2021, 2022, 2023)
+  WHERE jahr IN (2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024)
     AND region = {regio}
     AND geschlecht = 'Gesamt'
     AND fach IN ('Mathematik, Naturwissenschaften', 'Informatik', 'Ingenieurwissenschaften (ohne Informatik)')
@@ -904,7 +904,7 @@ AND fachbereich = {faecher}
     # 1. Beschäftigte MINT
     df_beschäftigte_clean <- df_alle %>%
       dplyr::mutate(Bereich = "Beschäftigte MINT",
-             Quelle = "Statistisches Bundesamt, 2024; Bundesagentur für Arbeit, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt",
+             Quelle = "Statistisches Bundesamt, 2025; Bundesagentur für Arbeit, 2025, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt",
              Region = region_reserve)
 
 
@@ -932,7 +932,7 @@ AND fachbereich = {faecher}
     #   mutate(Bereich = "Nachwuchs MINT")
     df_nachwuchs_clean <- df_nachwuchs_agg %>%
       dplyr::mutate(Bereich = "Nachwuchs MINT",
-             Quelle = "Destatis, 2024 und Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt")
+             Quelle = "Destatis, 2025 und Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt")
 
 
     # 5. Wirkhebel (Prognosen)
@@ -941,7 +941,7 @@ AND fachbereich = {faecher}
     uebersicht_data_clean <- uebersicht_data %>%
       dplyr::mutate(Bereich = "Wirkhebel MINT",
              Quelle = "Berechnungen durch das IW Köln, 2024, beauftragt durch MINTvernetzt",
-             Region = "Deutschland (immer deutschland)")
+             Region = "Deutschland (immer Deutschland)")
 
     # Falls nötig: Nur gleiche Spaltennamen verwenden
     # Dazu alle Datensätze auf einen gemeinsamen Satz von Spalten bringen
@@ -1018,13 +1018,13 @@ argument_verlauf <- function(r){
   df_beschäftigte$wert_besr <- prettyNum(df_beschäftigte$wert, big.mark = ".", decimal.mark = ",")
 
   # Ordnen der Legende
-  sorted_indicators <- df_beschäftigte %>%
-    dplyr::group_by(indikator) %>%
-    dplyr::summarize(m_value = mean(round(wert, 1), na.rm = TRUE)) %>%
-    dplyr::arrange(desc(m_value)) %>%
-    dplyr::pull(indikator)
+  # sorted_indicators <- df_beschäftigte %>%
+  #   dplyr::group_by(indikator) %>%
+  #   dplyr::summarize(m_value = mean(round(wert, 1), na.rm = TRUE)) %>%
+  #   dplyr::arrange(desc(m_value)) %>%
+  #   dplyr::pull(indikator)
 
-  df_beschäftigte$indikator <- factor(df_beschäftigte$indikator, levels = sorted_indicators)
+  # df_beschäftigte$indikator <- factor(df_beschäftigte$indikator, levels = sorted_indicators)
 
 
   query_df <- glue::glue_sql("
@@ -1071,7 +1071,7 @@ argument_verlauf <- function(r){
 
 
 
-    out_beschäftigte <- highcharter::hchart(df_beschäftigte, 'line', highcharter::hcaes(x = "jahr", y = "wert", group = "indikator")) %>%
+    out_beschäftigte <- highcharter::hchart(df_beschäftigte, 'line', highcharter::hcaes(x = "jahr", y = "wert")) %>%
       highcharter::hc_tooltip(pointFormat = tooltip) %>%
       highcharter::hc_plotOptions(
         series = list(
@@ -2187,7 +2187,7 @@ argument_wirkhebel <- function(r){
       style = list(fontFamily = "Calibri Regular", fontSize = "14px")
     ) %>%
     highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
-    highcharter::hc_caption(text = "Berechnungen durch das IW Köln, 2024, beauftragt durch MINTvernetzt.",
+    highcharter::hc_caption(text = "Quelle: Berechnungen durch das IW Köln, 2024, beauftragt durch MINTvernetzt.",
                             style = list(fontSize = "11px", color = "gray")) %>%
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(
@@ -2201,7 +2201,7 @@ argument_wirkhebel <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = 'Berechnungen durch das IW Köln, 2024, beauftragt durch MINTvernetzt.\\n\\n' + this.getCSV();
+     var data = 'Quelle: Berechnungen durch das IW Köln, 2024, beauftragt durch MINTvernetzt.\\n\\n' + this.getCSV();
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);

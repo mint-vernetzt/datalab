@@ -22,8 +22,8 @@ mod_schule_kurse_einstieg_comparison_ui <- function(id){
     shinyWidgets::sliderTextInput(
       inputId = ns("date_kurse_einstieg_comparison"),
       label = NULL,
-      choices = 2013:2023,
-      selected = 2023
+      choices = 2013:2024,
+      selected = 2024
     ),
     p("Region:"),
     shinyWidgets::pickerInput(

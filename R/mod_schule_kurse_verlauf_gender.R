@@ -17,8 +17,8 @@ mod_schule_kurse_verlauf_gender_ui <- function(id){
       inputId = ns("datum_kurse_verlauf_gender"),
       #label = "Jahr:",
       label = NULL,
-      choices = 2013:2023,
-      selected = c(2017, 2023)
+      choices = 2013:2024,
+      selected = c(2017, 2024)
     ),
     p("Region:"),
 

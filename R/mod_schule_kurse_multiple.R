@@ -22,8 +22,8 @@ mod_schule_kurse_multiple_ui <- function(id){
     shinyWidgets::sliderTextInput(
       inputId = ns("date_kurse"),
       label = NULL,
-      choices = 2013:2023,
-      selected = 2023
+      choices = 2013:2024,
+      selected = 2024
     ),
 
     p("Kursniveau:"),
