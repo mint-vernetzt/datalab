@@ -1,5 +1,5 @@
 # Akronym übergeben für Datensatz-Pfad in Onedrive
-akro <- "kab"
+
 #akro <- "kbr"
 
 ################################################################################
@@ -538,7 +538,7 @@ kurse <- kurse %>%
 library(DBI)
 con <- dbConnect(duckdb::duckdb(), "data/mint_db.duckdb", read_only = TRUE)
 data_z <- dbGetQuery(con, "SELECT * FROM kurse")
-dbDisconnect(con)
+dbDisconnect(con, shutdown = TRUE)
 
 #neue Daten anhängen
 kurse <- rbind(data_z, kurse)
@@ -559,6 +559,451 @@ library(dplyr)
 
 ## iqb_standard Teil -------------------------------------------------------
 
+### Daten ergänzen an db-Dataframe ----
+
+library(DBI)
+library(dplyr)
+
+setwd("~/datalab2")
+con <- dbConnect(duckdb::duckdb(), "data/mint_db.duckdb")
+iqb <- dbGetQuery(con, "SELECT * FROM iqb")
+
+# TODO
+## Testwert nach status und zuwanderung nach BULA 2024 - Tabellen 7.4 - 7.10
+## NEU Selbstkonzept und Interesse nach GESCHLECHT und FACH 2018-2024 Tabellen 8.1 und 8.2
+
+akro <- "kbr"
+pfad <- paste0("C:/Users/", akro,
+               "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
+
+## Mindeststandard
+
+#pfad
+m_ms <- readxl::read_xlsx(path = paste0(pfad, "IQB022_Bildungtrend_2024_Zusatzmaterial_Tabellen_251114.xlsx"),
+                  sheet = "Tab. 3.31web")
+m_ms <- m_ms[,c(1,2,9)]
+m_ms <- m_ms[-1*(1:5),]
+m_ms <- m_ms %>%
+  rename("land" = "zurück zum Inhaltsverzeichnis",
+         "indikator" = "...2",
+         "wert" = "...9") %>%
+  tidyr::fill(land, .direction = "downup") %>%
+  mutate(wert = round(as.numeric(wert), 2)) %>%
+  na.omit()
+
+m_ms <- m_ms %>%
+  mutate(
+    bereich = "Schule",
+    typ = "standard",
+    klasse = "9. Klasse",
+    fach = "Mathematik",
+    geschlecht = "gesamt",
+    jahr = 2024,
+    indikator = case_when(
+      indikator == "MS (MSA) verfehlt" ~ "Mindeststandard nicht erreicht",
+      indikator == "RS (MSA) erreicht" ~ "Regelstandard erreicht",
+      indikator == "OS (MSA) erreicht" ~ "Optimalstandard erreicht"
+    )
+  ) %>%
+  rename("region" = "land")
+
+m_ms <- m_ms[, c("bereich", "typ", "klasse", "fach", "indikator", "geschlecht",
+                 "region", "jahr", "wert")]
+
+b_ms <- readxl::read_xlsx(path = paste0(pfad, "IQB022_Bildungtrend_2024_Zusatzmaterial_Tabellen_251114.xlsx"),
+                          sheet = "Tab. 3.67web")
+b_ms <- b_ms[,c(1,2, 3, 6,9)]
+b_ms <- b_ms[-1*(1:5),]
+b_ms <- b_ms %>%
+  rename("land" = "zurück zum Inhaltsverzeichnis",
+         "2012" = "...3",
+         "2018" = "...6",
+         "indikator" = "...2",
+         "2024" = "...9") %>%
+  tidyr::fill(land, .direction = "downup") %>%
+ # mutate(wert = round(as.numeric(wert), 2)) %>%
+  na.omit()
+
+b_ms <- b_ms %>%
+  tidyr::pivot_longer(cols = c("2012", "2018", "2024"))
+
+b_ms <- b_ms %>%
+  mutate(
+    bereich = "Schule",
+    typ = "standard",
+    klasse = "9. Klasse",
+    fach = "Biologie (Fachwissen)",
+    geschlecht = "gesamt",
+    indikator = case_when(
+      indikator == "MS (MSA) verfehlt" ~ "Mindeststandard nicht erreicht",
+      indikator == "RS (MSA) erreicht" ~ "Regelstandard erreicht",
+      indikator == "OS (MSA) erreicht" ~ "Optimalstandard erreicht"
+    )
+  ) %>%
+  rename("region" = "land",
+         "jahr" = "name",
+         "wert" = "value") %>%
+  mutate(wert = round(as.numeric(wert), 2))
+
+b_ms <- b_ms[, c("bereich", "typ", "klasse", "fach", "indikator", "geschlecht",
+                 "region", "jahr", "wert")]
+
+
+c_ms <- readxl::read_xlsx(path = paste0(pfad, "IQB022_Bildungtrend_2024_Zusatzmaterial_Tabellen_251114.xlsx"),
+                          sheet = "Tab. 3.69web")
+c_ms <- c_ms[,c(1,2, 3, 6,9)]
+c_ms <- c_ms[-1*(1:5),]
+c_ms <- c_ms %>%
+  rename("land" = "zurück zum Inhaltsverzeichnis",
+         "2012" = "...3",
+         "2018" = "...6",
+         "indikator" = "...2",
+         "2024" = "...9") %>%
+  tidyr::fill(land, .direction = "downup") %>%
+  # mutate(wert = round(as.numeric(wert), 2)) %>%
+  na.omit()
+
+c_ms <- c_ms %>%
+  tidyr::pivot_longer(cols = c("2012", "2018", "2024"))
+
+c_ms <- c_ms %>%
+  mutate(
+    bereich = "Schule",
+    typ = "standard",
+    klasse = "9. Klasse",
+    fach = "Chemie (Fachwissen)",
+    geschlecht = "gesamt",
+    indikator = case_when(
+      indikator == "MS (MSA) verfehlt" ~ "Mindeststandard nicht erreicht",
+      indikator == "RS (MSA) erreicht" ~ "Regelstandard erreicht",
+      indikator == "OS (MSA) erreicht" ~ "Optimalstandard erreicht"
+    )
+  ) %>%
+  rename("region" = "land",
+         "jahr" = "name",
+         "wert" = "value") %>%
+  mutate(wert = round(as.numeric(wert), 2))
+
+c_ms <- c_ms[, c("bereich", "typ", "klasse", "fach", "indikator", "geschlecht",
+                 "region", "jahr", "wert")]
+
+
+p_ms <- readxl::read_xlsx(path = paste0(pfad, "IQB022_Bildungtrend_2024_Zusatzmaterial_Tabellen_251114.xlsx"),
+                          sheet = "Tab. 3.71web")
+p_ms <- p_ms[,c(1,2, 3, 6,9)]
+p_ms <- p_ms[-1*(1:5),]
+p_ms <- p_ms %>%
+  rename("land" = "zurück zum Inhaltsverzeichnis",
+         "2012" = "...3",
+         "2018" = "...6",
+         "indikator" = "...2",
+         "2024" = "...9") %>%
+  tidyr::fill(land, .direction = "downup") %>%
+  # mutate(wert = round(as.numeric(wert), 2)) %>%
+  na.omit()
+
+p_ms <- p_ms %>%
+  tidyr::pivot_longer(cols = c("2012", "2018", "2024"))
+
+p_ms <- p_ms %>%
+  mutate(
+    bereich = "Schule",
+    typ = "standard",
+    klasse = "9. Klasse",
+    fach = "Phsik (Fachwissen)",
+    geschlecht = "gesamt",
+    indikator = case_when(
+      indikator == "MS (MSA) verfehlt" ~ "Mindeststandard nicht erreicht",
+      indikator == "RS (MSA) erreicht" ~ "Regelstandard erreicht",
+      indikator == "OS (MSA) erreicht" ~ "Optimalstandard erreicht"
+    )
+  ) %>%
+  rename("region" = "land",
+         "jahr" = "name",
+         "wert" = "value") %>%
+  mutate(wert = round(as.numeric(wert), 2))
+
+p_ms <- p_ms[, c("bereich", "typ", "klasse", "fach", "indikator", "geschlecht",
+                 "region", "jahr", "wert")]
+
+## Testwerte nach Geschlecht
+
+m_gs <- readxl::read_xlsx(path = paste0(pfad, "IQB023_BT 2024 geschlecht.xlsx"),
+                          sheet = "mathe")
+
+m_gs <- m_gs %>%
+  tidyr::pivot_longer(cols = c("2012", "2018", "2024"))
+
+m_gs <- m_gs %>%
+  mutate(
+    bereich = "Schule",
+    typ = "score",
+    klasse = "9. Klasse",
+    fach = "Mathematik",
+    indikator = "Alle",
+    geschlecht = case_when(
+      geschlecht == "Jungen" ~ "Männer",
+      geschlecht == "Mädchen" ~ "Frauen"
+    )
+  ) %>%
+  rename(
+         "jahr" = "name",
+         "wert" = "value") %>%
+  mutate(wert = round(as.numeric(wert), 2))
+
+m_gs <- m_gs[, c("bereich", "typ", "klasse", "fach", "indikator", "geschlecht",
+                 "region", "jahr", "wert")]
+
+b_gs <- readxl::read_xlsx(path = paste0(pfad, "IQB023_BT 2024 geschlecht.xlsx"),
+                          sheet = "bio")
+
+b_gs <- b_gs %>%
+  tidyr::pivot_longer(cols = c("2012", "2018", "2024"))
+
+b_gs <- b_gs %>%
+  mutate(
+    bereich = "Schule",
+    typ = "score",
+    klasse = "9. Klasse",
+    fach = "Biologie (Fachwissen)",
+    indikator = "Alle",
+    geschlecht = case_when(
+      geschlecht == "Jungen" ~ "Männer",
+      geschlecht == "Mädchen" ~ "Frauen"
+    )
+  ) %>%
+  rename(
+    "jahr" = "name",
+    "wert" = "value") %>%
+  mutate(wert = round(as.numeric(wert), 2))
+
+b_gs <- b_gs[, c("bereich", "typ", "klasse", "fach", "indikator", "geschlecht",
+                 "region", "jahr", "wert")]
+
+c_gs <- readxl::read_xlsx(path = paste0(pfad, "IQB023_BT 2024 geschlecht.xlsx"),
+                          sheet = "chemie")
+
+c_gs <- c_gs %>%
+  tidyr::pivot_longer(cols = c("2012", "2018", "2024"))
+
+c_gs <- c_gs %>%
+  mutate(
+    bereich = "Schule",
+    typ = "score",
+    klasse = "9. Klasse",
+    fach = "Chemie (Fachwissen)",
+    indikator = "Alle",
+    geschlecht = case_when(
+      geschlecht == "Jungen" ~ "Männer",
+      geschlecht == "Mädchen" ~ "Frauen"
+    )
+  ) %>%
+  rename(
+    "jahr" = "name",
+    "wert" = "value") %>%
+  mutate(wert = round(as.numeric(wert), 2))
+
+c_gs <- c_gs[, c("bereich", "typ", "klasse", "fach", "indikator", "geschlecht",
+                 "region", "jahr", "wert")]
+
+
+p_gs <- readxl::read_xlsx(path = paste0(pfad, "IQB023_BT 2024 geschlecht.xlsx"),
+                          sheet = "physik")
+
+p_gs <- p_gs %>%
+  tidyr::pivot_longer(cols = c("2012", "2018", "2024"))
+
+p_gs <- p_gs %>%
+  mutate(
+    bereich = "Schule",
+    typ = "score",
+    klasse = "9. Klasse",
+    fach = "Physik (Fachwissen)",
+    indikator = "Alle",
+    geschlecht = case_when(
+      geschlecht == "Jungen" ~ "Männer",
+      geschlecht == "Mädchen" ~ "Frauen"
+    )
+  ) %>%
+  rename(
+    "jahr" = "name",
+    "wert" = "value") %>%
+  mutate(wert = round(as.numeric(wert), 2))
+
+p_gs <- p_gs[, c("bereich", "typ", "klasse", "fach", "indikator", "geschlecht",
+                 "region", "jahr", "wert")]
+
+# Wert nach Status und Zuwanderung
+
+m_migra <- readxl::read_xlsx(path = paste0(pfad, "IQB022_Bildungtrend_2024_Zusatzmaterial_Tabellen_251114.xlsx"),
+                          sheet = "Tab. 7.4web")
+m_migra <- m_migra[,c(1,2, 3, 7, 11)]
+
+m_migra <- m_migra %>%
+  rename("region" = "zurück zum Inhaltsverzeichnis",
+         "2012" = "...3",
+         "2018" = "...7",
+         "indikator" = "...2",
+         "2024" = "...11") %>%
+  tidyr::fill(region, .direction = "downup") %>%
+  # mutate(wert = round(as.numeric(wert), 2)) %>%
+  na.omit()
+
+m_migra$region <- gsub("[0-9,]", "", m_migra$region)
+
+m_migra <- m_migra %>%
+  tidyr::pivot_longer(cols = c("2012", "2018", "2024"))
+
+m_migra <- m_migra %>%
+  mutate(
+    bereich = "Schule",
+    typ = "score",
+    klasse = "9. Klasse",
+    fach = "Mathematik",
+    geschlecht = "gesamt",
+    indikator = case_when(
+      indikator == "mit Zuwanderungshintergrund" ~ "mit Zuwanderungsgeschichte",
+      indikator == "ohne Zuwanderungshintergrund" ~ "ohne Zuwanderungsgeschichte"
+    )
+  ) %>%
+  rename(
+         "jahr" = "name",
+         "wert" = "value") %>%
+  mutate(wert = round(as.numeric(wert), 2))
+
+m_migra <- m_migra[, c("bereich", "typ", "klasse", "fach", "indikator", "geschlecht",
+                 "region", "jahr", "wert")]
+
+
+b_migra <- readxl::read_xlsx(path = paste0(pfad, "IQB022_Bildungtrend_2024_Zusatzmaterial_Tabellen_251114.xlsx"),
+                             sheet = "Tab. 7.5web")
+b_migra <- b_migra[,c(1,2, 3, 7, 11)]
+
+b_migra <- b_migra %>%
+  rename("region" = "zurück zum Inhaltsverzeichnis",
+         "2012" = "...3",
+         "2018" = "...7",
+         "indikator" = "...2",
+         "2024" = "...11") %>%
+  tidyr::fill(region, .direction = "downup") %>%
+  # mutate(wert = round(as.numeric(wert), 2)) %>%
+  na.omit()
+
+b_migra$region <- gsub("[0-9,]", "", b_migra$region)
+
+b_migra <- b_migra %>%
+  tidyr::pivot_longer(cols = c("2012", "2018", "2024"))
+
+b_migra <- b_migra %>%
+  mutate(
+    bereich = "Schule",
+    typ = "score",
+    klasse = "9. Klasse",
+    fach = "Biologie (Fachwissen)",
+    geschlecht = "gesamt",
+    indikator = case_when(
+      indikator == "mit Zuwanderungshintergrund" ~ "mit Zuwanderungsgeschichte",
+      indikator == "ohne Zuwanderungshintergrund" ~ "ohne Zuwanderungsgeschichte"
+    )
+  ) %>%
+  rename(
+    "jahr" = "name",
+    "wert" = "value") %>%
+  mutate(wert = round(as.numeric(wert), 2))
+
+b_migra <- b_migra[, c("bereich", "typ", "klasse", "fach", "indikator", "geschlecht",
+                       "region", "jahr", "wert")]
+
+c_migra <- readxl::read_xlsx(path = paste0(pfad, "IQB022_Bildungtrend_2024_Zusatzmaterial_Tabellen_251114.xlsx"),
+                             sheet = "Tab. 7.7web")
+c_migra <- c_migra[,c(1,2, 3, 7, 11)]
+
+c_migra <- c_migra %>%
+  rename("region" = "zurück zum Inhaltsverzeichnis",
+         "2012" = "...3",
+         "2018" = "...7",
+         "indikator" = "...2",
+         "2024" = "...11") %>%
+  tidyr::fill(region, .direction = "downup") %>%
+  # mutate(wert = round(as.numeric(wert), 2)) %>%
+  na.omit()
+
+c_migra$region <- gsub("[0-9,]", "", c_migra$region)
+
+c_migra <- c_migra %>%
+  tidyr::pivot_longer(cols = c("2012", "2018", "2024"))
+
+c_migra <- c_migra %>%
+  mutate(
+    bereich = "Schule",
+    typ = "score",
+    klasse = "9. Klasse",
+    fach = "Chemie (Fachwissen)",
+    geschlecht = "gesamt",
+    indikator = case_when(
+      indikator == "mit Zuwanderungshintergrund" ~ "mit Zuwanderungsgeschichte",
+      indikator == "ohne Zuwanderungshintergrund" ~ "ohne Zuwanderungsgeschichte"
+    )
+  ) %>%
+  rename(
+    "jahr" = "name",
+    "wert" = "value") %>%
+  mutate(wert = round(as.numeric(wert), 2))
+
+c_migra <- c_migra[, c("bereich", "typ", "klasse", "fach", "indikator", "geschlecht",
+                       "region", "jahr", "wert")]
+
+p_migra <- readxl::read_xlsx(path = paste0(pfad, "IQB022_Bildungtrend_2024_Zusatzmaterial_Tabellen_251114.xlsx"),
+                             sheet = "Tab. 7.9web")
+p_migra <- p_migra[,c(1,2, 3, 7, 11)]
+
+p_migra <- p_migra %>%
+  rename("region" = "zurück zum Inhaltsverzeichnis",
+         "2012" = "...3",
+         "2018" = "...7",
+         "indikator" = "...2",
+         "2024" = "...11") %>%
+  tidyr::fill(region, .direction = "downup") %>%
+  # mutate(wert = round(as.numeric(wert), 2)) %>%
+  na.omit()
+
+p_migra$region <- gsub("[0-9,]", "", p_migra$region)
+
+p_migra <- p_migra %>%
+  tidyr::pivot_longer(cols = c("2012", "2018", "2024"))
+
+p_migra <- p_migra %>%
+  mutate(
+    bereich = "Schule",
+    typ = "score",
+    klasse = "9. Klasse",
+    fach = "Chemie (Fachwissen)",
+    geschlecht = "gesamt",
+    indikator = case_when(
+      indikator == "mit Zuwanderungshintergrund" ~ "mit Zuwanderungsgeschichte",
+      indikator == "ohne Zuwanderungshintergrund" ~ "ohne Zuwanderungsgeschichte"
+    )
+  ) %>%
+  rename(
+    "jahr" = "name",
+    "wert" = "value") %>%
+  mutate(wert = round(as.numeric(wert), 2))
+
+p_migra <- p_migra[, c("bereich", "typ", "klasse", "fach", "indikator", "geschlecht",
+                       "region", "jahr", "wert")]
+
+
+
+# TODO
+## Testwert nach status --> muss aus PDF Seite 246 oder so extrahiert werden
+
+## NEU Selbstkonzept und Interesse nach GESCHLECHT und FACH 2018-2024 Tabellen 8.1 und 8.2
+
+iqb <- rbind(iqb,m_ms, b_ms, c_ms, p_ms, m_gs, b_gs, c_gs, p_gs, m_migra, b_migra, c_migra, p_migra)
+
+dbWriteTable(con, 'iqb', iqb, overwrite = TRUE, append = FALSE)
+save(iqb, file="iqb.rda")
+dbDisconnect(con, shutdown=TRUE)
 
 #### Rohdatensatz einlesen ------------------------------------------------------
 
