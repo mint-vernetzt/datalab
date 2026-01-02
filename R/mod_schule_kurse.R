@@ -372,13 +372,15 @@ mod_schule_kurse_ui <- function(id){
              Die Daten stammen aus der Befragung des Instituts zur Qualitätsentwicklung im Bildungswesen e. V. (IQB), das in regelmäßigen Abständen
              die Leistung von Schüler:innen in verschiedenen Fächern testet. Dafür werden deutschlandweit mehr als 1.300 Schulen und
                über 26.000 Schüler:innen befragt."),
-             p("Die Ergebnisse aus dem Jahr 2021 zeigen: Jede:r fünfte Viertklässler:in beherrscht die nötigen Grundlagen in der Mathematik nicht.
-               In der Befragung zehn Jahre zuvor waren es nur jede:r zehnte. Mädchen sowie Schüler:innen mit Zuwanderungsgeschichte und niedrigem sozialem Status
-               schneiden im Mittel schlechter ab. Dabei zeigt ein näherer Blick auf die Unterschiede zwischen Mädchen und Jungen, dass sich Mädchen auch weniger für Mathematik
-               interessieren und ihre Fähigkeiten im Fach schlechter einschätzen."),
+             p("Die Ergebnisse der 4. Klassen aus dem Jahr 2021 zeigen: Jede:r fünfte Viertklässler:in beherrscht die nötigen Grundlagen in Mathematik nicht.
+             Und die neueste Ergebnisse der 9. Klassen aus 2024 zeigen, dass dieser Anteil im Laufe der Schulbahn noch zunimmt. Hier erreichen rund 24 % die Mindest-Anforderungen in Mathematik nicht.
+             Mädchen sowie Schüler:innen mit Zuwanderungsgeschichte und niedrigem sozialem Status schneiden in allen Erhebungen in Mathematik im Mittel schlechter ab. In den Naturwissenschaften erzielen Mädchen
+             im Mittel gleiche oder besser Ergebnisse als Jungen.
+             Ein näherer Blick auf die Unterschiede zwischen Mädchen und Jungen zeigt, dass sich Mädchen auch weniger für Mathematik
+               interessieren und sich in dem Fach weniger zutrauen."),
              p(),
              shinyBS::bsPopover(id="i_schule_kompetenz_1", title = "",
-                                content = paste0("Im Bericht des IQB-Bildungstrends 2021 kann man weitere Informationen und eine Einordnung der dargestellten Daten finden. <br> <a>https://www.iqb.hu-berlin.de/bt/BT2021/Bericht/</a> <br><br> Weitere Informationen zum Thema Diversität und soziale Herkunft in der Bildungswelt können in der Diversitätsstudie von MINTvernetzt nachgelesen werden. <br> <a> https://mint-vernetzt.de/data/daten-fakten#mint-studie-diversitaet </a>"),
+                                content = paste0("Im Bericht des IQB-Bildungstrends 2021 und 2024 kann man weitere Informationen und eine Einordnung der dargestellten Daten finden. <br> <a>https://www.iqb.hu-berlin.de/bt/BT2021/Bericht/</a> <br> <a>https://www.iqb.hu-berlin.de/de/schule/sekundarstufe-i/bildungstrend/2024/</a><br><br> Weitere Informationen zum Thema Diversität und soziale Herkunft in der Bildungswelt können in der Diversitätsstudie von MINTvernetzt nachgelesen werden. <br> <a> https://mint-vernetzt.de/data/daten-fakten#mint-studie-diversitaet </a>"),
                                 placement = "right",
                                 trigger = "click"),
              tags$a(paste0("Interessieren Sie sich für weitere Informationen zum Thema, klicken Sie hier:"), icon("info-circle"), id = "i_schule_kompetenz_1"),
@@ -388,7 +390,7 @@ mod_schule_kurse_ui <- function(id){
                width = 12,
              tabsetPanel(type = "tabs",
 
-                         tabPanel("Leistungsschwache Schüler:innen in Mathematik", br(),
+                         tabPanel("Leistungsschwache Schüler:innen in MINT", br(),
 
                                   tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
                                            .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
@@ -401,7 +403,7 @@ mod_schule_kurse_ui <- function(id){
                                     shinycssloaders::withSpinner(htmlOutput(ns("plot_iqb_standard_zeitverlauf")),
                                                                  color = "#154194"),
                                     shinyBS::bsPopover(id="h_schule_kompetenz_1", title = "",
-                                                       content = paste0("Für Mecklenburg-Vorpommern liegen keine Daten vor, da pandemiebedingt nicht genug Testungen realisiert werden konnten.", "<br> <br> Gesamte realisierte Stichprobengröße:", "<br> 2021: 1.464 Schulen mit N = 26.844 Schüler:innen", "<br> 2018: 1.462 Schulen mit N = 44.941 Schüler:innen", "<br> 2016: 1.508 Schulen mit N = 29.259 Schüler:innen", "<br> 2012: 1.326 Schulen mit N = 44.584 Schüler:innen", "<br> 2011: 1.349 Schulen mit N = 27.081 Schüler:innen"),
+                                                       content = paste0("Für Mecklenburg-Vorpommern liegen 2021 keine Daten vor, da pandemiebedingt nicht genug Testungen realisiert werden konnten.", "<br> <br> Gesamte realisierte Stichprobengröße:", "<br> 2024: 1.556 Schulen mit N = 48.279 Schüler:innen", "<br> 2021: 1.464 Schulen mit N = 26.844 Schüler:innen", "<br> 2018: 1.462 Schulen mit N = 44.941 Schüler:innen", "<br> 2016: 1.508 Schulen mit N = 29.259 Schüler:innen", "<br> 2012: 1.326 Schulen mit N = 44.584 Schüler:innen", "<br> 2011: 1.349 Schulen mit N = 27.081 Schüler:innen"),
                                                        placement = "top",
                                                        trigger = "hover"),
                                     tags$a(paste0("Hinweis zu den Daten und Stichprobengröße"), icon("info-circle"), id = "h_schule_kompetenz_1")
@@ -421,14 +423,14 @@ mod_schule_kurse_ui <- function(id){
                                     shinycssloaders::withSpinner(htmlOutput(ns("plot_iqb_mathe_mittel_zeitverlauf")),
                                                                  color = "#154194"),
                                     shinyBS::bsPopover(id="def_schule_kompetenz_2", title = "",
-                                                       content = paste0("Mit Zuwanderungsgeschichte = Kinder, deren beider Eltern nach Deutschland zugewandert sind. Zuwanderungsgeschichten 1. Generation (auch Kind ist nach Deutschland zugewandert) und 2. Generation (Kind ist in Deutschland geboren) werden zusammengefasst. <br> Ohne Zuwanderungsgeschichte = Kinder, deren beider Eltern in Deutschland geboren wurden.", "<br> <br> Bildungskapital = Ressourcen, Kinder durch (kulturelle) Bildung zu fördern, und Indikator für den sozialen Status der Eltern. Erfasst wurde das Bildungskapital durch die Anzahl an Büchern im Haushalt (hoch = mehr als 100 Bücher zuhause).", "<br><br>sozialer Status = die soziale Position der Eltern. Hier wurden sozialer Status und Anforderungen der Berufe betrachtet."),
+                                                       content = paste0("Mit Zuwanderungsgeschichte = Kinder, die selbst oder deren beider Eltern nach Deutschland zugewandert sind. <br> Ohne Zuwanderungsgeschichte = Kinder, deren beider Eltern in Deutschland geboren wurden.", "<br> <br> Bildungskapital = Ressourcen, Kinder durch (kulturelle) Bildung zu fördern, und Indikator für den sozialen Status der Eltern. Erfasst wurde das Bildungskapital durch die Anzahl an Büchern im Haushalt (hoch = mehr als 100 Bücher zuhause).", "<br><br>sozialer Status = die soziale Position der Eltern. Hier wurden sozialer Status und Anforderungen der Berufe betrachtet. <br> Ab 2024 wird nur noch das Bildungskapital berichtet."),
                                                        placement = "top",
                                                        trigger = "hover"),
                                     tags$a(paste0("Definition der Begriffe"), icon("info-circle"), id = "def_schule_kompetenz_2"),
                                     br(),
                                     br(),
                                     shinyBS::bsPopover(id="h_schule_kompetenz_2", title = "",
-                                                       content = paste0("Für Mecklenburg-Vorpommern liegen keine Daten vor, da pandemiebedingt nicht genug Testungen realisiert werden konnten.", "<br><br>Für einzelne Bundesländer liegen in bestimmten Bedingungen oder zu bestimmten Zeitpunkten keine Daten vor. In diesen Fällen stehen die betroffenen Bundesländer nicht zur Auswahl oder betroffene Jahre werden nicht angezeigt.", "<br> <br> Gesamte realisierte Stichprobengröße:", "<br> 2021: 1.464 Schulen mit N = 26.844 Schüler:innen", "<br> 2018: 1.462 Schulen mit N = 44.941 Schüler:innen", "<br> 2016: 1.508 Schulen mit N = 29.259 Schüler:innen", "<br> 2012: 1.326 Schulen mit N = 44.584 Schüler:innen", "<br> 2011: 1.349 Schulen mit N = 27.081 Schüler:innen"),
+                                                       content = paste0("Für einzelne Bundesländer liegen in bestimmten Bedingungen oder zu bestimmten Zeitpunkten keine Daten vor. In diesen Fällen stehen die betroffenen Bundesländer nicht zur Auswahl oder betroffene Jahre werden nicht angezeigt.", "<br> <br> Gesamte realisierte Stichprobengröße:", "<br> 2024: 1.556 Schulen mit N = 48.279 Schüler:innen", "<br> 2021: 1.464 Schulen mit N = 26.844 Schüler:innen", "<br> 2018: 1.462 Schulen mit N = 44.941 Schüler:innen", "<br> 2016: 1.508 Schulen mit N = 29.259 Schüler:innen", "<br> 2012: 1.326 Schulen mit N = 44.584 Schüler:innen", "<br> 2011: 1.349 Schulen mit N = 27.081 Schüler:innen"),
                                                        placement = "top",
                                                        trigger = "hover"),
                                     tags$a(paste0("Hinweis zu den Daten und Stichprobengröße"), icon("info-circle"), id = "h_schule_kompetenz_2")
@@ -448,7 +450,7 @@ mod_schule_kurse_ui <- function(id){
                                     shinycssloaders::withSpinner(htmlOutput(ns("plot_iqb_fragebogen")),
                                                                  color = "#154194"),
                                     shinyBS::bsPopover(id="h_schule_kompetenz_3", title = "",
-                                                       content = paste0("Das Interesse und die Einschätzung der eigenen Fähigkeiten (fachspezifisches Selbstkonzept) wurden durch mehrere Fragen in einem Fragebogen erfasst, auf einer Skala von 1 bis 4.", "<br> <br> Gesamte realisierte Stichprobengröße:", "<br> 2021: 1.464 Schulen mit N = 26.844 Schüler:innen", "<br> 2016: 1.508 Schulen mit N = 29.259 Schüler:innen", "<br> 2011: 1.349 Schulen mit N = 27.081 Schüler:innen"),
+                                                       content = paste0("Das Interesse und die Einschätzung der eigenen Fähigkeiten (fachspezifisches Selbstkonzept) wurden durch mehrere Fragen auf einer Skala von 1 bis 4 erfasst. Es werden Gruppenmittelwerte berichtet.", "<br> <br> Gesamte realisierte Stichprobengröße:", "<br> 2024: 1.556 Schulen mit N = 48.279 Schüler:innen", "<br> 2021: 1.464 Schulen mit N = 26.844 Schüler:innen", "<br> 2016: 1.508 Schulen mit N = 29.259 Schüler:innen", "<br> 2011: 1.349 Schulen mit N = 27.081 Schüler:innen"),
                                                        placement = "top",
                                                        trigger = "hover"),
                                     tags$a(paste0("Hinweis zu den Daten und zur Stichprobengröße"), icon("info-circle"), id = "h_schule_kompetenz_3")

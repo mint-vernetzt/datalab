@@ -25,7 +25,7 @@ library(stringr)
 # akro <- "kab"
 #  akro <- "kbr"
 # setwd(paste0("C:/Users/", akro,
-#       "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten"))
+      # "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten"))
 # wd <- getwd() #für Datensatz einlesen später nötig
 
 # Funktion zum Daten einlesen (Quelle: Skript aus 2022 - Spezifische_Kurse_kab)
@@ -536,7 +536,7 @@ kurse <- kurse %>%
 
 
 library(DBI)
-con <- dbConnect(duckdb::duckdb(), "data/mint_db.duckdb", read_only = TRUE)
+con <- dbConnect(duckdb::duckdb(), "data/mint_db.duckdb")
 data_z <- dbGetQuery(con, "SELECT * FROM kurse")
 dbDisconnect(con, shutdown = TRUE)
 
@@ -568,10 +568,6 @@ setwd("~/datalab2")
 con <- dbConnect(duckdb::duckdb(), "data/mint_db.duckdb")
 iqb <- dbGetQuery(con, "SELECT * FROM iqb")
 
-# TODO
-## Testwert nach status und zuwanderung nach BULA 2024 - Tabellen 7.4 - 7.10
-## NEU Selbstkonzept und Interesse nach GESCHLECHT und FACH 2018-2024 Tabellen 8.1 und 8.2
-
 akro <- "kbr"
 pfad <- paste0("C:/Users/", akro,
                "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
@@ -581,15 +577,21 @@ pfad <- paste0("C:/Users/", akro,
 #pfad
 m_ms <- readxl::read_xlsx(path = paste0(pfad, "IQB022_Bildungtrend_2024_Zusatzmaterial_Tabellen_251114.xlsx"),
                   sheet = "Tab. 3.31web")
-m_ms <- m_ms[,c(1,2,9)]
-m_ms <- m_ms[-1*(1:5),]
+m_ms <- m_ms[,c(1,2,3,6,9)]
+m_ms <- m_ms[-1*(1:4),]
+
 m_ms <- m_ms %>%
   rename("land" = "zurück zum Inhaltsverzeichnis",
+         "2012" = "...3",
+         "2018" = "...6",
          "indikator" = "...2",
-         "wert" = "...9") %>%
+         "2024" = "...9") %>%
   tidyr::fill(land, .direction = "downup") %>%
-  mutate(wert = round(as.numeric(wert), 2)) %>%
+  # mutate(wert = round(as.numeric(wert), 2)) %>%
   na.omit()
+
+m_ms <- m_ms %>%
+  tidyr::pivot_longer(cols = c("2012", "2018", "2024"))
 
 m_ms <- m_ms %>%
   mutate(
@@ -598,14 +600,17 @@ m_ms <- m_ms %>%
     klasse = "9. Klasse",
     fach = "Mathematik",
     geschlecht = "gesamt",
-    jahr = 2024,
     indikator = case_when(
       indikator == "MS (MSA) verfehlt" ~ "Mindeststandard nicht erreicht",
       indikator == "RS (MSA) erreicht" ~ "Regelstandard erreicht",
       indikator == "OS (MSA) erreicht" ~ "Optimalstandard erreicht"
     )
   ) %>%
-  rename("region" = "land")
+  rename("region" = "land",
+         "jahr" = "name",
+         "wert" = "value") %>%
+  mutate(wert = round(as.numeric(wert), 2)) %>%
+  na.omit()
 
 m_ms <- m_ms[, c("bereich", "typ", "klasse", "fach", "indikator", "geschlecht",
                  "region", "jahr", "wert")]
@@ -977,7 +982,7 @@ p_migra <- p_migra %>%
     bereich = "Schule",
     typ = "score",
     klasse = "9. Klasse",
-    fach = "Chemie (Fachwissen)",
+    fach = "Physik (Fachwissen)",
     geschlecht = "gesamt",
     indikator = case_when(
       indikator == "mit Zuwanderungshintergrund" ~ "mit Zuwanderungsgeschichte",
@@ -992,15 +997,151 @@ p_migra <- p_migra %>%
 p_migra <- p_migra[, c("bereich", "typ", "klasse", "fach", "indikator", "geschlecht",
                        "region", "jahr", "wert")]
 
+## Status
+status <- readxl::read_excel(path = paste0(pfad, "IQB024_BT 2024 status.xlsx"))
+
+status <- status %>%
+  mutate(
+    bereich = "Schule",
+    typ = "score",
+    klasse = "9. Klasse",
+    geschlecht = "gesamt"
+  )
+
+status <- status[, c("bereich", "typ", "klasse", "fach", "indikator", "geschlecht",
+                       "region", "jahr", "wert")]
+
+## Selbstkonzept und Interesse
+
+# funktion
+create_selbst_int <- function(df, bereichx, fachx){
+  df <- df[,c(1,2, 7, 9, 11,  13, 15,  17)]
+  df <- df[-1*1:4,]
+
+  df <- df %>%
+    rename("region" = "zurück zum Inhaltsverzeichnis",
+           "geschlecht" = "...2",
+           "2012_M" = "...7",
+           "2012_SD" = "...9",
+           "2018_M" = "...11",
+           "2018_SD" = "...13",
+           "2024_M" = "...15",
+           "2024_SD" = "...17"
+    ) %>%
+    tidyr::fill(region, .direction = "downup") %>%
+    # mutate(wert = round(as.numeric(wert), 2)) %>%
+    na.omit()
+
+  df$region <- gsub("[0-9,]", "", df$region)
+
+  df <- df %>%
+    tidyr::pivot_longer(cols = c("2012_M", "2012_SD", "2018_M", "2018_SD", "2024_M", "2024_SD"))
+
+  df <- df %>%
+    mutate(
+      bereich = "Schule",
+      klasse = "9. Klasse",
+      indikator = bereichx,
+      fach = fachx,
+      jahr = case_when(
+        grepl("2012", name) ~ 2012,
+        grepl("2018", name) ~ 2018,
+        grepl("2024", name) ~ 2024
+      ),
+      typ = case_when(
+        grepl("M", name) ~ "Mittelwert",
+        grepl("SD", name) ~ "Standardabweichung"
+      )
+    ) %>%
+    rename(
+      "wert" = "value") %>%
+    mutate(wert = round(as.numeric(wert), 2)) %>%
+    select(-name)
+
+  df <- df[, c("bereich", "typ", "klasse", "fach", "indikator", "geschlecht",
+                           "region", "jahr", "wert")]
+}
+
+# Mathe - Selbstkonzept
+selbst_mm <- readxl::read_excel(path = paste0(pfad, "IQB022_Bildungtrend_2024_Zusatzmaterial_Tabellen_251114.xlsx"),
+                               sheet = "Tab. 8.1web")
+
+selbst_ma <- create_selbst_int(df = selbst_mm, fachx = "Mathematik", bereichx = "Selbstkonzept")
 
 
-# TODO
-## Testwert nach status --> muss aus PDF Seite 246 oder so extrahiert werden
+# Mathe - Interesse
+int_ma <- readxl::read_excel(path = paste0(pfad, "IQB022_Bildungtrend_2024_Zusatzmaterial_Tabellen_251114.xlsx"),
+                               sheet = "Tab. 8.2web")
 
-## NEU Selbstkonzept und Interesse nach GESCHLECHT und FACH 2018-2024 Tabellen 8.1 und 8.2
+int_ma <- create_selbst_int(df = int_ma, fachx = "Mathematik", bereichx = "Interesse")
 
-iqb <- rbind(iqb,m_ms, b_ms, c_ms, p_ms, m_gs, b_gs, c_gs, p_gs, m_migra, b_migra, c_migra, p_migra)
+# Bio - Selbstkonzept
+selbst_b <- readxl::read_excel(path = paste0(pfad, "IQB022_Bildungtrend_2024_Zusatzmaterial_Tabellen_251114.xlsx"),
+                                sheet = "Tab. 8.3web")
 
+selbst_b <- create_selbst_int(df = selbst_b, fachx = "Biologie", bereichx = "Selbstkonzept")
+
+
+# Bio - Interesse
+int_b <- readxl::read_excel(path = paste0(pfad, "IQB022_Bildungtrend_2024_Zusatzmaterial_Tabellen_251114.xlsx"),
+                           sheet = "Tab. 8.4web")
+
+int_b <- create_selbst_int(df = int_b, fachx = "Biologie", bereichx = "Interesse")
+
+# Chemie- Selbstkonzept
+selbst_c <- readxl::read_excel(path = paste0(pfad, "IQB022_Bildungtrend_2024_Zusatzmaterial_Tabellen_251114.xlsx"),
+                               sheet = "Tab. 8.5web")
+
+selbst_c <- create_selbst_int(df = selbst_c, fachx = "Chemie", bereichx = "Selbstkonzept")
+
+
+# Chemie - Interesse
+int_c <- readxl::read_excel(path = paste0(pfad, "IQB022_Bildungtrend_2024_Zusatzmaterial_Tabellen_251114.xlsx"),
+                            sheet = "Tab. 8.6web")
+
+int_c <- create_selbst_int(df = int_c, fachx = "Chemie", bereichx = "Interesse")
+
+# Physik- Selbstkonzept
+selbst_p <- readxl::read_excel(path = paste0(pfad, "IQB022_Bildungtrend_2024_Zusatzmaterial_Tabellen_251114.xlsx"),
+                               sheet = "Tab. 8.7web")
+
+selbst_p <- create_selbst_int(df = selbst_p, fachx = "Physik", bereichx = "Selbstkonzept")
+
+
+# Physik - Interesse
+int_p <- readxl::read_excel(path = paste0(pfad, "IQB022_Bildungtrend_2024_Zusatzmaterial_Tabellen_251114.xlsx"),
+                            sheet = "Tab. 8.8web")
+
+int_p <- create_selbst_int(df = int_p, fachx = "Physik", bereichx = "Interesse")
+
+
+
+## Zusammenfügen und aktualisieren in DB ----
+
+iqb <- rbind(iqb,m_ms, b_ms, c_ms, p_ms, m_gs, b_gs, c_gs, p_gs,
+             m_migra, b_migra, c_migra, p_migra, status,
+             selbst_ma, int_ma, selbst_b, int_b, selbst_c, int_c,
+             selbst_p, int_p)
+
+iqb$fach[iqb$fach == "Biologie"] <- "Biologie (Fachwissen)"
+iqb$fach[iqb$fach == "Chemie"] <- "Chemie (Fachwissen)"
+iqb$fach[iqb$fach == "Physik"] <- "Physik (Fachwissen)"
+
+dbWriteTable(con, 'iqb', iqb, overwrite = TRUE, append = FALSE)
+save(iqb, file="iqb.rda")
+dbDisconnect(con, shutdown=TRUE)
+
+con <- dbConnect(duckdb::duckdb(), "data/mint_db.duckdb")
+iqb <- dbGetQuery(con, "SELECT * FROM iqb")
+
+# nur noch neue Zuwanderungs-Zahlen für 9. Kl, ums zusammen darstellen zu können
+iqb <- iqb %>%
+  filter(!(klasse == "9. Klasse" & indikator %in% c("mit Zuwanderungsgeschichte",
+                                                    "ohne Zuwanderungsgeschichte",
+                                                    "mit Zuwanderungsgeschichte (beide Elternteile)",
+                                                    "mit Zuwanderungsgeschichte (ein Elternteil)")))
+
+iqb <- rbind(iqb, m_migra, b_migra, c_migra, p_migra)
 dbWriteTable(con, 'iqb', iqb, overwrite = TRUE, append = FALSE)
 save(iqb, file="iqb.rda")
 dbDisconnect(con, shutdown=TRUE)

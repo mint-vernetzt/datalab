@@ -42,7 +42,6 @@ mod_schule_kurse_iqb_mathe_mittel_zeitverlauf_ui <- function(id){
                                  "nach sozialem Status"),
                      multiple = FALSE,
                      selected = c("nach Geschlecht")
-
                    )
   ),
 
@@ -154,9 +153,9 @@ mod_schule_kurse_iqb_mathe_mittel_zeitverlauf_ui <- function(id){
                    shinyWidgets::pickerInput(
                      inputId = ns("fach_iqb_mathe_mittel_zeitverlauf"),
                      choices = c("Mathematik",
-                                 "Biologie",
-                                 "Chemie",
-                                 "Physik"),
+                                 "Biologie" = "Biologie (Fachwissen)",
+                                 "Chemie" = "Chemie (Fachwissen)",
+                                 "Physik" = "Physik (Fachwissen)"),
                      multiple = FALSE,
                      selected = "Mathematik"
                    )),
