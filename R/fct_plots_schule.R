@@ -3313,6 +3313,7 @@ iqb_fragebogen <- function(r){
     titel <- paste0("Selbsteinschätzung des Interesses und der eigenen Fähigkeiten in ", fach_select,
                     " von Schüler:innen der 4. Klasse (", jahr_select, ")"         )
     tooltip_text <- "{point.geschlecht} <br> {point.display_rel}"
+    quelle_text <- "Quelle der Daten: Institut zur Qualitätsentwicklung im Bildungswesen, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
   }else{
     jahr_select <- r$jahr_iqb_fragebogen_9
@@ -3325,7 +3326,7 @@ iqb_fragebogen <- function(r){
     }else if(gruppe_select == "nach Zuwanderungsgeschichte"){
       gruppe_select <- c("ohne Zuwanderungshintergrund", "mit Zuwanderungshintergrund")
     }else{
-      gruppe_select <- c("mehr als 100 Bücher", "weniger als 100 Bücher")
+      gruppe_select <- c("mehr als 100 Bücher", "maximal 100 Bücher")
     }
 
     df_query <- glue::glue_sql("
@@ -3376,6 +3377,7 @@ iqb_fragebogen <- function(r){
     titel <- paste0("Selbsteinschätzung des Interesses und der eigenen Fähigkeiten in ", fach_select,
                     " von Schüler:innen der 9. Klasse (", jahr_select, ")"         )
     tooltip_text <- "{point.geschlecht}: {point.display_rel} (SD = {point.display_sd})"
+    quelle_text <- "Quelle der Daten: Institut zur Qualitätsentwicklung im Bildungswesen, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
   }
 
@@ -3392,9 +3394,7 @@ iqb_fragebogen <- function(r){
     highcharter::hc_xAxis(title = list(text = "")) %>%
     highcharter::hc_colors(c("#154194",
                              "#efe8e6")) %>%
-    highcharter::hc_title(text = paste0("Selbsteinschätzung des Interesses und der eigenen Fähigkeiten in ", fach_select,
-                                        " von Schüler:innen der 4. Klasse (", jahr_select, ")"
-    ),
+    highcharter::hc_title(text = titel,
     margin = 45,
     align = "center",
     style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
@@ -3402,7 +3402,7 @@ iqb_fragebogen <- function(r){
       style = list(fontFamily = "Calibri Regular", fontSize = "14px")
     ) %>%
     highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
-    highcharter::hc_caption(text = "Quelle der Daten: Institut zur Qualitätsentwicklung im Bildungswesen, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+    highcharter::hc_caption(text = quelle_text,
                             style = list(fontSize = "11px", color = "gray")) %>%
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(

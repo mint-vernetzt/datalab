@@ -14,8 +14,8 @@ mod_schule_kurse_iqb_fragen_ui <- function(id){
     p("Klassenstufe:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("klasse_iqb_fragebogen"),
-      choices = c("4. Klasse",
-                  "9. Klasse"),
+      choices = c("9. Klasse",
+                  "4. Klasse"),
       justified = TRUE,
       checkIcon = list(yes = icon("ok",
                                   lib = "glyphicon"))
@@ -81,9 +81,9 @@ mod_schule_kurse_iqb_fragen_ui <- function(id){
                      shinyWidgets::pickerInput(
                        inputId = ns("fach_iqb_fragebogen_9"),
                        choices = c("Mathematik",
-                                   "Biologie",
-                                   "Chemie",
-                                   "Physik"),
+                                   "Biologie (Fachwissen)",
+                                   "Chemie (Fachwissen)",
+                                   "Physik (Fachwissen)"),
                        multiple = FALSE,
                        selected = "Mathematik"
                      ),
