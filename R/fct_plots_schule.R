@@ -2672,17 +2672,12 @@ return(out)
 
 iqb_standard_zeitverlauf <- function(r){
 
-
   # reactive values übergeben
   kl_select <- r$klasse_iqb_standard_zeitverlauf
   if(kl_select == "4. Klasse"){
     bl_select <- r$land_iqb_standard_zeitverlauf_4
-  }else{
-    bl_select <- r$land_iqb_standard_zeitverlauf_9
-  }
 
-
-  df_query <- glue::glue_sql("
+    df_query <- glue::glue_sql("
   SELECT jahr, indikator, fach, region, wert
   FROM iqb
   WHERE klasse = {kl_select}
@@ -2690,7 +2685,24 @@ iqb_standard_zeitverlauf <- function(r){
   AND geschlecht = 'gesamt'
   AND indikator = 'Mindeststandard nicht erreicht'
                                ", .con = con)
-  df <- DBI::dbGetQuery(con, df_query)
+    df <- DBI::dbGetQuery(con, df_query)
+
+  }else{
+    bl_select <- r$land_iqb_standard_zeitverlauf_9
+    fach_select <- r$fach_iqb_standard_zeitverlauf_9
+
+    df_query <- glue::glue_sql("
+  SELECT jahr, indikator, fach, region, wert
+  FROM iqb
+  WHERE klasse = {kl_select}
+  AND region IN ({bl_select*})
+  AND fach = {fach_select}
+  AND geschlecht = 'gesamt'
+  AND indikator = 'Mindeststandard nicht erreicht'
+                               ", .con = con)
+    df <- DBI::dbGetQuery(con, df_query)
+  }
+
   df <- df %>%
     dplyr::mutate(display_rel = prettyNum(df$wert, big.mark = ".", decimal.mark = ","))
 
@@ -2704,12 +2716,13 @@ iqb_standard_zeitverlauf <- function(r){
     title_help <- paste0(bl_select[1], ", ", bl_select[2], " & ", bl_select[3])
   }
 
-  color <- dplyr::case_when(
-    kl_select == "4. Klasse" ~ c("#efe8e6","#D0A9CD", "#b16fab"),
-    kl_select == "9. Klasse" ~ "#b16fab"
-  )
-
-
+  if(length(unique(df$jahr) == 3)){
+    color <- c("#efe8e6","#D0A9CD", "#b16fab")
+  }else if(length(unique(df$jahr)) == 2){
+    color <- c("#efe8e6","#b16fab")
+  }else{
+    color <- "#b16fab"
+  }
 
   titel <- paste0("Anteil der Schüler:innen aus ", title_help, ", die den Mindeststandard in Mathematik nicht erreichen (", kl_select, ")")
   out <- highcharter::hchart(df, 'column', highcharter::hcaes(y = wert, x = region, group=jahr))%>%
@@ -2788,6 +2801,7 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
     indikator_select <- r$indi_iqb_mathe_mittel_zeitverlauf_9
   }
 
+
   if(klasse_select == "4. Klasse"){
     bl_select <- r$land_iqb_mathe_mittel_zeitverlauf_4
   }else{
@@ -2817,15 +2831,16 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
   # nach gewählter Vergleichsgruppe filtern
 
   # Datensatzaufbereitung bei Auswahl Geschlecht
-  if (indikator_select == "nach Geschlecht") {
+  if (indikator_select == "nach Geschlecht" & klasse_select == "4. Klasse") {
     if(score_select == "Mindeststandard") {
       df <- df %>% dplyr::filter(indikator == "Mindeststandard nicht erreicht")
     }else{
       df <- df %>% dplyr::filter(indikator == "Alle")
     }
 
-    df <- df %>% dplyr::mutate(geschlecht=dplyr::case_when(
-      geschlecht=="gesamt" ~ "Gesamt",
+    df <- df %>%
+      dplyr::mutate(geschlecht = dplyr::case_when(
+      geschlecht == "gesamt" ~ "Gesamt",
       T~df$geschlecht
     ))%>%
       dplyr::filter(geschlecht != "Gesamt")
@@ -2835,18 +2850,29 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
     df$geschlecht <- as.factor(df$geschlecht)
     df$geschlecht <- factor(df$geschlecht, levels = c("Mädchen", "Jungen"))
 
+  }
 
+  if (indikator_select == "nach Geschlecht" & klasse_select == "9. Klasse") {
+
+    df <- df %>% dplyr::filter(indikator == "Alle")
+    df <- df %>%
+      dplyr::mutate(geschlecht = dplyr::case_when(
+        geschlecht == "gesamt" ~ "Gesamt",
+        T~df$geschlecht
+      ))%>%
+      dplyr::filter(geschlecht != "Gesamt")
+
+    df$geschlecht[df$geschlecht == "Frauen"] <- "Mädchen"
+    df$geschlecht[df$geschlecht == "Männer"] <- "Jungen"
+    df$geschlecht <- as.factor(df$geschlecht)
+    df$geschlecht <- factor(df$geschlecht, levels = c("Mädchen", "Jungen"))
 
   }
 
   # Datensatzaufbereitung bei Auswahl Zuwanderungsgeschichte
-  if (indikator_select == "nach Zuwanderungsgeschichte" & klasse_select == "4. Klasse"){
-    df <- df %>% dplyr::filter(indikator %in% c("Alle", "mit Zuwanderungsgeschichte", "ohne Zuwanderungsgeschichte"))
+  if (indikator_select == "nach Zuwanderungsgeschichte"){
+    df <- df %>% dplyr::filter(indikator %in% c("mit Zuwanderungsgeschichte", "ohne Zuwanderungsgeschichte"))
     df <- df %>% dplyr::filter(geschlecht == "gesamt")
-
-    # Alle als Gesamtgruppe ausfiltern
-    df <- df %>%
-      dplyr::filter(indikator!="Alle")
 
     # Für Grafik als Faktor speichern
     df$indikator<- as.factor(df$indikator)
@@ -2856,57 +2882,35 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
 
   }
 
-  if(indikator_select == "nach Zuwanderungsgeschichte" & klasse_select == "9. Klasse"){
-    df <- df %>% dplyr::filter(indikator %in% c("mit Zuwanderungsgeschichte (beide Elternteile)",
-                                                "mit Zuwanderungsgeschichte (ein Elternteil)",
-                                                "ohne Zuwanderungsgeschichte"))
-
-
-    # Für Grafik als Faktor speichern
-    df$indikator<- as.factor(df$indikator)
-    df$indikator <- factor(df$indikator, levels = c("ohne Zuwanderungsgeschichte",
-                                                    "mit Zuwanderungsgeschichte (ein Elternteil)",
-                                                    "mit Zuwanderungsgeschichte (beide Elternteile)"))
-
-  }
 
   # Datensatzaufbereitung bei Auswahl Bildungskapital/sozialem Status
-  if(indikator_select == "nach Bildungskapital") {
-    df <- df %>% dplyr::filter(indikator %in% c("Alle", "kapital_hoch", "kapital_niedrig"))
+  if(indikator_select == "nach Bildungskapital" & klasse_select == "4. Klasse") {
+    df <- df %>% dplyr::filter(indikator %in% c("kapital_hoch", "kapital_niedrig"))
     df <- df %>% dplyr::filter(geschlecht == "gesamt")%>%
-      dplyr::mutate(indikator=dplyr::case_when(indikator == "Alle" ~"Gesamt",
+      dplyr::mutate(indikator=dplyr::case_when(
                                                indikator == "kapital_hoch" ~ "hohes Bildungskapital",
                                                indikator == "kapital_niedrig" ~ "niedriges Bildungskapital"))
 
-    df <- df %>% dplyr::mutate(geschlecht=dplyr::case_when(
-      geschlecht=="gesamt" ~ "Gesamt",
-      T~df$geschlecht
-    ))
     # Für Grafik als Faktor speichern
     df$indikator<- as.factor(df$indikator)
     df$indikator <- factor(df$indikator, levels = c("hohes Bildungskapital", "niedriges Bildungskapital" ))
 
-    # Alle als Gesamtgruppe ausfiltern
-    df <- df %>%
-      dplyr::filter(indikator!="Alle")
   }
 
-
-  if(indikator_select == "nach sozialem Status") {
-    df <- df %>% dplyr::filter(indikator %in% c("hoher Status", "niedriger Status"))
-    df <- df %>% dplyr::filter(geschlecht == "gesamt")
+  if(indikator_select == "nach sozialem Status" & klasse_select == "9. Klasse") {
+    df <- df %>% dplyr::filter(indikator %in% c("hoher Status", "niedriger Status", "mehr als 100 Bücher", "maximal 100 Bücher"))
+    df <- df %>% dplyr::filter(geschlecht == "gesamt")%>%
+      dplyr::mutate(indikator=dplyr::case_when(
+        indikator %in% c("hoher Status", "mehr als 100 Bücher") ~ "hoher Status/hohes Bildungskapital",
+        indikator %in% c("niedriger Status", "maximal 100 Bücher") ~ "niedriger Status/niedriges Bildungskapital"))
 
     # Für Grafik als Faktor speichern
     df$indikator<- as.factor(df$indikator)
-    df$indikator <- factor(df$indikator, levels = c("hoher Status", "niedriger Status" ))
+    df$indikator <- factor(df$indikator, levels = c("hoher Status/hohes Bildungskapital", "niedriger Status/niedriges Bildungskapital" ))
 
   }
 
-  if(klasse_select == "9. Klasse" & indikator_select == "nach Zuwanderungsgeschichte") {
-    color <- c("#efe8e6", "#AFF3E0", "#66cbaf")
-  }else{
     color <- c("#efe8e6", "#66cbaf")
-  }
 
 
   # Plot
@@ -3042,7 +3046,8 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
         highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}"),
                               min=300) %>%
         highcharter::hc_xAxis(title = list(text = ""), categories = c("2012",
-                                                                      "2018")
+                                                                      "2018",
+                                                                      "2024")
         ) %>%
         highcharter::hc_colors(c("#154194",
                                  "#efe8e6"
@@ -3209,7 +3214,8 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
             highcharter::hc_tooltip(pointFormat = "{point.indikator} Durchschnittliche Punktzahl: {point.y}")%>%
             highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}"),min=300) %>%
             highcharter::hc_xAxis(title = list(text = ""), categories = c("2012",
-                                                                          "2018")) %>%
+                                                                          "2018",
+                                                                          "2024")) %>%
             highcharter::hc_colors(color) %>%
             highcharter::hc_title(text = paste0("Durchschnittliche Leistung der Schüler:innen im ", fach_select, "-Kompetenztest ", indikator_select, " in " , bl_select, " (", klasse_select, ")"),
                                   margin = 45,
@@ -3272,10 +3278,11 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
 iqb_fragebogen <- function(r){
 
   # reactive values einlesen
-  jahr_select <- r$jahr_iqb_fragebogen
-  fach_select <- r$fach_iqb_fragebogen
+  klasse_select <- r$klasse_iqb_fragebogen
 
-
+  if(klasse_select == "4. Klasse"){
+    jahr_select <- r$jahr_iqb_fragebogen_4
+    fach_select <- r$fach_iqb_fragebogen_4
 
     df_query <- glue::glue_sql("
     SELECT fach, indikator, geschlecht, jahr, wert
@@ -3285,35 +3292,101 @@ iqb_fragebogen <- function(r){
     AND fach = {fach_select}
     AND NOT geschlecht = 'Gesamt'
                                ", .con = con)
-  df <- DBI::dbGetQuery(con, df_query)
+    df <- DBI::dbGetQuery(con, df_query)
 
 
     # als Faktor speichern für Reihenfolge und Selbstkonzept umbennenen
     df <- df %>%
       dplyr::mutate(
-          indikator = dplyr::case_when(
-            indikator == "Selbstkonzept" ~ "Selbsteinschätzung der eigenen Fähigkeiten",
-            indikator == "Interesse" ~ "Interesse für das Fach"
-          ))
+        indikator = dplyr::case_when(
+          indikator == "Selbstkonzept" ~ "Selbsteinschätzung der eigenen Fähigkeiten",
+          indikator == "Interesse" ~ "Interesse für das Fach"
+        ))
 
-  df <- df %>%
-    dplyr::mutate(display_rel = prettyNum(round(df$wert,1), big.mark = ".", decimal.mark = ","))
-
-
-  df$geschlecht <- as.factor(df$geschlecht)
-  df$geschlecht <- factor(df$geschlecht, levels = c("Mädchen", "Jungen"))
+    df <- df %>%
+      dplyr::mutate(display_rel = prettyNum(round(df$wert,1), big.mark = ".", decimal.mark = ","))
 
 
+    df$geschlecht <- as.factor(df$geschlecht)
+    df$geschlecht <- factor(df$geschlecht, levels = c("Mädchen", "Jungen"))
 
+    titel <- paste0("Selbsteinschätzung des Interesses und der eigenen Fähigkeiten in ", fach_select,
+                    " von Schüler:innen der 4. Klasse (", jahr_select, ")"         )
+    tooltip_text <- "{point.geschlecht} <br> {point.display_rel}"
+    quelle_text <- "Quelle der Daten: Institut zur Qualitätsentwicklung im Bildungswesen, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
+  }else{
+    jahr_select <- r$jahr_iqb_fragebogen_9
+    region_select <- r$region_iqb_fragebogen_9
+    fach_select <- r$fach_iqb_fragebogen_9
+    gruppe_select <- r$gruppe_iqb_fragebogen_9
+
+    if(gruppe_select == "nach Geschlecht"){
+      gruppe_select <- c("Mädchen", "Jungen")
+    }else if(gruppe_select == "nach Zuwanderungsgeschichte"){
+      gruppe_select <- c("ohne Zuwanderungshintergrund", "mit Zuwanderungshintergrund")
+    }else{
+      gruppe_select <- c("mehr als 100 Bücher", "maximal 100 Bücher")
+    }
+
+    df_query <- glue::glue_sql("
+    SELECT fach, indikator, geschlecht, typ, jahr, wert
+    FROM iqb
+    WHERE typ IN ('Mittelwert', 'Standardabweichung')
+    AND jahr = {jahr_select}
+    AND region = {region_select}
+    AND fach = {fach_select}
+    AND geschlecht IN ({gruppe_select[1]}, {gruppe_select[2]})
+                               ", .con = con)
+    df <- DBI::dbGetQuery(con, df_query)
+#
+#
+    # als Faktor speichern für Reihenfolge und Selbstkonzept umbennenen
+    df <- df %>%
+      dplyr::mutate(
+        indikator = dplyr::case_when(
+          indikator == "Selbstkonzept" ~ "Selbsteinschätzung der eigenen Fähigkeiten",
+          indikator == "Interesse" ~ "Interesse für das Fach"
+        ))
+
+    df_sd <- df %>%
+      dplyr::filter(typ == "Standardabweichung") %>%
+      dplyr::rename("sd" = "wert") %>%
+      dplyr::select(-typ)
+
+    df <- df %>%
+      dplyr::filter(typ == "Mittelwert") %>%
+      dplyr::select(-typ) %>%
+      dplyr::left_join(df_sd, by = c("geschlecht", "fach", "indikator", "jahr"))
+
+    df <- df %>%
+      dplyr::mutate(display_rel = prettyNum(round(df$wert,1), big.mark = ".", decimal.mark = ","),
+                    display_sd = prettyNum(sd, big.mark = ".", decimal.mark = ","))
+
+    if("Mädchen" %in% df$geschlecht){
+      df$geschlecht <- as.factor(df$geschlecht)
+      df$geschlecht <- factor(df$geschlecht, levels = c("Mädchen", "Jungen"))
+    }else if("mit Zuwanderungsgeschichte" %in% df$geschlecht){
+      df$geschlecht <- as.factor(df$geschlecht)
+      df$geschlecht <- factor(df$geschlecht, levels = c("ohne Zuwanderungsgeschichte", "mit Zuwanderungsgeschichte"))
+    }else if("mehr als 100 Bücher" %in% df$geschlecht){
+      df$geschlecht <- as.factor(df$geschlecht)
+      df$geschlecht <- factor(df$geschlecht, levels = c("maximal 100 Bücher", "mehr als 100 Bücher"))
+    }
+
+    titel <- paste0("Selbsteinschätzung des Interesses und der eigenen Fähigkeiten in ", fach_select,
+                    " von Schüler:innen der 9. Klasse (", jahr_select, ")"         )
+    tooltip_text <- "{point.geschlecht}: {point.display_rel} (SD = {point.display_sd})"
+    quelle_text <- "Quelle der Daten: Institut zur Qualitätsentwicklung im Bildungswesen, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+
+  }
 
 
   # plot
-  titel <- paste0("Selbsteinschätzung des Interesses und der eigenen Fähigkeiten in ", fach_select,
-                  " von Schüler:innen der 4. Klasse (", jahr_select, ")"         )
+
   out <- highcharter::hchart(df, 'column', highcharter::hcaes(y = round(wert, 1), x = indikator, group = geschlecht))%>%
     highcharter::hc_plotOptions(column = list(pointWidth = 90))%>%
-    highcharter::hc_tooltip(pointFormat = "{point.geschlecht} <br> {point.display_rel}")%>%
+    highcharter::hc_tooltip(pointFormat = tooltip_text)%>%
     highcharter::hc_yAxis(title = list(text = "Skalenwert  1 - 4"),
                           labels = list(format = "{value}"),
                           pointsWidth = 4,
@@ -3321,9 +3394,7 @@ iqb_fragebogen <- function(r){
     highcharter::hc_xAxis(title = list(text = "")) %>%
     highcharter::hc_colors(c("#154194",
                              "#efe8e6")) %>%
-    highcharter::hc_title(text = paste0("Selbsteinschätzung des Interesses und der eigenen Fähigkeiten in ", fach_select,
-                                        " von Schüler:innen der 4. Klasse (", jahr_select, ")"
-    ),
+    highcharter::hc_title(text = titel,
     margin = 45,
     align = "center",
     style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
@@ -3331,7 +3402,7 @@ iqb_fragebogen <- function(r){
       style = list(fontFamily = "Calibri Regular", fontSize = "14px")
     ) %>%
     highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
-    highcharter::hc_caption(text = "Quelle der Daten: Institut zur Qualitätsentwicklung im Bildungswesen, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+    highcharter::hc_caption(text = quelle_text,
                             style = list(fontSize = "11px", color = "gray")) %>%
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(

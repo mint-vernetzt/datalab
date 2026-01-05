@@ -158,11 +158,11 @@ mod_fachkraft_start_ui <- function(id){
           Zuwanderung von MINT-Fachkräften und Verbleib älterer Fachkräfte in MINT-Berufen.
 
           Nähere Informationen dazu, welche methodischen Annahmen den Wirkhebeln und Szenarien zugrunde liegen,
-          finden Sie in den Info-Boxen der Grafiken.
+          finden Sie in in den Info-Boxen der Grafiken.
 
           Vergleichen Sie hier, wie sich diese Wirkhebel auf die Fachkräfteentwicklung auswirken."),
 
-        p("Hier finden Sie drei statische Grafikvarianten zum Herunterladen. Die interaktiven Grafiken folgen darunter und können auch gerne als Screenshots weiterverwendet werden. In Zukunft ist auch ein Download der interaktiven Grafiken möglich."),
+        p("Hier finden Sie drei Grafikvarianten zum Herunterladen. Die interaktiven, anpassbaren Grafiken folgen darunter und können ebenfalls über die Grafik-Funktion oben rechts neben der Grafik-Überschrift heruntergeladen werden."),
 
         tags$a(href = "www/Vergleich_Wirkhebel_MINT-Fachkraefte.png", target = "_blank", "Download Grafik Vergleich Wirkhebel",
                title = "Die Grafik öffnet sich in einem neuen Browserfenster und kann mit Rechtsklick + \"Grafik speichern unter...\" heruntergeladen werden."),
@@ -174,6 +174,27 @@ mod_fachkraft_start_ui <- function(id){
                title = "Die Grafik öffnet sich in einem neuen Browserfenster und kann mit Rechtsklick + \"Grafik speichern unter...\" heruntergeladen werden."),
 
         ),
+        column(
+          width = 4,
+          tags$div(
+            style = "display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-start;",
+            tags$strong(
+              "MINT-Fachkräfteszenarien erklärt:",
+              style = "margin: 0px 0px 0px 60px"
+            ),
+            p("Lesen Sie in diesem Foliensatz die zentralen Ergebnisse, Methodik und Interpretation nach.",
+              style = "margin: 0px 0px 0px 60px"),
+            tags$a(
+              href = "www/MINTvernetzt_Foliensatz_MINT-Fachkräfteszenarien_erklärt.pdf",
+              target = "_blank",
+              tags$img(
+                src = "www/Screenshot_Foliensatz_Fachkräfteszenarien.png",
+                alt = "Cover Foliensatz MINT-Fachkräfteszenarien",
+                style = "max-width: 20%; height: auto; cursor: pointer; margin: 10px 0px 0px 70px;
+                  border: 1px solid #EFE8E6;"
+              )
+            )
+          )),
        column(
          width = 12,
 
@@ -207,7 +228,7 @@ mod_fachkraft_start_ui <- function(id){
                      id = "h_fachkraft-prognosen_3"),
               p(),
 
-              tags$a(href = "www/Methodenbericht_MINT-Fachkraefteszenarien.pdf", target = "_blank", "Methodenbericht des IW Köln als PDF")
+              tags$a(href = "www/MINTvernetzt_Methodenbericht_MINT-Fachkräfteszenarien.pdf", target = "_blank", "Methodenbericht des IW Köln als PDF")
             )
           ),
 
@@ -228,7 +249,7 @@ mod_fachkraft_start_ui <- function(id){
                                                     color = "#154194"),
 
               p(),
-              tags$a(href = "www/Methodenbericht_MINT-Fachkraefteszenarien.pdf", target = "_blank", "Methodenbericht des IW Köln als PDF")
+              tags$a(href = "www/MINTvernetzt_Methodenbericht_MINT-Fachkräfteszenarien.pdf", target = "_blank", "Methodenbericht des IW Köln als PDF")
             )
           ),
     tabPanel(
@@ -248,7 +269,7 @@ mod_fachkraft_start_ui <- function(id){
                                      color = "#154194"),
 
         p(),
-        tags$a(href = "www/Methodenbericht_MINT-Fachkraefteszenarien.pdf", target = "_blank", "Methodenbericht des IW Köln als PDF")
+        tags$a(href = "www/MINTvernetzt_Methodenbericht_MINT-Fachkräfteszenarien.pdf", target = "_blank", "Methodenbericht des IW Köln als PDF")
       )
     ),
     tabPanel(
@@ -268,7 +289,7 @@ mod_fachkraft_start_ui <- function(id){
                                             color = "#154194"),
 
               p(),
-              tags$a(href = "www/Methodenbericht_MINT-Fachkraefteszenarien.pdf", target = "_blank", "Methodenbericht des IW Köln als PDF")
+              tags$a(href = "www/MINTvernetzt_Methodenbericht_MINT-Fachkräfteszenarien.pdf", target = "_blank", "Methodenbericht des IW Köln als PDF")
             )
           )
 )))),
@@ -613,10 +634,10 @@ mod_fachkraft_start_server <- function(id, r){
     ## pdf ----
     # output$downloadPDF <- downloadHandler(
     #   # filename = function() {
-    #   #   "Methodenbericht_MINT-Fachkraefteszenarien.pdf"
+    #   #   "MINTvernetzt_Methodenbericht_MINT-Fachkräfteszenarien.pdf"
     #   # },
     #   content = function(file) {
-    #     file.copy("www/Methodenbericht_MINT-Fachkraefteszenarien.pdf", file)
+    #     file.copy("www/MINTvernetzt_Methodenbericht_MINT-Fachkräfteszenarien.pdf", file)
     #   }
     # )
 
