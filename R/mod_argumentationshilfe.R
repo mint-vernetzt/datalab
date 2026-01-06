@@ -104,13 +104,13 @@ mod_argumentation_ui <- function(id){
             tags$div(
               style = "display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-start;",
               tags$strong(
-                "Dierkt eine Datenanalyse mit KI starten:",
+                "Dierkt mit der Datenanalyse starten:",
                 style = "margin: 40px 0px 0px 60px"
               ),
                       class = "linked-image",
                       style = "flex: 0 0 20%;",
                       tags$a(
-                        href = "https://chatgpt.com/g/g-67e4f41fd91881919a753f4309194bf7-test-mint-datalab-assistent-test",
+                        href = "https://chatgpt.com/g/g-695cd1fa74f881918a54b0517af8163e-mint-datalab-gpt",
                         target = "_blank",
                         tags$img(
                           src = "www/Bild_MINT-DataLab-GPT.png",
@@ -461,7 +461,7 @@ mod_argumentation_ui <- function(id){
               width = 5,
               div(style = "margin-left: 30px;",
               actionButton(label = tagList(icon("arrow-up-right-from-square"), "    Zum MINT-DataLab-GPT"), inputId = "GPT_link",
-                           onclick = 'window.open("https://chatgpt.com/g/g-67e4f41fd91881919a753f4309194bf7-mint-datalab-gpt", "_blank");')
+                           onclick = 'window.open("https://chatgpt.com/g/g-695cd1fa74f881918a54b0517af8163e-mint-datalab-gpt", "_blank");')
             )
           )
           )
