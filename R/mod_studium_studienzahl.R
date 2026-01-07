@@ -167,7 +167,7 @@ mod_studium_studienzahl_ui <- function(id){
                in MINT im Jahre 2015 auf 176.000 im Jahr 2022. Ein ähnliches Bild zeigt sich auch bei den Auszubildenden.
                In einer Kurzanalyse fassen wir die Entwicklungen im MINT-Nachwuchs zusammen."),
         br(), br(),
-        tags$a(href = "https://www.mint-vernetzt.de/content/uploads/2024/02/MIN_Kurzanalyse_Interesse_final.pdf",
+        tags$a(href = "https://www.mint-vernetzt.de/content/uploads/2026/01/MINTvernetzt_Kurzanalyse_Interesse_an_MINT.pdf",
                target = "_blank", "Link zur Kurzanalyse"),
         br(), br(),
         p("Veröffentlichung: 16. Februar 2024",
