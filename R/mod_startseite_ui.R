@@ -72,7 +72,7 @@ mod_startseite_start_ui <- function(id){
            Die Kurzanalysen können auf den verschiedenen Bereichs- und Themenseiten
               im MINT-DataLab heruntergeladen werden.", br(),
               "Auf der MINTvernetzt-Website, auf der Themenseite des MINT-DataLabs,
-              finden sich alle Kurzanalyen auf einen Blick.",
+              finden sich alle Kurzanalsyen auf einen Blick.",
               br()),
               tags$a(href = "https://www.mint-vernetzt.de/mint-datalab/#kurzanalysen",
                      target = "_blank", "Alle Kurzanalysen",
