@@ -1068,7 +1068,7 @@ argument_verlauf <- function(r){
     color2 <-  c("#154194","#66cbaf")
 
     titel <- titel_beschäftigte
-
+    quelle <- "Destatis, 2025 und Bundesagentur für Arbeit, 2025, beides auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
 
     out_beschäftigte <- highcharter::hchart(df_beschäftigte, 'line', highcharter::hcaes(x = "jahr", y = "wert")) %>%
@@ -1104,7 +1104,8 @@ argument_verlauf <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = 'Quelle: Destatis, 2025 und Bundesagentur für Arbeit, 2025, beides auf Anfrage, eigene Berechnungen durch MINTvernetzt\\n\\n' + this.getCSV();
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle: %s';
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -1114,12 +1115,16 @@ argument_verlauf <- function(r){
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel))  #
+   }", gsub("'", "\\\\'", titel),
+       gsub("'", "\\\\'", titel),
+       gsub("'", "\\\\'", quelle)
+                                                         )  #
                                                        )))
                                   ))
       )
 
     titel <- titel_andere
+    quelle <- "Destatis, 2025 und Bundesagentur für Arbeit, 2025, beides auf Anfrage, eigene Berechnungen durch MINTvernetzt"
 
     out_andere <- highcharter::hchart(df_andere, 'line', highcharter::hcaes(x = "jahr", y = "wert", group = "indikator")) %>%
       highcharter::hc_tooltip(pointFormat = tooltip) %>%
@@ -1154,7 +1159,8 @@ argument_verlauf <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = 'Quellen: Destatis, 2025 und Bundesagentur für Arbeit, 2025, beides auf Anfrage, eigene Berechnungen durch MINTvernetzt.\\n\\n' + this.getCSV();
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle: %s';
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -1164,7 +1170,10 @@ argument_verlauf <- function(r){
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel))  #
+   }", gsub("'", "\\\\'", titel),
+       gsub("'", "\\\\'", titel),
+       gsub("'", "\\\\'", quelle)
+                                                         )  #
                                                        )))
                                   ))
       )
@@ -1278,6 +1287,7 @@ argument_fachkraft <- function(r){
 
 
     titel <- titel_1
+    quelle <- "Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
     plot_left <- highcharter::hchart(
       object = expanded_dt %>% dplyr::filter(mint_zuordnung == fach[1]),
@@ -1329,7 +1339,8 @@ argument_fachkraft <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = 'Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.\\n\\n' + this.getCSV();
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle: %s';
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -1339,7 +1350,10 @@ argument_fachkraft <- function(r){
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel))  #
+   }", gsub("'", "\\\\'", titel),
+      gsub("'", "\\\\'", titel),
+      gsub("'", "\\\\'", quelle)
+                                                         )  #
                                                        )))
                                   ))
       )
@@ -1352,6 +1366,8 @@ argument_fachkraft <- function(r){
     )
 
     titel_2 <- paste0("Engpassrisiko in ", fach_2," (", timerange, ")")
+    quelle <- "Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+
 
     used_colors <- group_col_dt %>%
       dplyr::filter(epa_kat %in% (expanded_dt %>%
@@ -1409,7 +1425,8 @@ argument_fachkraft <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = 'Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.\\n\\n' + this.getCSV();
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle: %s';
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -1419,7 +1436,10 @@ argument_fachkraft <- function(r){
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel_2))  #
+   }", gsub("'", "\\\\'", titel_2),
+       gsub("'", "\\\\'", titel_2),
+       gsub("'", "\\\\'", quelle)
+                                                         )  #
                                                        )))
                                   ))
       )
@@ -1615,6 +1635,7 @@ argument_fachkraft <- function(r){
     expanded_dt <- expanded_dt[!is.na(expanded_dt$group_col), ]
 
     titel <- titel_1
+    quelle <- "Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
 
     plot_left <- highcharter::hchart(
@@ -1674,7 +1695,8 @@ argument_fachkraft <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle: %s';
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -1684,7 +1706,10 @@ argument_fachkraft <- function(r){
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel))  #
+   }", gsub("'", "\\\\'", titel),
+       gsub("'", "\\\\'", titel),
+       gsub("'", "\\\\'", quelle)
+                                                         )  #
                                                        )))
                                   ))
       )
@@ -1709,6 +1734,8 @@ argument_fachkraft <- function(r){
         dplyr::pull(group_col)
 
       titel <- titel_2
+      quelle <- "Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+
 
       plot_right <- highcharter::hchart(
         object = expanded_dt %>% dplyr::filter(mint_zuordnung == fach[2]),
@@ -1766,7 +1793,8 @@ argument_fachkraft <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle: %s';
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -1776,7 +1804,10 @@ argument_fachkraft <- function(r){
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel))  #
+   }", gsub("'", "\\\\'", titel),
+       gsub("'", "\\\\'", titel),
+       gsub("'", "\\\\'", quelle)
+                                                           )  #
                                                          )))
                                     ))
         )
@@ -1836,7 +1867,7 @@ argument_demografie <- function(r){
   titel <- ifelse(regio == "Saarland",
                   paste0("Demografischer Wandel: Beschäftigte in MINT nach Altersgruppen im ", regio, " (", timerange, ")"),
                   paste0("Demografischer Wandel: Beschäftigte in MINT nach Altersgruppen in ", regio, " (", timerange, ")"))
-
+  quelle <- "Quelle: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
   out <- highcharter::hchart(df, 'bar', highcharter::hcaes(
     y = !!rlang::sym("wert"),
@@ -1861,7 +1892,7 @@ argument_demografie <- function(r){
       style = list(fontFamily = "Calibri Regular", fontSize = "14px")
     ) %>%
     highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
-    highcharter::hc_caption(text = "    Quelle: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt. ",
+    highcharter::hc_caption(text = quelle,
                             style = list(fontSize = "11px", color = "gray")) %>%
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(
@@ -1875,7 +1906,8 @@ argument_demografie <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle: %s';
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -1885,21 +1917,15 @@ argument_demografie <- function(r){
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel))  #
+   }", gsub("'", "\\\\'", titel),
+       gsub("'", "\\\\'", titel),
+       gsub("'", "\\\\'", quelle)
+                                                       )  #
                                                      )))
                                 ))
     )
 
-
-
-
-
-
-
-
   return(out)
-
-
 
 }
 
@@ -2024,6 +2050,7 @@ argument_nachwuchs <- function(r){
   titel <- ifelse(regio == "Saarland",
                   paste0("Entwicklung der Nachwuchszahlen in den MINT-Disziplinen im ", regio),
                   paste0("Entwicklung der Nachwuchszahlen in den MINT-Disziplinen in ", regio))
+  quelle <- "Destatis, 2025 und Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
   out <- highcharter::hchart(df_nachwuchs_agg, 'line', highcharter::hcaes(x = jahr, y = wert, group = fach)) %>%
     highcharter::hc_tooltip(pointFormat = tooltip) %>%
@@ -2046,7 +2073,7 @@ argument_nachwuchs <- function(r){
     highcharter::hc_chart(
       style = list(fontFamily = "Calibri Regular", fontSize = "14px")
     )  %>%
-    highcharter::hc_caption(text = "Quelle: Destatis, 2025 und Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+    highcharter::hc_caption(text = quelle,
                             style = list(fontSize = "11px", color = "gray")) %>%
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(
@@ -2060,7 +2087,8 @@ argument_nachwuchs <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = 'Quelle der Daten: Destatis, 2025 und Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.\\n\\n' +  this.getCSV();
+    var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle: %s';
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -2070,7 +2098,10 @@ argument_nachwuchs <- function(r){
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel))  #
+   }", gsub("'", "\\\\'", titel),
+       gsub("'", "\\\\'", titel),
+       gsub("'", "\\\\'", quelle)
+                                                       )  #
                                                      )))
                                 ))
     )
@@ -2149,6 +2180,7 @@ argument_wirkhebel <- function(r){
   options(highcharter.lang = hcoptslang)
 
   titel <- "Einfluss der folgenden vier Wirkhebel auf die Entwicklung der MINT-Fachkräfte bis 2037 deutschlandweit <br>"
+  quelle <- "Berechnungen durch das IW Köln, 2024, beauftragt durch MINTvernetzt."
   tooltip <- paste0("Anzahl an MINT-Fachkräften, die bis 2037
                     gewonnen werden können: {point.diff_disp}")
   format <- "{value:, f}"
@@ -2160,8 +2192,6 @@ argument_wirkhebel <- function(r){
 
   final_data <- final_data[with(final_data, order(diff, decreasing = TRUE)),]
   final_data$diff_disp <- prettyNum(final_data$diff, decimal.mark = ",", big.mark = ".")
-
-
 
 
   out <- highcharter::hchart(final_data, 'bar', highcharter::hcaes(
@@ -2187,7 +2217,7 @@ argument_wirkhebel <- function(r){
       style = list(fontFamily = "Calibri Regular", fontSize = "14px")
     ) %>%
     highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
-    highcharter::hc_caption(text = "Quelle: Berechnungen durch das IW Köln, 2024, beauftragt durch MINTvernetzt.",
+    highcharter::hc_caption(text = quelle,
                             style = list(fontSize = "11px", color = "gray")) %>%
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(
@@ -2201,7 +2231,8 @@ argument_wirkhebel <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = 'Quelle: Berechnungen durch das IW Köln, 2024, beauftragt durch MINTvernetzt.\\n\\n' + this.getCSV();
+     var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle: %s';
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -2211,7 +2242,10 @@ argument_wirkhebel <- function(r){
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel))  #
+   }", gsub("'", "\\\\'", titel),
+       gsub("'", "\\\\'", titel),
+       gsub("'", "\\\\'", quelle)
+                                                       )  #
                                                      )))
                                 ))
     )
