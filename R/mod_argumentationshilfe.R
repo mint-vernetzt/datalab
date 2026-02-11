@@ -736,8 +736,8 @@ mod_argumentation_ui <- function(id){
                  column(
                    width = 3,
                    br(),
-                   div(class = "content-box",
-                       style = "width: 320px;
+                   div(class = "content-box", #width: 320px;
+                       style = "
                               margin-left: 0;
                               background-color: #00a87a30;
                               border: 2px solid #00a87a;
@@ -753,8 +753,8 @@ mod_argumentation_ui <- function(id){
                  column(
                    width = 3,
                    br(),
-                   div(class = "content-box",
-                       style = "width: 320px;
+                   div(class = "content-box", #width: 320px;
+                       style = "
                               margin-left: 0;
                               background-color: #00a87a30;
                               border: 2px solid #00a87a;
@@ -770,8 +770,8 @@ mod_argumentation_ui <- function(id){
                  column(
                    width = 3,
                    br(),
-                   div(class = "content-box",
-                       style = "width: 320px;
+                   div(class = "content-box", #width: 320px;
+                       style = "
                               margin-left: 0;
                               background-color: #00a87a30;
                               border: 2px solid #00a87a;
@@ -845,8 +845,8 @@ mod_argumentation_ui <- function(id){
           column(
             width = 3,
             br(),
-            div(class = "content-box",
-                style = "width: 320px;
+            div(class = "content-box", #width: 320px;
+                style = "
                               margin-left: 0;
                               background-color: #00a87a30;
                               border: 2px solid #00a87a;
@@ -863,8 +863,8 @@ mod_argumentation_ui <- function(id){
           column(
             width = 3,
             br(),
-            div(class = "content-box",
-                style = "width: 320px;
+            div(class = "content-box", #width: 320px;
+                style = "
                               margin-left: 0;
                               background-color: #00a87a30;
                               border: 2px solid #00a87a;
@@ -936,8 +936,8 @@ mod_argumentation_ui <- function(id){
           column(
             width = 3,
             br(),
-            div(class = "content-box",
-                style = "width: 320px;
+            div(class = "content-box", #width: 320px;
+                style = "
                               margin-left: 0;
                               background-color: #00a87a30;
                               border: 2px solid #00a87a;
@@ -1003,8 +1003,8 @@ mod_argumentation_ui <- function(id){
           column(
             width = 3,
             br(),
-            div(class = "content-box",
-                style = "width: 320px;
+            div(class = "content-box", #width: 320px;
+                style = "
                               margin-left: 0;
                               background-color: #00a87a30;
                               border: 2px solid #00a87a;
@@ -1021,8 +1021,8 @@ mod_argumentation_ui <- function(id){
           column(
             width = 3,
             br(),
-            div(class = "content-box",
-                style = "width: 320px;
+            div(class = "content-box", #width: 320px;
+                style = "
                               margin-left: 0;
                               background-color: #00a87a30;
                               border: 2px solid #00a87a;
@@ -1038,8 +1038,8 @@ mod_argumentation_ui <- function(id){
           column(
             width = 3,
             br(),
-            div(class = "content-box",
-                style = "width: 320px;
+            div(class = "content-box", #width: 320px;
+                style = "
                               margin-left: 0;
                               background-color: #00a87a30;
                               border: 2px solid #00a87a;
@@ -1110,8 +1110,8 @@ mod_argumentation_ui <- function(id){
           column(
             width = 3,
             br(),
-            div(class = "content-box",
-                style = "width: 320px;
+            div(class = "content-box", #width: 320px;
+                style = "
                               margin-left: 0;
                               background-color: #00a87a30;
                               border: 2px solid #00a87a;
@@ -1127,8 +1127,8 @@ mod_argumentation_ui <- function(id){
           column(
             width = 3,
             br(),
-            div(class = "content-box",
-                style = "width: 320px;
+            div(class = "content-box", #width: 320px;
+                style = "
                               margin-left: 0;
                               background-color: #00a87a30;
                               border: 2px solid #00a87a;
