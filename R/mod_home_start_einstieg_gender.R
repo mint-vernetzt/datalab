@@ -84,7 +84,7 @@ mod_home_start_einstieg_gender_ui <- function(id){
       conditionalPanel("input.ansicht_start_comparison_mint_gender == 'Einzelansicht - Kuchendiagramm'",
                        ns = ns,
             br(),
-            darstellung(id="dh_alle_frauen_1"),
+            darstellung(id="h_alle_frauen_1"),
             br(),
             br(),
             shinyBS::bsPopover(id="dh_alle_frauen_1", title="",

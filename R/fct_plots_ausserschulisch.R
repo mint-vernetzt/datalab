@@ -1254,7 +1254,7 @@ plot_mv_genderb <- function(){
 
     plot <- df %>%
       highcharter::hchart(
-        "pie", highcharter::hcaes(x = gruppe, y = wert)
+        "pie", highcharter::hcaes(x = gruppe, y = as.numeric(wert))
       )%>%
       highcharter::hc_tooltip(
         pointFormat=paste('Anteil: {point.wert} %')) %>%

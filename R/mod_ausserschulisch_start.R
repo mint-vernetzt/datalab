@@ -224,19 +224,10 @@ mod_ausserschulisch_start_ui <- function(id){
                 column(
                   width = 8,
                   p("MINTvernetzt führt verschiedene Befragungen unter MINT-Akteur:innen durch.
-                    Hier wird eine Auswahl dieser Befragungsergebnisse dargestellt. Die vollständigen Berichte
-                    zu den Befragungen finden sich auf der MINTvernetzt-Website. Weitere Hinweise und Verlinkungen finden
-                    sich unter den jeweiligen Befragungsergebnissen und unter dem Reiter \"Informationen zu den Befragungen\"."),
-                  br(),
-                  p("Die Ergebnisse der MINTvernetzt-Akteursbefragung zeigen, dass z.B. vier von fünf der Befragten
-                    MINT-Bildungsakteur:innen hauptberuflich tätig sind. Etwas mehr als ein Drittel haben, trotz ihres
-                    Engagements in MINT, keinen MINT-Bildungshintergrund.",
-                    "Eine der hier dargestellten Fragen des MINT-Stimmungsbarometers zeigt, dass die Befragten
-                    das Ganztagsangebot an Schulen besonders als Bildungsort unter Einbezug außerschulischer Angebote nutzen wollen würden.",
-                    "In der MINTvernetzt-Genderbefragung von 2023 wurde ein Blick in die Vernetzung außerschulischer MINT-Bildungsakteur:innen
-                    geworfen, die sich für Mädchen- und Frauenförderung in MINT interessieren oder in diesem Bereich aktiv sind.
-                    Hier zeigt sich, dass Bildungsnetzwerke in diesem Bereich vor allem durch Aktivität und hohe Vernetzungswünsche geprägt sind."),
-
+                    Hier zeigen wir die Ergebnisse des MINT-Stimmungsbarometers zur Nutzung des Ganztags und
+                    die Ergebnisse der MINTvernetzt-Genderbefragung zur Vernetzung in der außerschulischen MINT-Community.
+                    Die vollständigen Berichte zu den Befragungen finden sich auf der MINTvernetzt-Website. Weitere Hinweise und Verlinkungen finden
+                    sich unter den jeweiligen Befragungsergebnissen und unter dem Reiter \"Informationen zu den Befragungen\".")
                 ),
                 p(),
                 column(
@@ -244,30 +235,30 @@ mod_ausserschulisch_start_ui <- function(id){
 
                   tabsetPanel(type = "tabs",
                               # Tab 1
-                              tabPanel("MINTvernetzt-Akteursbefragung: Außerschulisch MINT-Akteur:innen", br(),
-
-                                       shiny::sidebarPanel(
-                                         width = 3,
-                                         tags$style(".well {background-color:#FFFFFF;}"),
-                                         tags$head(tags$style(HTML(".small-box {height: 140px}"))),
-                                         mod_ausserschulisch_mvb_akteursbefragung_ui("mod_ausserschulisch_mvb_akteursbefragung_ui_1"),
-                                       ),
-                                       shiny::mainPanel(
-                                         width = 9,
-                                         shinycssloaders::withSpinner(
-                                           highcharter::highchartOutput(ns("plot_mvb_akteursbefragung"), height = "500px"),
-                                                                      color = "#154194"),
-
-
-                                         p(style = "font-size:16px; font-weight: 600;",
-                                           br(),
-                                           "Die MINTvernetzt-Akteursbefragung fragt ab, wer die MINTvernetzt-Community ist und welche Bedrüfnisse
-                                           und Wünsche sie hat. Weitere Ergebnisse und Informationen finden sich ",
-                                           tags$a(style = "color: #008F68; font-size: 16px;", href = "https://www.mint-vernetzt.de/studien-und-umfragen/#akteursbefragung", target = "_blank", "hier, auf der MINTvernetzt-Website"),
-                                           "."), br(),
-
-                                       )
-                              ),
+                              # tabPanel("MINTvernetzt-Akteursbefragung: Außerschulisch MINT-Akteur:innen", br(),
+                              #
+                              #          shiny::sidebarPanel(
+                              #            width = 3,
+                              #            tags$style(".well {background-color:#FFFFFF;}"),
+                              #            tags$head(tags$style(HTML(".small-box {height: 140px}"))),
+                              #            mod_ausserschulisch_mvb_akteursbefragung_ui("mod_ausserschulisch_mvb_akteursbefragung_ui_1"),
+                              #          ),
+                              #          shiny::mainPanel(
+                              #            width = 9,
+                              #            shinycssloaders::withSpinner(
+                              #              highcharter::highchartOutput(ns("plot_mvb_akteursbefragung"), height = "500px"),
+                              #                                         color = "#154194"),
+                              #
+                              #
+                              #            p(style = "font-size:16px; font-weight: 600;",
+                              #              br(),
+                              #              "Die MINTvernetzt-Akteursbefragung fragt ab, wer die MINTvernetzt-Community ist und welche Bedrüfnisse
+                              #              und Wünsche sie hat. Weitere Ergebnisse und Informationen finden sich ",
+                              #              tags$a(style = "color: #008F68; font-size: 16px;", href = "https://www.mint-vernetzt.de/studien-und-umfragen/#akteursbefragung", target = "_blank", "hier, auf der MINTvernetzt-Website"),
+                              #              "."), br(),
+                              #
+                              #          )
+                              # ),
                               # Tab 2
                               tabPanel("MINT-Stimmungsbarometer: Nutzung des Ganztags", br(),
                                        shiny::sidebarPanel(
@@ -323,30 +314,30 @@ mod_ausserschulisch_start_ui <- function(id){
                               shiny::tabPanel(
                                 "Informationen zu den Befragungen",
                                 # Erste Befragung
-                                    fluidRow(
-                                      style= "top: 15px;",
-                                      column(
-                                        style = "top: 15px;",
-                                        width = 8,
-                                        div(
-                                          p(strong("MINTvernetzt-Akteursbefragung 2024:", style = "color: #FCC433;")),
-                                          p(tags$b("Ziel der Umfrage:"), "Übersicht über die MINT-Bildungsakteur:innen und ihre Bedarfe und Herausforderungen herstellen.", br(),
-                                            tags$b("Teilnehmendenzahl:"), "221 Personen haben an der Umfrage teilgenommen.",br(),
-                                            tags$b("Befragung:"), "Durchgeführt zwischen Juni und Juli 2024. Die Umfrage wurde über Kanäle von MINTvernetzt geteilt.")
-                                        )
-                                      ),
-                                      column(
-                                        style = "top: 15px;",
-                                        width = 2,
-                                        tags$a(
-                                          href = "https://www.mint-vernetzt.de/studien-und-umfragen/#akteursbefragung",
-                                          target = "_blank",
-                                          tags$img(src = "www/Außerschulisch_Befragung_Akteur.png",
-                                                   style = "position: relative; float: inline-end;
-                                                 right: 15px; height: auto; width: 200px; padding: 5px;")
-                                        )
-                                      )
-                                ),
+                                #     fluidRow(
+                                #       style= "top: 15px;",
+                                #       column(
+                                #         style = "top: 15px;",
+                                #         width = 8,
+                                #         div(
+                                #           p(strong("MINTvernetzt-Akteursbefragung 2024:", style = "color: #FCC433;")),
+                                #           p(tags$b("Ziel der Umfrage:"), "Übersicht über die MINT-Bildungsakteur:innen und ihre Bedarfe und Herausforderungen herstellen.", br(),
+                                #             tags$b("Teilnehmendenzahl:"), "221 Personen haben an der Umfrage teilgenommen.",br(),
+                                #             tags$b("Befragung:"), "Durchgeführt zwischen Juni und Juli 2024. Die Umfrage wurde über Kanäle von MINTvernetzt geteilt.")
+                                #         )
+                                #       ),
+                                #       column(
+                                #         style = "top: 15px;",
+                                #         width = 2,
+                                #         tags$a(
+                                #           href = "https://www.mint-vernetzt.de/studien-und-umfragen/#akteursbefragung",
+                                #           target = "_blank",
+                                #           tags$img(src = "www/Außerschulisch_Befragung_Akteur.png",
+                                #                    style = "position: relative; float: inline-end;
+                                #                  right: 15px; height: auto; width: 200px; padding: 5px;")
+                                #         )
+                                #       )
+                                # ),
                                 # Zweite Befragung
                                 fluidRow(
                                   style= "top: 15px;",
@@ -511,9 +502,9 @@ mod_ausserschulisch_start_server <- function(id, r){
     })
     # MV-Befragungen ----
 
-    output$plot_mvb_akteursbefragung <- highcharter::renderHighchart(
-      plot_mv_akteursb(r)
-    )
+    # output$plot_mvb_akteursbefragung <- highcharter::renderHighchart(
+    #   plot_mv_akteursb(r)
+    # )
 
     output$plot_mv_stimmung <- highcharter::renderHighchart(
       plot_mv_stimmung(r)
