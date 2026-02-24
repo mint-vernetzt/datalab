@@ -940,7 +940,7 @@ add_caption_and_download <- function(
   # install.packages(packageurl, repos=NULL, type="source")
   #
   # packageVersion("webshot2")
-  #
+
 
   # set chromote, determine chromium variant
   # Sys.setenv(
@@ -1247,22 +1247,32 @@ darstellung <- function(id, title = NULL) {
 # test des funktionszusammenfasser
 
 
-piebuilder <- function(df, titel, x, y, tooltip, color = c("#b16fab", "#efe8e6"), format = '{point.prop_besr}%', subtitel = NULL, quelle="Quelle"){
+# Grafik-Funktionen -------------------------------------------------------
+
+
+piebuilder <- function(df, titel, x, y, tooltip, color = c("#b16fab", "#efe8e6"),
+                       format = '{point.prop_besr}%', subtitel = NULL, quelle="Quelle"){
 
   if (is.null(subtitel)){
-    out <- highcharter::hchart(df, size = 280, type = "pie", mapping = highcharter::hcaes(x = !!rlang::sym(x), y = !!rlang::sym(y)), name = "value") %>%
+    out <- highcharter::hchart(df, size = 280, type = "pie", mapping =
+                                 highcharter::hcaes(x = !!rlang::sym(x),
+                                                    y = !!rlang::sym(y)), name = "value") %>%
       highcharter::hc_tooltip(
         pointFormat=tooltip) %>%
       highcharter::hc_colors(color) %>%
       highcharter::hc_title(text = titel,
                             margin = 45,
                             align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>% #Calibri Regular
+                            style = list(color = "black", useHTML = TRUE,
+                                         fontFamily = "Calibri Regular",
+                                         fontSize = "20px")) %>% #Calibri Regular
       highcharter::hc_chart(
         style = list(fontFamily = "Calibri Regular", fontSize = "14px")) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
       highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
-                                             dataLabels = list(enabled = TRUE, format = format ), showInLegend = TRUE)) %>%
+                                             dataLabels = list(enabled = TRUE,
+                                                               format = format ),
+                                             showInLegend = TRUE)) %>%
       highcharter::hc_caption(text = quelle,
                               style = list(fontSize = "11px", color = "gray")) %>%
       highcharter::hc_exporting(enabled = TRUE,
@@ -1302,7 +1312,9 @@ piebuilder <- function(df, titel, x, y, tooltip, color = c("#b16fab", "#efe8e6")
                                 )
       )
   } else {
-    out <- highcharter::hchart(df, size = 280, type = "pie", mapping = highcharter::hcaes(x = !!rlang::sym(x), y = !!rlang::sym(y)), name = "value") %>%
+    out <- highcharter::hchart(df, size = 280, type = "pie",
+                               mapping = highcharter::hcaes(x = !!rlang::sym(x),
+                                                            y = !!rlang::sym(y)), name = "value") %>%
       highcharter::hc_tooltip(
         pointFormat=tooltip) %>%
       highcharter::hc_colors(color) %>%
