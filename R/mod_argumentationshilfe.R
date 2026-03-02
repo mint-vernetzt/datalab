@@ -48,17 +48,7 @@ mod_argumentation_ui <- function(id){
           column(
             width = 8,
             h1("Datenbasierte Berichte und Argumentationen mit KI erstellen"),
-            # p(
-            #   "Ob für Förderanträge, Kommunikation oder strategische Entscheidungen -
-            #   Daten helfen dabei, die MINT-Bildungswelt zu verstehen und überzeugend
-            #   zu argumentieren. Sie wollen Ihre Arbeit mit Zahlen und Fakten unterstreichen,
-            #   zum Beispiel, um in Finanzierungsanträgen zu überzeugen, im Diskurs mit
-            #   Politiker:innen die Relevanz von MINT-Förderung zu bestärken oder
-            #   das eigene Projekt wirksam auszurichten?"
-            # p(
-            # "Hier finden Sie die Werkzeuge, um einen aussagestarken MINT-Bericht erstellen
-            # zu lassen und eine starke Argumentationskette für die MINT-Bildungsförderung
-            # in Ihrer Region aufzubauen."),
+
             p("Daten helfen dabei, die MINT-Bildungswelt zu verstehen. Gleichzeitig sind
               Daten das Fundament, um wirkungsvolle Entscheidungen zu treffen und
               erfolgreich für MINT-Förderung zu argumentieren.
@@ -70,41 +60,14 @@ mod_argumentation_ui <- function(id){
               tags$li("Er erstellt einen MINT-Bericht für ein ausgewähltes Bundesland"),
               tags$li("Er hilft, für MINT-Förderung zu argumentieren"),
               tags$li("Er hilft, Daten grundlegend zu interpretieren"),
-            ),
-            br(),
-            p("Der MINT-DataLab-GPT kann bei der Interpretation aller Daten im MINT-DataLab assistieren."),
-
-            p("Auf dieser Seite finden Sie eine Anleitung, wie Sie mit dem MINT-DataLab-GPT einen MINT-Bericht erstellen können.", br(),
-            "Häufig gestellte Fragen beantworten wir weiter unten auf der Seite. ", tags$a(href = "#faq",
-                                                                       style = "color: #000000; text-decoration: underline;",
-                                                                       "→ zu den FAQs")),
-
-            p("Beachten Sie bitte auch die Nutzungshinweise am Ende der Seite."), #Für die Nutzung des GPT benötigen Sie ein (kostenfreies) OpenAI-Konto.
-
-            ),
+            )
+          ),
           column(
             width = 4,
             tags$div(
               style = "display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-start;",
               tags$strong(
-                "Beispielbericht für Hamburg:",
-                style = "margin: 20px 0px 0px 60px"
-              ),
-              tags$a(
-                href = "www/MINTvernetzt_Argumentationskette_Hamburg.pdf",
-                target = "_blank",
-                tags$img(
-                  src = "www/Bild_Beispielbericht.png",
-                  alt = "Cover Beispielbericht Hamburg",
-                  style = "max-width: 20%; height: auto; cursor: pointer; margin: 10px 0px 0px 70px;
-                  border: 1px solid #EFE8E6;"
-                )
-              )
-            ),
-            tags$div(
-              style = "display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-start;",
-              tags$strong(
-                "Dierkt mit der Datenanalyse starten:",
+                "Direkt Analyse starten:",
                 style = "margin: 40px 0px 0px 60px"
               ),
                       class = "linked-image",
@@ -119,73 +82,14 @@ mod_argumentation_ui <- function(id){
                           margin: 10px 0px 0px 70px; border-radius: 10px;"
                         )
                       )
-                    )
+                    ),
+            tags$a(
+              href = "https://chatgpt.com/g/g-695cd1fa74f881918a54b0517af8163e-mint-datalab-gpt",
+              target = "_blank",
+              p("Link MINT-DataLab-GPT", style = "text-decoration: underline; color: #b16fab;
+                margin-left: 60px;")
+            )
           ),
-
-        ## Infos zu GPT ----
-
-        # column(
-        #   width = 8,
-        #   # h2("MINT-DataLab-GPT - die KI-Assistenz für Datenanalysen:"),
-        #   # p("Der MINT-DataLab-GPT ist von MINTvernetzt für Datenanalysen erstellt
-        #   #   worden und ist eine spezialisierte Form des Chat-GPT von OpenAI.
-        #   #   Der MINT-DataLab-GPT nutzt das KI-Modell von OpenAI, für die Nutzung muss
-        #   #   dort ein (kostenfreier) Account angelegt werden."),
-        #   # br(),
-        #   tags$strong("Das sind die Vorteile des MINT-DataLab-GPT:", style = "font-size: 16px;"),
-        #
-        #   div(class = "content-box",
-        #       style = "background-color: #ee777530;
-        #        color: #000;
-        #        border: 2px solid #ee7775;
-        #        margin-left: 20px;
-        #        width: 90%;
-        #        border-radius: 10px;
-        #        display: flex;
-        #        align-items: center;
-        #        padding: 10px;",
-        #       div(
-        #         class = "linked-image",
-        #         style = "flex: 0 0 20%;",
-        #         tags$a(
-        #           href = "https://chatgpt.com/g/g-67e4f41fd91881919a753f4309194bf7-test-mint-datalab-assistent-test",
-        #           target = "_blank",
-        #           tags$img(
-        #             src = "www/Bild_MINT-DataLab-GPT.png",
-        #             alt = "MINT-DataLab-GPT Symbolbild",
-        #             style = "max-width: 100%; height: auto; cursor: pointer; margin: 0px; border-radius: 10px;"
-        #           )
-        #         )
-        #       ),
-        #       div(
-        #         style = "flex: 1; padding-left: 20px; display: flex;
-        #         flex-direction: column; justify-content: center;
-        #         text-align: left;",
-        #         tags$strong("Maßgeschneidert für MINT-Daten und Analysen"),
-        #         p("Unser GPT ist speziell konfiguriert darauf, Datenberichte zu erstellen.
-        #  Es ist ausgerichtet auf unsere Datensätze, und verknüpft diese mit den Fakten
-        #  aus den Kurzanalysen des MINT-DataLabs."),
-        #         tags$strong("Persönliche Assistenz für überzeugende Berichte und Argumente"),
-        #         p("Unser GPT begleitet durch den Prozess und kann Daten nicht nur
-        #  interpretieren, sondern Analysen an Ihrem individuellen Bedarf ausrichten und um Informationen
-        #  anreichern, für starke Aussagen und Argumente."),
-        #         tags$strong("Erhöhte Quellensicherheit"),
-        #         p("Unser GPT nutzt als Daten-Quelle die aus dem MINT-DataLab bereitgestellten
-        #  Statistiken und erstellt automatisch Quellenverzeichnisse. So können
-        #  die KI-Vorteile genutzt werden, bei erhöhter Quellensicherheit.")
-        #       )
-        #   ),
-        #
-        #   # p("Auf dieser Seite finden Sie einen Einstieg in die Nutzung des MINT-DataLab-GPT. Neben
-        #   # einer FAQ-Sektion am Ende der Seite finden Sie hier einer Datenvorauswahl für
-        #   # Ihren Schnellstart in die Erstellung datenbasierter Berichte und Argumentationen.
-        #   #   Folgen Sie dafür den Schritten im nächsten Abschnitt."),
-        #   # p("Darüber hinaus können alle Daten des MINT-DataLab für eine Analyse mit dem MINT-DataLab-GPT
-        #   #   heruntergeladen werden. Die Download-Funktion finden Sie oben rechts an den interkativen Grafiken
-        #   #   auf den jeweiligen Unterseiten.")
-        # ),
-
-
 
         ## 4 Schritte ----
         column(
@@ -262,6 +166,32 @@ mod_argumentation_ui <- function(id){
    div(
       style = "margin-top: 40px;",
 
+      ## Fokus-Switch ----
+
+    column(
+      width = 8,
+      id = "fokus-auswahl",
+
+      p(strong("Legen Sie hier Ihren inhaltlichen Schwerpunkt fest.")),
+
+      div(
+        style = "display: flex; gab: 30px",
+        p("MINT-Nachwuchsförderung allgemein"),
+
+        div(
+          style = "margin-left: 40px; margin-right: 30px; width = 30px;",
+          shinyWidgets::materialSwitch(
+            inputId = ns("frauen_fokus"),
+            value = FALSE
+          )
+        ),
+        p("Mädchen- und Frauenförderung in MINT")
+      )
+
+
+
+    ),
+
        ## Region-Filter ----
 
     column(
@@ -277,9 +207,6 @@ mod_argumentation_ui <- function(id){
                 border-radius: 15px; max-width: 50px;")
       ),
       div(id = "region",
-
-        # p(strong(style = "text-align: left; font-size: 18px;",
-        #          "1. Wählen Sie eine Region für die Analyse aus.")),
 
         shinyWidgets::pickerInput(
           inputId = ns("region_argumentationshilfe"),
@@ -638,6 +565,54 @@ mod_argumentation_ui <- function(id){
       )
     )
 ),
+
+# Beispiel Bericht und Cheatsheet ----
+column(
+  id = "bsp_cheatsheet",
+  width = 12,
+  h2("So könnte Ihr MINT-Bericht aussehen"),
+  column(
+    width = 4,
+    tags$strong(
+      "Beispielbericht für Hamburg:" #,
+      #style = "margin: 20px 0px 0px 60px"
+    ),
+    tags$a(
+      href = "www/MINTvernetzt_Argumentationskette_Hamburg.pdf",
+      target = "_blank",
+      tags$img(
+        src = "www/Bild_Beispielbericht.png",
+        alt = "Cover Beispielbericht Hamburg",
+        style = "max-width: 20%; height: auto; cursor: pointer; margin: 10px 0px 0px 70px;
+                  border: 1px solid #EFE8E6;"
+      )
+    ),
+    tags$a( href = "www/MINTvernetzt_Argumentationskette_Hamburg.pdf",
+            target = "_blank",
+            "MINTvernetzt_Argumentationskette_Hamburg.pdf", style = "text-decoration: underline;")
+  ),
+  column(
+    width = 4,
+    tags$strong(
+      "Cheatsheet Argumentation für Mädchenförderung" #,
+      #style = "margin: 20px 0px 0px 60px"
+    ),
+    tags$a(
+      href = "www/MINTvernetzt_Argumentationskette_Hamburg.pdf",
+      target = "_blank",
+      tags$img(
+        src = "www/Bild_Beispielbericht.png",
+        alt = "Cover Beispielbericht Hamburg",
+        style = "max-width: 20%; height: auto; cursor: pointer; margin: 10px 0px 0px 70px;
+                  border: 1px solid #EFE8E6;"
+      )
+    ),
+    tags$a( href = "www/MINTvernetzt_Argumentationskette_Hamburg.pdf",
+            target = "_blank",
+            "MINTvernetzt_Argumentationskette_Hamburg.pdf", style = "text-decoration: underline;")
+  )
+),
+
 
 # Überleitung zu Grafiken ----
   column(
@@ -1287,11 +1262,15 @@ mod_argumentation_ui <- function(id){
 mod_argumentation_server <- function(id){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
-    r <- reactiveValues()
+    r <- reactiveValues(frauen_fokus = FALSE)
 
     observeEvent(input$region_argumentationshilfe, {
       r$region_argumentationshilfe <- input$region_argumentationshilfe
     })
+
+    observeEvent(input$frauen_fokus, {
+      r$frauen_fokus <- input$frauen_fokus
+    }, ignoreInit = FALSE)
 
 
     # Download der gesemmelten Daten

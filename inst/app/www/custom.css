@@ -479,10 +479,8 @@ details[open] .faq-summary::before {
 }
 
 
+/* Switch Layout */
 
-
-
-
-
-
-
+.label-default {
+    background-color: #154194;
+}
