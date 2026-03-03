@@ -78,7 +78,7 @@ mod_argumentation_ui <- function(id){
                         tags$img(
                           src = "www/Bild_MINT-DataLab-GPT.png",
                           alt = "MINT-DataLab-GPT Symbolbild",
-                          style = "max-width: 30%; height: auto; cursor: pointer;
+                          style = "max-width: 28%; height: auto; cursor: pointer;
                           margin: 10px 0px 0px 70px; border-radius: 10px;"
                         )
                       )
@@ -175,17 +175,19 @@ mod_argumentation_ui <- function(id){
       p(strong("Legen Sie hier Ihren inhaltlichen Schwerpunkt fest.")),
 
       div(
-        style = "display: flex; gab: 30px",
-        p("MINT-Nachwuchsförderung allgemein"),
+        style = "display:flex; gap:20px; align-items:center; width:100%;
+        margin-bottom: 40px; margin-top: 20px;",
+        p(style="margin:0; flex:1; text-align:right;", "MINT-Nachwuchsförderung allgemein"),
 
         div(
-          style = "margin-left: 40px; margin-right: 30px; width = 30px;",
+          style= "align-content: center;",
           shinyWidgets::materialSwitch(
             inputId = ns("frauen_fokus"),
             value = FALSE
           )
         ),
-        p("Mädchen- und Frauenförderung in MINT")
+
+        p(style="margin:0; flex:1; text-align:left;", "Mädchen- und Frauenförderung in MINT")
       )
 
 
@@ -566,50 +568,90 @@ mod_argumentation_ui <- function(id){
     )
 ),
 
+
+
 # Beispiel Bericht und Cheatsheet ----
+
 column(
   id = "bsp_cheatsheet",
   width = 12,
-  h2("So könnte Ihr MINT-Bericht aussehen"),
-  column(
-    width = 4,
-    tags$strong(
-      "Beispielbericht für Hamburg:" #,
-      #style = "margin: 20px 0px 0px 60px"
+
+  hr(style = "border-top: 2px solid #154194; margin-top: 40px; margin-bottom: 30px;"),
+  h2("So könnte Ihr MINT-Bericht aussehen", style = "margin-bottom: 30px;"),
+
+  div(
+    style = "
+      display: grid;
+      grid-template-columns: 41.6667% 41.6667%;
+      column-gap: 30px;
+      row-gap: 0px;
+      align-items: start;
+    ",
+
+    div(
+      tags$strong("Beispielbericht für Hamburg:"),
+      p("Hier können Sie exemplarisch sehen, wie man die Textbausteine und Grafiken
+        zu einem Bericht integrieren kann. Außerdem finden Sie Tipps dazu,
+        welche Daten darüber hinaus ergänzt werden können,
+        um den Bericht abzurunden.")
     ),
-    tags$a(
-      href = "www/MINTvernetzt_Argumentationskette_Hamburg.pdf",
-      target = "_blank",
-      tags$img(
-        src = "www/Bild_Beispielbericht.png",
-        alt = "Cover Beispielbericht Hamburg",
-        style = "max-width: 20%; height: auto; cursor: pointer; margin: 10px 0px 0px 70px;
-                  border: 1px solid #EFE8E6;"
+
+    div(
+      tags$strong("Cheatsheet Argumentation für Mädchenförderung"),
+      p("Ihr Projekt fokussiert sich auf die Förderung von Mädchen in MINT?
+        Nutzen Sie dieses Cheatsheet für Tipps dazu, Ihre Argumentation für Ihr
+        Projekt am besten auszurichten.")
+    ),
+
+    div(
+      tags$a(
+        href = "www/MINTvernetzt_Argumentationskette_Hamburg.pdf",
+        target = "_blank",
+        tags$img(
+          src = "www/Bild_Beispielbericht.png",
+          alt = "Cover Beispielbericht Hamburg",
+          style = "
+            display:block;
+            max-width: 20%;
+            height: auto;
+            cursor: pointer;
+            margin: 10px 0px 10px 60px;
+            border: 1px solid #EFE8E6;
+          "
+        )
+      ),
+      tags$a(
+        href = "www/MINTvernetzt_Argumentationskette_Hamburg.pdf",
+        target = "_blank",
+        "MINTvernetzt_Argumentationskette_Hamburg.pdf",
+        style = "text-decoration: underline; display: block;"
       )
     ),
-    tags$a( href = "www/MINTvernetzt_Argumentationskette_Hamburg.pdf",
-            target = "_blank",
-            "MINTvernetzt_Argumentationskette_Hamburg.pdf", style = "text-decoration: underline;")
-  ),
-  column(
-    width = 4,
-    tags$strong(
-      "Cheatsheet Argumentation für Mädchenförderung" #,
-      #style = "margin: 20px 0px 0px 60px"
-    ),
-    tags$a(
-      href = "www/MINTvernetzt_Argumentationskette_Hamburg.pdf",
-      target = "_blank",
-      tags$img(
-        src = "www/Bild_Beispielbericht.png",
-        alt = "Cover Beispielbericht Hamburg",
-        style = "max-width: 20%; height: auto; cursor: pointer; margin: 10px 0px 0px 70px;
-                  border: 1px solid #EFE8E6;"
+
+    div(
+      tags$a(
+        href = "www/MINTvernetzt_Cheatsheet_Maedchenfoerderung.pdf",
+        target = "_blank",
+        tags$img(
+          src = "www/Cover_Cheatsheet.png",
+          alt = "Cover Cheatsheet Maedchenfoerderung",
+          style = "
+            display:block;
+            max-width: 20%;
+            height: auto;
+            cursor: pointer;
+            margin: 10px 0px 10px 60px;
+            border: 1px solid #EFE8E6;
+          "
+        )
+      ),
+      tags$a(
+        href = "www/MINTvernetzt_Cheatsheet_Maedchenfoerderung.pdf",
+        target = "_blank",
+        "MINTvernetzt_Cheatsheet_Maedchenfoerderung.pdf",
+        style = "text-decoration: underline; display: block;"
       )
-    ),
-    tags$a( href = "www/MINTvernetzt_Argumentationskette_Hamburg.pdf",
-            target = "_blank",
-            "MINTvernetzt_Argumentationskette_Hamburg.pdf", style = "text-decoration: underline;")
+    )
   )
 ),
 
@@ -621,7 +663,7 @@ column(
     hr(style = "border-top: 2px solid #154194; margin-top: 40px;"),
 
     h2("Die Datengrundlage Ihres MINT-Berichts als Grafiken", #So geht der MINT-DataLab-GPT bei der Analyse vor
-       style= "margin-bottom: 30px; margin-top: 40px;"),
+       style= "margin-bottom: 30px; margin-top: 30px;"),
 
     column(
       style = "margin-bottom: 40px;",

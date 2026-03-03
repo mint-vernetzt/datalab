@@ -484,3 +484,13 @@ details[open] .faq-summary::before {
 .label-default {
     background-color: #154194;
 }
+
+
+.material-switch > input[type="checkbox"] + label.switch {
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    margin-top: 15px;
+}
+
+
