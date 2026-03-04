@@ -1965,6 +1965,7 @@ argument_frauen_bildungskette <- function(r){
 
   # load UI inputs from reactive value
   zeit <- 2024
+  regio <- r$region_argumentationshilfe
   indikator_choice <- c("Leistungskurse", "Studierende",
                         "Auszubildende", "Beschäftigte")
 
@@ -2120,6 +2121,7 @@ argument_großer_unterschied <- function(r) {
     )
 
     timerange <- 2024
+    regio <- r$region_argumentationshilfe
     indi <- "Beschäftigte"
 
     df_query <- glue::glue_sql("
@@ -2221,7 +2223,7 @@ argument_selbstkonzept <- function(r){
   # reactive values einlesen
 
     jahr_select <- 2024
-    region_select <- regio
+    region_select <- r$region_argumentationshilfe
     gruppe_select <- c("Mädchen", "Jungen")
 
     df_query <- glue::glue_sql("
@@ -2327,6 +2329,7 @@ argument_faecherverteilung <- function(r){
 
   # load UI inputs from reactive value
   timerange <- 2024
+  regio <- r$region_argumentationshilfe
 
   color_fach_balken <- c(
     "Informatik" = "#00a87a",
