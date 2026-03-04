@@ -2,7 +2,7 @@
 # Funktion Datendownload --------------------------------------------------
 
 daten_download <- function(r){
-browser()
+
   fokus <- r$frauen_fokus
   regio <- r$region_argumentationshilfe
   region_reserve <- regio
