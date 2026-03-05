@@ -183,7 +183,14 @@ background-color:#FCFCFD;
     border: 1px solid #EAECF0;
     border-radius: 10px;
     margin-bottom: 15px;
+    margin-right: 5px;
 
+}
+
+/* Frauen-Fokus Boxen auf KI-Analysehilfe-Seite */
+
+.frauen_box > .box{
+   border: 1px solid #154194;
 }
 
 /* Box ohne Rahmen, wie Hintergrund */
@@ -479,10 +486,18 @@ details[open] .faq-summary::before {
 }
 
 
+/* Switch Layout */
+
+.label-default {
+    background-color: #154194;
+}
 
 
-
-
-
+.material-switch > input[type="checkbox"] + label.switch {
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    margin-top: 15px;
+}
 
 
