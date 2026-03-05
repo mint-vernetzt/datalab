@@ -1373,7 +1373,7 @@ div(
   ### Frauen im Beruf ----
   fluidRow(id="beruf_frauen",
            shinydashboard::box(
-             title = "Sturkturelle Einflüsse in der Fachwahl verdeutlichen.",
+             title = "Strukturelle Einflüsse in der Fachwahl verdeutlichen.",
              width = 12,
              column(
                width = 9,
@@ -1411,10 +1411,9 @@ div(
                               border: 2px solid #00a87a;
                               color: #154194;
                               border-radius: 10px;",
-                     p(strong("Wenn die Balken von Schule zu Beruf abnehmen:")),
-                     p("Mädchen wählen in der Schule MINT-Kurse, entscheiden sich später bei
-                       Studium oder Beruf jedoch seltener für MINT. Das deutet darauf hin, dass
-                       frühe Kontakte mit MINT nicht immer zu einer entsprechenden Berufswahl führen.")
+                     p(strong("Wenn die Anteile der Frauen geringer sind:")),
+                     p("Diese MINT-Berufe werden seltener von Frauen gewählt und bleiben männerdominiert.
+                       Das weißt auf starke soziale, stereotypebedingte Einflüsse hin, die auf die Berufswahl einwirken.")
                  )
                )
              )

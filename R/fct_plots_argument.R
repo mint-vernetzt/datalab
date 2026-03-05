@@ -2005,7 +2005,7 @@ argument_frauen_bildungskette <- function(r){
 
     df_alle_bw <- DBI::dbGetQuery(con, query_df_alle_bw)
 
-
+if (regio == "Deutschland"){
     df_alle_schule <- df_alle[df_alle$bereich == "Schule",] %>%
       dplyr::left_join(df_alle_bw, by = c("bereich", "indikator", "fachbereich", "geschlecht")) %>%
       dplyr::mutate(wert.x = wert.x - wert.y) %>%
@@ -2015,7 +2015,7 @@ argument_frauen_bildungskette <- function(r){
     df_alle <- df_alle %>%
       dplyr::filter(bereich != "Schule") %>%
       rbind(df_alle_schule)
-
+}
 
   df <- df %>%
     dplyr::left_join(df_alle, by = c("bereich", "indikator", "fachbereich")) %>%
