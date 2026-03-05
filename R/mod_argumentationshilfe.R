@@ -566,7 +566,7 @@ column(
 
     div(
       tags$a(
-        href = "www/MINTvernetzt_Cheatsheet_Maedchenfoerderung.pdf",
+        href = "www/MINTvernetzt_Cheatsheet_MINT-DataLab-GPT_Maedchenfoerderung.pdf",
         target = "_blank",
         tags$img(
           src = "www/Cover_Cheatsheet.png",
@@ -582,7 +582,7 @@ column(
         )
       ),
       tags$a(
-        href = "www/MINTvernetzt_Cheatsheet_Maedchenfoerderung.pdf",
+        href = "www/MINTvernetzt_Cheatsheet_MINT-DataLab-GPT_Maedchenfoerderung.pdf",
         target = "_blank",
         "MINTvernetzt_Cheatsheet_Maedchenfoerderung.pdf",
         style = "text-decoration: underline; display: block;"
@@ -883,7 +883,7 @@ div(
              column(
                width = 8,
                p("Der Bedarf an MINT-Fachkräften ist bundesweit hoch. Das zeigt z. B. die MINT-Fachkräftelücke
-          aus dem MINT-Report des IW Köln. Für 2024 wird diese Lücke deutschlandweit auf rund 150.000 geschätzt.
+          aus dem MINT-Report des IW Köln. Für 2025 wird diese Lücke deutschlandweit auf rund 150.000 geschätzt.
           So viele MINT-Fachkräfte fehlen also deutschlandweit.
           Diese Zahl liegt für die einzelnen Bundesländer so nicht vor.", br(),
 
@@ -1358,7 +1358,8 @@ div(
                               border-radius: 10px;",
                      p(strong("Wenn die Anteile der Frauen geringer sind:")),
                      p("Diese MINT-Berufe werden seltener von Frauen gewählt und bleiben männerdominiert.
-                       Das weißt auf starke soziale, stereotypebedingte Einflüsse hin, die auf die Berufswahl einwirken.")
+                       Deutliche Unterschiede weißen auf starke soziale, stereotypebedingte Einflüsse hin,
+                       die auf die Berufswahl einwirken.")
                  )
                )
              )
