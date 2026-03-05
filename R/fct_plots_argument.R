@@ -419,24 +419,70 @@ daten_download <- function(r){
 
   }else{
 
-    ### Frauen Vergleich Zeitverlauf ----
+    ### Frauen Vergleich Bildungskette ----
 
-    t<- 2015:2024
+    zeit <- 2024
+    regio <- r$region_argumentationshilfe
     indikator_choice <- c("Leistungskurse", "Studierende",
                           "Auszubildende", "Beschäftigte")
 
-    query <- glue::glue_sql("
-  SELECT bereich, indikator, fachbereich, geschlecht, jahr, wert
+    # filter dataset based on UI input
+    query_df <- glue::glue_sql("
+  SELECT bereich, indikator, fachbereich, geschlecht, wert
   FROM zentral
-  WHERE jahr IN ({t*})
-    AND region IN ({regio*})
-    AND geschlecht = 'Frauen'
+  WHERE jahr = {zeit}
+    AND region = {regio}
+    AND geschlecht IN ('Frauen', 'Männer')
     AND fachbereich = 'MINT'
-    AND indikator IN ({indikator_choice*})
 ", .con = con)
 
-    df <- DBI::dbGetQuery(con, query)
-    df_fr_vgl <- df[with(df, order(indikator, jahr, decreasing = FALSE)), ]
+    df <- DBI::dbGetQuery(con, query_df)
+
+    query_df_alle <- glue::glue_sql("
+  SELECT bereich, indikator, fachbereich, geschlecht, wert
+  FROM zentral
+  WHERE jahr = {zeit}
+    AND region = {regio}
+    AND geschlecht = 'Gesamt'
+    AND fachbereich = 'MINT'
+", .con = con)
+
+    df_alle <- DBI::dbGetQuery(con, query_df_alle)
+
+    if (regio == "Deutschland"){
+
+      #Baden-Würrtemberg rausrechnen, da dort keine Geschlechter erfasst werden
+      query_df_alle_bw <- glue::glue_sql("
+  SELECT bereich, indikator, fachbereich, geschlecht, wert
+  FROM zentral
+  WHERE jahr = {zeit}
+    AND region = 'Baden-Württemberg'
+    AND geschlecht = 'Gesamt'
+    AND fachbereich = 'MINT'
+    AND bereich = 'Schule'
+", .con = con)
+
+      df_alle_bw <- DBI::dbGetQuery(con, query_df_alle_bw)
+
+      df_alle_schule <- df_alle[df_alle$bereich == "Schule",] %>%
+        dplyr::left_join(df_alle_bw, by = c("bereich", "indikator", "fachbereich", "geschlecht")) %>%
+        dplyr::mutate(wert.x = wert.x - wert.y) %>%
+        dplyr::select(-wert.y) %>%
+        dplyr::rename(wert = wert.x)
+
+      df_alle <- df_alle %>%
+        dplyr::filter(bereich != "Schule") %>%
+        rbind(df_alle_schule)
+    }
+
+    df_fr_vgl <- df %>%
+      dplyr::left_join(df_alle, by = c("bereich", "indikator", "fachbereich")) %>%
+      dplyr::rename(wert = wert.x,
+                    wert_ges = wert.y,
+                    geschlecht = geschlecht.x) %>%
+      dplyr::mutate(prop = round(wert / wert_ges * 100, 1)) %>%
+      dplyr::select(-geschlecht.y, -wert_ges)
+
 
     ### Frauen in MINT-Berufen ----
     timerange <- 2024
@@ -1992,9 +2038,10 @@ argument_frauen_bildungskette <- function(r){
 
   df_alle <- DBI::dbGetQuery(con, query_df_alle)
 
+if (regio == "Deutschland"){
 
-    #Baden-Würrtemberg rausrechnen, da dort keine Geschlechter erfasst werden
-    query_df_alle_bw <- glue::glue_sql("
+  #Baden-Würrtemberg rausrechnen, da dort keine Geschlechter erfasst werden
+  query_df_alle_bw <- glue::glue_sql("
   SELECT bereich, indikator, fachbereich, geschlecht, wert
   FROM zentral
   WHERE jahr = {zeit}
@@ -2004,8 +2051,7 @@ argument_frauen_bildungskette <- function(r){
     AND bereich = 'Schule'
 ", .con = con)
 
-    df_alle_bw <- DBI::dbGetQuery(con, query_df_alle_bw)
-
+  df_alle_bw <- DBI::dbGetQuery(con, query_df_alle_bw)
 
     df_alle_schule <- df_alle[df_alle$bereich == "Schule",] %>%
       dplyr::left_join(df_alle_bw, by = c("bereich", "indikator", "fachbereich", "geschlecht")) %>%
@@ -2016,7 +2062,7 @@ argument_frauen_bildungskette <- function(r){
     df_alle <- df_alle %>%
       dplyr::filter(bereich != "Schule") %>%
       rbind(df_alle_schule)
-
+}
 
   df <- df %>%
     dplyr::left_join(df_alle, by = c("bereich", "indikator", "fachbereich")) %>%
