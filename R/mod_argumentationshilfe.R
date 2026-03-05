@@ -92,6 +92,7 @@ mod_argumentation_ui <- function(id){
           ),
 
         ## 4 Schritte ----
+
         column(
           width = 12,
           h2("In vier Schritten zu Ihrem MINT-Bericht oder Ihrer Argumentationskette", #Schnellstart: So analyserien Sie Daten mit dem MINT-DataLab-GPT
@@ -163,302 +164,238 @@ mod_argumentation_ui <- function(id){
       )
     ),
 
-   div(
+
+    column(
+      width = 8,
+      id = ns("ziel_col"),
       style = "margin-top: 40px;",
 
       ## Fokus-Switch ----
 
-    column(
-      width = 8,
-      id = "fokus-auswahl",
-
-      p(strong("Legen Sie hier Ihren inhaltlichen Schwerpunkt fest.")),
-
       div(
-        style = "display:flex; gap:20px; align-items:center; width:100%;
-        margin-bottom: 40px; margin-top: 20px;",
-        p(style="margin:0; flex:1; text-align:right;", "MINT-Nachwuchsförderung allgemein"),
+        id = "fokus-auswahl",
+
+        p(strong("Legen Sie hier Ihren inhaltlichen Schwerpunkt fest."),
+          style = "margin-top: 20px;"),
 
         div(
-          style= "align-content: center;",
-          shinyWidgets::materialSwitch(
-            inputId = ns("frauen_fokus"),
-            value = FALSE
-          )
-        ),
+          style = "display:flex; gap:20px; align-items:center; width:100%;
+        margin-bottom: 40px; margin-top: 20px;",
+          p(style="margin:0; flex:1; text-align:right;",
+            "MINT-Nachwuchsförderung allgemein"),
 
-        p(style="margin:0; flex:1; text-align:left;", "Mädchen- und Frauenförderung in MINT")
-      )
+          div(
+            style= "align-content: center; width: 60px;",
+            shinyWidgets::materialSwitch(
+              inputId = ns("frauen_fokus"),
+              value = FALSE
+            )
+          ),
+
+          p(style="margin:0; flex:1; text-align:left; margin-right: 10px;",
+            "Mädchen- und Frauenförderung in MINT")
+        )
 
 
 
-    ),
+      ),
 
-       ## Region-Filter ----
+      ## Region-Filter ----
 
-    column(
-      width = 8,
-      style = "display: flex; align-items: center; margin-bottom: 30px;",
       div(
-        style = "margin: 0px 25px 20px 0px;",
-        img(src='www/gpt_schritt_1.png',
-            class = "img-responsive",
-            alt = "Bild Schritt 1 klein",
-            style="display: block;
+
+        style = "display: flex; align-items: center; margin-bottom: 30px;",
+        div(
+          style = "margin: 0px 25px 20px 10px;",
+          img(src='www/gpt_schritt_1.png',
+              class = "img-responsive",
+              alt = "Bild Schritt 1 klein",
+              style="display: block;
                 margin-top: 10px; border: 2px solid #B16FAB;
                 border-radius: 15px; max-width: 50px;")
-      ),
-      div(id = "region",
+        ),
+        div(id = "region",
 
-        shinyWidgets::pickerInput(
-          inputId = ns("region_argumentationshilfe"),
-          label = "1. Wählen Sie eine Region für die Analyse aus.",
-          choices = c("Deutschland",
-                      "Baden-Württemberg",
-                      "Bayern",
-                      "Berlin",
-                      "Brandenburg",
-                      "Bremen",
-                      "Hamburg",
-                      "Hessen",
-                      "Mecklenburg-Vorpommern",
-                      "Niedersachsen",
-                      "Nordrhein-Westfalen",
-                      "Rheinland-Pfalz",
-                      "Saarland",
-                      "Sachsen",
-                      "Sachsen-Anhalt",
-                      "Schleswig-Holstein",
-                      "Thüringen"
-          ),
-          multiple = FALSE,
-          selected = c("Deutschland")
+            shinyWidgets::pickerInput(
+              inputId = ns("region_argumentationshilfe"),
+              label = "1. Wählen Sie eine Region für die Analyse aus.",
+              choices = c("Deutschland",
+                          "Baden-Württemberg",
+                          "Bayern",
+                          "Berlin",
+                          "Brandenburg",
+                          "Bremen",
+                          "Hamburg",
+                          "Hessen",
+                          "Mecklenburg-Vorpommern",
+                          "Niedersachsen",
+                          "Nordrhein-Westfalen",
+                          "Rheinland-Pfalz",
+                          "Saarland",
+                          "Sachsen",
+                          "Sachsen-Anhalt",
+                          "Schleswig-Holstein",
+                          "Thüringen"
+              ),
+              multiple = FALSE,
+              selected = c("Deutschland")
+            )
         )
-      )
-    ),
+      ),
 
 
 
       ## Daten-Download ----
 
-    column(
-      width = 8,
-      style = "display: flex; align-items: center; margin-bottom: 15px;",
-       div(
-        style = "margin: 0px 25px 100px 0px;",
-        img(src='www/gpt_schritt_2.png',
-            class = "img-responsive",
-            alt = "Bild Schritt 2 klein",
-            style="display: block;
+      column(
+        width = 12,
+        style = "display: flex; align-items: center; margin-bottom: 15px;",
+        div(
+          style = "margin: 0px 25px 100px 0px;",
+          img(src='www/gpt_schritt_2.png',
+              class = "img-responsive",
+              alt = "Bild Schritt 2 klein",
+              style="display: block;
                   margin-top: 10px; border: 2px solid #B16FAB;
                   border-radius: 15px; max-width: 50px;")
-      ),
-      div(id = "download_section",
-        style = "flex: 1; margin-bottom: 15px;",
-
-        # p(strong(style = "text-align: left; font-size: 18px;",
-        #          "2. Laden Sie die gewünschten Daten herunter")),
-        # p(style = "font-size : 15px;", "Als Basis für den Datenbericht sowie
-        # die datenbasierte Argumentation haben wir fünf Statistiken aus dem MINT-DataLab ausgewählt.
-        # Um welche Statistiken es sich handelt, sehen Sie weiter unten auf dieser Seite,
-        #   wo sie grafisch eingebunden sind."),
-        #
-        # downloadButton(style = "marign-bottom: 5px;",
-        #                ns("download_txt"), "   Vorausgewählte Daten herunterladen"),
-        # p( "Hinweis: Die Daten öffnen sich in einem Text-Dokument und können auf den
-        #   ersten Blick verwirrend aussehen. Kopieren Sie den Inhalt der Datei und fügen
-        #   Sie diesen direkt in das Chat-Fenster des GPT ein.")
-
-
-        fluidRow(
-          p(strong(style = "text-align: left; font-size: 18px; margin-left: 15px;",
-                   "2. Laden Sie die Datengrundlage herunter.")),
-          column(
-            width = 6,  # Text in der linken Spalte
-
-            p(
-              "Als Basis für den Datenbericht sowie die datenbasierte Argumentation
-              haben wir fünf Statistiken aus dem MINT-DataLab ausgewählt.")
-          ),
-          column(
-            width = 5,
-            div(style = "margin-left: 30px;",
-            p(
-              tags$a(href = "#daten_grafiken",
-                     style = "color: #000000; text-decoration: underline;",
-                     "→ Betrachten Sie die Daten in den interaktiven Grafiken weiter unten auf dieser Seite."))
-          ))
         ),
+        div(id = "download_section",
+            style = "flex: 1; margin-bottom: 15px;",
 
-        fluidRow(
-          column(
-            width = 6,  # Text in der linken Spalte
-            p("Laden sie hier die Daten als txt.-Dokument herunter. Kopieren
+            # p(strong(style = "text-align: left; font-size: 18px;",
+            #          "2. Laden Sie die gewünschten Daten herunter")),
+            # p(style = "font-size : 15px;", "Als Basis für den Datenbericht sowie
+            # die datenbasierte Argumentation haben wir fünf Statistiken aus dem MINT-DataLab ausgewählt.
+            # Um welche Statistiken es sich handelt, sehen Sie weiter unten auf dieser Seite,
+            #   wo sie grafisch eingebunden sind."),
+            #
+            # downloadButton(style = "marign-bottom: 5px;",
+            #                ns("download_txt"), "   Vorausgewählte Daten herunterladen"),
+            # p( "Hinweis: Die Daten öffnen sich in einem Text-Dokument und können auf den
+            #   ersten Blick verwirrend aussehen. Kopieren Sie den Inhalt der Datei und fügen
+            #   Sie diesen direkt in das Chat-Fenster des GPT ein.")
+
+
+            fluidRow(
+              p(strong(style = "text-align: left; font-size: 18px; margin-left: 15px;",
+                       "2. Laden Sie die Datengrundlage herunter.")),
+              column(
+                width = 6,  # Text in der linken Spalte
+
+                p(
+                  "Als Basis für den Datenbericht sowie die datenbasierte Argumentation
+              haben wir fünf Statistiken aus dem MINT-DataLab ausgewählt.")
+              ),
+              column(
+                width = 5,
+                div(style = "margin-left: 30px;",
+                    p(
+                      tags$a(href = "#daten_grafiken",
+                             style = "color: #000000; text-decoration: underline;",
+                             "→ Betrachten Sie die Daten in den interaktiven Grafiken weiter unten auf dieser Seite."))
+                ))
+            ),
+
+            fluidRow(
+              column(
+                width = 6,  # Text in der linken Spalte
+                p("Laden sie hier die Daten als txt.-Dokument herunter. Kopieren
               Sie den Inhalt des Dokuments in den Chat des MINT-DataLab-GPT oder
               hängen Sie die Datei an.")
-          ),
-          column(
-            width = 5,
-            div(style = "margin-left: 30px;",
-            downloadButton(style = "margin-bottom: 5px;",
-                           ns("download_txt"),
-                           "   Daten herunterladen")
-          )
-          )
-        ),
+              ),
+              column(
+                width = 5,
+                div(style = "margin-left: 30px;",
+                    downloadButton(style = "margin-bottom: 5px;",
+                                   ns("download_txt"),
+                                   "   Daten herunterladen")
+                )
+              )
+            )
+        )
 
-        # Hinweis unter den Download-Optionen
-      #   p(style = "font-size: 15px;",
-      #     "Hinweis: Die Daten öffnen sich in einem Text-Dokument und können auf den
-      # ersten Blick verwirrend aussehen. Kopieren Sie den Inhalt der Datei und fügen
-      # Sie diesen direkt in das Chat-Fenster des GPT ein.")
       ),
-
-
-
-  #     tags$head(
-  #       tags$script(HTML("
-  #   function copyToClipboard(id) {
-  #     var pre = document.querySelector('#' + id + ' pre');
-  #     var text = pre ? pre.innerText : '';
-  #     navigator.clipboard.writeText(text).then(function() {
-  #       alert('Inhalt wurde in die Zwischenablage kopiert!');
-  #     }, function(err) {
-  #       alert('Fehler beim Kopieren: ' + err);
-  #     });
-  #   }
-  # "))
-  #     ),
-
-
-      # tagList(
-      #   fluidRow(
-      #     column(
-      #       width = 8,
-      #
-      #       # Unsichtbarer Textblock zum Kopieren
-      #       div(
-      #         id = "copy_target",
-      #         style = "visibility: hidden; height: 0; overflow: hidden;",
-      #
-      #         verbatimTextOutput("clipboard_text")
-      #
-      #       ),
-      #
-      #       # Kopier-Button
-      #       actionButton("copy_btn", "Daten direkt kopieren"),
-      #
-      #       tags$script(HTML("
-      #     $(document).on('click', '#copy_btn', function(){
-      #       copyToClipboard('copy_target');
-      #     });
-      #   ")),
-
-
-# )))
-
-    ),
 
       ## MINT-DataLab-GPT ----
 
-    column(
-      width = 8,
-      style = "display: flex; align-items: center; margin-bottom: 15px;",
-      div(
-        style = "margin: 0px 25px 50px 0px;",
-        img(src='www/gpt_schritt_3.png',
-            class = "img-responsive",
-            alt = "Bild Schritt 3 klein",
-            style="display: block;
+      column(
+        width = 12,
+        style = "display: flex; align-items: center; margin-bottom: 15px;",
+        div(
+          style = "margin: 0px 25px 50px 0px;",
+          img(src='www/gpt_schritt_3.png',
+              class = "img-responsive",
+              alt = "Bild Schritt 3 klein",
+              style="display: block;
                   margin-top: 10px; border: 2px solid #B16FAB;
                   border-radius: 15px; max-width: 50px;")
-      ),
-      div(id = "MINT-DataLab-GPT",
-          style = "flex: 1; margin-bottom: 15px;",
-          fluidRow(
-            p(strong(style = "text-align: left; font-size: 18px; margin-bottom: 15px; margin-left: 15px;",
-                     "3. Wechseln Sie zum MINT-DataLab GPT und folgen Sie den Anweisungen.")),
-            column(
-              width = 6,  # Text in der linken Spalte
+        ),
+        div(id = "MINT-DataLab-GPT",
+            style = "flex: 1; margin-bottom: 15px;",
+            fluidRow(
+              p(strong(style = "text-align: left; font-size: 18px; margin-bottom: 15px; margin-left: 15px;",
+                       "3. Wechseln Sie zum MINT-DataLab-GPT und folgen Sie den Anweisungen.")),
+              column(
+                width = 6,  # Text in der linken Spalte
 
-              p(
-                "Sobald Sie auf den Link zum MINT-DataLab-GPT klicken, öffnet sich ein Chatfenster in ChatGPT.
+                p(
+                  "Sobald Sie auf den Link zum MINT-DataLab-GPT klicken, öffnet sich ein Chatfenster in ChatGPT.
                  Wählen Sie aus, ob sie eine Argumentation oder eine Bericht wollen,
                  der MINT-DataLab-GPT führt Sie durch die Erstellung der Analyse.")
-            ),
-            column(
-              width = 5,
-              div(style = "margin-left: 30px;",
-              actionButton(label = tagList(icon("arrow-up-right-from-square"), "    Zum MINT-DataLab-GPT"), inputId = "GPT_link",
-                           onclick = 'window.open("https://chatgpt.com/g/g-695cd1fa74f881918a54b0517af8163e-mint-datalab-gpt", "_blank");')
+              ),
+              column(
+                width = 5,
+                div(style = "margin-left: 30px;",
+                    actionButton(label = tagList(icon("arrow-up-right-from-square"), "    Zum MINT-DataLab-GPT"), inputId = "GPT_link",
+                                 onclick = 'window.open("https://chatgpt.com/g/g-695cd1fa74f881918a54b0517af8163e-mint-datalab-gpt", "_blank");')
+                )
+              )
             )
-          )
-          )
+        )
       ),
-
-
-        # p(style = "font-size : 15px;",
-        #   "Sobald Sie auf den Link zum MINT-DataLab-GPT klicken, öffnet sich ein Chatfenster in ChatGPT.
-        #   Wählen Sie aus, ob sie eine Argumentation oder eine Bericht wollen und laden Sie die Daten hoch.
-        #   Der MINT-DataLab-GPT führt Sie durch die Erstellung der Analyse."),
-        # tags$a(href="https://chatgpt.com/g/g-67e4f41fd91881919a753f4309194bf7-test-mint-datalab-assistent-test",
-        #        "→ Zum MINT-DataLab-GPT", target="_blank",
-        #        style = "color: #b16fab; font-weight: 600; font-size: 17px;"),
-       # actionButton(label = "→ Zum MINT-DataLab-GPT", inputId = "GPT_link",
-       #              onclick = 'window.open("https://chatgpt.com/g/g-67e4f41fd91881919a753f4309194bf7-mint-datalab-gpt", "_blank");')
-
-      # )
-     ),
 
 
       ## Grafiken ----
-    column(
-      width = 8,
-      style = "display: flex; align-items: center; margin-bottom: 20px;",
-      div(
-        style = "margin: 0px 25px 90px 0px;",
-        img(src='www/gpt_schritt_4.png',
-            class = "img-responsive",
-            alt = "Bild Schritt 4 klein",
-            style="display: block;
+      column(
+        width = 12,
+        style = "display: flex; align-items: center; margin-bottom: 20px;",
+        div(
+          style = "margin: 0px 25px 90px 0px;",
+          img(src='www/gpt_schritt_4.png',
+              class = "img-responsive",
+              alt = "Bild Schritt 4 klein",
+              style="display: block;
                   margin-top: 10px; border: 2px solid #B16FAB;
                   border-radius: 15px; max-width: 50px;")
-      ),
-      div(id = "grafiken",
-          style = "flex: 1; margin-bottom: 15px;",
-          fluidRow(
-            p(strong(style = "text-align: left; font-size: 18px; margin-left: 15px;",
-                     "4. Ergänzen Sie den KI-Bericht zur Veranschaulichung mit Grafiken.")),
-            column(
-              width = 6,
-              p(
-                "Der Bericht wird anschaulicher, wenn Sie den Texten des MINT-DataLab-GPT Grafiken hinzuzufügen.
+        ),
+        div(id = "grafiken",
+            style = "flex: 1; margin-bottom: 15px;",
+            fluidRow(
+              p(strong(style = "text-align: left; font-size: 18px; margin-left: 15px;",
+                       "4. Ergänzen Sie den KI-Bericht zur Veranschaulichung mit Grafiken.")),
+              column(
+                width = 6,
+                p(
+                  "Der Bericht wird anschaulicher, wenn Sie den Texten des MINT-DataLab-GPT Grafiken hinzuzufügen.
                 Laden Sie die passenden Grafiken gesammelt hier herunter oder wählen Sie einzelne Grafiken
                 im folgenden Abschnitt aus und fügen
                 Sie Text und Grafiken für Ihren Bericht zusammen.")
-            ),
-        #     column(
-        #       width = 5,
-        #       div(style = "margin-left: 30px;",
-        #       p(stlye="margin-left: 20px;",
-        #         "→ Die Download-Option für alle Grafiken des MINT-DataLab finden Sie rechts oben an den Grafiken.")
-        #     )
-        # ),
+              ),
 
-        column(
-          width = 5,
-          div(style = "margin-left: 30px; margin-top: 10px;",
-              p(stlye="margin-left: 20px;",
-                 "→ Die Download-Option für alle Grafiken des MINT-DataLab finden Sie rechts oben an den Grafiken."),
-              actionButton(
-                ns("download_all_png_client"),
-                label = tagList(icon("download"), "Alle Grafiken herunterladen (ZIP)")
-              )
-          )
-        ),
+              column(
+                width = 5,
+                div(style = "margin-left: 30px; margin-top: 10px;",
+                    p(stlye="margin-left: 20px;",
+                      "→ Die Download-Option für alle Grafiken des MINT-DataLab finden Sie rechts oben an den Grafiken."),
+                    actionButton(
+                      ns("download_all_png_client"),
+                      label = tagList(icon("download"), "Alle Grafiken herunterladen (ZIP)")
+                    )
+                )
+              ),
 
 
-        tags$script(HTML(sprintf("
+              tags$script(HTML(sprintf("
 (function() {
   function dateStr(){ return new Date().toISOString().slice(0,10); }
   function blobFromCanvas(canvas, type, quality){
@@ -563,12 +500,11 @@ mod_argumentation_ui <- function(id){
 })();
 ", ns("download_all_png_client"))))
 
+            )
+        )
       )
-      )
-    )
-),
 
-
+    ),
 
 # Beispiel Bericht und Cheatsheet ----
 
@@ -612,7 +548,7 @@ column(
           alt = "Cover Beispielbericht Hamburg",
           style = "
             display:block;
-            max-width: 20%;
+            max-width: 15%;
             height: auto;
             cursor: pointer;
             margin: 10px 0px 10px 60px;
@@ -637,7 +573,7 @@ column(
           alt = "Cover Cheatsheet Maedchenfoerderung",
           style = "
             display:block;
-            max-width: 20%;
+            max-width: 15%;
             height: auto;
             cursor: pointer;
             margin: 10px 0px 10px 60px;
@@ -947,7 +883,7 @@ div(
              column(
                width = 8,
                p("Der Bedarf an MINT-Fachkräften ist bundesweit hoch. Das zeigt z. B. die MINT-Fachkräftelücke
-          aus dem MINT-Report des IW Köln. Für 2023 wird diese Lücke deutschlandweit auf 209.000 geschätzt.
+          aus dem MINT-Report des IW Köln. Für 2024 wird diese Lücke deutschlandweit auf rund 150.000 geschätzt.
           So viele MINT-Fachkräfte fehlen also deutschlandweit.
           Diese Zahl liegt für die einzelnen Bundesländer so nicht vor.", br(),
 
@@ -955,6 +891,7 @@ div(
             akuten Fachkräfteengpasses. Die Zahlen unterstreichen, wie wichtig MINT-Förderung ist,
           um den Fachkräftemangel zu reduzieren.")
              ),
+             br(),br(),
              column(
                width = 9,
                shiny::mainPanel(
@@ -1048,6 +985,7 @@ div(
             in den nächsten rund 10 Jahren in Rente gehen werden, mit der Anzahl an MINT-Beschäftigten
             unter 25 Jahren, die in den Berufen nachfolgen, vergleicht.")
              ),
+             br(),br(),
              column(
                width = 9,
                shiny::mainPanel(
@@ -1115,6 +1053,7 @@ div(
             Ein Schlüssel ist, mehr MINT-Nachwuchs zu gewinnen, doch in vielen
             MINT-Bereichen steht es aktuell nicht gut um den Nachwuchs, wie die folgende Grafik zeigt.")
              ),
+             br(),br(),
              column(
                width = 9,
                shiny::mainPanel(
@@ -1217,6 +1156,7 @@ div(
             die Förderung des MINT-Nachwuchses, aber auch
             die gezielte Unterstützung von Frauen.")
              ),
+             br(),br(),
              column(
                width = 9,
                shiny::mainPanel(
@@ -1303,8 +1243,10 @@ ui_mint_frauen <- function(id){
 
   ### Frauen entlang der Bildungskette ----
 div(
-  fluidRow(id="box1_frauen",
+  fluidRow(id="box_frauen1",
+       htmltools::tagAppendAttributes(
            shinydashboard::box(
+
              title = "Den Frauenanteil entlang der Bildungskette analysieren.",
              width = 12,
              column(
@@ -1366,12 +1308,15 @@ div(
 
                  )
                )
-             )
-         )
+            )
+         ), class = "frauen_box"
+
+        )
     ),
 
   ### Frauen im Beruf ----
   fluidRow(id="beruf_frauen",
+           htmltools::tagAppendAttributes(
            shinydashboard::box(
              title = "Strukturelle Einflüsse in der Fachwahl verdeutlichen.",
              width = 12,
@@ -1418,14 +1363,18 @@ div(
                )
              )
 
+           ),
+           class = "frauen_box"
            )
   ),
 
   ### Selbstkonzept in MINT ----
 
   fluidRow(id="schule_kompetenz",
+           htmltools::tagAppendAttributes(
            shinydashboard::box(
              title = "Mögliche Gründe für den geringeren Anteil von Mädchen in MINT aufzeigen",
+
              width = 12,
              column(
                width = 9,
@@ -1469,7 +1418,7 @@ div(
                               border: 2px solid #00a87a;
                               color: #154194;
                               border-radius: 10px;",
-                     p(strong("Ist der blaue Balken höher:")),
+                     p(strong("Ist der blaue Balken niedriger:")),
                      p("Mädchen trauen sich in diesen MINT-Fach systematisch
                        weniger zu. Das liegt nicht an unterschiedlichen Voraussetzungen,
                        sondern an stereotypen Erwartungen und gesellschaftlichen Einflüssen.")
@@ -1485,7 +1434,7 @@ div(
                               border: 2px solid #00a87a;
                               color: #154194;
                               border-radius: 10px;",
-                     p(strong("Ist der beige Balken ist niedriger:")),
+                     p(strong("Ist der beige Balken ist höher:")),
                      p("Jungen trauen sich in diesem MINT-Fach systematisch
                        weniger zu. Auch sie können von stereotypen Erwartungen und gesellschaftlichen Einflüssen
                        negativ beeinflusst werden.")
@@ -1509,14 +1458,17 @@ div(
                )
              )
 
-           )
+           ), class = "frauen_box"
+        )
   ),
 
   ### Fächerwahl von Frauen ----
 
   fluidRow(id="studium_frauen",
+        htmltools::tagAppendAttributes(
            shinydashboard::box(
              title = "Zeigen, wo Mädchen und Frauen bereits in MINT vertreten sind.",
+
              width = 12,
              column(
                width = 8,
@@ -1579,13 +1531,16 @@ div(
                  )
                )
              )
-           )
+           ), class = "frauen_box"
+        )
   ),
 
   ### Wirkhebel ----
   fluidRow(id = "box5",
+         htmltools::tagAppendAttributes(
            shinydashboard::box(
              title = "Das Potenzial von Mädchenförderung hervorheben",
+
              width = 12,
              column(
                width = 8,
@@ -1658,13 +1613,16 @@ div(
                  )
                )
              )
-           )
+           ), class = "frauen_box"
+         )
 
   )
 
 )
 
 }
+
+
 
 # Argumentation Server
 
@@ -1682,6 +1640,23 @@ mod_argumentation_server <- function(id){
       r$frauen_fokus <- input$frauen_fokus
     }, ignoreInit = FALSE)
 
+
+    ## Farb-Wechsel ----
+    observeEvent(input$frauen_fokus, {
+      if (isTRUE(input$frauen_fokus)) {
+        shinyjs::runjs(sprintf(
+          "document.getElementById('%s').setAttribute('style', '%s');",
+          ns("ziel_col"),
+          "border: 1px solid #154194; border-radius: 15px; background-color: #15419420; margin-top: 40px;"
+        ))
+      } else {
+        shinyjs::runjs(sprintf(
+          "document.getElementById('%s').setAttribute('style', '%s');",
+          ns("ziel_col"),
+          "margin-top: 40px;"  # oder dein Default-Style
+        ))
+      }
+    })
 
     ## Download der gesemmelten Daten ----
 
