@@ -3340,7 +3340,7 @@ iqb_fragebogen <- function(r){
       df$geschlecht <- factor(df$geschlecht, levels = c("maximal 100 Bücher", "mehr als 100 Bücher"))
     }
     titel <- ifelse(region_select == "Saarland",
-                    paste0("Selbsteinschätzung des Interesses und der eigenen Fähigkeiten in ", fach_select," von Schüler:innen der 9. Klasse im ", region_select, " (", jahr_select, ")"),
+                    paste0("Selbsteinschätzung des Interesses und der eigenen Fähigkeiten im ", fach_select," von Schüler:innen der 9. Klasse im ", region_select, " (", jahr_select, ")"),
                     paste0("Selbsteinschätzung des Interesses und der eigenen Fähigkeiten in ", fach_select," von Schüler:innen der 9. Klasse in ", region_select, " (", jahr_select, ")"))
     tooltip_text <- "{point.geschlecht}: {point.display_rel} (SD = {point.display_sd})"
     quelle_text <- "Quelle der Daten: Institut zur Qualitätsentwicklung im Bildungswesen, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
