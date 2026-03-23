@@ -84,7 +84,9 @@ home_einstieg <- function(r) {
     }else{
 
     if(indikator_choice_1 == "Leistungskurse") indikator_choice_1 <- "Schüler:innen im Leistungskurs"
-    titel <- paste0(indikator_choice_1, " in ", regio, " (", zeit, ")")
+    titel <- ifelse(regio == "Saarland",
+                    paste0(indikator_choice_1, " im ", regio, " (", zeit, ")"),
+                    paste0(indikator_choice_1, " in ", regio, " (", zeit, ")"))
     tooltip <- paste('Anteil: {point.prop_besr} % <br> Anzahl: {point.wert_besr}')
 
     quelle <- "Quellen: Destatis, 2025; Bundesagentur für Arbeit, 2025; KMK, 2025, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
@@ -97,12 +99,16 @@ home_einstieg <- function(r) {
     # filter for UI input and ensure proportions sum to 1
     df_1 <- df %>% dplyr::filter(indikator == indikator_choice_1[1])
     if(indikator_choice_1[1] == "Leistungskurse") indikator_choice_1[1] <- "Schüler:innen im Leistungskurs"
-    titel_1 <- paste0(indikator_choice_1[1], " in ", regio, " (", zeit, ")")
+    titel_1 <- ifelse(regio == "Saarland",
+                      paste0(indikator_choice_1[1], " im ", regio, " (", zeit, ")"),
+                      paste0(indikator_choice_1[1], " in ", regio, " (", zeit, ")"))
     quelle <- "Quellen: Destatis, 2025; Bundesagentur für Arbeit, 2025; KMK, 2025, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
     df_2 <- df %>% dplyr::filter(indikator == indikator_choice_1[2])
     if(indikator_choice_1[2] == "Leistungskurse") indikator_choice_1[2] <- "Schüler:innen im Leistungskurs"
-    titel_2 <- paste0(indikator_choice_1[2], " in ", regio, " (", zeit, ")")
+    titel_2 <- ifelse(regio == "Saarland",
+                     paste0(indikator_choice_1[2], " im ", regio, " (", zeit, ")"),
+                     paste0(indikator_choice_1[2], " in ", regio, " (", zeit, ")"))
 
     tooltip <- paste('Anteil: {point.prop_besr} % <br> Anzahl: {point.wert_besr}')
     quelle <- "Quellen: Destatis, 2025; Bundesagentur für Arbeit, 2025; KMK, 2025, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
@@ -193,10 +199,14 @@ home_einstieg <- function(r) {
   else if(betrachtung == "Gruppenvergleich - Balkendiagramm"){
 
    df <- df[with(df, order(prop, decreasing = TRUE)), ] ####
-   titel <- paste0("Anteil von MINT nach Bildungsbereichen in ", regio, " (", zeit,")")
+   titel <- ifelse(regio == "Saarland",
+                   paste0("Anteil von MINT nach Bildungsbereichen im ", regio, " (", zeit,")"),
+                   paste0("Anteil von MINT nach Bildungsbereichen in ", regio, " (", zeit,")"))
 
 
-   title <- paste0("Anteil von MINT nach Bildungsbereichen in ", regio, " (", zeit,")")
+   title <- ifelse(regio == "Saarland",
+                   paste0("Anteil von MINT nach Bildungsbereichen im ", regio, " (", zeit,")"),
+                   paste0("Anteil von MINT nach Bildungsbereichen in ", regio, " (", zeit,")"))
 
    #dies kann nicht als systemvariable übergeben werden also group
 
@@ -206,7 +216,7 @@ home_einstieg <- function(r) {
       highcharter::hc_xAxis(title = list(text = "")) %>%
       highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
       highcharter::hc_colors(c("#b16fab", "#efe8e6")) %>%
-      highcharter::hc_title(text = paste0("Anteil von MINT nach Bildungsbereichen in ", regio, " (", zeit,")"),
+      highcharter::hc_title(text = titel,
                             margin = 45,
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
@@ -321,7 +331,9 @@ home_rest_mint_verlauf <- function(r) {
 
     df$indikator <- factor(df$indikator, levels = sorted_indicators)
 
-    titel1 <- paste0("MINT-Anteil nach Bildungsbereichen in ", regio)
+    titel1 <- ifelse(regio == "Saarland",
+                     paste0("MINT-Anteil nach Bildungsbereichen im ", regio),
+                     paste0("MINT-Anteil nach Bildungsbereichen in ", regio))
 
     tooltip <- paste("Anteil MINT <br> Indikator: {point.indikator} <br> Anteil: {point.prop_besr} %")
 
@@ -354,7 +366,9 @@ home_rest_mint_verlauf <- function(r) {
 
     df$indikator <- factor(df$indikator, levels = sorted_indicators)
 
-    titel = paste0("Personen in MINT nach Bildungsbereichen in ", regio)
+    titel = ifelse(regio == "Saarland",
+                   paste0("Personen in MINT nach Bildungsbereichen im ", regio),
+                   paste0("Personen in MINT nach Bildungsbereichen in ", regio))
 
     tooltip <- paste("Anteil MINT <br> Indikator: {point.indikator} <br> Anzahl: {point.wert_besr}")
 
@@ -392,6 +406,8 @@ home_einstieg_gender <- function(r) {
   gegenwert <- r$gegenwert_start_comparison_gender
   indi <- r$indikator_start_einstieg_1_gender
   regio <- r$regio_start_comparison_gender
+
+  praep <- ifelse(regio == "Saarland", "im", "in")
 
   # filter dataset based on UI input
 
@@ -514,7 +530,7 @@ home_einstieg_gender <- function(r) {
     df_mint <- df %>% dplyr::filter(fachbereich == "MINT")
     df_rest <- df %>% dplyr::filter(fachbereich == "Nicht MINT")
 
-    titel <- paste0(df_mint$titel_help[1], " in ", regio, " (", zeit, ")")
+    titel <- paste0(df_mint$titel_help[1], " ", praep, " ", regio, " (", zeit, ")")
     tooltip <- paste('Anteil: {point.prop_besr}% <br> Anzahl: {point.wert_besr}')
     color = c("#efe8e6", "#154194")
     quelle <- "Quellen: Destatis, 2025; Bundesagentur für Arbeit, 2025; KMK, 2025, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
@@ -528,7 +544,7 @@ home_einstieg_gender <- function(r) {
     }
     if(gegenwert == "Ja"){
 
-     titel <- paste0(df_mint$titel_help2[1], " in ", regio, " (", zeit, ")")
+     titel <- paste0(df_mint$titel_help2[1], " ", praep, " ", regio, " (", zeit, ")")
 
      quelle <- "Quellen: Destatis, 2025; Bundesagentur für Arbeit, 2025; KMK, 2025, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
@@ -553,6 +569,8 @@ home_einstieg_gender <- function(r) {
     df_1_rest <- df_rest %>% dplyr::filter(indikator == indi[1])
     df_2_rest<- df_rest %>% dplyr::filter(indikator == indi[2])
 
+    titel <- paste0(df_2_mint$titel_help[1], " ", praep, " ", regio, " (", zeit, ")")
+
     if(indi[1] == "Schüler:innen im Leistungskurs" & nrow(df_1_mint) == 0){
       titel1 <- "Schüler:innendaten für 2024 sind noch nicht verfügbar."
       wert <- NA
@@ -570,7 +588,7 @@ home_einstieg_gender <- function(r) {
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px"))
 
-      mint2 <- piebuilder(df_2_mint, paste0(df_2_mint$titel_help[1], " in ", regio, " (", zeit, ")"),
+      mint2 <- piebuilder(df_2_mint, titel,
                           x = "geschlecht", y = "prop",
                           paste0('Anteil: {point.prop_besr}% <br> Anzahl: {point.wert_besr}'),
                           c("#efe8e6", "#154194"))
@@ -587,12 +605,12 @@ home_einstieg_gender <- function(r) {
         highcharter::hc_tooltip(pointFormat = "Anzahl: {point.display_abs}") %>%
         highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular")) %>%
         highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(fontFamily = "Calibri Regular")) %>%
-        highcharter::hc_title(text = titel1,
+        highcharter::hc_title(text = titel2,
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px"))
 
-      mint1 <- piebuilder(df_1_mint, paste0(df_1_mint$titel_help[1], " in ", regio, " (", zeit, ")"),
+      mint1 <- piebuilder(df_1_mint, paste0(df_1_mint$titel_help[1], " ", praep, " ", regio, " (", zeit, ")"),
                           x = "geschlecht", y = "prop",
                           paste0('Anteil: {point.prop_besr}% <br> Anzahl: {point.wert_besr}'),
                           c("#efe8e6", "#154194"))
@@ -601,13 +619,13 @@ home_einstieg_gender <- function(r) {
 
     quelle <- "Quellen: Destatis, 2025; Bundesagentur für Arbeit, 2025; KMK, 2025, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
-     mint1 <- piebuilder(df_1_mint, paste0(df_1_mint$titel_help[1], " in ", regio, " (", zeit, ")"),
+     mint1 <- piebuilder(df_1_mint, paste0(df_1_mint$titel_help[1], " ", praep, " ", regio, " (", zeit, ")"),
                          x = "geschlecht", y = "prop",
                          paste0('Anteil: {point.prop_besr}% <br> Anzahl: {point.wert_besr}'),
                          c("#efe8e6", "#154194"),quelle = quelle)
 
 
-      mint2 <- piebuilder(df_2_mint, paste0(df_2_mint$titel_help[1], " in ", regio, " (", zeit, ")"),
+      mint2 <- piebuilder(df_2_mint, paste0(df_2_mint$titel_help[1], " ", praep, " ", regio, " (", zeit, ")"),
                          x = "geschlecht", y = "prop",
                          paste0('Anteil: {point.prop_besr}% <br> Anzahl: {point.wert_besr}'),
                          c("#efe8e6", "#154194"), quelle = quelle)
@@ -637,7 +655,7 @@ home_einstieg_gender <- function(r) {
                                   align = "center",
                                   style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px"))
 
-          nmint2 <- piebuilder(df_2_rest, paste0(df_2_rest$titel_help2[1], " in ", regio, " (", zeit, ")"),
+          nmint2 <- piebuilder(df_2_rest, paste0(df_2_rest$titel_help2[1], " ", praep, " ", regio, " (", zeit, ")"),
                                x = "geschlecht", y = "prop",
                                paste0('Anteil: {point.prop_besr}% <br> Anzahl: {point.wert_besr}'),
                                c("#efe8e6", "#154194"))
@@ -646,7 +664,7 @@ home_einstieg_gender <- function(r) {
         }else if(indi[2] == "Schüler:innen im Leistungskurs" & nrow(df_2_rest) == 0){
 
           #leerer line
-          nmint1 <- piebuilder(df_1_rest, paste0(df_1_rest$titel_help2[1], " in ", regio, " (", zeit, ")"),
+          nmint1 <- piebuilder(df_1_rest, paste0(df_1_rest$titel_help2[1], " ", praep, " ", regio, " (", zeit, ")"),
                                x = "geschlecht", y = "prop",
                                paste0('Anteil: {point.prop_besr}% <br> Anzahl: {point.wert_besr}'),
                                c("#efe8e6", "#154194"))
@@ -667,12 +685,12 @@ home_einstieg_gender <- function(r) {
 
       quelle <- "Quellen: Destatis, 2025; Bundesagentur für Arbeit, 2025; KMK, 2025, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
-      nmint1 <- piebuilder(df_1_rest, paste0(df_1_rest$titel_help2[1], " in ", regio, " (", zeit, ")"),
+      nmint1 <- piebuilder(df_1_rest, paste0(df_1_rest$titel_help2[1], " ", praep, " ", regio, " (", zeit, ")"),
                            x = "geschlecht", y = "prop",
                            paste0('Anteil: {point.prop_besr}% <br> Anzahl: {point.wert_besr}'),
                            c("#efe8e6", "#154194"), quelle = quelle)
 
-     nmint2 <- piebuilder(df_2_rest, paste0(df_2_rest$titel_help2[1], " in ", regio, " (", zeit, ")"),
+     nmint2 <- piebuilder(df_2_rest, paste0(df_2_rest$titel_help2[1], " ", praep, " ", regio, " (", zeit, ")"),
                           x = "geschlecht", y = "prop",
                           paste0('Anteil: {point.prop_besr}% <br> Anzahl: {point.wert_besr}'),
                           c("#efe8e6", "#154194"), quelle = quelle)
@@ -748,7 +766,7 @@ home_einstieg_gender <- function(r) {
       group <- "geschlecht"
       tooltip <- "{point.anzeige_geschlecht}Anteil: {point.prop_besr} % <br> Anzahl: {point.wert_besr}"
       stacking <- "percent"
-      titel <- paste0("Anteil von Frauen in MINT nach Bildungsbereichen in ", regio, " (", zeit, ")")
+      titel <- paste0("Anteil von Frauen in MINT nach Bildungsbereichen ", praep, " ", regio, " (", zeit, ")")
       reversed <- FALSE
       format <- "{value}%"
 
@@ -766,9 +784,9 @@ home_einstieg_gender <- function(r) {
       df <- df[with(df, order(prop, decreasing = TRUE)), ]
 
 
-      title <- paste0("Anteil von Frauen in MINT nach Bildungsbereichen in ", regio, " (", zeit, ")")
+      titel <- paste0("Anteil von Frauen in MINT nach Bildungsbereichen ", praep, " ", regio, " (", zeit, ")")
 
-      ##balkenbuilder nicht verwendet wegen dem sonderfall Kateogirne
+      ##balkenbuilder nicht verwendet wegen dem sonderfall Kategorie
 
       out <- highcharter::hchart(df, 'bar', highcharter::hcaes(x = indikator, y = prop, group = geschlecht)) %>%
         highcharter::hc_tooltip(pointFormat = "{point.anzeige_geschlecht} Anteil: {point.prop_besr} % <br> Anzahl: {point.wert_besr}") %>%
@@ -789,7 +807,7 @@ home_einstieg_gender <- function(r) {
         highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
         highcharter::hc_colors(c("#154194", "#efe8e6")) %>%
 
-        highcharter::hc_title(text = paste0("Anteil von Frauen in MINT nach Bildungsbereichen in ", regio, " (", zeit, ")"),
+        highcharter::hc_title(text = titel,
                               margin = 25,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
@@ -825,7 +843,7 @@ home_einstieg_gender <- function(r) {
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", title),gsub("'", "\\\\'", title)))))
+   }", gsub("'", "\\\\'", titel),gsub("'", "\\\\'", titel)))))
                                     )
                                   )
         )
@@ -859,6 +877,8 @@ home_comparison_line <- function(r) {
   regio <- r$regio_start_comparison
   indikator_choice <- r$indikator_start_comparison
   abs_selector <- r$abs_zahlen_start_comparison
+
+  praep <- ifelse(regio == "Saarland", "im", "in")
 
 
   query <- glue::glue_sql("
@@ -978,7 +998,7 @@ home_comparison_line <- function(r) {
 
     # plot
 
-    titel <- "Anteil von Frauen in MINT nach Bildungsbereichen"
+    titel <- paste0("Anteil von Frauen in MINT nach Bildungsbereichen ", praep, " ", regio)
     tooltip <- "Anteil Frauen <br> Indikator: {point.indikator} <br> Anteil: {point.prop_besr} %"
     format <- "{value}%"
     color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24")
@@ -1004,7 +1024,7 @@ home_comparison_line <- function(r) {
 
     df$indikator <- factor(df$indikator, levels = sorted_indicators)
 
-    titel <- "Anzahl von Frauen in MINT nach Bildungsbereichen"
+    titel <- paste0("Anteil von Frauen in MINT nach Bildungsbereichen ", praep, " ", regio)
     tooltip <- "Anzahl Frauen <br> Indikator: {point.indikator} <br> Anzahl: {point.y} "
     format <- "{value}"
 

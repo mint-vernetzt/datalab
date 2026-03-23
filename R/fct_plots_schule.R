@@ -63,7 +63,11 @@ kurse_einstieg_comparison <- function(r) {
 
    df1 <- df1[with(df1, order(round(proportion,1), decreasing = FALSE)),]
 
-   titel <- paste0("Anteil von MINT-Belegungen in der Schule in ", regio, " (", timerange,")")
+ titel <- ist_saarland(
+   gruppe = "Anteil von MINT-Belegungen in der Schule",
+   regio = regio,
+   timerange = timerange
+ )
 
    #forcats, daher nicht in balkenbuilder
 
@@ -75,7 +79,7 @@ kurse_einstieg_comparison <- function(r) {
     highcharter::hc_xAxis(title = list(text = "")) %>%
     highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
     highcharter::hc_colors(c("#efe8e6", "#b16fab")) %>%
-    highcharter::hc_title(text = paste0("Anteil von MINT-Belegungen in der Schule in ", regio, " (", timerange,")"),
+    highcharter::hc_title(text = titel,
                           margin = 45,
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
@@ -121,7 +125,7 @@ kurse_einstieg_comparison <- function(r) {
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}")) %>%
       highcharter::hc_xAxis(title = list(text = "")) %>%
       highcharter::hc_colors(c("#efe8e6","#b16fab") ) %>%
-      highcharter::hc_title(text = paste0("Anteil von MINT-Belegungen in der Schule in ", regio, " (", timerange,")"),
+      highcharter::hc_title(text = titel,
                             margin = 45,
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
@@ -189,7 +193,11 @@ kurse_einstieg_comparison <- function(r) {
 
     df1$wert <- as.numeric(as.character(df1$wert)) #wert ist charakter
 
-    titel <- paste0("MINT-Anteil in ", titel_help,  " in ", regio, " (", timerange, ")")
+    titel <- ist_saarland(
+      gruppe = paste0("MINT-Anteil ", titel_help),
+      regio = regio,
+      timerange = timerange
+    )
     tooltip <- paste('Anteil: {point.proportion} % <br> Anzahl: {point.wert}')
     format <- "{point.proportion} %"
 
@@ -254,7 +262,10 @@ kurse_verlauf_single <- function(r) {
    df <- df[with(df, order(jahr, decreasing = FALSE)), ]
 
     # plot
-    titel <- paste0("Anteil von MINT-Belegungen in der Schule in ", regio)
+   titel <- ifelse(regio == "Saarland",
+                  paste0("Anzahl an MINT-Belegungen in der Schule im ", regio),
+                  paste0("Anzahl an MINT-Belegungen in der Schule in ", regio))
+
     tooltip <- "Anteil: {point.indikator} <br> Wert: {point.y} %"
     format <- "{value}%"
     color <- c("#b16fab", "#154194","#66cbaf")
@@ -272,7 +283,10 @@ kurse_verlauf_single <- function(r) {
     # order years for plot
     df <- df[with(df, order(jahr, decreasing = FALSE)), ]
 
-    titel <- paste0("Anzahl an MINT-Belegungen in der Schule in ", regio)
+    titel <- ifelse(regio == "Saarland",
+                    paste0("Anzahl an MINT-Belegungen in der Schule im ", regio),
+                    paste0("Anzahl an MINT-Belegungen in der Schule in ", regio))
+
     tooltip <- "Anzahl: {point.y}"
     format <-  "{value:, f}"
     color <- c("#b16fab", "#154194","#66cbaf")
@@ -608,7 +622,9 @@ kurse_waffle_mint <- function(r) {
                          titel_help)
 
 
-    titel <- paste0("MINT-Fächeranteile in ", titel_help , " in ", regio, " (", timerange, ")")
+    titel <- ifelse(regio == "Saarland",
+    paste0("MINT-Fächeranteile im ", titel_help , " im ", regio, " (", timerange, ")"),
+    paste0("MINT-Fächeranteile im ", titel_help , " in ", regio, " (", timerange, ")"))
     tooltip <- paste('Anteil: {point.proportion}% <br> Anzahl: {point.wert}')
     color <- as.character(df$color)
     format <-"{point.proportion}  %"
@@ -735,7 +751,9 @@ kurse_waffle_mint <- function(r) {
     # # # plot
 
 
-    titel <- paste0( "Anteil von ", indika, "-Belegungen nach Fächern in ", regio, " (", timerange, ")")
+    titel <- ifelse(regio == "Saarland",
+                    paste0( "Anteil von ", indika, "-Belegungen nach Fächern im ", regio, " (", timerange, ")"),
+                    paste0( "Anteil von ", indika, "-Belegungen nach Fächern in ", regio, " (", timerange, ")"))
 
 
     if ( darster == "In Prozent"){
@@ -963,7 +981,9 @@ kurse_verlauf_subjects_bl <- function(r) {
 
     # plot
     quelle <- "Quelle der Daten: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
-    titel <- paste0("Anteil einzelner Fächer an den ", kurs_help ," in ", states)
+    titel <- ifelse(states == "Saarland",
+                    paste0("Anteil einzelner Fächer an den ", kurs_help, " im ", states),
+                    paste0("Anteil einzelner Fächer an den ", kurs_help, " in ", states))
     tooltip <-  "{point.fachbereich} <br> Anteil: {point.y} %"
     format <-  "{value}%"
     color <- as.character(df$color)
@@ -982,7 +1002,9 @@ kurse_verlauf_subjects_bl <- function(r) {
     df <- df[with(df, order(region, jahr, decreasing = FALSE)), ]
 
     quelle2 <- "Quelle der Daten: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
-    titel <- paste0("Anzahl der ", kurs_help, " in einzelnen Fächern in ", states)
+    titel <- ifelse(states == "Saarland",
+                    paste0("Anzahl der ", kurs_help, " in einzelnen Fächern im ", states),
+                    paste0("Anzahl der ", kurs_help, " in einzelnen Fächern in ", states))
     tooltip <-  "{point.fachbereich} <br> Anzahl: {point.y}"
     format <-  "{value:, f}"
     color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#d0a9cd",
@@ -1963,7 +1985,9 @@ kurse_comparison_gender <- function(r) {
       ) %>%
       # Layout anpassen
       plotly::layout(
-        title = paste0("Mädchen-Anteil nach Fächern in ",regio, " (", timerange, ")"),
+        title = ifelse(regio == "Saarland",
+                       paste0("Mädchen-Anteil nach Fächern im ",regio, " (", timerange, ")"),
+                       paste0("Mädchen-Anteil nach Fächern in ",regio, " (", timerange, ")")),
         xaxis = list(title = ""),
         yaxis = list(title = ""),
         margin = list(l = 100, r = 50, t = 50, b = 50),
@@ -1982,7 +2006,7 @@ kurse_comparison_gender <- function(r) {
             x = 0, y = -0.3,
             xanchor = "left", yanchor = "top",
             showarrow = FALSE,
-            font = list(size = 10, color = "gray")
+            font = list(size = 10, color = "gray", family = "SourceSans3-Regular")
           )
         )
       ) %>%
@@ -2083,8 +2107,12 @@ kurse_comparison_gender <- function(r) {
       df_rest <- df1 %>%
         dplyr::filter(fachbereich != "MINT")
 
-      titel <- paste0("Mädchen-Anteil in MINT-", titel_help,  " in ", regio, " (", timerange, ")")
-      titelg <- paste0("Mädchen-Anteil in anderen ", titel_help,  " in ", regio, " (", timerange, ")")
+      titel <- ifelse(regio == "Saarland",
+                      paste0("Mädchen-Anteil in MINT-", titel_help,  " im ", regio, " (", timerange, ")"),
+                      paste0("Mädchen-Anteil in MINT-", titel_help,  " in ", regio, " (", timerange, ")"))
+      titelg <- ifelse(regio == "Saarland",
+                       paste0("Mädchen-Anteil in anderen ", titel_help,  " im ", regio, " (", timerange, ")"),
+                       paste0("Mädchen-Anteil in anderen ", titel_help,  " in ", regio, " (", timerange, ")"))
       tooltip <- paste('Anteil: {point.proportion}% <br> Anzahl: {point.wert}')
 
       quelle <- "Quelle der Daten: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
@@ -2107,7 +2135,9 @@ kurse_comparison_gender <- function(r) {
         dplyr::filter(fachbereich == "MINT")
 
 
-      titel = paste0("Mädchen-Anteil in MINT-", titel_help,  " in ", regio, " (", timerange, ")")
+      titel = ifelse(regio == "Saarland",
+                paste0("Mädchen-Anteil in MINT-", titel_help,  " im ", regio, " (", timerange, ")"),
+                paste0("Mädchen-Anteil in MINT-", titel_help,  " in ", regio, " (", timerange, ")"))
       tooltip = paste('Anteil: {point.proportion}% <br> Anzahl: {point.wert}')
 
 
@@ -2130,7 +2160,9 @@ kurse_comparison_gender <- function(r) {
     if(gegenwert == "Ja"){
 
 
-      titel <- paste0("Anteil von Mädchen in MINT- und anderen Fächern in ",regio, " (", timerange, ")")
+      titel <- ifelse(regio == "Saarland",
+                      paste0("Anteil von Mädchen in MINT- und anderen Fächern im ",regio, " (", timerange, ")"),
+                      paste0("Anteil von Mädchen in MINT- und anderen Fächern in ",regio, " (", timerange, ")"))
 
       #nicht als funktion, da es 1) zu komplex und 2) besondere feinheiten enthält, die die funktion balkenbuilder überlasten würde
       out <- highcharter::hchart(df1, 'bar', highcharter::hcaes( x = indikator, y=round(proportion,1), group = anzeige_geschlecht)) %>%
@@ -2144,7 +2176,7 @@ kurse_comparison_gender <- function(r) {
                                                                     "Oberstufenbelegungen andere Fächer")) %>%
         highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
         highcharter::hc_colors(c("#efe8e6", "#154194")) %>%
-        highcharter::hc_title(text = paste0("Anteil von Mädchen in MINT- und anderen Fächern in ",regio, " (", timerange, ")"),
+        highcharter::hc_title(text = titel,
                               margin = 25,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
@@ -2187,7 +2219,9 @@ kurse_comparison_gender <- function(r) {
     }else if(gegenwert == "Nein"){
 
 
-      titel <- paste0("Anteil von Mädchen in MINT-Fächern in ",regio, " (", timerange, ")"   )
+      titel <- ifelse(regio == "Saarland",
+                      paste0("Anteil von Mädchen in MINT-Fächern im ",regio, " (", timerange, ")"),
+                      paste0("Anteil von Mädchen in MINT-Fächern in ",regio, " (", timerange, ")"))
 
       df1 <- df1 %>% dplyr::filter(indikator %in%
                                      c("Grundkurse MINT-Fächer",
@@ -2202,7 +2236,7 @@ kurse_comparison_gender <- function(r) {
                                                                     "Oberstufenbelegungen MINT-Fächer")) %>%
         highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
         highcharter::hc_colors(c("#efe8e6", "#154194")) %>%
-        highcharter::hc_title(text = paste0("Anteil von Mädchen in MINT-Fächern in ",regio, " (", timerange, ")"),
+        highcharter::hc_title(text = titel,
                               margin = 25,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
@@ -2304,7 +2338,9 @@ kurse_verlauf_gender <- function(r){
 
     # plot
 
-    titel <- paste0("Anzahl von Mädchen in MINT-Oberstufenkursen in ", regio)
+    titel <- ifelse(regio == "Saarland",
+                    paste0("Anteil von Mädchen in MINT-Oberstufenkursen im ", regio),
+                    paste0("Anteil von Mädchen in MINT-Oberstufenkursen in ", regio))
     tooltip <-  "{point.indikator} <br> Wert: {point.wert_anzeige}"
     format <-  "{value:, f}"
     color <- colors_mint_vernetzt$general
@@ -2321,7 +2357,9 @@ kurse_verlauf_gender <- function(r){
     df <- df[with(df, order(jahr, decreasing = FALSE)), ]
 
 
-    titel <- paste0("Mädchenanteil in MINT-Oberstufenkursen", regio)
+    titel <- ifelse(regio == "Saarland",
+                    paste0("Anteil von Mädchen in MINT-Oberstufenkursen im ", regio),
+                    paste0("Anteil von Mädchen in MINT-Oberstufenkursen in ", regio))
     tooltip <-  "{point.indikator} <br> Wert: {point.y}%"
     format <-  "{value}%"
     color <- colors_mint_vernetzt$general
@@ -2425,8 +2463,12 @@ kurse_wahl <- function(r) {
       df_m <- df %>%
         dplyr::filter(anzeige_geschlecht == "Männer")
 
-      titelf <- paste0(titel_help, " von Mädchen in ", regio, " (", timerange, ")")
-      titelm <- paste0(titel_help, " von Jungen in ", regio, " (", timerange, ")")
+      titelf <- ifelse(regio == "Saarland",
+                       paste0(titel_help, " von Mädchen im ", regio, " (", timerange, ")"),
+                       paste0(titel_help, " von Mädchen in ", regio, " (", timerange, ")"))
+      titelm <- ifelse(regio == "Saarland",
+                       paste0(titel_help, " von Jungen im ", regio, " (", timerange, ")"),
+                       paste0(titel_help, " von Jungen in ", regio, " (", timerange, ")"))
       tooltip <- paste('Anteil: {point.proportion}% <br> Anzahl: {point.wert}')
       color = as.character(df_f$col)
 
@@ -2446,7 +2488,9 @@ kurse_wahl <- function(r) {
       df_f <- df %>%
         dplyr::filter(anzeige_geschlecht == "Frauen")
 
-      titel <- paste0(titel_help, " von Mädchen in ", regio, " (", timerange, ")")
+      titel <- ifelse(regio == "Saarland",
+                      paste0(titel_help, " von Mädchen im ", regio, " (", timerange, ")"),
+                      paste0(titel_help, " von Mädchen in ", regio, " (", timerange, ")"))
       tooltip <- paste('Anteil: {point.proportion}% <br> Anzahl: {point.wert}')
       format = '{point.proportion}%'
       color = as.character(df_f$col)
@@ -2506,7 +2550,7 @@ kurse_wahl <- function(r) {
 
     help_title <- ifelse(subjects == "MINT-Fächer (gesamt)", "MINT-Fächern (gesamt)", subjects)
     help_title <- ifelse(help_title == "andere Fächer (gesamt)", "anderen Fächern (gesamt)", help_title)
-    help_kurs <- ifelse(kurs_select == "Grundkurse", "Grundkurs-B", "Leistungskurs-B")
+    help_kurs <- ifelse(kurs_select == "Grundkurse", "Grundkurs", "Leistungskurs")
     help_kurs <- ifelse(kurs_select == "Oberstufenbelegungen", "Oberstufen", help_kurs)
 
 
@@ -2632,14 +2676,16 @@ iqb_standard_zeitverlauf <- function(r){
     color <- "#b16fab"
   }
 
-  titel <- paste0("Anteil der Schüler:innen aus ", title_help, ", die den Mindeststandard in Mathematik nicht erreichen (", kl_select, ")")
+  titel <- ifelse(bl_select[1] == "Saarland",
+                  paste0("Anteil der Schüler:innen aus dem ", title_help, ", die den Mindeststandard in Mathematik nicht erreichen (", kl_select, ")"),
+                  paste0("Anteil der Schüler:innen aus ", title_help, ", die den Mindeststandard in Mathematik nicht erreichen (", kl_select, ")"))
   out <- highcharter::hchart(df, 'column', highcharter::hcaes(y = wert, x = region, group=jahr))%>%
     highcharter::hc_plotOptions(column = list(pointWidth = 90))%>%
     highcharter::hc_tooltip(pointFormat = "{point.jahr} <br> {point.display_rel} % leistungsschwach")%>%
     highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value} %")) %>% #, pointsWidth=100
     highcharter::hc_xAxis(title = list(text = "")) %>%
     highcharter::hc_colors(color) %>%
-    highcharter::hc_title(text = paste0("Anteil der Schüler:innen aus ", title_help, ", die den Mindeststandard in Mathematik nicht erreichen (", kl_select, ")"),
+    highcharter::hc_title(text = titel,
                           margin = 45,
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
@@ -2831,7 +2877,9 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
 
 
 
-      titel <- paste0("Anteil der Schüler:innen, die den Mindeststandard in Mathematik nicht erreichen, nach Geschlecht in " , bl_select, " (", klasse_select, ")")
+      titel <- ifelse(bl_select == "Saarland",
+                      paste0("Anteil der Schüler:innen, die den Mindeststandard in Mathematik nicht erreichen, nach Geschlecht im " , bl_select, " (", klasse_select, ")"),
+                      paste0("Anteil der Schüler:innen, die den Mindeststandard in Mathematik nicht erreichen, nach Geschlecht in " , bl_select, " (", klasse_select, ")"))
 
      out <- highcharter::hchart(df, 'column', highcharter::hcaes(y = wert, x = jahr, group = geschlecht))%>%
         highcharter::hc_plotOptions(column = list(pointWidth = 90))%>%
@@ -2844,7 +2892,7 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
         highcharter::hc_colors(c("#154194",
                                  "#efe8e6"
         )) %>%
-        highcharter::hc_title(text = paste0("Anteil der Schüler:innen, die den Mindeststandard in Mathematik nicht erreichen, nach Geschlecht in " , bl_select, " (", klasse_select, ")"),
+        highcharter::hc_title(text = titel,
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
@@ -2885,7 +2933,9 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
       df$wert <- round(df$wert,1)
 
 
-    titel <- paste0("Durchschnittliche Leistung der Schüler:innen im Mathematik-Kompetenztest nach Geschlecht in " , bl_select, " (", klasse_select, ")")
+    titel <- ifelse(bl_select == "Saarland",
+                    paste0("Durchschnittliche Leistung der Schüler:innen im Mathematik-Kompetenztest nach Geschlecht im " , bl_select, " (", klasse_select, ")"),
+                    paste0("Durchschnittliche Leistung der Schüler:innen im Mathematik-Kompetenztest nach Geschlecht in " , bl_select, " (", klasse_select, ")"))
 
       out <- highcharter::hchart(df, 'column', highcharter::hcaes(y = wert, x = jahr, group = geschlecht))%>%
         highcharter::hc_plotOptions(column = list(pointWidth = 90))%>%
@@ -2899,7 +2949,7 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
         highcharter::hc_colors(c("#154194",
                                  "#efe8e6"
         )) %>%
-        highcharter::hc_title(text = paste0("Durchschnittliche Leistung der Schüler:innen im Mathematik-Kompetenztest nach Geschlecht in " , bl_select, " (", klasse_select, ")"),
+        highcharter::hc_title(text = titel,
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
@@ -2946,7 +2996,9 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
       df$wert <- round(df$wert,1)
 
 
-      titel <- paste0("Durchschnittliche Leistung der Schüler:innen im ", fach_select, "-Kompetenztest nach Geschlecht in " , bl_select, " (", klasse_select, ")")
+      titel <- ifelse(bl_select == "Saarland",
+                      paste0("Durchschnittliche Leistung der Schüler:innen im ", fach_select, "-Kompetenztest nach Geschlecht im " , bl_select, " (", klasse_select, ")"),
+                      paste0("Durchschnittliche Leistung der Schüler:innen im ", fach_select, "-Kompetenztest nach Geschlecht in " , bl_select, " (", klasse_select, ")"))
 
       out <- highcharter::hchart(df, 'column', highcharter::hcaes(y = wert, x = jahr, group = geschlecht))%>%
         highcharter::hc_plotOptions(column = list(pointWidth = 90))%>%
@@ -2960,7 +3012,7 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
         highcharter::hc_colors(c("#154194",
                                  "#efe8e6"
         )) %>%
-        highcharter::hc_title(text = paste0("Durchschnittliche Leistung der Schüler:innen im ", fach_select, "-Kompetenztest nach Geschlecht in " , bl_select, " (", klasse_select, ")"),
+        highcharter::hc_title(text = titel,
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
@@ -3007,7 +3059,10 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
 
         df$wert <- round(df$wert,1)
 
-        titel <- paste0("Durchschnittliche Leistung der Schüler:innen im Mathematik-Kompetenztest ", indikator_select, " in " , bl_select, " (", klasse_select, ")")
+        titel <- ifelse(bl_select == "Saarland",
+                        paste0("Durchschnittliche Leistung der Schüler:innen im Mathematik-Kompetenztest ", indikator_select, " im " , bl_select, " (", klasse_select, ")"),
+                        paste0("Durchschnittliche Leistung der Schüler:innen im Mathematik-Kompetenztest ", indikator_select, " in " , bl_select, " (", klasse_select, ")"))
+
 
         out <- highcharter::hchart(df, 'column', highcharter::hcaes(y = wert, x = jahr, group = indikator))%>%
           highcharter::hc_plotOptions(column = list(pointWidth = 90))%>%
@@ -3018,7 +3073,7 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
                                                                         "2021")) %>%
           highcharter::hc_colors(c("#efe8e6", "#66cbaf"
           )) %>%
-          highcharter::hc_title(text = paste0("Durchschnittliche Leistung der Schüler:innen im Mathematik-Kompetenztest ", indikator_select, " in " , bl_select, " (", klasse_select, ")"),
+          highcharter::hc_title(text = titel,
                                 margin = 45,
                                 align = "center",
                                 style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
@@ -3063,7 +3118,9 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
           df$wert <- round(df$wert,1)
 
 
-          titel <- paste0("Durchschnittliche Leistung der Schüler:innen im ", fach_select, "-Kompetenztest ", indikator_select, " in " , bl_select, " (", klasse_select, ")")
+          titel <- ifelse(bl_select == "Saarland",
+                          paste0("Durchschnittliche Leistung der Schüler:innen im ", fach_select, "-Kompetenztest ", indikator_select, " im " , bl_select, " (", klasse_select, ")"),
+                          paste0("Durchschnittliche Leistung der Schüler:innen im ", fach_select, "-Kompetenztest ", indikator_select, " in " , bl_select, " (", klasse_select, ")"))
 
           out <- highcharter::hchart(df, 'column', highcharter::hcaes(y = wert, x = jahr, group = indikator))%>%
             highcharter::hc_plotOptions(column = list(pointWidth = 90))%>%
@@ -3071,7 +3128,7 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
             highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}"),min=300) %>%
             highcharter::hc_xAxis(title = list(text = "")) %>%
             highcharter::hc_colors(color) %>%
-            highcharter::hc_title(text = paste0("Durchschnittliche Leistung der Schüler:innen im ", fach_select, "-Kompetenztest ", indikator_select, " in " , bl_select, " (", klasse_select, ")"),
+            highcharter::hc_title(text = titel,
                                   margin = 45,
                                   align = "center",
                                   style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
@@ -3115,7 +3172,9 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
           df$wert <- round(df$wert,1)
 
 
-          titel <-  paste0("Durchschnittliche Leistung der Schüler:innen im ", fach_select, "-Kompetenztest ", indikator_select, " in " , bl_select, " (", klasse_select, ")")
+          titel <-  ifelse(bl_select == "Saarland",
+                           paste0("Durchschnittliche Leistung der Schüler:innen im ", fach_select, "-Kompetenztest ", indikator_select, " im " , bl_select, " (", klasse_select, ")"),
+                           paste0("Durchschnittliche Leistung der Schüler:innen im ", fach_select, "-Kompetenztest ", indikator_select, " in " , bl_select, " (", klasse_select, ")"))
 
           out <- highcharter::hchart(df, 'column', highcharter::hcaes(y = wert, x = jahr, group = indikator))%>%
             highcharter::hc_plotOptions(column = list(pointWidth = 90))%>%
@@ -3125,7 +3184,7 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
                                                                           "2018",
                                                                           "2024")) %>%
             highcharter::hc_colors(color) %>%
-            highcharter::hc_title(text = paste0("Durchschnittliche Leistung der Schüler:innen im ", fach_select, "-Kompetenztest ", indikator_select, " in " , bl_select, " (", klasse_select, ")"),
+            highcharter::hc_title(text = titel,
                                   margin = 45,
                                   align = "center",
                                   style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
@@ -3218,8 +3277,7 @@ iqb_fragebogen <- function(r){
     df$geschlecht <- as.factor(df$geschlecht)
     df$geschlecht <- factor(df$geschlecht, levels = c("Mädchen", "Jungen"))
 
-    titel <- paste0("Selbsteinschätzung des Interesses und der eigenen Fähigkeiten in ", fach_select,
-                    " von Schüler:innen der 4. Klasse (", jahr_select, ")"         )
+    titel <- paste0("Selbsteinschätzung des Interesses und der eigenen Fähigkeiten in ", fach_select," von Schüler:innen der 4. Klasse (", jahr_select, ")")
     tooltip_text <- "{point.geschlecht} <br> {point.display_rel}"
     quelle_text <- "Quelle der Daten: Institut zur Qualitätsentwicklung im Bildungswesen, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
@@ -3247,8 +3305,8 @@ iqb_fragebogen <- function(r){
     AND geschlecht IN ({gruppe_select[1]}, {gruppe_select[2]})
                                ", .con = con)
     df <- DBI::dbGetQuery(con, df_query)
-#
-#
+
+
     # als Faktor speichern für Reihenfolge und Selbstkonzept umbennenen
     df <- df %>%
       dplyr::mutate(
@@ -3281,9 +3339,9 @@ iqb_fragebogen <- function(r){
       df$geschlecht <- as.factor(df$geschlecht)
       df$geschlecht <- factor(df$geschlecht, levels = c("maximal 100 Bücher", "mehr als 100 Bücher"))
     }
-
-    titel <- paste0("Selbsteinschätzung des Interesses und der eigenen Fähigkeiten in ", fach_select,
-                    " von Schüler:innen der 9. Klasse (", jahr_select, ")"         )
+    titel <- ifelse(region_select == "Saarland",
+                    paste0("Selbsteinschätzung des Interesses und der eigenen Fähigkeiten im ", fach_select," von Schüler:innen der 9. Klasse im ", region_select, " (", jahr_select, ")"),
+                    paste0("Selbsteinschätzung des Interesses und der eigenen Fähigkeiten in ", fach_select," von Schüler:innen der 9. Klasse in ", region_select, " (", jahr_select, ")"))
     tooltip_text <- "{point.geschlecht}: {point.display_rel} (SD = {point.display_sd})"
     quelle_text <- "Quelle der Daten: Institut zur Qualitätsentwicklung im Bildungswesen, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 

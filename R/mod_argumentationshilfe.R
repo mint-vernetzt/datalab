@@ -34,7 +34,7 @@ mod_argumentation_ui <- function(id){
       div(class = "clean-box",
           column(
             width = 12,
-            img(src='www/Banner_KI-Analysehilfe.avif',
+            img(src='www/Banner_KI-Analysehilfe_beta.png',
                 class = "img-responsive",
                 height = "300px",
                 alt = "Banner KI-Analysehilfe",
