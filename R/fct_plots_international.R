@@ -1807,11 +1807,6 @@ plot_international_schule_migration <- function(r) {
    # lander <- r$regio_int_schule
 
 
-
-
-
-
-
   if (is.null(fach_m)) { fach_m <- ""}
 
   if (label_m == "TIMSS") {

@@ -197,7 +197,7 @@ daten_download <- function(r){
       FROM arbeitsmarkt_detail
       WHERE jahr = {timerange}
       AND landkreis = 'alle Landkreise'
-      AND bundesland = {regio}
+      AND bundesland = {region_reserve}
       AND anforderung = 'Gesamt'
       AND geschlecht = 'Gesamt'
       AND indikator IN ({gruppe*})
@@ -229,7 +229,7 @@ daten_download <- function(r){
       SELECT bundesland, fachbereich, jahr, kategorie, wert
       FROM arbeitsmarkt_detail
       WHERE jahr IN (2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024)
-      AND bundesland = {regio}
+      AND bundesland = {region_reserve}
       AND geschlecht = 'Gesamt'
       AND fachbereich IN ('Mathematik, Naturwissenschaften', 'Informatik', 'Technik (gesamt)')
       AND kategorie = 'Auszubildende'
