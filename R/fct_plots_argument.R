@@ -197,7 +197,7 @@ daten_download <- function(r){
       FROM arbeitsmarkt_detail
       WHERE jahr = {timerange}
       AND landkreis = 'alle Landkreise'
-      AND bundesland = {region_reserve}
+      AND bundesland = {regio}
       AND anforderung = 'Gesamt'
       AND geschlecht = 'Gesamt'
       AND indikator IN ({gruppe*})
@@ -229,7 +229,7 @@ daten_download <- function(r){
       SELECT bundesland, fachbereich, jahr, kategorie, wert
       FROM arbeitsmarkt_detail
       WHERE jahr IN (2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024)
-      AND bundesland = {region_reserve}
+      AND bundesland = {regio}
       AND geschlecht = 'Gesamt'
       AND fachbereich IN ('Mathematik, Naturwissenschaften', 'Informatik', 'Technik (gesamt)')
       AND kategorie = 'Auszubildende'
@@ -804,8 +804,12 @@ argument_verlauf <- function(r){
 
     df_andere$indikator <- factor(df_andere$indikator, levels = sorted_indicators)
 
-    titel_beschäftigte <- paste0("Entwicklung der Beschäftigtenzahlen in MINT in ", regio)
-    titel_andere <- paste0("Entwicklung der Studierenden- und Auszubildendenzahlen in MINT in ", regio)
+    titel_beschäftigte <- ifelse(regio == "Saarland",
+                                 paste0("Entwicklung der Beschäftigtenzahlen in MINT im ", regio),
+                                 paste0("Entwicklung der Beschäftigtenzahlen in MINT in ", regio))
+    titel_andere <- ifelse(regio == "Saarland",
+                           paste0("Entwicklung der Studierenden- und Auszubildendenzahlen in MINT im ", regio),
+                           paste0("Entwicklung der Studierenden- und Auszubildendenzahlen in MINT in ", regio))
     tooltip <- paste("{point.indikator} <br> Anzahl: {point.wert_besr}")
 
     # plot
@@ -2097,7 +2101,9 @@ if (regio == "Deutschland"){
   group <- "geschlecht"
   tooltip <- "{point.anzeige_geschlecht}Anteil: {point.prop_besr} % <br> Anzahl: {point.wert_besr}"
   stacking <- "percent"
-  titel <- paste0("Anteil von Frauen in MINT nach Bildungsbereichen in ", regio, " (", zeit, ")")
+  titel <- ifelse(regio == "Saarland",
+                  paste0("Anteil von Frauen in MINT nach Bildungsbereichen im ", regio, " (", zeit, ")"),
+                  paste0("Anteil von Frauen in MINT nach Bildungsbereichen in ", regio, " (", zeit, ")"))
   reversed <- FALSE
   format <- "{value}%"
 
@@ -2239,8 +2245,12 @@ argument_großer_unterschied <- function(r) {
       dplyr::mutate(color = color_fachbereich[fachbereich])
 
 
-    titel1 <- paste0("Berufswahl unter Frauen in ", regio, " (", timerange, ")")
-    titel2 <- paste0("Berufswahl unter Männern in ", regio, " (", timerange, ")")
+    titel1 <- ifelse(regio == "Saarland",
+                     paste0("Berufswahl unter Frauen im ", regio, " (", timerange, ")"),
+                     paste0("Berufswahl unter Frauen in ", regio, " (", timerange, ")"))
+    titel2 <- ifelse(regio == "Saarland",
+      paste0("Berufswahl unter Männern im ", regio, " (", timerange, ")"),
+      paste0("Berufswahl unter Männern in ", regio, " (", timerange, ")"))
     subtitel1 <- paste0("Von allen weiblichen ", title_help, " arbeiten ", round(100-df_f$prop[df_f$fachbereich == "andere Berufsfelder"],1), "% in MINT")
     subtitel2 <-  paste0("Von allen männlichen ", title_help, " arbeiten ", round(100-df_m$prop[df_m$fachbereich == "andere Berufsfelder"],1), "% in MINT")
     color1 <- as.character(df_f$color)
@@ -2307,8 +2317,9 @@ argument_selbstkonzept <- function(r){
      df$geschlecht <- as.factor(df$geschlecht)
      df$geschlecht <- factor(df$geschlecht, levels = c("Mädchen", "Jungen"))
 
-    titel <- paste0("Selbsteinschätzung der eigenen Fähigkeiten in MINT-Fächern
-                    von Schüler:innen der 9. Klasse (", jahr_select, ")")
+    titel <- ifelse(region_select == "Saarland",
+    paste0("Selbsteinschätzung der eigenen Fähigkeiten in MINT-Fächern von Schüler:innen der 9. Klasse im ", region_select, " (", jahr_select, ")"),
+    paste0("Selbsteinschätzung der eigenen Fähigkeiten in MINT-Fächern von Schüler:innen der 9. Klasse in ", region_select, " (", jahr_select, ")"))
     tooltip_text <- "{point.geschlecht}: {point.display_rel} (SD = {point.display_sd})"
     quelle_text <- "Quelle der Daten: Institut zur Qualitätsentwicklung im Bildungswesen, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
@@ -2453,8 +2464,8 @@ argument_faecherverteilung <- function(r){
 
   col <- df$color
   titel <- ifelse(regio == "Saarland",
-                paste0( "Anteil der weiblichen Studierender nach Fachbereich ",regio," (", timerange, ")"),
-                  paste0( "Anteil der weiblichen Studierenden nach Fachbereich im ",regio," (", timerange, ")"))
+                paste0( "Anteil der weiblichen Studierenden nach Fachbereich im ",regio," (", timerange, ")"),
+                paste0( "Anteil der weiblichen Studierenden nach Fachbereich in ",regio," (", timerange, ")"))
 
 
     out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y=prop, x= fach))%>%

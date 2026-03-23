@@ -442,9 +442,9 @@ plot_international_map_fem <- function(r){
     map_selection <- readRDS("data/map_data/map_selection_europa.rds")
 
     # Spezifische inputs laden
-    timerange <- r$map_y_f
-    fach_m <- r$map_f_f
-    betr <- r$map_le_betr
+    timerange <- r$map_y_eu_f
+    fach_m <- r$map_f_eu_f
+    betr <- r$map_le_eu_betr
 
 
 
@@ -462,32 +462,19 @@ plot_international_map_fem <- function(r){
       SELECT *
       FROM studierende_europa
       WHERE ebene = '1'
+      AND jahr = {timerange}
       AND indikator = 'Frauen-/Männeranteil'
-      AND mint_select = 'mint'
+      AND fachbereich = {fach_m}
+      AND geschlecht = 'Frauen'
                                ", .con = con)
 
-      df1 <- DBI::dbGetQuery(con, df_query)
-
-
-
-      df12 <- df1 %>%
-        tidyr::pivot_wider(values_from = wert, names_from = geschlecht)%>%
-        dplyr::select(-Männer, -Gesamt)%>%
-        dplyr::rename(wert = Frauen)%>%
-        dplyr::mutate(wert = round(wert,1),
-                      fach = dplyr::case_when(
-                        fach == "Alle MINT-Fächer" ~ "MINT",
-                        T ~ fach)
-                      )%>%
-        dplyr::filter( fach == fach_m&
-                         jahr == timerange)
-
+      df <- DBI::dbGetQuery(con, df_query)
 
       # wert für hover vorbereiten
-      df1$display_rel <- prettyNum( df1$wert, big.mark = ".", decimal.mark = ",")
+      df$display_rel <- prettyNum(round(df$wert, 2), big.mark = ".", decimal.mark = ",")
 
       # mit geo mapping data joinen
-      map_data_1 <- df1 %>%
+      map_data_1 <- df %>%
         dplyr::left_join(countries_names, by = "land") %>%
         dplyr::mutate(alpha2 = toupper(alpha2))
 
@@ -513,42 +500,25 @@ plot_international_map_fem <- function(r){
     } else if(betr=="Anteil an Frauen von Frauen"){
       # falls betrachtung == fvf
 
-      # daten in richtige form bringen und runden
-
-      # df1 <- dplyr::tbl(con, from = "studierende_europa") %>%
-      #   dplyr::filter(ebene == "1" &
-      #                   indikator == "Fächerwahl"&
-      #                   mint_select == "mint" &
-      #                   geschlecht == "Frauen")%>%
-      #   dplyr::filter(fach == fach_m &
-      #                   jahr == timerange)%>%
-      #   dplyr::collect()
-
-
-
-
       df_query <- glue::glue_sql("
       SELECT *
       FROM studierende_europa
       WHERE ebene = '1'
       AND indikator = 'Fächerwahl'
+      AND jahr = {timerange}
       AND mint_select = 'mint'
+      AND fachbereich = {fach_m}
       AND geschlecht = 'Frauen'
                                ", .con = con)
 
       df <- DBI::dbGetQuery(con, df_query)
 
-      df1 <- df %>%
-        dplyr::filter(fach == fach_m &
-                        jahr == timerange)
-
-
-      df1 <- df1 %>%
+      df <- df %>%
         dplyr::mutate(display_rel = prettyNum(round(wert,1), big.mark = ".", decimal.mark = ","))  # hover und titel vorbereiten
 
 
       # mit geo mapping data joinen
-      map_data_1 <- df1 %>%
+      map_data_1 <- df %>%
         dplyr::left_join(countries_names, by = "land") %>%
         dplyr::mutate(alpha2 = toupper(alpha2))
 
@@ -580,7 +550,8 @@ plot_international_map_fem <- function(r){
     level <- r$map_le_f
     betr <- r$map_le_betr
     timerange <- r$map_y_f
-    fach_m <- r$map_f_f
+    #fach_m <- r$map_f_f
+    fach_m <- "MINT"
 
     # Kartenabschnitt für hc definieren
     map_selection <- map_selection_international
@@ -1806,7 +1777,6 @@ plot_international_schule_migration <- function(r) {
   leistungsindikator_m <- r$line_li_int_schule
    # lander <- r$regio_int_schule
 
-
   if (is.null(fach_m)) { fach_m <- ""}
 
   if (label_m == "TIMSS") {
@@ -2056,7 +2026,7 @@ plot_international_schule_migration <- function(r) {
       plot_data <- plot_data %>%
         dplyr::filter(land %in% lander)
 
-      fig <- plotly::plot_ly(data = plot_data, color = I("gray80")) %>%
+      p <- plotly::plot_ly(data = plot_data, color = I("gray80")) %>%
         plotly::add_segments(
           x = ~basis_wert,
           xend = ~wert,
@@ -2119,6 +2089,7 @@ plot_international_schule_migration <- function(r) {
           )
         )
 
+    fig <- p
 
     }
   else if (label_m == "PISA" && leistungsindikator_m == "nach Geschlecht") {
@@ -2867,7 +2838,7 @@ plot_international_map_arb_gender <- function(r) {
       tooltip <- "{point.land} <br> Anteil: {point.display_rel}% <br> Anzahl: {point.display_total}"
       titel <- paste0("Anteil von Frauen an allen ", title_eu, " in Europa")
       mincolor <- "#f4f5f6"
-      maxcolor <- "#b16fab"
+      maxcolor <- "#154194"
       map <- map_selection
       quelle <- "Quelle der Daten: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt."
       out1 <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor, prop=FALSE, wert=TRUE, map=map, quelle = quelle)
