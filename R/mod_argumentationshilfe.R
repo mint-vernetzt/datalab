@@ -34,11 +34,11 @@ mod_argumentation_ui <- function(id){
       div(class = "clean-box",
           column(
             width = 12,
-            img(src='www/Banner_KI-Analysehilfe_beta.png',
+            img(src='www/Banner_KI_Analysehilfe_beta.png',
                 class = "img-responsive",
-                height = "300px",
+                # height = "300px",
                 alt = "Banner KI-Analysehilfe",
-                style="display: block; margin-left: auto; margin-right: auto;"
+                style="display: block; margin-left: auto; margin-right: auto; margin-bottom: 20px;"
             )))),
 
 
