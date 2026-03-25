@@ -204,6 +204,8 @@ beruf_verlauf_single <- function(r) {
   regio <- r$region_arbeitsmarkt_einstieg_verlauf
   indi <- r$indikator_arbeitsmarkt_einstieg_verlauf_2
 
+  praep <- ifelse(regio == "Saarland", " im ", " in ")
+
   # df <-  dplyr::tbl(con, from = "arbeitsmarkt_detail")%>%
 
   df_query <- glue::glue_sql("
@@ -275,7 +277,7 @@ beruf_verlauf_single <- function(r) {
     df <- df[with(df, order(jahr, decreasing = FALSE)), ]
 
 
-    titel <- paste0("Anzahl von MINT-Beschäftigten und -Auszubildenden an allen Beschäftigten o. Auszubildenden in ", regio)
+    titel <- paste0("Anzahl von MINT-Beschäftigten und -Auszubildenden an allen Beschäftigten o. Auszubildenden", praep, regio)
     tooltip <- "{point.indikator} <br> Anteil: {point.wert_disp}"
 
   #  titel <- paste0("Anzahl unterschiedlicher Beschäftigtengruppen in ", regio)
@@ -949,6 +951,7 @@ arbeitsmarkt_faecher_anteil <- function(r) {
   timerange <- r$date_arbeitsmarkt_fach_vergleich
   regio <- r$region_arbeitsmarkt_fach_vergleich
   nicht_mint <- r$gegenwert_arbeitsmarkt_fach_vergleich
+  praep <- ifelse(regio == "Saarland", " im ", " in ")
 
 
 
@@ -1181,7 +1184,7 @@ arbeitsmarkt_faecher_anteil <- function(r) {
     hover <- "Anteil an allen Berufsfeldern: {point.display_rel} % <br> Anzahl {point.indikator}: {point.wert}"
     if(indikator_choice == "Auszubildende (1. Jahr)") hover <- "Anteil an allen Berufsfeldern: {point.display_rel} % <br> Anzahl Auszubildende mit neuem Lehrvertrag: {point.wert}"
 
-    titel <- paste0( "Überblick über die Berufsfelder von ", title_help, br(), "in ",regio, " (", timerange, ")")
+    titel <- paste0( "Überblick über die Berufsfelder von ", title_help, br(), praep, regio, " (", timerange, ")")
     format <- "{value}%"
     color <- c("#efe8e6","#b16fab")
     tooltip <- hover
@@ -2261,6 +2264,7 @@ arbeitsmarkt_wahl_gender <- function(r) {
     timerange <- r$date_arbeitsmarkt_wahl_gender_pie
     indi <- r$level_arbeitsmarkt_wahl_gender_pie
     regio <- r$region_arbeitsmarkt_wahl_gender_pie
+    praep <- ifelse(regio == "Saarland", " im ", " in ")
 
     df_query <- glue::glue_sql("
     SELECT jahr, bundesland, indikator, fachbereich, wert, geschlecht
@@ -2333,8 +2337,8 @@ arbeitsmarkt_wahl_gender <- function(r) {
        dplyr::mutate(color = color_fachbereich[fachbereich])
 
 
-     titel1 <- paste0("Berufswahl unter Frauen in ", regio, " (", timerange, ")")
-     titel2 <- paste0("Berufswahl unter Männern in ", regio, " (", timerange, ")")
+     titel1 <- paste0("Berufswahl unter Frauen", praep, regio, " (", timerange, ")")
+     titel2 <- paste0("Berufswahl unter Männern", praep, regio, " (", timerange, ")")
      subtitel1 <- paste0("Von allen weiblichen ", title_help, " arbeiten ", round(100-df_f$prop[df_f$fachbereich == "andere Berufsfelder"],1), "% in MINT")
      subtitel2 <-  paste0("Von allen männlichen ", title_help, " arbeiten ", round(100-df_m$prop[df_m$fachbereich == "andere Berufsfelder"],1), "% in MINT")
      color1 <- as.character(df_f$color)
@@ -2669,7 +2673,8 @@ arbeitsmarkt_top10 <- function( r){
 
     }else{
 
-      titel <- paste0("Höchster Frauenanteil unter den neuen Auszubildenden im Fachbereich " ,fb ," in ", bula, " (", time, ")")
+      titel <- ifelse(bula == "Saarland", paste0("Höchster Frauenanteil unter den neuen Auszubildenden im Fachbereich " ,fb ," im ", bula, " (", time, ")"),
+                                          paste0("Höchster Frauenanteil unter den neuen Auszubildenden im Fachbereich " ,fb ," in ", bula, " (", time, ")"))
 
     plot_frau <- highcharter::hchart(berufe_frauen, 'bar', highcharter::hcaes(y = prop, x = beruf)) %>%
       highcharter::hc_plotOptions(
@@ -2682,7 +2687,7 @@ arbeitsmarkt_top10 <- function( r){
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value} %", rotation = -45), min = 0, max = 100, tickInterval = 10) %>%
       highcharter::hc_xAxis(title = list(text = "")) %>%
       highcharter::hc_colors(c("#154194")) %>%
-      highcharter::hc_title(text = paste0("Höchster Frauenanteil unter den neuen Auszubildenden im Fachbereich " ,fb ," in ", bula, " (", time, ")"),
+      highcharter::hc_title(text = titel,
                             margin = 45,
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -2744,7 +2749,8 @@ arbeitsmarkt_top10 <- function( r){
 
     }else{
 
-     titel <- paste0("Höchster Männeranteil unter den neuen Auszubildenden im Fachbereich ", fb ," in ", bula ," (", time, ")")
+     titel <- ifelse(bula == "Saarland", paste0("Höchster Männeranteil unter den neuen Auszubildenden im Fachbereich ", fb ," im ", bula ," (", time, ")"),
+                     paste0("Höchster Männeranteil unter den neuen Auszubildenden im Fachbereich ", fb ," in ", bula ," (", time, ")"))
 
     plot_mann <- highcharter::hchart(berufe_maenner, 'bar', highcharter::hcaes(y = prop, x = beruf)) %>%
       highcharter::hc_plotOptions(
@@ -2758,7 +2764,7 @@ arbeitsmarkt_top10 <- function( r){
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value} %", rotation = -45), min = 0, max = 100, tickInterval = 10) %>%
       highcharter::hc_xAxis(title = list(text = "")) %>%
       highcharter::hc_colors(c("#66cbaf")) %>%
-      highcharter::hc_title(text = paste0("Höchster Männeranteil unter den neuen Auszubildenden im Fachbereich ", fb ," in ", bula ," (", time, ")"),
+      highcharter::hc_title(text = titel,
                             margin = 45,
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
@@ -2832,7 +2838,8 @@ arbeitsmarkt_top10 <- function( r){
                               style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px"))
 
     }else{
-titel <- paste0("Am häufigsten gewählte MINT-Ausbildungsberufe von weiblichen Neu-Auszubildenden im Fachbereich " ,fb ,"  in ", bula ," (", time, ")")
+titel <- ifelse(bula == "Saarland", paste0("Am häufigsten gewählte MINT-Ausbildungsberufe von weiblichen Neu-Auszubildenden im Fachbereich " ,fb ,"  im ", bula ," (", time, ")"),
+                paste0("Am häufigsten gewählte MINT-Ausbildungsberufe von weiblichen Neu-Auszubildenden im Fachbereich " ,fb ,"  in ", bula ," (", time, ")"))
 
       plot_frau <- highcharter::hchart(berufe_frauen, 'bar', highcharter::hcaes(y = wert, x = beruf)) %>%
       highcharter::hc_plotOptions(
@@ -2845,7 +2852,7 @@ titel <- paste0("Am häufigsten gewählte MINT-Ausbildungsberufe von weiblichen 
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}", rotation = -45), min = 0, max = plyr::round_any(max(berufe_frauen$wert), 500, f = ceiling), tickInterval = 1000) %>%
       highcharter::hc_xAxis(title = list(text = "")) %>%
       highcharter::hc_colors(c("#154194")) %>%
-      highcharter::hc_title(text = paste0("Am häufigsten gewählte MINT-Ausbildungsberufe von weiblichen Neu-Auszubildenden im Fachbereich " ,fb ,"  in ", bula ," (", time, ")"),
+      highcharter::hc_title(text = titel,
                             margin = 45,
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
@@ -2902,7 +2909,8 @@ titel <- paste0("Am häufigsten gewählte MINT-Ausbildungsberufe von weiblichen 
                               style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px"))
 
     }else{
-     titel <- paste0("Am häufigsten gewählte MINT-Ausbildungsberufe von männlichen Neu-Auszubildenden im Fachbereich ",fb," in ", bula ," (", time, ")")
+     titel <- ifelse(bula == "Saarland", paste0("Am häufigsten gewählte MINT-Ausbildungsberufe von männlichen Neu-Auszubildenden im Fachbereich ",fb," im ", bula ," (", time, ")"),
+                     paste0("Am häufigsten gewählte MINT-Ausbildungsberufe von männlichen Neu-Auszubildenden im Fachbereich ",fb," in ", bula ," (", time, ")"))
 
     plot_mann <- highcharter::hchart(berufe_maenner, 'bar', highcharter::hcaes(y = wert, x = beruf)) %>%
       highcharter::hc_plotOptions(
@@ -2915,7 +2923,7 @@ titel <- paste0("Am häufigsten gewählte MINT-Ausbildungsberufe von weiblichen 
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}", rotation = -45), min = 0, max = plyr::round_any(max(berufe_maenner$wert), 1000, f = ceiling), tickInterval = 1000) %>%
       highcharter::hc_xAxis(title = list(text = "")) %>%
       highcharter::hc_colors(c("#66cbaf")) %>%
-      highcharter::hc_title(text = paste0("Am häufigsten gewählte MINT-Ausbildungsberufe von männlichen Neu-Auszubildenden im Fachbereich ",fb," in ", bula ," (", time, ")"),
+      highcharter::hc_title(text = titel,
                             margin = 45,
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
@@ -2999,6 +3007,7 @@ arbeitsmarkt_faecher_anteil_frauen <- function(r) {
   regio <- r$region_arbeitsmarkt_fach_vergleich_frauen
   nicht_mint <- r$gegenwert_arbeitsmarkt_fach_vergleich_frauen
   indikator_choice <- r$indikator_arbeitsmarkt_fach_vergleich_balken_frauen
+  praep <- ifelse(regio == "Saarland", " im ", " in ")
 
   indikator_choice <- gsub("^weibliche ", "", indikator_choice)
 
@@ -3090,7 +3099,7 @@ arbeitsmarkt_faecher_anteil_frauen <- function(r) {
       hover <- "Anteil an allen Berufsfeldern: {point.display_rel} % <br> Anzahl {point.indikator}: {point.wert}"
       if(indikator_choice == "Auszubildende (1. Jahr)") hover <- "Anteil an allen Berufsfeldern: {point.display_rel} % <br> Anzahl Auszubildende mit neuem Lehrvertrag: {point.wert}"
 
-      titel <- paste0( "Überblick über die Berufsfelder von ", title_help, br(), "in ",regio, " (", timerange, ")")
+      titel <- paste0( "Überblick über die Berufsfelder von ", title_help, br(), praep, regio, " (", timerange, ")")
       format <- "{value}%"
       color <- c("#efe8e6","#b16fab")
       tooltip <- hover
@@ -3250,6 +3259,7 @@ arbeitsmarkt_lk_detail_map <- function(r) {
   # load UI inputs from reactive value
   timerange <- r$date_beruf_arbeitsmarkt_landkreis_karte
   states <- r$states_beruf_arbeitsmarkt_landkreis_karte
+  praep <- ifelse(states == "Saarland", " im ", " in ")
 
   # input values for first map
   category_1 <- r$kategorie_beruf_arbeitsmarkt_landkreis_karte1
@@ -3371,7 +3381,7 @@ arbeitsmarkt_lk_detail_map <- function(r) {
 
 
 
-  titel <- paste0("Anteil von ", titel_sub1_2, titel_gesamt1, titel_gesamt1_2, " in ", states, " (", timerange, ")")
+  titel <- paste0("Anteil von ", titel_sub1_2, titel_gesamt1, titel_gesamt1_2, praep, states, " (", timerange, ")")
   highcharter::highchart(type = "map") %>%
     highcharter::hc_add_series_map(
     map = map_state,
@@ -3391,7 +3401,7 @@ arbeitsmarkt_lk_detail_map <- function(r) {
   ) %>%
     highcharter::hc_colorAxis(min=0,labels = list(format = "{text}%")) %>%
     highcharter::hc_title(
-      text = paste0("Anteil von ", titel_sub1_2, titel_gesamt1, titel_gesamt1_2, " in ", states, " (", timerange, ")"),
+      text = titel,
       margin = 10,
       align = "center",
       style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
@@ -3453,6 +3463,7 @@ arbeitsmarkt_lk_detail_vergleich <- function(r){
   timerange <- r$date_beruf_arbeitsmarkt_landkreis_vergleich
   states <- r$states_beruf_arbeitsmarkt_landkreis_vergleich
   search_val <- r$search_in_bar_chart
+  praep <- ifelse(states == "Saarland", " im ", " in ")
 
   df_query <- glue::glue_sql("
   SELECT *
@@ -3491,7 +3502,7 @@ arbeitsmarkt_lk_detail_vergleich <- function(r){
 
     legende <- paste0("Anteil: {point.y} %")
     yAxis <- "{value}%"
-    titel <- paste0("Anteil von ", titel_sub2, titel_gesamt_1, titel_gesamt_2, " in ", states, " (", timerange, ")")
+    titel <- paste0("Anteil von ", titel_sub2, titel_gesamt_1, titel_gesamt_2, praep, states, " (", timerange, ")")
 
   } else if(display_form== "Anzahl") {
     df_compare <- df_compare %>%
@@ -3502,7 +3513,7 @@ arbeitsmarkt_lk_detail_vergleich <- function(r){
     legende <- paste0("Anzahl: {point.y}")
     yAxis <- "{value}"
     titel_gesamt_1 <- stringr::str_remove(titel_gesamt_1, "an allen")
-    titel <- paste0("Anzahl ", titel_sub, titel_gesamt_1, " in ", states, " (", timerange, ")")
+    titel <- paste0("Anzahl ", titel_sub, titel_gesamt_1, praep, states, " (", timerange, ")")
   }
 
   #Vector für angepasste Größe des Plots
@@ -3559,6 +3570,7 @@ arbeitsmarkt_lk_verlauf <- function(r){
   gruppe <- r$kategorie_beruf_arbeitsmarkt_landkreis_verlauf
   fach <- r$fachbereich_beruf_arbeitsmarkt_landkreis_verlauf
   absolut_selector <- r$abs_zahlen_beruf_arbeitsmarkt_landkreis_verlauf
+  praep <- ifelse(regio == "Saarland", " im ", " in ")
 
 
   if(grepl("weiblich", gruppe)){
@@ -3643,7 +3655,7 @@ arbeitsmarkt_lk_verlauf <- function(r){
 
 
 
-    titel <- paste0("Anzahl der ", gruppe ," in ", fach, " in ", regio)
+    titel <- paste0("Anzahl der ", gruppe ," in ", fach, praep, regio)
     tooltip <- "{point.landkreis} <br> Anzahl: {point.wert_disp}"
     format <- "{value:, f}"
     color <- c("#b16fab", "#154194", "#66cbaf","#fbbf24", "#ee7775", "#35bd97",
@@ -3667,6 +3679,7 @@ entgelte_vergleich_1 <- function(r) {
   land <- r$region_arbeitsmarkt_entgelt_vergleich
   # berufsleb <- r$beruf_arbeitsmarkt_entgelt_berufslev
   berufsleb <- "Gesamt"
+  praep <- ifelse(land == "Saarland", " im ", " in ")
 
 
  ##)
@@ -3706,7 +3719,7 @@ entgelte_vergleich_1 <- function(r) {
     geschlecht <- "alle Geschlechter"
   }
 
-  titel <- paste0("Mittleres Entgelt nach Berufsfeldern in ", land, " ", datum,
+  titel <- paste0("Mittleres Entgelt nach Berufsfeldern", praep, land, " ", datum,
                   " (", berufsleb, ", ", geschlecht, ")" )
   tooltip <- paste('Wert in Euro: {point.y}')
   format <- "{value}"
@@ -3810,6 +3823,7 @@ entgelte_verlauf_1 <- function(r) {
   #berufsleb <- r$indikator_arbeitsmarkt_entgelt_verlauf_2
   berufsleb <- "Gesamt"
   geschlecht <- r$abs_zahlen_arbeitsmarkt_entgelt_verlauf
+  praep <- ifelse(land == "Saarland", " im ", " in ")
 
   datum1 <- datum[1]:datum[2]
 
@@ -3864,7 +3878,7 @@ entgelte_verlauf_1 <- function(r) {
 
 
 
-  titel <- paste0("Entwicklung der Entgelte in den verschiedenen Kategorien in ", land, " (", geschlecht, ",", " ", berufsleb, ")")
+  titel <- paste0("Entwicklung der Entgelte in den verschiedenen Kategorien", praep, land, " (", geschlecht, ",", " ", berufsleb, ")")
   tooltip <-"Wert in Euro {point.y}"
   format <- "{value}"
   color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
@@ -3970,7 +3984,7 @@ entgelte_balken_1 <- function(r) {
 
 
 
-  titel <- paste0("MINT-Anteil in")
+  titel <- ifelse(bulasa == "Saarland", paste0("MINT-Anteil im"), paste0("MINT-Anteil in"))
   tooltip <- paste('Wert {point.x}')
   format <- "{wert}"
 
