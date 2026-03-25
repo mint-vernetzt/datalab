@@ -4193,6 +4193,8 @@ plot_auslaender_mint <- function(r){
 
   betr_ebene <- r$ebene_ausl
 
+  praep <- ifelse(bl_select == "Saarland", "im", "in")
+
   #
 
 
@@ -4316,7 +4318,7 @@ plot_auslaender_mint <- function(r){
 
       if (status_select == "Absolvent:innen"){
 
-        titel <- paste0("Anteil internationaler Absolvent:innen an allen Absolvent:innen in ", bl_select,  " (",year_select, ")" )
+        titel <- paste0("Anteil internationaler Absolvent:innen an allen Absolvent:innen ", praep, " ", bl_select,  " (",year_select, ")" )
 
         #nicht als funktion, da es 1) zu komplex und 2) besondere feinheiten enthält, die die funktion balkenbuilder überlasten würde
 
@@ -4338,7 +4340,7 @@ plot_auslaender_mint <- function(r){
                                                                         "Sport")) %>%
           highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
           highcharter::hc_colors(c("#efe8e6", "#66cbaf")) %>%
-          highcharter::hc_title(text = paste0("Anteil internationaler Absolvent:innen an allen Absolvent:innen in ", bl_select,  " (",year_select, ")" ),
+          highcharter::hc_title(text = titel,
                                 margin = 45,
                                 align = "center",
                                 style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
@@ -4381,7 +4383,7 @@ plot_auslaender_mint <- function(r){
       } else {
 
 
-        titel <- paste0("Anteil internationaler ", help, " an allen ", help2, " in ", bl_select,  " (",year_select, ")" )
+        titel <- paste0("Anteil internationaler ", help, " an allen ", help2, " ", praep, " ", bl_select,  " (",year_select, ")" )
 
         #nicht als funktion, da es 1) zu komplex und 2) besondere feinheiten enthält, die die funktion balkenbuilder überlasten würde
 
@@ -4403,7 +4405,7 @@ plot_auslaender_mint <- function(r){
                                                                         "Sport")) %>%
           highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
           highcharter::hc_colors(c("#efe8e6", "#66cbaf")) %>%
-          highcharter::hc_title(text = paste0("Anteil internationaler ", help, " an allen ", help2, " in ", bl_select,  " (",year_select, ")" ),
+          highcharter::hc_title(text = titel,
                                 margin = 45,
                                 align = "center",
                                 style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
@@ -4458,8 +4460,8 @@ plot_auslaender_mint <- function(r){
 
 
       if (status_select == "Absolvent:innen"){
-        titel <- paste0("Anzahl internationaler Absolvent:innen in ", bl_select,  " (",year_select, ")" )
 
+        titel <- paste0("Anteil internationaler ", help, " an allen ", help2, " ", praep, " ", bl_select,  " (",year_select, ")" )
 
         #nicht als funktion, da es 1) zu komplex und 2) besondere feinheiten enthält, die die funktion balkenbuilder überlasten würde
         out <- highcharter::hchart(df_fachbereich, 'bar', highcharter::hcaes(y = wert, x = fach, group = ausl_detect))%>%
@@ -4479,7 +4481,7 @@ plot_auslaender_mint <- function(r){
                                                                         "Agrar-, Forst- und Ernährungswissenschaften, Veterinärmedizin",
                                                                         "Sport")) %>%
           highcharter::hc_colors(c("#efe8e6", "#66cbaf")) %>%
-          highcharter::hc_title(text = paste0("Anzahl internationaler Absolvent:innen in ", bl_select,  " (",year_select, ")" ),
+          highcharter::hc_title(text = titel,
                                 margin = 45,
                                 align = "center",
                                 style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
@@ -4520,7 +4522,7 @@ plot_auslaender_mint <- function(r){
 
       }else{
 
-        titel <- paste0("Anzahl internationaler ", help, " in ", bl_select,  " (",year_select, ")" )
+        titel <- paste0("Anzahl internationaler ", help, " ", praep, " ", bl_select,  " (",year_select, ")" )
 
         #nicht als funktion, da es 1) zu komplex und 2) besondere feinheiten enthält, die die funktion balkenbuilder überlasten würde
 
@@ -4541,7 +4543,7 @@ plot_auslaender_mint <- function(r){
                                                                         "Agrar-, Forst- und Ernährungswissenschaften, Veterinärmedizin",
                                                                         "Sport")) %>%
           highcharter::hc_colors(c("#efe8e6", "#66cbaf")) %>%
-          highcharter::hc_title(text = paste0("Anzahl internationaler ", help, " in ", bl_select,  " (",year_select, ")" ),
+          highcharter::hc_title(text = titel,
                                 margin = 45,
                                 align = "center",
                                 style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
@@ -4598,7 +4600,7 @@ plot_auslaender_mint <- function(r){
 
        if (status_select == "Absolvent:innen"){
 
-         titel <- paste0("Anteil internationaler Absolvent:innen an allen Absolvent:innen in ", bl_select,  " (",year_select, ")" )
+         titel <- paste0("Anteil internationaler Absolvent:innen an allen Absolvent:innen ", praep, " ", bl_select,  " (",year_select, ")" )
 
          #nicht als funktion, da es 1) zu komplex und 2) besondere feinheiten enthält, die die funktion balkenbuilder überlasten würde
 
@@ -4611,7 +4613,7 @@ plot_auslaender_mint <- function(r){
            highcharter::hc_plotOptions(bar = list(stacking = "percent"))%>%
            highcharter::hc_colors(c("#efe8e6", "#66cbaf")) %>%
 
-           highcharter::hc_title(text = paste0("Anteil internationaler Absolvent:innen an allen Absolvent:innen in ", bl_select,  " (",year_select, ")" ),
+           highcharter::hc_title(text = titel,
                                  margin = 45,
                                  align = "center",
                                  style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
@@ -4654,7 +4656,7 @@ plot_auslaender_mint <- function(r){
        } else {
 
 
-         titel <- paste0("Anteil internationaler ", help, " an allen ", help2, " in ", bl_select,  " (",year_select, ")" )
+         titel <- paste0("Anteil internationaler ", help, " an allen ", help2, " ", praep, " ", bl_select,  " (",year_select, ")" )
 
 
          #nicht als funktion, da es 1) zu komplex und 2) besondere feinheiten enthält, die die funktion balkenbuilder überlasten würde
@@ -4669,7 +4671,7 @@ plot_auslaender_mint <- function(r){
            highcharter::hc_plotOptions(bar = list(stacking = "percent"))%>%
            highcharter::hc_colors(c("#efe8e6", "#66cbaf")) %>%
 
-           highcharter::hc_title(text = paste0("Anteil internationaler ", help, " an allen ", help2, " in ", bl_select,  " (",year_select, ")" ),
+           highcharter::hc_title(text = titel,
                                  margin = 45,
                                  align = "center",
                                  style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
@@ -4733,7 +4735,7 @@ plot_auslaender_mint <- function(r){
           #nicht als funktion, da es 1) zu komplex und 2) besondere feinheiten enthält, die die funktion balkenbuilder überlasten würde
           #
 
-          titel <-  paste0("Anzahl internationaler Absolvent:innen in ", bl_select,  " (",year_select, ")" )
+          titel <-  paste0("Anzahl internationaler Absolvent:innen ", praep, " ", bl_select,  " (",year_select, ")" )
 
           out <- highcharter::hchart(df_faecher, 'bar', highcharter::hcaes(y = wert, x = fach, group = ausl_detect))%>%
             highcharter::hc_tooltip(pointFormat = "{point.ausl_detect} <br> Anzahl: {point.display_abs}")%>%
@@ -4741,7 +4743,7 @@ plot_auslaender_mint <- function(r){
             highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}")) %>%
             highcharter::hc_xAxis(title = list(text = "")) %>%
             highcharter::hc_colors(c("#efe8e6", "#66cbaf")) %>%
-            highcharter::hc_title(text = paste0("Anzahl internationaler Absolvent:innen in ", bl_select,  " (",year_select, ")" ),
+            highcharter::hc_title(text = titel,
                                   margin = 45,
                                   align = "center",
                                   style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
@@ -4783,7 +4785,7 @@ plot_auslaender_mint <- function(r){
 
         } else {
 
-          titel <- paste0("Anzahl internationaler ", help, " in ", bl_select,  " (",year_select, ")" )
+          titel <- paste0("Anzahl internationaler ", help, " ", praep, " ", bl_select,  " (",year_select, ")" )
 
           out <- highcharter::hchart(df_faecher, 'bar', highcharter::hcaes(y = wert, x = fach, group = ausl_detect))%>%
             highcharter::hc_tooltip(pointFormat = "{point.ausl_detect} <br> Anzahl: {point.display_abs}")%>%
@@ -4791,7 +4793,7 @@ plot_auslaender_mint <- function(r){
             highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}")) %>%
             highcharter::hc_xAxis(title = list(text = "")) %>%
             highcharter::hc_colors(c("#efe8e6", "#66cbaf")) %>%
-            highcharter::hc_title(text = paste0("Anzahl internationaler ", help, " in ", bl_select,  " (",year_select, ")" ),
+            highcharter::hc_title(text = titel,
                                   margin = 45,
                                   align = "center",
                                   style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
@@ -4863,6 +4865,7 @@ plot_auslaender_mint_zeit <- function(r){
   absolut_selector <- r$abs_zahlen_studium_studienzahl_ausl_zeit
   status_select <- r$status_ausl_zeit
   betrachtung <- r$ansicht_ausl_zeit
+  praep <- ifelse(bl_select == "Saarland", " im ", " in ")
 
   if(bl_select %in% c("Deutschland",
                       "Baden-Württemberg",
@@ -4962,7 +4965,7 @@ plot_auslaender_mint_zeit <- function(r){
     if(betrachtung == "Zeitverlauf - Liniendiagramm"){
       if(status_select == "Absolvent:innen"){
 
-        titel <-  paste0("Anteil internationaler Absolvent:innen an allen Absolvent:innen in ", fach_help , " in ", bl_select )
+        titel <-  paste0("Anteil internationaler Absolvent:innen an allen Absolvent:innen in ", fach_help , praep, bl_select )
         tooltip <- "{point.ausl_detect} <br> Anteil: {point.display_rel} %"
         format <- "{value} %"
         color <- c("#154194", "#66cbaf")
@@ -4972,7 +4975,7 @@ plot_auslaender_mint_zeit <- function(r){
 
       } else {
 
-        titel <-  paste0("Anteil internationaler ", help, " an allen ", help2, " in ", fach_help , " in ", bl_select )
+        titel <-  paste0("Anteil internationaler ", help, " an allen ", help2, " in ", fach_help , praep, bl_select )
         tooltip <- "{point.ausl_detect} <br> Anteil: {point.display_rel} %"
         format <- "{value} %"
         quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt"
@@ -4986,7 +4989,7 @@ plot_auslaender_mint_zeit <- function(r){
 
         df <- df[with(df, order(wert, decreasing = TRUE)), ]
 
-        titel <- paste0("Anteil internationaler Absolvent:innen an allen Absolvent:innen in ", fach_help , " in ", bl_select )
+        titel <- paste0("Anteil internationaler Absolvent:innen an allen Absolvent:innen in ", fach_help , praep, bl_select )
 
 
         highcharter::hchart(df, 'column', highcharter::hcaes(y = wert, x = jahr, group = ausl_detect))%>%
@@ -4999,7 +5002,7 @@ plot_auslaender_mint_zeit <- function(r){
           highcharter::hc_plotOptions(column = list(pointWidth = 70))%>%
           highcharter::hc_colors(c("#efe8e6", "#66cbaf")) %>%
           highcharter::hc_yAxis(max = 40)%>%
-          highcharter::hc_title(text = paste0("Anteil internationaler Absolvent:innen an allen Absolvent:innen in ", fach_help , " in ", bl_select ),
+          highcharter::hc_title(text = titel,
                                 align = "center",
                                 style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
           highcharter::hc_chart(
@@ -5041,7 +5044,7 @@ plot_auslaender_mint_zeit <- function(r){
 
         df <- df[with(df, order(wert, decreasing = TRUE)), ]
 
-        titel <- paste0("Anteil internationaler ", help, " an allen ", help2, " in ", fach_help , " in ", bl_select )
+        titel <- paste0("Anteil internationaler ", help, " an allen ", help2, " in ", fach_help , praep, bl_select )
 
         highcharter::hchart(df, 'column', highcharter::hcaes(y = wert, x = jahr, group = ausl_detect))%>%
           highcharter::hc_tooltip(pointFormat = "{point.ausl_detect} <br> Anteil: {point.display_rel} %")%>%
@@ -5053,7 +5056,7 @@ plot_auslaender_mint_zeit <- function(r){
           highcharter::hc_plotOptions(column = list(pointWidth = 70))%>%
           highcharter::hc_colors(c("#efe8e6", "#66cbaf")) %>%
           highcharter::hc_yAxis(max = 40)%>%
-          highcharter::hc_title(text = paste0("Anteil internationaler ", help, " an allen ", help2, " in ", fach_help , " in ", bl_select ),
+          highcharter::hc_title(text = titel,
                                 align = "center",
                                 style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
           highcharter::hc_chart(
@@ -5109,7 +5112,7 @@ plot_auslaender_mint_zeit <- function(r){
 
       if (status_select == "Absolvent:innen"){
 
-        titel <-    paste0("Anzahl internationaler Absolvent:innen in ", fach_help, " in ", bl_select)
+        titel <-    paste0("Anzahl internationaler Absolvent:innen in ", fach_help, praep, bl_select)
         tooltip <- "{point.ausl_detect} <br> Anzahl: {point.display_abs}"
         format <- "{value:, f}"
         color <- c("#154194", "#66cbaf")
@@ -5118,7 +5121,7 @@ plot_auslaender_mint_zeit <- function(r){
 
       } else {
 
-        titel <-  paste0("Anzahl internationaler ", help, " in ", fach_help, " in ", bl_select)
+        titel <-  paste0("Anzahl internationaler ", help, " in ", fach_help, praep, bl_select)
         tooltip <- "{point.ausl_detect} <br> Anzahl: {point.display_abs}"
         format <- "{value:, f}"
         color <- c("#154194", "#66cbaf")
@@ -5132,7 +5135,7 @@ plot_auslaender_mint_zeit <- function(r){
 
         df <- df[with(df, order(wert, decreasing = TRUE)), ]
 
-        titel <- paste0("Anzahl internationaler Absolvent:innen in ", fach_help, " in ", bl_select)
+        titel <- paste0("Anzahl internationaler Absolvent:innen in ", fach_help, praep, bl_select)
 
 
         highcharter::hchart(df, 'column', highcharter::hcaes(y = wert, x = jahr, group = ausl_detect))%>%
@@ -5144,7 +5147,7 @@ plot_auslaender_mint_zeit <- function(r){
           highcharter::hc_xAxis(title = list(text = "")) %>%
           #highcharter::hc_plotOptions(column = list(stacking = "percent")) %>%
           highcharter::hc_colors(c("#efe8e6", "#66cbaf")) %>%
-          highcharter::hc_title(text =  paste0("Anzahl internationaler Absolvent:innen in ", fach_help, " in ", bl_select),
+          highcharter::hc_title(text = titel,
                                 margin = 45,
                                 align = "center",
                                 style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
@@ -5186,7 +5189,7 @@ plot_auslaender_mint_zeit <- function(r){
 
         df <- df[with(df, order(wert, decreasing = TRUE)), ]
 
-        titel <- paste0("Anzahl internationaler ", help, " in ", fach_help, " in ", bl_select)
+        titel <- paste0("Anzahl internationaler ", help, " in ", fach_help, praep, bl_select)
 
         highcharter::hchart(df, 'column', highcharter::hcaes(y = wert, x = jahr, group = ausl_detect))%>%
           highcharter::hc_tooltip(pointFormat = "{point.ausl_detect} <br> Anzahl: {point.display_abs}")%>%
@@ -5195,7 +5198,7 @@ plot_auslaender_mint_zeit <- function(r){
           ) %>%
           highcharter::hc_xAxis(title = list(text = "")) %>%
           highcharter::hc_colors(c("#efe8e6", "#66cbaf")) %>%
-          highcharter::hc_title(text =  paste0("Anzahl internationaler ", help, " in ", fach_help, " in ", bl_select),
+          highcharter::hc_title(text = titel,
                                 margin = 45,
                                 align = "center",
                                 style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
@@ -5316,6 +5319,7 @@ studierende_international_bula_mint <- function(r) {
     help_l <- ifelse(label_m == "Studienanfänger:innen (1. Hochschulsemester)", "Studienanfänger:innen", help_l)
 
 
+
     # plot
 
 
@@ -5370,6 +5374,8 @@ studierende_international_bula_mint <- function(r) {
     help_l <- ifelse(label == "internationalen Studienanfänger:innen (1. Hochschulsemester)",
                      "internationalen Studienanfänger:innen", help_l)
     help_l <- ifelse(label == "Studienanfänger:innen (1. Hochschulsemester)", "Studienanfänger:innen", help_l)
+
+
 
     # Plot
 
@@ -5552,7 +5558,7 @@ studierende_international_bula_mint <- function(r) {
         colors = ifelse(df$region == "Deutschland", "#b16fab",
                         ifelse(df$region == "Ostdeutschland (inkl. Berlin)", "#d3a4d7",
                                ifelse(df$region == "Westdeutschland (o. Berlin)", "#d3a4d7", "#A9A9A9"))))) %>%
-      highcharter::hc_title(text = paste0( "MINT-Anteil unter den ", r_lab1 , " (", timerange, ")"),
+      highcharter::hc_title(text = titel,
                             margin = 25,
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px"))   %>%
