@@ -498,7 +498,7 @@ plot_international_map_fem <- function(r){
 
       # spezifischen titel vorbereiten
       title_dyn <- if(fach_m=="Alle MINT-Fächer"){
-        paste("Anteil von weiblichen Studierenden an allen Studierenden in MINT (" , timerange, ")")
+        paste("Anteil von weiblichen Studierenden an allen Studierenden in MINT (", timerange, ")")
 
       } else if (fach_m=="Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe"){
 
@@ -558,7 +558,7 @@ plot_international_map_fem <- function(r){
 
       # spezifischen titel vorbereiten
       title_dyn <- if(fach_m=="Alle MINT-Fächer"){
-        paste("Anteil von weiblichen Studierenden in MINT an allen weiblichnen Studierenden (" , timerange, ")")
+        paste("Anteil von weiblichen Studierenden in MINT an allen weiblichen Studierenden (" , timerange, ")")
 
       } else if (fach_m=="Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe"){
 
@@ -1076,9 +1076,6 @@ plot_international_top10_gender <- function(r) {
 
 
 
-
-
-
     fach_m <- r$map_f_g_e_u
     if (is.null(fach_m)) { fach_m <- ""}
 
@@ -1100,7 +1097,6 @@ plot_international_top10_gender <- function(r) {
 
     df <- df %>%
       dplyr::select(land, wert)
-
 
 
   }
