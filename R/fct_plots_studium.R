@@ -92,7 +92,7 @@ studienzahl_mint <- function(r){
           highcharter::hw_grid(
 
 
-            out <- piebuilder(df_pie, titel, x = "fach", y = "proportion", tooltip, color =  c("#b16fab", "#efe8e6"), format = format, quelle=quelle),
+            out <- piebuilder(df_pie, titel, x = "fach", y = "proportion", tooltip, color =  c("#b16fab", "#efe8e6"), format = format, quelle = quelle),
 
 
             ncol = 1,
@@ -3316,7 +3316,7 @@ studienzahl_choice_gender <- function(r) {
 
       quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
-      out <- piebuilder(df, titel, x = "fach", y ="prop", tooltip, color, format, quelle=quelle)
+      out <- piebuilder(df, titel, x = "fach", y ="prop", tooltip, color, format, quelle = quelle)
 
     }
 
@@ -4061,6 +4061,7 @@ plot_mint_faecher_frauen <- function(r){
      var filename = chartTitle + '_' + date + '.txt';
 
      var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
 
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
@@ -4103,6 +4104,7 @@ plot_mint_faecher_frauen <- function(r){
      var filename = chartTitle + '_' + date + '.txt';
 
      var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
 
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {

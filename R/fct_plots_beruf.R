@@ -3555,7 +3555,7 @@ arbeitsmarkt_lk_detail_vergleich <- function(r){
 
 
   quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
-  out <- balkenbuilder3(df_compare, titel, x="landkreis", y="display_value", tooltip, format, color, optional = optional, optional2 = my_hc_size, quelle= quelle)
+  out <- balkenbuilder3(df_compare, titel, x="landkreis", y="display_value", tooltip, format, color, optional = optional, optional2 = my_hc_size, quelle = quelle)
 
 
 }

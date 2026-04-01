@@ -577,6 +577,8 @@ home_einstieg_gender <- function(r) {
       jahr <- NA
       df_1_mint <- dplyr::data_frame(wert, jahr)
 
+      quelle <- "Quellen: Destatis, 2025; Bundesagentur für Arbeit, 2025; KMK, 2025, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+
 
       #nrow 0 daher empty line
       mint1 <- highcharter::hchart(df_1_mint, 'line', highcharter::hcaes(x = reorder(jahr, wert), y = wert)) %>%
@@ -591,7 +593,7 @@ home_einstieg_gender <- function(r) {
       mint2 <- piebuilder(df_2_mint, titel,
                           x = "geschlecht", y = "prop",
                           paste0('Anteil: {point.prop_besr}% <br> Anzahl: {point.wert_besr}'),
-                          c("#efe8e6", "#154194"))
+                          c("#efe8e6", "#154194"), quelle = quelle)
 
 
     }else if(indi[2] == "Schüler:innen im Leistungskurs" & nrow(df_2_mint) == 0){
@@ -599,6 +601,7 @@ home_einstieg_gender <- function(r) {
       wert <- NA
       jahr <- NA
       df_2_mint <- dplyr::data_frame(wert, jahr)
+      quelle <- "Quellen: Destatis, 2025; Bundesagentur für Arbeit, 2025; KMK, 2025, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
       ##empty line plot
       mint2 <- highcharter::hchart(df_2_mint, 'line', highcharter::hcaes(x = reorder(jahr, wert), y = wert, group = indikator)) %>%
@@ -613,7 +616,7 @@ home_einstieg_gender <- function(r) {
       mint1 <- piebuilder(df_1_mint, paste0(df_1_mint$titel_help[1], " ", praep, " ", regio, " (", zeit, ")"),
                           x = "geschlecht", y = "prop",
                           paste0('Anteil: {point.prop_besr}% <br> Anzahl: {point.wert_besr}'),
-                          c("#efe8e6", "#154194"))
+                          c("#efe8e6", "#154194"),quelle = quelle)
 
       }else{
 

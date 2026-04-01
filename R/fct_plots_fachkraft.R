@@ -1721,6 +1721,7 @@ plot_fachkraft_detail_item  <- function(r) {
      var filename = chartTitle + '_' + date + '.txt';
 
      var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle: Quellen: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
 
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
@@ -1796,6 +1797,8 @@ plot_fachkraft_detail_item  <- function(r) {
      var filename = chartTitle + '_' + date + '.txt';
 
      var data = 'Titel: %s\\n' + this.getCSV();
+     data += '\\nQuelle: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
+
 
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
