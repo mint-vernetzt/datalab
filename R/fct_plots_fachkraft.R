@@ -1113,7 +1113,7 @@ plot_fachkraft_epa_bulas <- function(r) {
     T ~ fach[1]
   )
 
-  titel_1 <- paste0("Engpassrisiko von Berufen in ", fach_1," (", level, timerange, ")")
+  titel_1 <- paste0("Engpassrisiko von Berufen in ", fach_1, " in ", regio," (", level, timerange, ")")
   titel <- titel_1
 
   # Entfernen aller Zeilen, bei denen group_col NA ist
@@ -1199,7 +1199,7 @@ plot_fachkraft_epa_bulas <- function(r) {
       T ~ fach[2]
     )
 
-    titel_2 <- paste0("Engpassrisiko in ", fach_2," (", level,timerange, ")")
+    titel_2 <- paste0("Engpassrisiko in ", fach_2," in ", regio," (", level,timerange, ")")
     titel <- titel_2
 
     used_colors <- group_col_dt %>%
@@ -1419,6 +1419,7 @@ plot_fachkraft_bar_vakanz  <- function(r) {
   this_region <- r$map_reg_fachkraft_arbeit_bar
   bf_label <- r$map_bl_fachkraft_arbeit_bar
 
+  praep <- ifelse(this_region == "Saarland", " im ", " in ")
 
   berufe_order <- c("Insgesamt", "Keine MINT-Berufe", "MINT-Berufe")
 #
@@ -1473,7 +1474,7 @@ plot_fachkraft_bar_vakanz  <- function(r) {
   }
 
 
-  titel <- paste0(this_indikator, " in den MINT-Bereichen in ", this_region,
+  titel <- paste0(this_indikator, " in den MINT-Bereichen", praep, this_region,
                   " (", level, timerange, ")")
 
   ##NICHT IN BALKENBUILDER DA ES eine andere struktur hat, und komplizierter is
@@ -1484,8 +1485,7 @@ plot_fachkraft_bar_vakanz  <- function(r) {
     mapping = highcharter::hcaes(x = fachbereich, y = wert, color = group_color)
   ) %>%
     highcharter::hc_title(
-      text = paste0(this_indikator, " in den MINT-Bereichen in ", this_region,
-                    " (", level, timerange, ")"),
+      text = titel,
       margin = 10,
       align = "center",
       style = list(color = "black",
@@ -1548,6 +1548,7 @@ plot_fachkraft_detail_item  <- function(r) {
   timerange <- r$map_y_fachkraft_arbeit_detail
   bf_label <- r$map_bl_fachkraft_arbeit_detail
   this_beruf <- r$map_b_fachkraft_arbeit_detail
+
 
   if (length(this_beruf) == 0) {
     stop("this_beruf ist leer – SQL-Abfrage kann nicht ausgeführt werden.")
@@ -1741,9 +1742,12 @@ plot_fachkraft_detail_item  <- function(r) {
 
 
 
-  titel <- paste0("Einzelne Indikatoren der Engpassanalyse (gesamt ",
-                  round(plot_solidgauge_data$wert, 1),
-                  ") für Beruf ", this_beruf, " (", timerange, ")")
+  # titel <- paste0("Einzelne Indikatoren der Engpassanalyse (gesamt ",
+  #                 round(plot_solidgauge_data$wert, 1),
+  #                 ") für Beruf ", this_beruf, " (", timerange, ")")
+
+  titel <- paste0("Einzelne Indikatoren der Engpassanalyse (gesamt ", round(plot_solidgauge_data$wert, 1),
+                  ") auf dem ", bf_label, "-Level ", "für ", this_beruf, " (", timerange, ")")
 
 
   ##NICHT IN BALKENBUILDER DA ES eine andere struktur hat, und komplizierter is
@@ -1769,9 +1773,7 @@ plot_fachkraft_detail_item  <- function(r) {
                           tickInterval = 1) %>%
     highcharter::hc_xAxis(title = list(text = "")) %>%
     highcharter::hc_title(
-      text = paste0("Einzelne Indikatoren der Engpassanalyse (gesamt ",
-                    round(plot_solidgauge_data$wert, 1),
-                    ") für Beruf ", this_beruf, " (", timerange, ")"),
+      text = titel,
       margin = 45,
       align = "center",
       style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
@@ -1898,6 +1900,7 @@ plot_fachkraft_ranking_epa  <- function(r) {
 
   this_beruf <- r$fachkraft_ranking_epa_2 #Alle Berufe, MINT-Berufe
 
+  bf_label_titel <- ifelse(bf_label == "Fachkräfte", "Fachkräften", bf_label)
 
   if(this_beruf == "Alle Berufe"){
 
@@ -1915,7 +1918,7 @@ plot_fachkraft_ranking_epa  <- function(r) {
 
     df <- DBI::dbGetQuery(con, df_query)
 
-    titel <- paste0("Die Berufe mit dem höchsten Engpassrisiko unter allen Berufsleveln in allen Berufsgruppen")
+    titel <- paste0("Die Berufe mit dem höchsten Engpassrisiko unter allen Berufsleveln in allen Berufsgruppen ", "(", timerange, ")" )
 
   }
   else{
@@ -1932,11 +1935,10 @@ plot_fachkraft_ranking_epa  <- function(r) {
 
     df <- DBI::dbGetQuery(con, df_query)
 
-    titel <- paste0("Die Berufe mit dem höchsten Engpassrisiko unter ", bf_label ," in allen Berufsgruppen")
+    titel <- paste0("Die Berufe mit dem höchsten Engpassrisiko unter ", bf_label_titel ," in allen Berufsgruppen ", "(", timerange, ")" )
 
   }
   } else if (this_beruf == "MINT-Berufe"){
-
 
     if(bf_label == "Gesamt"){
 
@@ -1949,7 +1951,7 @@ plot_fachkraft_ranking_epa  <- function(r) {
       ORDER BY wert DESC
       LIMIT 30
     ", .con = con)
-      titel <- paste0("Die Berufe mit dem höchsten Engpassrisiko unter allen Berufsleveln in MINT-Berufen")
+      titel <- paste0("Die Berufe mit dem höchsten Engpassrisiko unter allen Berufsleveln in MINT-Berufen ", "(", timerange, ")" )
 
       df <- DBI::dbGetQuery(con, df_query)
 
@@ -1967,7 +1969,7 @@ plot_fachkraft_ranking_epa  <- function(r) {
       LIMIT 30
     ", .con = con)
 
-      titel <- paste0("Die Berufe mit dem höchsten Engpassrisiko unter ", bf_label ," in MINT-Berufen")
+      titel <- paste0("Die Berufe mit dem höchsten Engpassrisiko unter ", bf_label_titel ," in MINT-Berufen ", "(", timerange, ")" )
 
       df <- DBI::dbGetQuery(con, df_query)
 
