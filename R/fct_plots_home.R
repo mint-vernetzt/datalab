@@ -193,64 +193,92 @@ home_einstieg <- function(r) {
   else if(betrachtung == "Gruppenvergleich - Balkendiagramm"){
 
    df <- df[with(df, order(prop, decreasing = TRUE)), ] ####
+
    titel <- paste0("Anteil von MINT nach Bildungsbereichen in ", regio, " (", zeit,")")
 
 
-   title <- paste0("Anteil von MINT nach Bildungsbereichen in ", regio, " (", zeit,")")
 
-   #dies kann nicht als systemvariable übergeben werden also group
+   out <- plotly::plot_ly(df, y = ~indikator, x = ~prop, type = "bar",orientation = "h",
+                          color = ~fachbereich, colors = c("#b16fab", "#efe8e6")) %>%
+     plotly::layout(barmode = "stack",
+                    xaxis = list(ticksuffix = "%", title = ""),
+                    yaxis = list(title = "",
+                            categoryorder = "array",
+                            categoryarray = c("Beschäftigte", "Auszubildende", "Studierende", "Leistungskurse")),
+                    legend = list(traceorder = "normal"),
+                    font = list(family = "Calibri Regular", size = 14),
+                    title = list(text = titel,
+                        x = 0.5, font = list(family = "Calibri Regular", size = 20, color = "black" )),
+                    annotations = list(list (text = "Quellen: Destatis, 2025; Bundesagentur für Arbeit, 2025; KMK, 2025, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+                                       xanchor = "left", showarrow = FALSE, xref = "paper", yref = "paper",
+                                       font = list(size = 11, color = "gray", family = "Calibri Regular")) ),
+                    margin = list(t = 90, b = 80)
 
-   out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y = prop, x = indikator, group = "fachbereich"))%>%
-      highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.fachbereich} <br> Anteil: {point.prop_besr}% <br> Anzahl: {point.wert_besr}") %>%
-      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"),  reversedStacks =  FALSE) %>%
-      highcharter::hc_xAxis(title = list(text = "")) %>%
-      highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
-      highcharter::hc_colors(c("#b16fab", "#efe8e6")) %>%
-      highcharter::hc_title(text = paste0("Anteil von MINT nach Bildungsbereichen in ", regio, " (", zeit,")"),
-                            margin = 45,
-                            align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
-     highcharter::hc_chart(
-        style = list(fontFamily = "Calibri Regular", fontSize = "14px")
-      ) %>%
-      highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
-     highcharter::hc_caption(text = "Quellen: Destatis, 2025; Bundesagentur für Arbeit, 2025; KMK, 2025, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
-                             style = list(fontSize = "11px", color = "gray")) %>%
-     highcharter::hc_exporting(enabled = TRUE,
-                               buttons = list(
-                                 contextButton = list(
-                                   menuItems = list("downloadPNG", "downloadCSV",
-                                                    list(
-                                                      text = "Daten für GPT",
-                                                      onclick = htmlwidgets::JS(sprintf(
-                                                        "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
-
-     var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle: Quellen: Destatis, 2025; Bundesagentur für Arbeit, 2025; KMK, 2025, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
-
-
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-   }", gsub("'", "\\\\'", titel), gsub("'", "\\\\'", titel)))))
-                                 )
-                               )
-     )
-
-
-  }
-
-  return(out)
+                    )
 }
+  return(out)
+
+}
+
+
+
+#
+#
+#
+#
+#   #dies kann nicht als systemvariable übergeben werden also group
+#
+#    out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y = prop, x = indikator, group = "fachbereich"))%>%
+#       highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.fachbereich} <br> Anteil: {point.prop_besr}% <br> Anzahl: {point.wert_besr}") %>%
+#       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"),  reversedStacks =  FALSE) %>%
+#       highcharter::hc_xAxis(title = list(text = "")) %>%
+#       highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
+#       highcharter::hc_colors(c("#b16fab", "#efe8e6")) %>%
+#       highcharter::hc_title(text = paste0("Anteil von MINT nach Bildungsbereichen in ", regio, " (", zeit,")"),
+#                             margin = 45,
+#                             align = "center",
+#                             style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
+#      highcharter::hc_chart(
+#         style = list(fontFamily = "Calibri Regular", fontSize = "14px")
+#       ) %>%
+#       highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
+#      highcharter::hc_caption(text = "Quellen: Destatis, 2025; Bundesagentur für Arbeit, 2025; KMK, 2025, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+#                              style = list(fontSize = "11px", color = "gray")) %>%
+#      highcharter::hc_exporting(enabled = TRUE,
+#                                buttons = list(
+#                                  contextButton = list(
+#                                    menuItems = list("downloadPNG", "downloadCSV",
+#                                                     list(
+#                                                       text = "Daten für GPT",
+#                                                       onclick = htmlwidgets::JS(sprintf(
+#                                                         "function () {
+#      var date = new Date().toISOString().slice(0,10);
+#      var chartTitle = '%s'.replace(/\\s+/g, '_');
+#      var filename = chartTitle + '_' + date + '.txt';
+#
+#      var data = 'Titel: %s\\n' + this.getCSV();
+#      data += '\\nQuelle: Quellen: Destatis, 2025; Bundesagentur für Arbeit, 2025; KMK, 2025, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
+#
+#
+#      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+#      if (window.navigator.msSaveBlob) {
+#        window.navigator.msSaveBlob(blob, filename);
+#      } else {
+#        var link = document.createElement('a');
+#        link.href = URL.createObjectURL(blob);
+#        link.download = filename;
+#        link.click();
+#      }
+#    }", gsub("'", "\\\\'", titel), gsub("'", "\\\\'", titel)))))
+#                                  )
+#                                )
+#      )
+#
+#
+#   }
+#
+#   return(out)
+# }
 
 
 
