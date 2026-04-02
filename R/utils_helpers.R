@@ -1495,6 +1495,152 @@ linebuilder_light <- function(df, titel, x , y, group = NULL, tooltip, format, c
 
 }
 
+
+
+
+
+
+
+
+# eventuell default farbenorder setzen?
+
+balkenbuilder_plotly <- function(df, titel, x, y, orientation = "h", group = NULL, hovertemplate = NULL,
+                                 order = NULL, color = NULL, percent = FALSE, reverse_legend = FALSE,
+                                 stacking = FALSE, subtitel = NULL, quelle = "Quelle") {
+
+  if (is.numeric(df[[y]])) df[[y]] <- round(df[[y]], 1)
+
+  if (!is.null(order)) {
+    df[[x]] <- factor(df[[x]], levels = order)
+  }
+
+  if (orientation == "h") {
+
+      if (is.null(group)) {
+        out <- plotly::plot_ly(df, x = df[[y]], y = df[[x]], type = "bar", orientation = "h")
+      } else {
+        out <- plotly::plot_ly(df, x = df[[y]], y = df[[x]], color = df[[group]], colors = color, type = "bar", orientation = "h")
+      }
+
+      out <- out %>%
+        plotly::layout(
+          xaxis = list(title = "", ticksuffix = if (percent) "%" else ""),
+          yaxis = list(title = ""),
+          title = list(text = titel, x = 0.5, font = list(family = "Calibri Regular", size = 20, color = "black")),
+          font = list(family = "Calibri Regular", size = 14),
+          legend = list(traceorder = if (isTRUE(reverse_legend)) "reversed" else "normal"),
+          hoverlabel = list(family = "Calibri Regular", color = "black"),
+          annotations = list(list(text = quelle, x = 0, y = -0.15, xref = "paper", yref = "paper", xanchor = "left", showarrow = FALSE, font = list(size = 11, color = "gray", family = "Calibri Regular"))),
+          margin = list(t = 90, b = 100)
+        )
+      # plotly::config(displaylogo = FALSE, modeBarButtonsToRemove = c(
+      #   "sendDataToCloud", "autoScale2d", "resetScale2d", "toggleSpikelines", "hoverClosestCartesian", "hoverCompareCartesian","zoom2d", "pan2d", "select2d", "lasso2d", "zoomIn2d", "zoomOut2d"),
+      #   modeBarButtonsToAdd = list(
+      #     list(name = "Download CSV",
+      #          icon = list(path = "M16,2H8C6.9,2,6,2.9,6,4v16c0,1.1,0.9,2,2,2h8c1.1,0,2-0.9,2-2V4C18,2.9,17.1,2,16,2z M16,20H8V4h8V20z M14.5,14h-2v3h-1v-3h-2l2.5-3.5L14.5,14z",
+      #                      width = 24,height = 24),
+      #          click = htmlwidgets::JS("
+      #   function(gd) {
+      #     var d = gd.data[0], out = 'x,y\\n';
+      #     for (var i = 0; i < d.x.length; i++) out += d.x[i] + ',' + d.y[i] + '\\n';
+      #     var a = document.createElement('a');
+      #     a.href = URL.createObjectURL(new Blob([out], {type: 'text/csv'}));
+      #     a.download = 'data.csv';
+      #     a.click();
+      #   }
+      # ")
+      #     ),
+      #     list(name = "Download TXT",
+      #          icon = list(path = "M14,2H6C4.9,2,4,2.9,4,4v16c0,1.1,0.9,2,2,2h12c1.1,0,2-0.9,2-2V8L14,2z M13,9V3.5L18.5,9H13z M9,13h6v1.5h-2v5h-2v-5H9V13z",
+      #                      width = 24,height = 24),
+      #          click = htmlwidgets::JS("
+      #   function(gd) {
+      #     var d = gd.data[0], out = '';
+      #     for (var i = 0; i < d.x.length; i++) out += d.y[i] + ': ' + d.x[i] + '\\n';
+      #     var a = document.createElement('a');
+      #     a.href = URL.createObjectURL(new Blob([out], {type: 'text/plain'}));
+      #     a.download = 'data.txt';
+      #     a.click();
+      #   }
+      # ")
+      #     )
+      #   )
+      # )
+
+
+    }
+
+
+  else if (orientation == "v") {
+
+      if (is.null(group)) {
+        out <- plotly::plot_ly(df, x = df[[x]], y = df[[y]], type = "bar", orientation = "v")
+      } else {
+        out <- plotly::plot_ly(df, x = df[[x]], y = df[[y]], color = df[[group]], colors = color, type = "bar", orientation = "v")
+      }
+
+      out <- out %>%
+        plotly::layout(
+          xaxis = list(title = ""),
+          yaxis = list(title = "", ticksuffix = if (percent) "%" else ""),
+          title = list(text = titel, x = 0.5, font = list(family = "Calibri Regular", size = 20, color = "black")),
+          font = list(family = "Calibri Regular", size = 14),
+          legend = list(traceorder = if (isTRUE(reverse_legend)) "reversed" else "normal"),
+          hoverlabel = list(family = "Calibri Regular", color = "black"),
+          annotations = list(list(text = quelle, x = 0, y = -0.15, xref = "paper", yref = "paper", xanchor = "left", showarrow = FALSE, font = list(size = 11, color = "gray", family = "Calibri Regular"))),
+          margin = list(t = 70, b = 80)
+        )
+   } else {
+     stop("orientation must be 'h' or 'v'")
+  }
+
+# hier irgendwie den inhalt der hovers besser definieren...
+
+  if (!is.null(hovertemplate)) {
+    out <- plotly::style(out, hovertemplate = hovertemplate)
+  } else {
+    out <- plotly::style(out, hoverinfo = "x+y")
+  }
+
+  if (isTRUE(stacking)) {
+    out <- plotly::layout(out, barmode = "stack")
+  }
+
+  if (!is.null(subtitel)) {
+    out <- plotly::layout(out, title = list(
+       text = paste0(
+        "<b>", titel, "</b>",
+        "<br>",
+        "<span style='font-size:14px; color:gray; font-family:Calibri;'>", subtitel, "</span>"),
+        x = 0.5, font = list(family = "Calibri Regular", size = 20, color = "black")))
+}
+
+
+  return(out)
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color,
                           optional=NULL, reverse = TRUE, TF=NULL, stacking=NULL, subtitel = NULL, quelle="Quelle"){
 

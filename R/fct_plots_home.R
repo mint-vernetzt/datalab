@@ -728,64 +728,27 @@ home_einstieg_gender <- function(r) {
       df <- df[with(df, order(prop, decreasing = TRUE)), ]
 
 
-   #   titel <- paste0("Anteil von Frauen in MINT nach Bildungsbereichen in ", regio, " (", zeit, ")")
 
- #     out <- highcharter::hchart(df, 'bar', highcharter::hcaes( x = indikator, y=prop, group = geschlecht)) %>%
- #       highcharter::hc_tooltip(pointFormat = "{point.anzeige_geschlecht}Anteil: {point.prop_besr} % <br> Anzahl: {point.wert_besr}") %>%
- #       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"),  reversedStacks =  FALSE) %>%
- #       highcharter::hc_xAxis(title = list(text = "")) %>%
- #       highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
- #       highcharter::hc_colors(c("#154194", "#efe8e6")) %>%
- #       highcharter::hc_title(text = paste0("Anteil von Frauen in MINT nach Bildungsbereichen in ", regio, " (", zeit, ")"),
- #                             margin = 25,
- #                             align = "center",
- #                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
- #       highcharter::hc_chart(
- #         style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
- #       ) %>%
- #       highcharter::hc_legend(enabled = TRUE, reversed = FALSE) %>%
- #       highcharter::hc_exporting(enabled = TRUE,
- #                                 buttons = list(
- #                                   contextButton = list(
- #                                     menuItems = list("downloadPNG", "downloadCSV",
- #                                                      list(
- #                                                        text = "Daten für GPT",
- #                                                        onclick = htmlwidgets::JS(sprintf(
- #                                                          "function () {
- #    var date = new Date().toISOString().slice(0,10);
- #    var chartTitle = '%s'.replace(/\\s+/g, '_');
- #    var filename = chartTitle + '_' + date + '.txt';
- #
- #    var data = this.getCSV();
- #    var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
- #    if (window.navigator.msSaveBlob) {
- #      window.navigator.msSaveBlob(blob, filename);
- #    } else {
- #      var link = document.createElement('a');
- #      link.href = URL.createObjectURL(blob);
- #      link.download = filename;
- #      link.click();
- #    }
- #  }", gsub("'", "\\\\'", titel)))))
-  #                                  )
-  #                                )
-  #      )
 
       x <- "indikator"
       y <- "prop"
       group <- "geschlecht"
-      tooltip <- "{point.anzeige_geschlecht}Anteil: {point.prop_besr} % <br> Anzahl: {point.wert_besr}"
-      stacking <- "percent"
       titel <- paste0("Anteil von Frauen in MINT nach Bildungsbereichen in ", regio, " (", zeit, ")")
-      reversed <- FALSE
-      format <- "{value}%"
 
-      colors <- c("#154194", "#efe8e6")
+      color <- c("#154194", "#efe8e6")
+      order <- rev(unique(df$indikator))
+      quelle <- "Quelle der Daten: Destatis, 2025; Bundesagentur für Arbeit, 2025; KMK, 2025, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
-      quelle <- "Quellen: Destatis, 2025; Bundesagentur für Arbeit, 2025; KMK, 2025, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      hovertemplate <- paste0(
+        "%{y}<br>",
+        "%{fullData.name}<br>",
+        "Anzahl: %{text}<br>",
+        "Prozent: %{x}%<extra></extra>"
+      )
 
-      out <- balkenbuilder(df, titel, x, y, group, tooltip, format="{value}%", color = colors, reverse=reversed, stacking = stacking, quelle = quelle)
 
+      out <- balkenbuilder_plotly(df=df, x=x, y=y, titel=titel, orientation = "h", group, color = color,
+                                  order = order, stacking = TRUE, percent = TRUE, hovertemplate = hovertemplate, quelle=quelle)
 
 
 
