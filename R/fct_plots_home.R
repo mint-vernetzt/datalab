@@ -194,27 +194,32 @@ home_einstieg <- function(r) {
 
    df <- df[with(df, order(prop, decreasing = TRUE)), ] ####
 
+   df <- df %>%
+     dplyr::mutate(
+       .tooltip = paste0(
+         "<b>", indikator, "</b><br>",
+         "Gruppe: ", fachbereich, "<br>",
+         "Prozent: ", prop, " %"
+       )
+     )
+
+   text <- df$.tooltip
+
+
+   x <- "indikator"
+   y <- "prop"
+   group <- "fachbereich"
    titel <- paste0("Anteil von MINT nach Bildungsbereichen in ", regio, " (", zeit,")")
+   color <- c("#b16fab", "#efe8e6")
+   order <- c("Beschäftigte", "Auszubildende", "Studierende", "Leistungskurse")
+   quelle <- "Quelle der Daten: Destatis, 2025; Bundesagentur für Arbeit, 2025; KMK, 2025, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+
+
+   out <- balkenbuilder_plotly(df=df, x=x, y=y, titel=titel, orientation = "h", group, color = color,
+                               order = order, stacking = TRUE, percent = TRUE, hovertemplate = TRUE, text=text, quelle=quelle)
 
 
 
-   out <- plotly::plot_ly(df, y = ~indikator, x = ~prop, type = "bar",orientation = "h",
-                          color = ~fachbereich, colors = c("#b16fab", "#efe8e6")) %>%
-     plotly::layout(barmode = "stack",
-                    xaxis = list(ticksuffix = "%", title = ""),
-                    yaxis = list(title = "",
-                            categoryorder = "array",
-                            categoryarray = c("Beschäftigte", "Auszubildende", "Studierende", "Leistungskurse")),
-                    legend = list(traceorder = "normal"),
-                    font = list(family = "Calibri Regular", size = 14),
-                    title = list(text = titel,
-                        x = 0.5, font = list(family = "Calibri Regular", size = 20, color = "black" )),
-                    annotations = list(list (text = "Quellen: Destatis, 2025; Bundesagentur für Arbeit, 2025; KMK, 2025, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
-                                       xanchor = "left", showarrow = FALSE, xref = "paper", yref = "paper",
-                                       font = list(size = 11, color = "gray", family = "Calibri Regular")) ),
-                    margin = list(t = 90, b = 80)
-
-                    )
 }
   return(out)
 
@@ -728,7 +733,17 @@ home_einstieg_gender <- function(r) {
       df <- df[with(df, order(prop, decreasing = TRUE)), ]
 
 
+      df <- df %>%
+        dplyr::mutate(
+          .tooltip = paste0(
+            "<b>", indikator, "</b><br>",
+            "Gruppe: ", geschlecht, "<br>",
+            "Anzahl: ", prettyNum(wert, big.mark = ".", decimal.mark = ","), "<br>",
+            "Prozent: ", prop, " %"
+          )
+        )
 
+      text <- df$.tooltip
 
       x <- "indikator"
       y <- "prop"
@@ -739,16 +754,9 @@ home_einstieg_gender <- function(r) {
       order <- rev(unique(df$indikator))
       quelle <- "Quelle der Daten: Destatis, 2025; Bundesagentur für Arbeit, 2025; KMK, 2025, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
-      hovertemplate <- paste0(
-        "%{y}<br>",
-        "%{fullData.name}<br>",
-        "Anzahl: %{text}<br>",
-        "Prozent: %{x}%<extra></extra>"
-      )
-
 
       out <- balkenbuilder_plotly(df=df, x=x, y=y, titel=titel, orientation = "h", group, color = color,
-                                  order = order, stacking = TRUE, percent = TRUE, hovertemplate = hovertemplate, quelle=quelle)
+                                  order = order, stacking = TRUE, percent = TRUE, hovertemplate = TRUE, text=text, quelle=quelle)
 
 
 
