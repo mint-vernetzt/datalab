@@ -1504,10 +1504,9 @@ linebuilder_light <- function(df, titel, x , y, group = NULL, tooltip, format, c
 
 # eventuell default farbenorder setzen?
 
-balkenbuilder_plotly <- function(df, titel, x, y, orientation = "h", group = NULL, hovertemplate = NULL, text = NULL,
+balkenbuilder_plotly <- function(df, titel, x, y, orientation = "h", group = NULL,
                                  order = NULL, color = NULL, percent = FALSE, reverse_legend = FALSE,
                                  stacking = FALSE, subtitel = NULL, quelle = "Quelle") {
-
 
   df_json <- jsonlite::toJSON(df, dataframe = "rows", auto_unbox = TRUE, na = "null")
   titel_js  <- gsub("'", "\\\\'", titel)
@@ -1525,22 +1524,22 @@ balkenbuilder_plotly <- function(df, titel, x, y, orientation = "h", group = NUL
 
   if (orientation == "h") {
 
-    df[[x]] <- paste0(as.character(df[[x]]), "\u00A0\u00A0\u00A0")
 
       if (is.null(group)) {
-        out <- plotly::plot_ly(df, x = df[[y]], y = df[[x]], type = "bar", orientation = "h")
+        out <- plotly::plot_ly(df, x = df[[y]], y = df[[x]], type = "bar", orientation = "h", text = ~.tooltip, hovertemplate = "%{text}<extra></extra>")
       } else {
-        out <- plotly::plot_ly(df, x = df[[y]], y = df[[x]], color = df[[group]], colors = color, type = "bar", orientation = "h")
+        out <- plotly::plot_ly(df, x = df[[y]], y = df[[x]], color = df[[group]], colors = color, type = "bar", orientation = "h", text = ~.tooltip, hovertemplate = "%{text}<extra></extra>")
       }
 
       out <- out %>%
         plotly::layout(
-          xaxis = list(title = "", tickfont = list(size = 11), automargin = TRUE,
+          xaxis = list(title = "", tickfont = list(size = 11), range = c(0, 100), automargin = TRUE,
                        tickmode = "linear", dtick = 10,
                        gridcolor = "lightgray",gridwidth = 0.1,
                        ticksuffix = if (percent) "%" else ""),
-          yaxis = list(title = "", automargin = TRUE,
-                       tickfont = list(size = 11)),
+          yaxis = list(title = "", tickfont = list(size = 11), ticksuffix = "   ",
+                       categoryorder = if (!is.null(order)) "array" else "trace",
+                       categoryarray = if (!is.null(order)) rev(order) else NULL),
           title = list(text = titel, x = 0.5,
                        font = list(family = "Calibri Regular", size = 20, color = "black")),
           font = list(family = "Calibri Regular"),
@@ -1552,10 +1551,10 @@ balkenbuilder_plotly <- function(df, titel, x, y, orientation = "h", group = NUL
                         y = -0.12,
                         traceorder = if (isTRUE(reverse_legend)) "reversed" else "normal"),
           bargap = 0.3,
-          annotations = list(list(text = quelle, x = -0.20, y = -0.40,
-                                  xref = "paper", yref = "paper", xanchor = "left", showarrow = FALSE,
+          annotations = list(list(text = quelle, x = 1, y = -0.30, xref = "paper", yref = "paper", showarrow = FALSE,
+                                  xanchor = "right", yanchor = "top",
                                   font = list(size = 11, color = "gray", family = "Calibri Regular"))),
-          margin = list(t = 80, b = 100)
+          margin = list(t = 60, b = 100)
           ) %>%
         plotly::config(
           displaylogo = FALSE,
@@ -1674,9 +1673,9 @@ balkenbuilder_plotly <- function(df, titel, x, y, orientation = "h", group = NUL
   else if (orientation == "v") {
 
       if (is.null(group)) {
-        out <- plotly::plot_ly(df, x = df[[x]], y = df[[y]], type = "bar", orientation = "v")
+        out <- plotly::plot_ly(df, x = df[[x]], y = df[[y]], type = "bar", orientation = "v", text = ~.tooltip, hovertemplate = "%{text}<extra></extra>")
       } else {
-        out <- plotly::plot_ly(df, x = df[[x]], y = df[[y]], color = df[[group]], colors = color, type = "bar", orientation = "v")
+        out <- plotly::plot_ly(df, x = df[[x]], y = df[[y]], color = df[[group]], colors = color, type = "bar", orientation = "v", text = ~.tooltip, hovertemplate = "%{text}<extra></extra>")
       }
 
     out <- out %>%
@@ -1816,15 +1815,6 @@ balkenbuilder_plotly <- function(df, titel, x, y, orientation = "h", group = NUL
 
  } else {
      stop("orientation must be 'h' or 'v'")
-  }
-
-
-  if (!is.null(text) && !is.null(hovertemplate)) {
-    out <- plotly::style(out, text = text, hovertemplate = "%{text}<extra></extra>")
-  } else if (!is.null(text)) {
-    out <- plotly::style(out, text = text)
-  } else if (!is.null(hovertemplate)) {
-    out <- plotly::style(out, hovertemplate = "%{text}<extra></extra>")
   }
 
 
