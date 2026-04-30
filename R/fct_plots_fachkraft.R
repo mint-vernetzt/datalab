@@ -689,8 +689,6 @@ plot_fachkraft_epa_item <- function(r) {
   }
 
 
-
-
   df_query <- glue::glue_sql("
   SELECT *
   FROM arbeitsmarkt_epa_detail
