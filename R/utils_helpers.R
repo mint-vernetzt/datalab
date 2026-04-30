@@ -1376,6 +1376,208 @@ piebuilder <- function(df, titel, x, y, tooltip, color = c("#b16fab", "#efe8e6")
 }
 
 
+linebuilder_plotly <- function(
+    df,
+    titel,
+    x,
+    y,
+    group,
+    format = ".1f",
+    color = c("#b16fab", "#154194", "#66cbaf", "#fbbf24"),
+    quelle = "Quelle"
+) {
+
+  # y runden
+  # df <- df %>%
+  #   dplyr::mutate(!!sym(y) := round(!!sym(y), 1))
+
+  # df für JS verfügbar machen
+  df_json <- jsonlite::toJSON(df, dataframe = "rows", auto_unbox = TRUE, na = "null")
+
+  # Strings sicher für JS
+  titel_js  <- gsub("'", "\\\\'", titel)
+  quelle_js <- gsub("'", "\\\\'", quelle)
+
+  # Plot erzeugen
+  p <- plotly::plot_ly(
+    data = df,
+    x = as.formula(paste0("~`", x, "`")),
+    y = as.formula(paste0("~`", y, "`")),
+    color = as.formula(paste0("~`", group, "`")),
+    colors = color,
+    type = "scatter",
+    mode = "lines+markers",
+    text = ~tooltip,
+    hovertemplate = "%{text}<extra></extra>"
+  ) |>
+    plotly::style(
+      hoverlabel = list(bgcolor = "white",
+                        font = list(size = 12))
+    ) |>
+    plotly::layout(
+      title = list(
+        text = titel,
+        x = 0.5,
+        xanchor = "center",
+        font = list(
+          family = "Calibri, sans-serif",
+          size = 20,
+          color = "black"
+        )
+      ),
+      xaxis = list(
+        title = list(text = "Jahr"),
+        tickformat = "d",
+        showgrid = FALSE,
+        zeroline = FALSE,
+        tickfont = list(family = "Calibri, sans-serif", size = 16, color = "black"),
+        titlefont = list(family = "Calibri, sans-serif", size = 16, color = "black")
+      ),
+      yaxis = list(
+        title = list(text = ""),
+        tickformat = format,
+        showgrid = TRUE,
+        zeroline = FALSE,
+        tickfont = list(family = "Calibri, sans-serif", size = 16, color = "black"),
+        titlefont = list(family = "Calibri, sans-serif", size = 16, color = "black")
+      ),
+      separators = ",.",
+      font = list(
+        family = "Calibri, sans-serif",
+        size = 16,
+        color = "black"
+      ),
+      legend = list(
+        orientation = "h",
+        x = 0.5,
+        y = -0.35,
+        xanchor = "center",
+        yanchor = "top"
+      ),
+      annotations = list(
+        list(
+          text = quelle,
+          x = 0,
+          y = -0.55,
+          xref = "paper",
+          yref = "paper",
+          xanchor = "left",
+          yanchor = "top",
+          showarrow = FALSE,
+          font = list(size = 11, color = "gray")
+        )
+      ),
+      margin = list(t = 80, b = 130, r = 50)
+    ) |>
+    plotly::config(
+      displaylogo = FALSE,
+      modeBarButtonsToRemove = c(
+        "sendDataToCloud", "autoScale2d", "resetScale2d", "toggleSpikelines",
+        "hoverClosestCartesian", "hoverCompareCartesian",
+        "zoom2d", "pan2d", "select2d", "lasso2d", "zoomIn2d", "zoomOut2d"
+      ),
+      modeBarButtonsToAdd = list(
+
+        # CSV-Download
+        list(
+          name = "Download CSV",
+          icon = list(
+            path = "M16,2H8C6.9,2,6,2.9,6,4v16c0,1.1,0.9,2,2,2h8c1.1,0,2-0.9,2-2V4C18,2.9,17.1,2,16,2z M16,20H8V4h8V20z M14.5,14h-2v3h-1v-3h-2l2.5-3.5L14.5,14z",
+            width = 24,
+            height = 24
+          ),
+          click = htmlwidgets::JS(sprintf("
+            function(gd) {
+              var rows = %s;
+              var date = new Date().toISOString().slice(0,10);
+              var chartTitle = '%s'.replace(/\\s+/g, '_');
+              var filename = chartTitle + '_' + date + '.csv';
+
+              if (!rows.length) return;
+
+              var cols = Object.keys(rows[0]);
+              var csv = cols.join(';') + '\\n';
+
+              rows.forEach(function(row) {
+                var values = cols.map(function(col) {
+                  var value = row[col];
+                  if (value === null || value === undefined) return '';
+                  value = String(value).replace(/\"/g, '\"\"');
+                  if (value.search(/[\";\\n]/) >= 0) {
+                    value = '\"' + value + '\"';
+                  }
+                  return value;
+                });
+                csv += values.join(';') + '\\n';
+              });
+
+              var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+
+              if (window.navigator.msSaveBlob) {
+                window.navigator.msSaveBlob(blob, filename);
+              } else {
+                var link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = filename;
+                link.click();
+              }
+            }
+          ", df_json, titel_js))
+        ),
+
+        # TXT-Download für KI
+        list(
+          name = "Download Daten für KI-Chats als txt",
+          icon = list(
+            path = "M14,2H6C4.9,2,4,2.9,4,4v16c0,1.1,0.9,2,2,2h12c1.1,0,2-0.9,2-2V8L14,2z M14,4.5L17.5,8H14V4.5z M18,20H6V4h6v6h6V20z",
+            width = 24,
+            height = 24
+          ),
+          click = htmlwidgets::JS(sprintf("
+            function(gd) {
+              var rows = %s;
+              var date = new Date().toISOString().slice(0,10);
+              var chartTitle = '%s'.replace(/\\s+/g, '_');
+              var filename = chartTitle + '_' + date + '.txt';
+
+              if (!rows.length) return;
+
+              var cols = Object.keys(rows[0]);
+
+              var text = '';
+              text += 'Titel: %s\\n';
+              text += 'Quelle: %s\\n\\n';
+              text += 'Daten:\\n';
+
+              text += cols.join('\\t') + '\\n';
+
+              rows.forEach(function(row) {
+                var values = cols.map(function(col) {
+                  var value = row[col];
+                  if (value === null || value === undefined) return '';
+                  return String(value);
+                });
+                text += values.join('\\t') + '\\n';
+              });
+
+              var blob = new Blob([text], { type: 'text/plain;charset=utf-8;' });
+
+              if (window.navigator.msSaveBlob) {
+                window.navigator.msSaveBlob(blob, filename);
+              } else {
+                var link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = filename;
+                link.click();
+              }
+            }
+          ", df_json, titel_js, titel_js, quelle_js))
+        )
+      )
+    )
+
+  return(p)
+}
 
 
 #df, titel, x, y, tooltip
