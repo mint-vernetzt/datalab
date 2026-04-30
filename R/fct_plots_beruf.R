@@ -244,6 +244,14 @@ beruf_verlauf_single <- function(r) {
                     wert_ges = wert.y) %>%
       dplyr::mutate(prop = round(wert/wert_ges *100, 1))
 
+    sorted_indicators <- df %>%
+      dplyr::group_by(fachbereich) %>%
+      dplyr::summarize(m_value = mean(round(prop, 1), na.rm = TRUE)) %>%
+      dplyr::arrange(m_value) %>%
+      dplyr::pull(fachbereich)
+
+    df$fachbereich <- factor(df$fachbereich, levels = sorted_indicators)
+
     # order years for plot
     df <- df[with(df, order(jahr, decreasing = FALSE)), ]
 
@@ -270,6 +278,14 @@ beruf_verlauf_single <- function(r) {
     out <- linebuilder_plotly(df, titel, x = "jahr", y = "prop", group = "indikator", color = color, quelle = quelle)
 
   } else if(absolut_selector == "Anzahl") {
+
+    sorted_indicators <- df %>%
+      dplyr::group_by(fachbereich) %>%
+      dplyr::summarize(m_value = mean(round(wert, 1), na.rm = TRUE)) %>%
+      dplyr::arrange(m_value) %>%
+      dplyr::pull(fachbereich)
+
+    df$fachbereich <- factor(df$fachbereich, levels = sorted_indicators)
 
     # order years for plot
     df <- df[with(df, order(jahr, decreasing = FALSE)), ]
@@ -366,8 +382,6 @@ arbeitsmarkt_mint_bulas <- function(r) {
     # plot
 
 
-
-    df <-df
     joinby <- c("name", "bundesland")
     name <- paste0("MINT")
     tooltip <- "{point.bundesland} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.wert}"
@@ -514,6 +528,14 @@ arbeitsmarkt_mint_bulas <- function(r) {
       df <- df %>%
         dplyr::filter(selector=="In Prozent")
 
+      sorted_indicators <- df %>%
+        dplyr::group_by(bundesland) %>%
+        dplyr::summarize(m_value = mean(round(wert, 1), na.rm = TRUE)) %>%
+        dplyr::arrange(m_value) %>%
+        dplyr::pull(bundesland)
+
+      df$bundesland <- factor(df$bundesland, levels = sorted_indicators)
+
       df <- df[with(df, order(bundesland, jahr, decreasing = FALSE)), ]
 
       titel <- paste0("Anteil von ", title_help, " in MINT-Berufen an allen ", title_help)
@@ -543,6 +565,13 @@ arbeitsmarkt_mint_bulas <- function(r) {
 
       df <- df[with(df, order(bundesland, jahr, decreasing = FALSE)), ]
 
+      sorted_indicators <- df %>%
+        dplyr::group_by(bundesland) %>%
+        dplyr::summarize(m_value = mean(round(wert, 1), na.rm = TRUE)) %>%
+        dplyr::arrange(m_value) %>%
+        dplyr::pull(bundesland)
+
+      df$bundesland <- factor(df$bundesland, levels = sorted_indicators)
 
       titel <- paste0("Anzahl von ", title_help, " in MINT-Berufen")
 
@@ -1305,7 +1334,7 @@ beruf_verlauf_faecher <- function(r) {
     sorted_indicators <- df %>%
       dplyr::group_by(fachbereich) %>%
       dplyr::summarize(m_value = mean(round(prop, 1), na.rm = TRUE)) %>%
-      dplyr::arrange(desc(m_value)) %>%
+      dplyr::arrange(m_value) %>%
       dplyr::pull(fachbereich)
 
     df$fachbereich <- factor(df$fachbereich, levels = sorted_indicators)
@@ -1343,10 +1372,11 @@ beruf_verlauf_faecher <- function(r) {
     sorted_indicators <- df %>%
       dplyr::group_by(fachbereich) %>%
       dplyr::summarize(m_value = mean(round(wert, 1), na.rm = TRUE)) %>%
-      dplyr::arrange(desc(m_value)) %>%
+      dplyr::arrange(m_value) %>%
       dplyr::pull(fachbereich)
 
     df$fachbereich <- factor(df$fachbereich, levels = sorted_indicators)
+
     colors <- color_fachbereich[sorted_indicators]
     #titlehelper
     title_help <- paste0(indi, "n")
@@ -2537,6 +2567,14 @@ arbeitsmarkt_wahl_gender <- function(r) {
          dplyr::filter(fachbereich != "Alle")
 
 
+       sorted_indicators <- df %>%
+         dplyr::group_by(bundesland) %>%
+         dplyr::summarize(m_value = mean(round(prop, 1), na.rm = TRUE)) %>%
+         dplyr::arrange(m_value) %>%
+         dplyr::pull(bundesland)
+
+       df$bundesland <- factor(df$bundesland, levels = sorted_indicators)
+
        # order years for plot
        df <- df[with(df, order(bundesland, jahr, decreasing = FALSE)), ]
 
@@ -2568,8 +2606,6 @@ arbeitsmarkt_wahl_gender <- function(r) {
 
      }else if(absolut_selector=="Anzahl"){
 
-
-
        title_help <- paste0(indi, "r")
        title_help <- ifelse(grepl("ausländische Beschäftigte", indi), "ausländischer Beschäftigter", title_help)
        title_help <- ifelse(grepl("ausländische Auszubildende", indi), "ausländischer Auszubildender", title_help)
@@ -2578,6 +2614,13 @@ arbeitsmarkt_wahl_gender <- function(r) {
        titel_w <- ifelse(faecher == "Andere Berufsgruppen", paste0("Anzahl weiblicher ", title_help, ", die kein MINT-Berufsfeld wählen (", timerange, ")"),
                          paste0("Anzahl weiblicher ", title_help, ", die das Berufsfeld ", faecher, " wählen (", timerange, ")"))
 
+       sorted_indicators <- df %>%
+         dplyr::group_by(bundesland) %>%
+         dplyr::summarize(m_value = mean(round(wert, 1), na.rm = TRUE)) %>%
+         dplyr::arrange(m_value) %>%
+         dplyr::pull(bundesland)
+
+       df$bundesland <- factor(df$bundesland, levels = sorted_indicators)
 
        df <- df[with(df, order(bundesland, jahr, decreasing = FALSE)), ]
 
@@ -3875,11 +3918,7 @@ entgelte_verlauf_1 <- function(r) {
                                ", .con = con)
 
 
-
   df <- DBI::dbGetQuery(con, df_query)
-
-
-
 
   df <- df %>%
     dplyr::mutate(wertq = readr::parse_number(wert))
@@ -3903,9 +3942,17 @@ entgelte_verlauf_1 <- function(r) {
     berufsleb = "alle Berufslevel"
   }
 
+  sorted_indicators <- df %>%
+    dplyr::group_by(berufsgruppe) %>%
+    dplyr::summarize(m_value = mean(round(wertq, 1), na.rm = TRUE)) %>%
+    dplyr::arrange(m_value) %>%
+    dplyr::pull(berufsgruppe)
+
+  df$berufsgruppe <- factor(df$berufsgruppe, levels = sorted_indicators)
+
 
   titel <- paste0("Entwicklung der Entgelte in den verschiedenen Kategorien in ", land, " (", geschlecht, ",", " ", berufsleb, ")")
-  tooltip <-"Wert in Euro {point.y}"
+
   df <- df %>%
     dplyr::mutate(
       tooltip = paste0(

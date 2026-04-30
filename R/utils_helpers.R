@@ -1384,7 +1384,8 @@ linebuilder_plotly <- function(
     group,
     format = ".1f",
     color = c("#b16fab", "#154194", "#66cbaf", "#fbbf24"),
-    quelle = "Quelle"
+    quelle = "Quelle",
+    subtitel = NULL
 ) {
 
   # y runden
@@ -1426,7 +1427,7 @@ linebuilder_plotly <- function(
         )
       ),
       xaxis = list(
-        title = list(text = "Jahr"),
+        title = list(text = ""),
         tickformat = "d",
         showgrid = FALSE,
         zeroline = FALSE,
@@ -1450,24 +1451,25 @@ linebuilder_plotly <- function(
       legend = list(
         orientation = "h",
         x = 0.5,
-        y = -0.35,
+        y = -0.13,
         xanchor = "center",
-        yanchor = "top"
+        yanchor = "top",
+        traceorder = "reversed"
       ),
       annotations = list(
         list(
           text = quelle,
-          x = 0,
-          y = -0.55,
+          x = 1,
+          y = -0.38,
           xref = "paper",
           yref = "paper",
-          xanchor = "left",
+          xanchor = "right",
           yanchor = "top",
           showarrow = FALSE,
-          font = list(size = 11, color = "gray")
+          font = list(size = 11, color = "gray", family = "Calibri Regular")
         )
       ),
-      margin = list(t = 80, b = 130, r = 50)
+      margin = list(t = 80, b = 100, r = 50)
     ) |>
     plotly::config(
       displaylogo = FALSE,
@@ -1575,6 +1577,19 @@ linebuilder_plotly <- function(
         )
       )
     )
+
+  if (!is.null(subtitel)) {
+    p <- plotly::layout(
+      p,
+      title = list(
+      text = paste0(
+        titel,
+        "<br>",
+        "<span style='font-size:14px; color:gray; font-family:Calibri;'>",
+        subtitel, "</span>"),
+      x = 0.5,
+      font = list(family = "Calibri Regular", size = 20, color = "black")))
+  }
 
   return(p)
 }
