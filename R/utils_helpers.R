@@ -1502,7 +1502,7 @@ linebuilder_light <- function(df, titel, x , y, group = NULL, tooltip, format, c
 
 
 
-# eventuell default farbenorder setzen?
+
 
 balkenbuilder_plotly <- function(df, titel, x, y, orientation = "h", group = NULL,
                                  order = NULL, color = NULL, percent = FALSE, reverse_legend = FALSE,
@@ -1513,7 +1513,7 @@ balkenbuilder_plotly <- function(df, titel, x, y, orientation = "h", group = NUL
   quelle_js <- gsub("'", "\\\\'", quelle)
   x_js      <- gsub("'", "\\\\'", x)
   y_js      <- gsub("'", "\\\\'", y)
-  group_js  <- gsub("'", "\\\\'", group)
+  group_js <- if (is.null(group)) "" else gsub("'", "\\\\'", group)
 
 
   if (is.numeric(df[[y]])) df[[y]] <- round(df[[y]], 1)
@@ -1526,20 +1526,36 @@ balkenbuilder_plotly <- function(df, titel, x, y, orientation = "h", group = NUL
 
 
       if (is.null(group)) {
-        out <- plotly::plot_ly(df, x = df[[y]], y = df[[x]], type = "bar", orientation = "h", text = ~.tooltip, hovertemplate = "%{text}<extra></extra>")
+
+        if (!is.null(color) && !is.null(names(color)) && x %in% names(df)) {
+          color <- unname(color[as.character(df[[x]])])
+        }
+
+        out <- plotly::plot_ly(df, x = as.formula(paste0("~`", y, "`")), y = as.formula(paste0("~`", x, "`")),
+                               marker = list(color = color),
+                               type = "bar", orientation = "h", hovertext = as.formula("~`.tooltip`"), hovertemplate = "%{hovertext}<extra></extra>")
       } else {
-        out <- plotly::plot_ly(df, x = df[[y]], y = df[[x]], color = df[[group]], colors = color, type = "bar", orientation = "h", text = ~.tooltip, hovertemplate = "%{text}<extra></extra>")
+
+        out <- plotly::plot_ly(df, x = as.formula(paste0("~`", y, "`")), y = as.formula(paste0("~`", x, "`")),
+                               color = as.formula(paste0("~`", group, "`")), colors = color,
+                               type = "bar", orientation = "h", hovertext = as.formula("~`.tooltip`"),
+                               hovertemplate = "%{hovertext}<extra></extra>")
       }
 
       out <- out %>%
         plotly::layout(
-          xaxis = list(title = "", tickfont = list(size = 11), range = c(0, 100), automargin = TRUE,
-                       tickmode = "linear", dtick = 10,
+          xaxis = list(title = "", tickfont = list(size = 11),
+                       range = if (percent & stacking) c(0, 100) else NULL, automargin = TRUE,
+                       tickmode = if (percent) "linear" else "auto",
+                       dtick =  if (percent) 10 else NULL,
                        gridcolor = "lightgray",gridwidth = 0.1,
-                       ticksuffix = if (percent) "%" else ""),
+                       ticksuffix = if (percent) "%" else "",
+                       tickformat = if (percent) NULL else ",.0f"),
           yaxis = list(title = "", tickfont = list(size = 11), ticksuffix = "   ",
                        categoryorder = if (!is.null(order)) "array" else "trace",
                        categoryarray = if (!is.null(order)) rev(order) else NULL),
+          separators = ",.",
+                       font = list(family = "Calibri, sans-serif", size = 16,color = "black"),
           title = list(text = titel, x = 0.5,
                        font = list(family = "Calibri Regular", size = 20, color = "black")),
           font = list(family = "Calibri Regular"),
@@ -1673,19 +1689,33 @@ balkenbuilder_plotly <- function(df, titel, x, y, orientation = "h", group = NUL
   else if (orientation == "v") {
 
       if (is.null(group)) {
-        out <- plotly::plot_ly(df, x = df[[x]], y = df[[y]], type = "bar", orientation = "v", text = ~.tooltip, hovertemplate = "%{text}<extra></extra>")
+
+        if (!is.null(color) && !is.null(names(color))) {
+          color <- unname(color[as.character(df[[x]])])
+        }
+
+        out <- plotly::plot_ly(df, x = as.formula(paste0("~`", x, "`")), y = as.formula(paste0("~`", y, "`")),
+                               marker = list(color = color),
+                               type = "bar", orientation = "v", hovertext = as.formula("~`.tooltip`"), hovertemplate = "%{hovertext}<extra></extra>")
       } else {
-        out <- plotly::plot_ly(df, x = df[[x]], y = df[[y]], color = df[[group]], colors = color, type = "bar", orientation = "v", text = ~.tooltip, hovertemplate = "%{text}<extra></extra>")
+        out <- plotly::plot_ly(df, x = as.formula(paste0("~`", x, "`")), y = as.formula(paste0("~`", y, "`")),
+                               color = as.formula(paste0("~`", group, "`")), colors = color,
+                               type = "bar", orientation = "v", hovertext = as.formula("~`.tooltip`"), hovertemplate = "%{hovertext}<extra></extra>")
       }
 
     out <- out %>%
       plotly::layout(
-      xaxis = list(title = "", tickfont = list(size = 11), automargin = TRUE,
-                   tickmode = "linear", dtick = 10,
+      yaxis = list(title = "", tickfont = list(size = 11), automargin = TRUE,
+                   tickmode = if (percent) "linear" else "auto",
+                   dtick = if (percent) 10 else NULL,
+                   range = if (percent & stacking) c(0, 100) else NULL,
                    gridcolor = "lightgray",gridwidth = 0.1,
-                   ticksuffix = if (percent) "%" else ""),
-      yaxis = list(title = "", automargin = TRUE,
+                   ticksuffix = if (percent) "%" else "",
+                   tickformat = if (percent) NULL else ",.0f"),
+      xaxis = list(title = "", automargin = TRUE,
                    tickfont = list(size = 11)),
+      separators = ",.",
+                   font = list(family = "Calibri, sans-serif", size = 16, color = "black"),
       title = list(text = titel, x = 0.5,
                    font = list(family = "Calibri Regular", size = 20, color = "black")),
       font = list(family = "Calibri Regular"),
@@ -1697,10 +1727,10 @@ balkenbuilder_plotly <- function(df, titel, x, y, orientation = "h", group = NUL
                     y = -0.12,
                     traceorder = if (isTRUE(reverse_legend)) "reversed" else "normal"),
       bargap = 0.3,
-      annotations = list(list(text = quelle, x = -0.20, y = -0.40,
-                              xref = "paper", yref = "paper", xanchor = "left", showarrow = FALSE,
+      annotations = list(list(text = quelle, x = 1, y = -0.30, xref = "paper", yref = "paper", showarrow = FALSE,
+                              xanchor = "right", yanchor = "top",
                               font = list(size = 11, color = "gray", family = "Calibri Regular"))),
-      margin = list(t = 80, b = 100)
+      margin = list(t = 60, b = 100)
     ) %>%
     plotly::config(
           displaylogo = FALSE,
@@ -1820,16 +1850,21 @@ balkenbuilder_plotly <- function(df, titel, x, y, orientation = "h", group = NUL
 
   if (isTRUE(stacking)) {
     out <- plotly::layout(out, barmode = "stack")
+  } else {
+    out <- plotly::layout(out, barmode = "group")
   }
 
   if (!is.null(subtitel)) {
     out <- plotly::layout(out, title = list(
-       text = paste0(
-        "<b>", subtitel, "</b>",
+      text = paste0(
+        titel,
         "<br>",
-        "<span style='font-size:14px; color:gray; font-family:Calibri;'>", subtitel, "</span>"),
-        x = 0.5, font = list(family = "Calibri Regular", size = 20, color = "black")))
-}
+        "<span style='font-size:14px; color:gray; font-family:Calibri;'>",
+        subtitel, "</span>"),
+      x = 0.5,
+      font = list(family = "Calibri Regular", size = 20, color = "black")))
+  }
+
 
 
   return(out)
