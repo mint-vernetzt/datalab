@@ -3065,7 +3065,7 @@ studienzahl_verlauf_single_gender <- function(r) {
       titel <- ifelse(regio == "Saarland",
                       paste0("Frauenanteil in der Studienfachgruppe ", fach_help, " im ", regio),
                       paste0("Frauenanteil in der Studienfachgruppe ", fach_help, " in ", regio))
-      tooltip <- "{point.indikator} <br> Anzahl: {point.display_abs}"
+
       df <- df %>%
         dplyr::mutate(
           tooltip = paste0(
@@ -4939,7 +4939,7 @@ plot_auslaender_mint_zeit <- function(r){
 
         quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt"
         color <- c("#154194", "#66cbaf")
-        out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "ausl_detect", color = color, quelle = quelle)
+        out <- linebuilder_plotly(df, titel, x = "jahr", y = "wert", group = "ausl_detect", color = color, quelle = quelle)
       }
 
     }else if(betrachtung == "Gruppenvergleich - Balkendiagramm"){
