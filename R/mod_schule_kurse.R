@@ -311,7 +311,7 @@ mod_schule_kurse_ui <- function(id){
                                tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_schule_frauen_1")
                                )
                     ),
-                    tabPanel("Zeitverlauf Mädchenanteil in MINT", br(), #kann raus
+                    tabPanel("Zeitverlauf Mädchenanteil in MINT", br(),
 
                              tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
                                            .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
@@ -322,9 +322,9 @@ mod_schule_kurse_ui <- function(id){
                                  tags$style(".well {background-color:#FFFFFF;}"),
                                  tags$head(tags$style(HTML(".small-box {height: 140px}"))),
                                  mod_schule_kurse_verlauf_gender_ui("mod_schule_kurse_verlauf_gender_ui_1")
-                               ),
-                               tags$img(src = "www/ti.png", style = "margin-top: 10px; width: 90%; display: block; margin-left: auto; margin-right: auto;")
-                             ),###########
+                               )
+
+                             ),
 
                              shiny::mainPanel(
                                width = 9,

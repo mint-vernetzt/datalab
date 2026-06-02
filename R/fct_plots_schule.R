@@ -2361,33 +2361,20 @@ kurse_verlauf_gender <- function(r){
   df <- DBI::dbGetQuery(con, df_query)
 
 
-  df <-  df %>%
-    dplyr::group_by(fachbereich, indikator, jahr) %>%
-    dplyr::mutate(props = wert[anzeige_geschlecht == "Frauen"] +
-                  wert[anzeige_geschlecht == "Männer"])
-
-
-
-  df <- df %>% dplyr::filter(anzeige_geschlecht == "Frauen")
-
-
-
-  # calcualte proportions
-  df <- df %>% dplyr::group_by(indikator, fachbereich, anzeige_geschlecht, jahr) %>%
-    dplyr::mutate(proportion = wert/props)
-
-  df$proportion <- round(df$proportion*100,1)
-
-  df$anzeige_geschlecht[df$anzeige_geschlecht == "Frauen"] <- "Mädchen"
-
-
   if(abs_rel == "Anzahl"){
 
+    df <- df %>%
+      dplyr::filter(anzeige_geschlecht == "Frauen")
+
+    df$anzeige_geschlecht[df$anzeige_geschlecht == "Frauen"] <- "Mädchen"
+
+
     # order years for plot
-    df <- df[with(df, order(jahr, decreasing = FALSE)), ]
+    df <- df %>%
+      dplyr::arrange(indikator, jahr)
+
 
     # plot
-
     titel <- ifelse(regio == "Saarland",
                     paste0("Anteil von Mädchen in MINT-Oberstufenkursen im ", regio),
                     paste0("Anteil von Mädchen in MINT-Oberstufenkursen in ", regio))
@@ -2409,10 +2396,21 @@ kurse_verlauf_gender <- function(r){
 
   } else if (abs_rel =="In Prozent") {
 
+    df <- df %>%
+      tidyr::pivot_wider(
+        names_from = anzeige_geschlecht,
+        values_from = wert
+      ) %>%
+      dplyr::mutate(
+        props = Frauen + Männer,
+        proportion = round((Frauen / props) * 100, 1),
+        anzeige_geschlecht = "Mädchen"
+      ) %>%
+      dplyr::select(indikator, fachbereich, jahr, proportion)
 
     # order years for plot
-    df <- df[with(df, order(jahr, decreasing = FALSE)), ]
-
+    df <- df %>%
+      dplyr::arrange(indikator, jahr)
 
     titel <- ifelse(regio == "Saarland",
                     paste0("Anteil von Mädchen in MINT-Oberstufenkursen im ", regio),
