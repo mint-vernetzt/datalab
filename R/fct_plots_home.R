@@ -273,6 +273,7 @@ home_einstieg <- function(r) {
 #' @param df The dataframe "zentral.xlsx" needs to be used for this function
 #' @param r Reactive variable that stores all the inputs from the UI
 #' @noRd
+
 home_rest_mint_verlauf <- function(r) {
 
   # load UI inputs from reactive value
@@ -326,34 +327,36 @@ home_rest_mint_verlauf <- function(r) {
     sorted_indicators <- df %>%
       dplyr::group_by(indikator) %>%
       dplyr::summarize(m_value = mean(round(prop, 1), na.rm = TRUE)) %>%
-      dplyr::arrange(desc(m_value)) %>%
+      dplyr::arrange(m_value) %>%
       dplyr::pull(indikator)
 
     df$indikator <- factor(df$indikator, levels = sorted_indicators)
 
+    # plot
     titel1 <- ifelse(regio == "Saarland",
                      paste0("MINT-Anteil nach Bildungsbereichen im ", regio),
                      paste0("MINT-Anteil nach Bildungsbereichen in ", regio))
 
-    tooltip <- paste("Anteil MINT <br> Indikator: {point.indikator} <br> Anteil: {point.prop_besr} %")
+    df <- df %>%
+      dplyr::mutate(
+        tooltip = paste0(
+          "<b>", indikator, "</b><br>",
+          "Jahr: ", jahr, "<br>",
+          "Anteil: ", prettyNum(prop, big.mark = ".", decimal.mark = ","), " %"
+        )
+      )
 
-    # plot
-
-    format <- "{value}%"
     color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24")
 
     quelle <- "Quellen: Destatis, 2025; Bundesagentur für Arbeit, 2025; KMK, 2025, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
-
-    out <- linebuilder(df, titel1,x="jahr", y="prop", group="indikator", tooltip = tooltip, format, color, quelle = quelle)
+    out <- linebuilder_plotly(df, titel1, x="jahr", y="prop", group="indikator",
+                              color = color, quelle = quelle)
 
   } else if (absolut_selector=="Anzahl") {
 
-    hcoptslang <- getOption("highcharter.lang")
-    hcoptslang$thousandsSep <- "."
-    options(highcharter.lang = hcoptslang)
-
     df <- df[with(df, order(fachbereich, jahr, decreasing = FALSE)), ]
+
     #Trennpunkte für lange Zahlen ergänzen
     df$wert_besr <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
 
@@ -366,19 +369,26 @@ home_rest_mint_verlauf <- function(r) {
 
     df$indikator <- factor(df$indikator, levels = sorted_indicators)
 
+    # plot
     titel = ifelse(regio == "Saarland",
                    paste0("Personen in MINT nach Bildungsbereichen im ", regio),
                    paste0("Personen in MINT nach Bildungsbereichen in ", regio))
 
-    tooltip <- paste("Anteil MINT <br> Indikator: {point.indikator} <br> Anzahl: {point.wert_besr}")
+    df <- df %>%
+      dplyr::mutate(
+        tooltip = paste0(
+          "<b>", indikator, "</b><br>",
+          "Jahr: ", jahr, "<br>",
+          "Anzahl: ", wert_besr
+        )
+      )
 
-    # plot
-
-    format <- "{value:, f}"
+    format <- ",d"
     color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24")
     quelle <- "Quellen: Destatis, 2025; Bundesagentur für Arbeit, 2025; KMK, 2025, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
-    out <- linebuilder(df, titel, x = "jahr", y="wert", group = "indikator", tooltip = tooltip, format, color, quelle = quelle)
 
+    out <- linebuilder_plotly(df, titel, x = "jahr", y="wert", group = "indikator",
+                              format = format, color = color, quelle = quelle)
 
   }
 
@@ -896,7 +906,6 @@ home_comparison_line <- function(r) {
 
   if(abs_selector=="In Prozent"){
 
-####deutschlabnd statt ({regio*})
     query_df_alle <- glue::glue_sql("
   SELECT bereich, indikator, fachbereich, geschlecht, jahr, wert
   FROM zentral
@@ -910,65 +919,14 @@ home_comparison_line <- function(r) {
     df_alle <- DBI::dbGetQuery(con, query_df_alle)
 
 
-    # df_alle <- df_alle %>%
-    #   group_by(bereich, indikator, fachbereich, jahr, region)%>%
-    #   summarise(
-    #     Wert = sum(Wert, na.rm = TRUE),
-    #     .groups = "drop"
-    #   ) %>%
-    #   mutate(Geschlecht = "Gesamt") %>%
-    #   select(bereich, indikator, fachbereich, geschlecht, jahr, wert, region)
-
-
-
     df_alle <- df_alle %>%
       dplyr::group_by(bereich, indikator, fachbereich, jahr) %>%
       dplyr::reframe(
         wert = sum(wert, na.rm = TRUE),
         .groups = "drop"
       ) %>%
-      # summarise(
-      #   wert = sum(wert, na.rm = TRUE),
-      #   .groups = "drop"
-      # ) %>%
       dplyr::mutate(geschlecht = "Gesamt") %>%
       dplyr::select(bereich, indikator, fachbereich, geschlecht, jahr, wert)
-
-
-
-
-
-#     if("Leistungskurse" %in% indikator_choice & regio == "Deutschland"){
-#
-#       query_df_alle_bw <- glue::glue_sql("
-#   SELECT bereich, indikator, fachbereich, geschlecht, jahr, wert
-#   FROM zentral
-#   WHERE jahr IN ({t*})
-#     AND region = 'Deutschland'
-#     AND geschlecht = 'Gesamt'
-#     AND fachbereich = 'MINT'
-#     AND bereich = 'Schule'
-# ", .con = con)
-#
-#       df_alle_bw <- DBI::dbGetQuery(con, query_df_alle_bw)
-#
-#
-#       # df_alle_schule <- df_alle[df_alle$bereich == "Schule",] %>%
-#       #   dplyr::left_join(df_alle_bw, by = c("bereich", "indikator", "fachbereich", "jahr", "geschlecht")) %>%
-#       #   dplyr::mutate(wert.x = wert.x - wert.y) %>%
-#       #   dplyr::select(-wert.y) %>%
-#       #   dplyr::rename(wert = wert.x)
-#
-#
-#       # df_alle <- df_alle_bw %>%
-#       #   dplyr::filter(bereich != "Schule") %>%
-#       #   rbind(df_alle_schule)
-#
-#       df_alle <- df_alle_bw
-#
-#       browser()
-#
-#     }
 
 
     df <- df %>%
@@ -979,14 +937,12 @@ home_comparison_line <- function(r) {
       dplyr::select(-c(wert.y, geschlecht.y))
 
 
-
-
     df <- df[with(df, order(indikator, jahr, decreasing = FALSE)), ]
 
     sorted_indicators <- df %>%
       dplyr::group_by(indikator) %>%
       dplyr::summarize(m_value = mean(round(prop, 1), na.rm = TRUE)) %>%
-      dplyr::arrange(desc(m_value)) %>%
+      dplyr::arrange(m_value) %>%
       dplyr::pull(indikator)
 
 
@@ -999,19 +955,26 @@ home_comparison_line <- function(r) {
     # plot
 
     titel <- paste0("Anteil von Frauen in MINT nach Bildungsbereichen ", praep, " ", regio)
-    tooltip <- "Anteil Frauen <br> Indikator: {point.indikator} <br> Anteil: {point.prop_besr} %"
-    format <- "{value}%"
+
+    df <- df %>%
+      dplyr::mutate(
+        tooltip = paste0(
+          "<b>", indikator, "</b><br>",
+          "Jahr: ", jahr, "<br>",
+          "Anteil: ", prop_besr, " %"
+        )
+      )
+
     color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24")
 
     quelle <- "Quellen: Destatis, 2025; Bundesagentur für Arbeit, 2025; KMK, 2025, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
-    out <- linebuilder(df, titel, x = "jahr", y = "prop", group="indikator",tooltip, format, quelle = quelle)
+
+    out <- linebuilder_plotly(df, titel, x = "jahr", y = "prop", group="indikator",
+                              color = color, quelle = quelle)
 
 
   } else if (abs_selector =="Anzahl"){
 
-    hcoptslang <- getOption("highcharter.lang")
-    hcoptslang$thousandsSep <- "."
-    options(highcharter.lang = hcoptslang)
 
     df <- df[with(df, order(indikator, jahr, decreasing = FALSE)), ]
 
@@ -1025,13 +988,23 @@ home_comparison_line <- function(r) {
     df$indikator <- factor(df$indikator, levels = sorted_indicators)
 
     titel <- paste0("Anteil von Frauen in MINT nach Bildungsbereichen ", praep, " ", regio)
-    tooltip <- "Anzahl Frauen <br> Indikator: {point.indikator} <br> Anzahl: {point.y} "
-    format <- "{value}"
+
+    df <- df %>%
+      dplyr::mutate(
+        tooltip = paste0(
+          "<b>", indikator, "</b><br>",
+          "Jahr: ", jahr, "<br>",
+          "Anzahl: ", prettyNum(wert, big.mark = ".", decimal.mark = ",")
+        )
+      )
+
+    format <- ",d"
 
     color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24" )
     quelle <- "Quellen: Destatis, 2025; Bundesagentur für Arbeit, 2025; KMK, 2025, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
-    out <- linebuilder(df,titel,x="jahr", y="wert", group="indikator", tooltip, format, color, quelle = quelle)
+    out <- linebuilder_plotly(df,titel,x="jahr", y="wert", group="indikator",
+                       format = format, color = color, quelle = quelle)
 
 
 

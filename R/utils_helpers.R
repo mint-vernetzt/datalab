@@ -1408,8 +1408,8 @@ linebuilder_plotly <- function(
     colors = color,
     type = "scatter",
     mode = "lines+markers",
-    text = ~tooltip,
-    hovertemplate = "%{text}<extra></extra>"
+    hovertext = ~tooltip,
+    hovertemplate = "%{hovertext}<extra></extra>"
   ) |>
     plotly::style(
       hoverlabel = list(bgcolor = "white",
