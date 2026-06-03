@@ -124,52 +124,6 @@ kurse_einstieg_comparison <- function(r) {
     out <- balkenbuilder_plotly(df=df1, x=x, y=y, titel=titel, orientation = "h",percent=FALSE, group=group, color=color,
                                 order=order, quelle=quelle)
 
-
-
-   #  out <-  highcharter::hchart(df1, 'bar', highcharter::hcaes(y = wert, x = indikator, group = forcats::fct_rev(fachbereich))) %>%
-   #    highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.fachbereich}<br>Anzahl: {point.wert}") %>%
-   #    highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}")) %>%
-   #    highcharter::hc_xAxis(title = list(text = "")) %>%
-   #    highcharter::hc_colors(c("#efe8e6","#b16fab") ) %>%
-   #    highcharter::hc_title(text = paste0("Anteil von MINT-Belegungen in der Schule in ", regio, " (", timerange,")"),
-   #                          margin = 45,
-   #                          align = "center",
-   #                          style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
-   #    highcharter::hc_chart(
-   #      style = list(fontFamily = "Calibri Regular", fontSize = "14px")
-   #    ) %>%
-   #    highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
-   #    highcharter::hc_caption(text = "Quellen: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
-   #                            style = list(fontSize = "11px", color = "gray")) %>%
-   #    highcharter::hc_exporting(enabled = TRUE,
-   #                              buttons = list(
-   #                                contextButton = list(
-   #                                  menuItems = list("downloadPNG", "downloadCSV",
-   #                                                   list(
-   #                                                     text = "Daten für GPT",
-   #                                                     onclick = htmlwidgets::JS(sprintf(
-   #                                                       "function () {
-   #   var date = new Date().toISOString().slice(0,10);
-   #   var chartTitle = '%s'.replace(/\\s+/g, '_');
-   #   var filename = chartTitle + '_' + date + '.txt';
-   #
-   #   var data = 'Titel: %s\\n' + this.getCSV();
-   #   data += '\\nQuelle:Quelle der Daten: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt';
-   #
-   #   var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-   #   if (window.navigator.msSaveBlob) {
-   #     window.navigator.msSaveBlob(blob, filename);
-   #   } else {
-   #     var link = document.createElement('a');
-   #     link.href = URL.createObjectURL(blob);
-   #     link.download = filename;
-   #     link.click();
-   #   }
-   # }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel)    ))))
-   #                                )
-   #                              )
-   #    )
-
   }
 
 
@@ -2419,54 +2373,83 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
 
         titel <- paste0("Durchschnittliche Leistung der Schüler:innen im Mathematik-Kompetenztest ", indikator_select, " in " , bl_select, " (", klasse_select, ")")
 
-        out <- highcharter::hchart(df, 'column', highcharter::hcaes(y = wert, x = jahr, group = indikator))%>%
-          highcharter::hc_plotOptions(column = list(pointWidth = 90))%>%
-          highcharter::hc_tooltip(pointFormat = "{point.indikator} <br> Durchschnittliche Punktzahl: {point.y}")%>%
-          highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}"),min=300) %>%
-          highcharter::hc_xAxis(title = list(text = ""), categories = c("2011",
-                                                                        "2016",
-                                                                        "2021")) %>%
-          highcharter::hc_colors(c("#efe8e6", "#66cbaf"
-          )) %>%
-          highcharter::hc_title(text = paste0("Durchschnittliche Leistung der Schüler:innen im Mathematik-Kompetenztest ", indikator_select, " in " , bl_select, " (", klasse_select, ")"),
-                                margin = 45,
-                                align = "center",
-                                style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
-          highcharter::hc_chart(
-            style = list(fontFamily = "Calibri Regular", fontSize = "14px")
+
+        jahr_order <- sort(unique(df$jahr))
+
+        df <- df %>%
+          dplyr::mutate(
+            jahr = factor(jahr, levels = jahr_order)
           ) %>%
-          highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
-          highcharter::hc_caption(text = "Quelle der Daten: Institut zur Qualitätsentwicklung im Bildungswesen, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
-                                  style = list(fontSize = "11px", color = "gray")) %>%
-          highcharter::hc_exporting(enabled = TRUE,
-                                    buttons = list(
-                                      contextButton = list(
-                                        menuItems = list("downloadPNG", "downloadCSV",
-                                                         list(
-                                                           text = "Daten für GPT",
-                                                           onclick = htmlwidgets::JS(sprintf(
-                                                             "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
-
-
-     var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle: Institut zur Qualitätsentwicklung im Bildungswesen, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt';
-
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-   }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel)    ))))
-                                      )
-                                    )
+          dplyr::arrange(indikator, geschlecht) %>%
+          dplyr::mutate(
+            .tooltip = paste0(
+              "<b>", jahr, "</b><br>",
+              indikator, "<br>",
+              "Durchschnittliche Punktzahl: ", wert)
           )
+
+
+        x <- "jahr"
+        y <- "wert"
+        group <- "indikator"
+        quelle <- "Quelle der Daten: Institut zur Qualitätsentwicklung im Bildungswesen, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+        #color <- c("ohne Zuwanderungsgeschichte" = "#efe8e6","mit Zuwanderungsgeschichte" = "#66cbaf")
+        color <- c("#efe8e6", "#66cbaf")
+
+        out <- balkenbuilder_plotly(df=df, x=x, y=y, titel=titel, orientation = "v", group=group, color=color,
+                                    percent = FALSE,stacking=FALSE, quelle=quelle)
+
+
+
+
+   #      out <- highcharter::hchart(df, 'column', highcharter::hcaes(y = wert, x = jahr, group = indikator))%>%
+   #        highcharter::hc_plotOptions(column = list(pointWidth = 90))%>%
+   #        highcharter::hc_tooltip(pointFormat = "{point.indikator} <br> Durchschnittliche Punktzahl: {point.y}")%>%
+   #        highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}"),min=300) %>%
+   #        highcharter::hc_xAxis(title = list(text = ""), categories = c("2011",
+   #                                                                      "2016",
+   #                                                                      "2021")) %>%
+   #        highcharter::hc_colors(c("#efe8e6", "#66cbaf"
+   #        )) %>%
+   #        highcharter::hc_title(text = paste0("Durchschnittliche Leistung der Schüler:innen im Mathematik-Kompetenztest ", indikator_select, " in " , bl_select, " (", klasse_select, ")"),
+   #                              margin = 45,
+   #                              align = "center",
+   #                              style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
+   #        highcharter::hc_chart(
+   #          style = list(fontFamily = "Calibri Regular", fontSize = "14px")
+   #        ) %>%
+   #        highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
+   #        highcharter::hc_caption(text = "Quelle der Daten: Institut zur Qualitätsentwicklung im Bildungswesen, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+   #                                style = list(fontSize = "11px", color = "gray")) %>%
+   #        highcharter::hc_exporting(enabled = TRUE,
+   #                                  buttons = list(
+   #                                    contextButton = list(
+   #                                      menuItems = list("downloadPNG", "downloadCSV",
+   #                                                       list(
+   #                                                         text = "Daten für GPT",
+   #                                                         onclick = htmlwidgets::JS(sprintf(
+   #                                                           "function () {
+   #   var date = new Date().toISOString().slice(0,10);
+   #   var chartTitle = '%s'.replace(/\\s+/g, '_');
+   #   var filename = chartTitle + '_' + date + '.txt';
+   #
+   #
+   #   var data = 'Titel: %s\\n' + this.getCSV();
+   #   data += '\\nQuelle: Institut zur Qualitätsentwicklung im Bildungswesen, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt';
+   #
+   #   var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+   #   if (window.navigator.msSaveBlob) {
+   #     window.navigator.msSaveBlob(blob, filename);
+   #   } else {
+   #     var link = document.createElement('a');
+   #     link.href = URL.createObjectURL(blob);
+   #     link.download = filename;
+   #     link.click();
+   #   }
+   # }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel)    ))))
+   #                                    )
+   #                                  )
+   #        )
       }else{
         if(bl_select %in% c("Berlin", "Bremen", "Saarland")){
           df <- df %>% dplyr::filter(jahr == "2018")
@@ -2475,52 +2458,56 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
 
           titel <- paste0("Durchschnittliche Leistung der Schüler:innen im ", fach_select, "-Kompetenztest ", indikator_select, " in " , bl_select, " (", klasse_select, ")")
 
-          out <- highcharter::hchart(df, 'column', highcharter::hcaes(y = wert, x = jahr, group = indikator))%>%
-            highcharter::hc_plotOptions(column = list(pointWidth = 90))%>%
-            highcharter::hc_tooltip(pointFormat = "{point.indikator} Durchschnittliche Punktzahl: {point.y}")%>%
-            highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}"),min=300) %>%
-            highcharter::hc_xAxis(title = list(text = "")) %>%
-            highcharter::hc_colors(color) %>%
-            highcharter::hc_title(text = paste0("Durchschnittliche Leistung der Schüler:innen im ", fach_select, "-Kompetenztest ", indikator_select, " in " , bl_select, " (", klasse_select, ")"),
-                                  margin = 45,
-                                  align = "center",
-                                  style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
-            highcharter::hc_chart(
-              style = list(fontFamily = "Calibri Regular", fontSize = "14px")
-            ) %>%
-            highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
-            highcharter::hc_caption(text = "Quelle der Daten: Institut zur Qualitätsentwicklung im Bildungswesen, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
-                                    style = list(fontSize = "11px", color = "gray")) %>%
-            highcharter::hc_exporting(enabled = TRUE,
-                                      buttons = list(
-                                        contextButton = list(
-                                          menuItems = list("downloadPNG", "downloadCSV",
-                                                           list(
-                                                             text = "Daten für GPT",
-                                                             onclick = htmlwidgets::JS(sprintf(
-                                                               "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
 
 
-     var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle: Institut zur Qualitätsentwicklung im Bildungswesen, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt';
 
+   #        out <- highcharter::hchart(df, 'column', highcharter::hcaes(y = wert, x = jahr, group = indikator))%>%
+   #          highcharter::hc_plotOptions(column = list(pointWidth = 90))%>%
+   #          highcharter::hc_tooltip(pointFormat = "{point.indikator} Durchschnittliche Punktzahl: {point.y}")%>%
+   #          highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}"),min=300) %>%
+   #          highcharter::hc_xAxis(title = list(text = "")) %>%
+   #          highcharter::hc_colors(color) %>%
+   #          highcharter::hc_title(text = paste0("Durchschnittliche Leistung der Schüler:innen im ", fach_select, "-Kompetenztest ", indikator_select, " in " , bl_select, " (", klasse_select, ")"),
+   #                                margin = 45,
+   #                                align = "center",
+   #                                style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
+   #          highcharter::hc_chart(
+   #            style = list(fontFamily = "Calibri Regular", fontSize = "14px")
+   #          ) %>%
+   #          highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
+   #          highcharter::hc_caption(text = "Quelle der Daten: Institut zur Qualitätsentwicklung im Bildungswesen, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+   #                                  style = list(fontSize = "11px", color = "gray")) %>%
+   #          highcharter::hc_exporting(enabled = TRUE,
+   #                                    buttons = list(
+   #                                      contextButton = list(
+   #                                        menuItems = list("downloadPNG", "downloadCSV",
+   #                                                         list(
+   #                                                           text = "Daten für GPT",
+   #                                                           onclick = htmlwidgets::JS(sprintf(
+   #                                                             "function () {
+   #   var date = new Date().toISOString().slice(0,10);
+   #   var chartTitle = '%s'.replace(/\\s+/g, '_');
+   #   var filename = chartTitle + '_' + date + '.txt';
+   #
+   #
+   #   var data = 'Titel: %s\\n' + this.getCSV();
+   #   data += '\\nQuelle: Institut zur Qualitätsentwicklung im Bildungswesen, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt';
+   #
+   #
+   #   var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+   #   if (window.navigator.msSaveBlob) {
+   #     window.navigator.msSaveBlob(blob, filename);
+   #   } else {
+   #     var link = document.createElement('a');
+   #     link.href = URL.createObjectURL(blob);
+   #     link.download = filename;
+   #     link.click();
+   #   }
+   # }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel)    ))))
+   #                                      )
+   #                                    )
+   #          )
 
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-   }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel)    ))))
-                                        )
-                                      )
-            )
         }else{
           df$wert <- round(df$wert,1)
 

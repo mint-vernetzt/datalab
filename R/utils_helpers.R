@@ -1504,9 +1504,9 @@ linebuilder_light <- function(df, titel, x , y, group = NULL, tooltip, format, c
 
 
 
-balkenbuilder_plotly <- function(df, titel, x, y, orientation = "h", group = NULL,
+balkenbuilder_plotly <- function(df, titel, x, y, yaxis_size = 11, orientation = "h", group = NULL, ticktext = NULL, tickvals = NULL,
                                  order = NULL, color = NULL, percent = FALSE, reverse_legend = FALSE,
-                                 stacking = FALSE, subtitel = NULL, quelle = "Quelle") {
+                                 stacking = FALSE, subtitel = NULL,legend_y = -0.12, quelle_y = -0.30, quelle = "Quelle") {
 
   df_json <- jsonlite::toJSON(df, dataframe = "rows", auto_unbox = TRUE, na = "null")
   titel_js  <- gsub("'", "\\\\'", titel)
@@ -1545,13 +1545,15 @@ balkenbuilder_plotly <- function(df, titel, x, y, orientation = "h", group = NUL
       out <- out %>%
         plotly::layout(
           xaxis = list(title = "", tickfont = list(size = 11),
-                       range = if (percent & stacking) c(0, 100) else NULL, automargin = TRUE,
+                       range = if (percent & stacking) c(0, 100) else if (percent) c(0, max(max(df[[y]], na.rm = TRUE), 10)) else NULL, automargin = TRUE,
                        tickmode = if (percent) "linear" else "auto",
                        dtick =  if (percent) 10 else NULL,
                        gridcolor = "lightgray",gridwidth = 0.1,
                        ticksuffix = if (percent) "%" else "",
                        tickformat = if (percent) NULL else ",.0f"),
-          yaxis = list(title = "", tickfont = list(size = 11), ticksuffix = "   ",
+          yaxis = list(title = "", tickfont = list(size = yaxis_size), ticksuffix = "   ", automargin = TRUE,
+                       ticktext = ticktext, tickvals = tickvals,
+                       tickmode = if (!is.null(ticktext)) "array" else "auto",
                        categoryorder = if (!is.null(order)) "array" else "trace",
                        categoryarray = if (!is.null(order)) rev(order) else NULL),
           separators = ",.",
@@ -1564,10 +1566,10 @@ balkenbuilder_plotly <- function(df, titel, x, y, orientation = "h", group = NUL
           legend = list(orientation = "h",
                         x = 0.5,
                         xanchor = "center",
-                        y = -0.12,
+                        y = legend_y,
                         traceorder = if (isTRUE(reverse_legend)) "reversed" else "normal"),
           bargap = 0.3,
-          annotations = list(list(text = quelle, x = 1, y = -0.30, xref = "paper", yref = "paper", showarrow = FALSE,
+          annotations = list(list(text = quelle, x = 1, y = quelle_y, xref = "paper", yref = "paper", showarrow = FALSE,
                                   xanchor = "right", yanchor = "top",
                                   font = list(size = 11, color = "gray", family = "Calibri Regular"))),
           margin = list(t = 60, b = 100)
@@ -1705,14 +1707,15 @@ balkenbuilder_plotly <- function(df, titel, x, y, orientation = "h", group = NUL
 
     out <- out %>%
       plotly::layout(
-      yaxis = list(title = "", tickfont = list(size = 11), automargin = TRUE,
+      yaxis = list(title = "", tickfont = list(size = yaxis_size), automargin = TRUE,
                    tickmode = if (percent) "linear" else "auto",
                    dtick = if (percent) 10 else NULL,
                    range = if (percent & stacking) c(0, 100) else NULL,
                    gridcolor = "lightgray",gridwidth = 0.1,
                    ticksuffix = if (percent) "%" else "",
                    tickformat = if (percent) NULL else ",.0f"),
-      xaxis = list(title = "", automargin = TRUE,
+      xaxis = list(title = "", automargin = TRUE, ticktext = ticktext, tickvals = tickvals,
+                   tickmode = if (!is.null(ticktext)) "array" else "auto",
                    tickfont = list(size = 11)),
       separators = ",.",
                    font = list(family = "Calibri, sans-serif", size = 16, color = "black"),
@@ -1724,10 +1727,10 @@ balkenbuilder_plotly <- function(df, titel, x, y, orientation = "h", group = NUL
       legend = list(orientation = "h",
                     x = 0.5,
                     xanchor = "center",
-                    y = -0.12,
+                    y = legend_y,
                     traceorder = if (isTRUE(reverse_legend)) "reversed" else "normal"),
       bargap = 0.3,
-      annotations = list(list(text = quelle, x = 1, y = -0.30, xref = "paper", yref = "paper", showarrow = FALSE,
+      annotations = list(list(text = quelle, x = 1, y = quelle_y, xref = "paper", yref = "paper", showarrow = FALSE,
                               xanchor = "right", yanchor = "top",
                               font = list(size = 11, color = "gray", family = "Calibri Regular"))),
       margin = list(t = 60, b = 100)
