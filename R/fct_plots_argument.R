@@ -784,6 +784,8 @@ argument_verlauf_1 <- function(r){
         )
       )
 
+    df_beschäftigte$label <- df_beschäftigte$wert_besr
+
     # plot
     format <- ",d"
     color1 <- c("#b16fab")
@@ -792,14 +794,8 @@ argument_verlauf_1 <- function(r){
     quelle <- "Destatis, 2025 und Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
     out <- linebuilder_plotly(df_beschäftigte, titel = titel, x = "jahr", y = "wert", group = "indikator",
-                       format = format, color = color1, quelle = quelle) |>
-      plotly::style(
-        text = prettyNum(df_beschäftigte$wert, big.mark = ".", decimal.mark = ","),
-        textposition = "top center",
-        mode = "lines+markers+text",
-        cliponaxis = FALSE
-
-      ) |>
+                       format = format, color = color1, quelle = quelle,
+                       label = TRUE) |>
       plotly::layout(
         margin = list(t = 40, b = 100, r = 50)
       )
@@ -853,6 +849,8 @@ argument_verlauf_2 <- function(r){
       )
     )
 
+  df_andere$label <- df_andere$wert_besr
+
   # plot
   format <- ",d"
   color2 <-  c("#154194","#66cbaf")
@@ -861,13 +859,7 @@ argument_verlauf_2 <- function(r){
   quelle <- "Destatis, 2025 und Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt"
 
   out <- linebuilder_plotly(df_andere, titel = titel, x = "jahr", y = "wert", group = "indikator",
-                     format = format, color = color2, quelle = quelle) |>
-          plotly::style(
-            text = prettyNum(df_andere$wert, big.mark = ".", decimal.mark = ","),
-            textposition = "top center",
-            mode = "lines+markers+text",
-            cliponaxis = FALSE
-          )
+                     format = format, color = color2, quelle = quelle, label =TRUE)
 
 
   return(out)
@@ -1741,10 +1733,11 @@ argument_nachwuchs <- function(r){
 
   df_nachwuchs_agg <- df_nachwuchs_agg %>%
     dplyr::mutate(label = dplyr::case_when(
-     # fach == "Mathematik, Naturwissenschaften" ~ "",
-      fach %in% c("Informatik",
+      fach == "Informatik" ~ "",
+      fach %in% c("Mathematik, Naturwissenschaften",
                   "Technik (inkl. Ingenieurwesen)") ~ wert_disp
     ))
+
 
   titel <- ifelse(regio == "Saarland",
                   paste0("Entwicklung der Nachwuchszahlen in den MINT-Disziplinen im ", regio),
@@ -1754,14 +1747,7 @@ argument_nachwuchs <- function(r){
 
   out <- linebuilder_plotly(df_nachwuchs_agg, titel = titel, x = "jahr",
                             y = "wert", group = "fach", format = format, color = colors,
-                            quelle = quelle)
-  # |>
-  #   plotly::style(
-  #     text = df_nachwuchs_agg$label,
-  #     textposition = "top center",
-  #     mode = "lines+markers+text",
-  #     cliponaxis = FALSE
-  #   )
+                            quelle = quelle, label = TRUE)
 
   return(out)
 
