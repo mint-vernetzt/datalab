@@ -1928,7 +1928,7 @@ plot_international_schule_migration <- function(r) {
 
 
       ####
-      fig <- plotly::plot_ly(data = plot_data, color = I("gray80")) %>%
+      p <- plotly::plot_ly(data = plot_data, color = I("gray80")) %>%
         plotly::add_segments(
           x = ~basis_wert,
           xend = ~mittel_wert,
@@ -2059,7 +2059,6 @@ plot_international_schule_migration <- function(r) {
           text = ~ifelse(is.na(wert), NA, paste0("Mädchen: ", wert)),
           hoverinfo = "text"
         ) %>%
-        # Layout anpassen
         plotly::layout(
           title = paste0("Mittlere erreichte Punktezahlen im TIMSS-", fach_m, "-Test in den 4. Klassen nach Geschlecht (", timerange, ")"),
           xaxis = list(title = ""),
@@ -2073,7 +2072,6 @@ plot_international_schule_migration <- function(r) {
             xanchor = "center",
             yanchor = "top"
           ),
-
           annotations = list(
             list(
               text = "Quelle der Daten: IEA, 2023, freier Download, eigene Berechnungen durch MINTvernetzt",
@@ -2089,7 +2087,6 @@ plot_international_schule_migration <- function(r) {
           )
         )
 
-    fig <- p
 
     }
   else if (label_m == "PISA" && leistungsindikator_m == "nach Geschlecht") {
@@ -2105,7 +2102,7 @@ plot_international_schule_migration <- function(r) {
       plot_data <- plot_data %>%
         dplyr::filter(land %in% lander)
 
-      fig <- plotly::plot_ly(data = plot_data, color = I("gray80")) %>%
+      p <- plotly::plot_ly(data = plot_data, color = I("gray80")) %>%
         plotly::add_segments(
           x = ~basis_wert,
           xend = ~wert,
@@ -2184,7 +2181,7 @@ plot_international_schule_migration <- function(r) {
       plot_data <- plot_data %>%
         dplyr::filter(land %in% lander)
 
-      fig <- plotly::plot_ly(data = plot_data, color = I("gray80")) %>%
+      p <- plotly::plot_ly(data = plot_data, color = I("gray80")) %>%
         plotly::add_segments(
           x = ~basis_wert,
           xend = ~mittel_wert,
@@ -2286,7 +2283,7 @@ plot_international_schule_migration <- function(r) {
       plot_data <- plot_data %>%
         dplyr::filter(land %in% lander)
 
-      fig <- plotly::plot_ly(data = plot_data, color = I("gray80")) %>%
+      p <- plotly::plot_ly(data = plot_data, color = I("gray80")) %>%
         plotly::add_segments(
           x = ~sehr_niedrig,
           xend = ~niedrig,
@@ -2377,7 +2374,7 @@ plot_international_schule_migration <- function(r) {
 
 
 
-  fig <- fig %>%
+  p <- p %>%
     plotly::config(displaylogo = FALSE,  modeBarButtonsToRemove = c(
       'sendDataToCloud', 'autoScale2d', 'resetScale2d', 'toggleSpikelines',
       'hoverClosestCartesian', 'hoverCompareCartesian',
@@ -2409,7 +2406,7 @@ plot_international_schule_migration <- function(r) {
     )
 
 
-  return(fig)
+  return(p)
 
 }
 
