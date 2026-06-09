@@ -3,8 +3,6 @@
 #
 
 
-
-
 plot_fachkraft_prognose  <- function(r) {
 
   filter_wirkhebel <- c("Basis-Szenario", r$fachkraft_item_prog_wirkhebel)
@@ -14,7 +12,7 @@ plot_fachkraft_prognose  <- function(r) {
   # plot_data <- dplyr::tbl(con, from ="fachkraefte_prognose") %>%
 
   df_query <- glue::glue_sql("
-  SELECT *
+  SELECT wirkhebel, indikator, jahr, wert
   FROM fachkraefte_prognose
   WHERE wirkhebel IN ({filter_wirkhebel*})
   AND indikator IN ({filter_indikator*})
@@ -24,11 +22,7 @@ plot_fachkraft_prognose  <- function(r) {
   AND anforderung = {filter_berufslevel}
                                ", .con = con)
 
-
-
   plot_data <- DBI::dbGetQuery(con, df_query)
-
-
 
   plot_data <- plot_data %>%
     dplyr::group_by("jahr") %>%
@@ -41,17 +35,14 @@ plot_fachkraft_prognose  <- function(r) {
     dplyr::ungroup()%>%
     dplyr::mutate(wirkhebel = dplyr::case_when(wirkhebel == "Frauen in MINT" ~ "Mädchen und Frauen in MINT fördern",
                                                wirkhebel == "MINT-Bildung" ~ "MINT-Nachwuchs fördern",
-                                               T ~ wirkhebel))
+                                               T ~ wirkhebel),
 
-  plot_data <- plot_data %>%
-    dplyr::mutate(display_color = ifelse(indikator == "Status-quo", "#DCBED9", "#154194"))
+                  wirkhebel = as.factor(wirkhebel))
 
-  data_list <- split(plot_data, plot_data$wirkhebel)
-
- # browser()
 
   if (filter_wirkhebel[2] == "Frauen in MINT") filter_wirkhebel[2]<-"Mädchen und Frauen in MINT fördern"
   if (filter_wirkhebel[2] == "MINT-Bildung") filter_wirkhebel[2]<-"MINT-Nachwuchs fördern"
+
   # Texte vorbereiten
   szenario <- paste0(filter_indikator[2], " in der ", filter_wirkhebel[2])
   szenario <- ifelse(filter_wirkhebel[2] == "Gesamteffekt",
@@ -70,7 +61,6 @@ plot_fachkraft_prognose  <- function(r) {
                      paste0(filter_indikator[2],
                             " bei der Förderung des MINT-Nachwuchses"),
                      szenario)
-
 
 
   titel <- paste0("Zukünftige MINT-Fachkräfteentwicklung bei aktuellen Verhältnissen
@@ -142,95 +132,54 @@ plot_fachkraft_prognose  <- function(r) {
     }
   }
 
-  hc <- highcharter::highchart() %>%
-    highcharter::hc_chart(type = "areaspline") %>%
-    highcharter::hc_title(text =  titel, align = "left") %>%
-    highcharter::hc_subtitle(text = subtitel, align = "left") %>%
-    highcharter::hc_legend(
-      layout = "horizontal",
-      align = "center",
-      verticalAlign = "bottom"
+  plot_data <- plot_data %>%
+    dplyr::arrange(wirkhebel, jahr)
+
+
+  plot_data <- plot_data %>%
+    dplyr::group_by(jahr) %>%
+    dplyr::mutate(
+      wert_cum = cumsum(wert[order(wirkhebel)])
     ) %>%
-    highcharter::hc_xAxis(plotBands = list(
-      list(
-        from = 2012,
-        to = 2022,
-        color = "#F9F6F5"
+    dplyr::ungroup()
+
+
+  plot_data <- plot_data %>%
+    dplyr::mutate(
+      tooltip = paste0(
+        "<b>Fachkräfte-Entwicklung ", jahr, "</b><br>",
+        wirkhebel, " ", prettyNum(wert_cum, decimal.mark = ",", big.mark = ".")
       )
-    )) %>%
-    highcharter::hc_yAxis(title = list(text = ""),
-                          min = 2500000,
-                          labels = list(formatter = highcharter::JS("
-                          function() {
-                            return Highcharts.numberFormat(this.value, 0, '.', '.');
-                          }
-                        "))) %>%
-    highcharter::hc_tooltip(shared = FALSE, headerFormat = "<b>Fachkräfte-Entwicklung {point.x}</b><br>") %>%
-    highcharter::hc_caption(text = "Vorausberechnung durch das IW Köln, 2025, beauftragt durch MINTvernetzt",
-                            style = list(fontSize = "11px", color = "gray")) %>%
-    highcharter::hc_credits(enabled = FALSE) %>%
-    highcharter::hc_plotOptions(
-      series = list(pointStart = 2012,
-                    stacking = 'normal'),
-      areaspline = list(fillOpacity = 0.5)
     )
 
-  # Serie für "Gesamteffekt" hinzufügen
-  hc <- hc %>% highcharter::hc_add_series(
-    name = filter_wirkhebel[2],
-    data = plot_data %>% dplyr::filter(wirkhebel == filter_wirkhebel[2]) %>% dplyr::pull(wert),
-    color = "#154194",
-    zoneAxis = 'x',
-    zones = list(
-       list(value = 2022),
-      list(dashStyle = 'Dash')
+  color <- c("#b16fab", "#154194")
+  quelle <- "Vorausberechnung durch das IW Köln, 2025, beauftragt durch MINTvernetzt"
+
+  plot <- linebuilder_plotly(plot_data, titel = titel, x = "jahr", y = "wert",
+                            group = "wirkhebel", format = ",d", color = color,
+                            quelle = quelle, area = TRUE)
+
+  plot <- plot |>
+    plotly::layout(
+      shapes = list(
+        list(
+          type = "line",
+          x0 = 2022,  # Zeitpunkt
+          x1 = 2022,
+          y0 = 0,
+          y1 = 1,
+          xref = "x",
+          yref = "paper",  # wichtig!
+          line = list(
+            color = "#EFE8E6",
+            width = 2,
+            dash = "dash"
+          )
+        )
+      )
     )
-  )
 
-  hc <- hc %>% highcharter::hc_add_series(
-    name = "Basis-Szenario",
-    data = plot_data %>% dplyr::filter(wirkhebel == "Basis-Szenario") %>% dplyr::pull(wert),
-    color = "#D0A9CD",
-    zoneAxis = 'x',
-    zones = list(
-      list(value = 2022),
-      list(dashStyle = 'Dash')
-    )
-  )
-
-  hc <- hc  %>%
-    highcharter::hc_exporting(enabled = TRUE,
-                              buttons = list(
-                                contextButton = list(
-                                  menuItems = list("downloadPNG", "downloadCSV")
-                                  )
-                                )
-                            )
-
-   #                                                 list(
-   #                                                   text = "Daten für GPT",
-   #                                                   onclick = htmlwidgets::JS(sprintf(
-   #                                                     "function () {
-   #   var date = new Date().toISOString().slice(0,10);
-   #   var chartTitle = '%s'.replace(/\\s+/g, '_');
-   #   var filename = chartTitle + '_' + date + '.txt';
-   #
-   #   var data = this.getCSV();
-   #   var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-   #   if (window.navigator.msSaveBlob) {
-   #     window.navigator.msSaveBlob(blob, filename);
-   #   } else {
-   #     var link = document.createElement('a');
-   #     link.href = URL.createObjectURL(blob);
-   #     link.download = filename;
-   #     link.click();
-   #   }
-   # }", gsub("'", "\\\\'", titel)))))
-   #                              )
-   #                            )
-   #  )
-
-  return(hc)
+  return(plot)
 }
 
 #Tab 3
@@ -315,21 +264,63 @@ plot_fachkraft_prognose_alle  <- function(r) {
                    bei unterschiedlichen Entwicklungen der Gesamteffekte",
                   titel)
 
-
-
-
   titel <- titel
-  tooltip <- "Anzahl: {point.y}"
-  format <- "{value:, f}"
+
+  plot_data <- plot_data %>%
+    dplyr::mutate(
+      tooltip = paste0(
+        "Fachkräfte-Entwicklung ", jahr, "<br>",
+        "<b>", indikator, " </b><br>",
+        "Anzahl: ", prettyNum(wert, decimal.mark = ",", big.mark = ".")
+      )
+    )
+
+  format <- ",d"
   color <- color_vec
   quelle <- "Vorausberechnung durch IW Köln, 2024, beauftragt durch MINTvernetzt"
-  hc <- linebuilder_light(plot_data, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color, quelle = quelle)
 
+  p <- linebuilder_plotly(plot_data, titel, x = "jahr", y = "wert", group = "indikator",
+                           format = format, color = color, quelle = quelle)
 
-  return(hc)
+  p <- p |>
+    plotly::layout(
+      shapes = list(
+        list(
+          type = "line",
+          x0 = 2022,  # Zeitpunkt
+          x1 = 2022,
+          y0 = 0,
+          y1 = 1,
+          xref = "x",
+          yref = "paper",  # wichtig!
+          line = list(
+            color = "#EFE8E6",
+            width = 2,
+            dash = "dash"
+          )
+        )
+      ),
+        annotations = list(
+          list(
+            text = quelle,
+            x = 1,
+            y = -2.68,
+            xref = "paper",
+            yref = "paper",
+            xanchor = "right",
+            yanchor = "top",
+            showarrow = FALSE,
+            font = list(size = 11, color = "gray", family = "Calibri Regular")
+          )
+        )
+    )
+
+  return(p)
 }
 
+
 plot_fachkraft_prognose_detail  <- function(r) {
+
   filter_wirkhebel <- r$fachkraft_item_prog_detail_wirkhebel
   filter_indikator <- c("Status-quo", ifelse(r$fachkraft_item_prog_detail_wirkhebel == "Basis-Szenario",
                                              "Status-quo",
@@ -363,13 +354,9 @@ plot_fachkraft_prognose_detail  <- function(r) {
   AND jahr <= 2037
                                ", .con = con)
 
-
-
   plot_data <- DBI::dbGetQuery(con, df_query)
 
-
-
-  plot_data <-plot_data %>%
+  plot_data <- plot_data %>%
     dplyr::filter(if_all(all_of(not_focused_column), ~ .x == "Gesamt")) %>%
     dplyr::select(all_of(c("wirkhebel", "indikator", "jahr", focused_column, "wert"))) %>%
     dplyr::filter(!!dplyr::sym(focused_column) != "Gesamt") %>%
@@ -379,28 +366,40 @@ plot_fachkraft_prognose_detail  <- function(r) {
                                                wirkhebel == "MINT-Bildung" ~ "MINT-Nachwuchs fördern",
                                                T ~ wirkhebel))
 
+  # plot_data <- plot_data %>%
+  #   dplyr::arrange(jahr, indikator) %>%
+  #   dplyr::group_by(jahr) %>%
+  #   dplyr::mutate(
+  #     wert_cum = cumsum(wert)
+  #   ) %>%
+  #   dplyr::ungroup()
+
   if(filter_wirkhebel == "Frauen in MINT") filter_wirkhebel <- "Mädchen und Frauen in MINT fördern"
   if(filter_wirkhebel == "MINT-Bildung") filter_wirkhebel <- "MINT-Nachwuchs fördern"
 
   if(focused_column == "nationalitaet"){
     plot_data$nationalitaet <- factor(plot_data$nationalitaet,
-                                      levels = c("Keine deutsche Staatsangehörigkeit",
-                                                 "deutsche Staatsangehörigkeit"))
+                                      levels = c("deutsche Staatsangehörigkeit",
+                                                 "Keine deutsche Staatsangehörigkeit"
+                                                 ))
+
 
   }else if(focused_column == "anforderung"){
 
     plot_data$anforderung <- factor(plot_data$anforderung,
-                                    levels = c("Expert:innen",
+                                    levels = c(
+                                               "Fachkräfte",
                                                "Spezialist:innen",
-                                               "Fachkräfte"))
+                                               "Expert:innen"
+                                               ))
 
-    levels(plot_data$anforderung) <- c("Akademiker:innen", "Facharbeiter:innen mit Fortbildung (Techniker, Meister)",
-                                       "Facharbeiter:innen mit Ausbildung")
+    levels(plot_data$anforderung) <- c("Facharbeiter:innen mit Ausbildung",
+                                       "Facharbeiter:innen mit Fortbildung (Techniker, Meister)",
+                                       "Akademiker:innen"
+                                       )
 
   }
 
-
-  data_list <- split(plot_data, plot_data[focused_column])
 
   if(filter_wirkhebel == "MINT-Nachwuchs fördern"){
     subtitel <- "Die Berechnung beruht auf der Annahme, dass es durch MINT-Bildungsförderung gelingt,
@@ -424,64 +423,46 @@ plot_fachkraft_prognose_detail  <- function(r) {
   }
 
 
+  titel <- paste0("Zukünftige MINT-Fachkräfteentwicklung bis 2037 betrachtet nach ",
+                  filter_gruppe)
 
-  #browser()
-
-
-
-  hc <- highcharter::highchart() %>%
-    highcharter::hc_chart(type = "areaspline") %>%
-    highcharter::hc_title(text = paste0("Zukünftige MINT-Fachkräfteentwicklung bis 2037 betrachtet nach ", filter_gruppe), align = "left") %>%
-    highcharter::hc_subtitle(text = subtitel, align = "left") %>%
-    highcharter::hc_legend(
-      layout = "horizontal",
-      align = "center",
-      verticalAlign = "bottom"
-    ) %>%
-    highcharter::hc_xAxis(plotBands = list(
-      list(
-        from = 2012,
-        to = 2022,
-        color = "#F9F6F5"
-      )
-    )) %>%
-    highcharter::hc_yAxis(title = list(text = ""),
-                          min = 2500000,
-                          labels = list(formatter = highcharter::JS("
-                          function() {
-                            return Highcharts.numberFormat(this.value, 0, '.', '.');
-                          }
-                        "))) %>%
-    highcharter::hc_tooltip(shared = TRUE, headerFormat = "<b>Fachkräfte-Entwicklung {point.x}</b><br>") %>%
-    highcharter::hc_caption(text = "Vorausberechnung durch das IW Köln, 2024, beauftragt durch MINTvernetzt",
-                            style = list(fontSize = "11px", color = "gray")) %>%
-    highcharter::hc_credits(enabled = FALSE) %>%
-    highcharter::hc_plotOptions(
-      series = list(pointStart = 2012,
-                    stacking = 'normal'),
-      areaspline = list(fillOpacity = 0.5)
-    )
-
-
-  for(i in 1:length(data_list)) {
-    hc <- hc %>% highcharter::hc_add_series(
-      name = paste(data_list[[i]] %>%
-                     dplyr::pull(!!dplyr::sym(focused_column)) %>%
-                     unique()),
-
-      data = data_list[[i]] %>%
-        dplyr::pull(wert),
-      color = color_palette[i],
-      zoneAxis = 'x',
-      zones = list(
-        list(value = 2022),
-        list(dashStyle = 'dot')
+  plot_data <- plot_data %>%
+    dplyr::mutate(
+      tooltip = paste0(
+        "<b>Fachkräfte-Entwicklung ", jahr, "</b><br>",
+        !!rlang::sym(focused_column), " ",
+        prettyNum(wert, decimal.mark = ",", big.mark = ".")
       )
     )
-  }
 
+  color <- color_palette
+  quelle <- "Vorausberechnung durch das IW Köln, 2025, beauftragt durch MINTvernetzt"
 
-  return(hc)
+  plot <- linebuilder_plotly(plot_data, titel = titel, x = "jahr", y = "wert",
+                             group = focused_column, subtitel = subtitel, format = ",d",
+                             color = color, quelle = quelle, area = TRUE)
+
+  plot <- plot |>
+    plotly::layout(
+      shapes = list(
+        list(
+          type = "line",
+          x0 = 2022,  # Zeitpunkt
+          x1 = 2022,
+          y0 = 0,
+          y1 = 1,
+          xref = "x",
+          yref = "paper",  # wichtig!
+          line = list(
+            color = "#EFE8E6",
+            width = 2,
+            dash = "dash"
+          )
+        )
+      )
+    )
+
+  return(plot)
 }
 ########################################################## bis hierin
 

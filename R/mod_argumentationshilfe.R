@@ -800,8 +800,13 @@ div(
                width = 9,
                shiny::mainPanel(
                  width = 12,
-                 shinycssloaders::withSpinner(htmlOutput(ns("plot_argument_verlauf")),
-                                              color = "#154194"),
+
+                   shinycssloaders::withSpinner(htmlOutput(ns("plot_argument_verlauf_1")),
+                                                color = "#154194"),
+
+                   shinycssloaders::withSpinner(htmlOutput(ns("plot_argument_verlauf_2")),
+                                                color = "#154194"),
+
                  shinyBS::bsPopover(id="h_argument_1a", title = "",
                                     content = paste0("Es werden nur sozialversicherungspflichtige Beschäftigte betrachtet. Die Kategorisierung in MINT entspricht der Zuordnung durch die Bundesagentur für Arbeit. Weitere Informationen finden Sie unter dem Reiter \"Datenquellen und Hinweise\"."),
                                     placement = "top",
@@ -1703,9 +1708,14 @@ mod_argumentation_server <- function(id){
 
     ### Grafik-Outputs rendern - allgemein ----
 
-    output$plot_argument_verlauf <- renderUI({
+    output$plot_argument_verlauf_1 <- renderUI({
 
-      argument_verlauf(r)
+      argument_verlauf_1(r)
+    })
+
+    output$plot_argument_verlauf_2 <- renderUI({
+
+      argument_verlauf_2(r)
     })
 
     output$plot_argument_fachkraft <- renderUI({

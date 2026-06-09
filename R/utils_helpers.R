@@ -1385,35 +1385,70 @@ linebuilder_plotly <- function(
     format = ".1f",
     color = c("#b16fab", "#154194", "#66cbaf", "#fbbf24"),
     quelle = "Quelle",
-    subtitel = NULL
+    subtitel = NULL,
+    label = NULL,
+    area = NULL
 ) {
 
-  # y runden
-  # df <- df %>%
-  #   dplyr::mutate(!!sym(y) := round(!!sym(y), 1))
-
   # df für JS verfügbar machen
-  df_json <- jsonlite::toJSON(df, dataframe = "rows", auto_unbox = TRUE, na = "null")
+  df_json <- subset(df, select = c(x, y, group))
+  df_json <- jsonlite::toJSON(df_json, dataframe = "rows",
+                              auto_unbox = TRUE, na = "null")
 
   # Strings sicher für JS
-  titel_js  <- gsub("'", "\\\\'", titel)
-  quelle_js <- gsub("'", "\\\\'", quelle)
+  titel_js  <- jsonlite::toJSON(titel, auto_unbox = TRUE)
+  quelle_js <- jsonlite::toJSON(quelle, auto_unbox = TRUE)
+
 
   # Plot erzeugen
-  p <- plotly::plot_ly(
-    data = df,
-    x = as.formula(paste0("~`", x, "`")),
-    y = as.formula(paste0("~`", y, "`")),
-    color = as.formula(paste0("~`", group, "`")),
-    colors = color,
-    type = "scatter",
-    mode = "lines+markers",
-    text = ~tooltip,
-    hovertemplate = "%{text}<extra></extra>"
-  ) |>
+  if(!is.null(label)) {
+    p <- plotly::plot_ly(
+      data = df,
+      x = as.formula(paste0("~`", x, "`")),
+      y = as.formula(paste0("~`", y, "`")),
+      color = as.formula(paste0("~`", group, "`")),
+      colors = color,
+      type = "scatter",
+      text = ~ label,
+      mode = "lines+markers+text",
+      hovertext = ~tooltip,
+      hovertemplate = "%{hovertext}<extra></extra>"
+    )
+  }else if (!is.null(area)){
+    p <- plotly::plot_ly(
+      data = df,
+      x = as.formula(paste0("~`", x, "`")),
+      y = as.formula(paste0("~`", y, "`")),
+      color = as.formula(paste0("~`", group, "`")),
+      colors = color,
+      type = "scatter",
+      mode = "lines+markers",
+      fill = "tonexty",
+      stackgroup = "one",
+      opacity = "0.6",
+      hovertext = ~tooltip,
+      hovertemplate = "%{hovertext}<extra></extra>"
+    )
+    }else{
+    p <- plotly::plot_ly(
+      data = df,
+      x = as.formula(paste0("~`", x, "`")),
+      y = as.formula(paste0("~`", y, "`")),
+      color = as.formula(paste0("~`", group, "`")),
+      colors = color,
+      type = "scatter",
+      mode = "lines+markers",
+      hovertext = ~tooltip,
+      hovertemplate = "%{hovertext}<extra></extra>"
+    )
+  }
+
+  p <- p |>
     plotly::style(
       hoverlabel = list(bgcolor = "white",
-                        font = list(size = 12))
+                        font = list(size = 12)),
+      textposition = "top center",
+      cliponaxis = FALSE
     ) |>
     plotly::layout(
       title = list(
@@ -1471,7 +1506,7 @@ linebuilder_plotly <- function(
       ),
       margin = list(t = 80, b = 100, r = 50)
     ) |>
-    plotly::config(
+      plotly::config(
       displaylogo = FALSE,
       modeBarButtonsToRemove = c(
         "sendDataToCloud", "autoScale2d", "resetScale2d", "toggleSpikelines",
@@ -1488,43 +1523,42 @@ linebuilder_plotly <- function(
             width = 24,
             height = 24
           ),
-          click = htmlwidgets::JS(sprintf("
-            function(gd) {
-              var rows = %s;
-              var date = new Date().toISOString().slice(0,10);
-              var chartTitle = '%s'.replace(/\\s+/g, '_');
-              var filename = chartTitle + '_' + date + '.csv';
 
-              if (!rows.length) return;
+          click = htmlwidgets::JS(
+            paste0("
+              function(gd) {
+                var rows = ", df_json, ";
 
-              var cols = Object.keys(rows[0]);
-              var csv = cols.join(';') + '\\n';
+                var date = new Date().toISOString().slice(0,10);
+                var filename = 'export_' + date + '.csv';
 
-              rows.forEach(function(row) {
-                var values = cols.map(function(col) {
-                  var value = row[col];
-                  if (value === null || value === undefined) return '';
-                  value = String(value).replace(/\"/g, '\"\"');
-                  if (value.search(/[\";\\n]/) >= 0) {
-                    value = '\"' + value + '\"';
-                  }
-                  return value;
+                if (!rows.length) return;
+
+                var cols = Object.keys(rows[0]);
+                var csv = cols.join(';') + '\\n';
+
+                rows.forEach(function(row) {
+                  var values = cols.map(function(col) {
+                    var value = row[col];
+                    if (value == null) return '';
+                    value = String(value).replace(/\"/g, '\"\"');
+                    if (value.search(/[\";\\n]/) >= 0) {
+                      value = '\"' + value + '\"';
+                    }
+                    return value;
+                  });
+                  csv += values.join(';') + '\\n';
                 });
-                csv += values.join(';') + '\\n';
-              });
 
-              var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+                var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
 
-              if (window.navigator.msSaveBlob) {
-                window.navigator.msSaveBlob(blob, filename);
-              } else {
                 var link = document.createElement('a');
                 link.href = URL.createObjectURL(blob);
                 link.download = filename;
                 link.click();
               }
-            }
-          ", df_json, titel_js))
+            ")
+          )
         ),
 
         # TXT-Download für KI
@@ -1535,48 +1569,50 @@ linebuilder_plotly <- function(
             width = 24,
             height = 24
           ),
-          click = htmlwidgets::JS(sprintf("
-            function(gd) {
-              var rows = %s;
-              var date = new Date().toISOString().slice(0,10);
-              var chartTitle = '%s'.replace(/\\s+/g, '_');
-              var filename = chartTitle + '_' + date + '.txt';
+          click = htmlwidgets::JS(
+            paste0("
+              function(gd) {
+                var rows = ", df_json, ";
+                var titel = ", titel_js, ";
+                var quelle = ", quelle_js, ";
 
-              if (!rows.length) return;
+                var date = new Date().toISOString().slice(0,10);
+                var chartTitle = titel.replace(/\\s+/g, '_');
+                var filename = chartTitle + '_' + date + '.txt';
 
-              var cols = Object.keys(rows[0]);
+                if (!rows.length) return;
 
-              var text = '';
-              text += 'Titel: %s\\n';
-              text += 'Quelle: %s\\n\\n';
-              text += 'Daten:\\n';
+                var cols = Object.keys(rows[0]);
 
-              text += cols.join('\\t') + '\\n';
+                var text = '';
+                text += 'Titel: ' + titel + '\\n';
+                text += 'Quelle: ' + quelle + '\\n\\n';
+                text += 'Daten:\\n';
 
-              rows.forEach(function(row) {
-                var values = cols.map(function(col) {
-                  var value = row[col];
-                  if (value === null || value === undefined) return '';
-                  return String(value);
+                text += cols.join('\\t') + '\\n';
+
+                rows.forEach(function(row) {
+                  var values = cols.map(function(col) {
+                    var value = row[col];
+                    if (value === null || value === undefined) return '';
+                    return String(value);
+                  });
+                  text += values.join('\\t') + '\\n';
                 });
-                text += values.join('\\t') + '\\n';
-              });
 
-              var blob = new Blob([text], { type: 'text/plain;charset=utf-8;' });
+                var blob = new Blob([text], { type: 'text/plain;charset=utf-8;' });
 
-              if (window.navigator.msSaveBlob) {
-                window.navigator.msSaveBlob(blob, filename);
-              } else {
                 var link = document.createElement('a');
                 link.href = URL.createObjectURL(blob);
                 link.download = filename;
                 link.click();
               }
-            }
-          ", df_json, titel_js, titel_js, quelle_js))
+            ")
+          )
         )
       )
     )
+
 
   if (!is.null(subtitel)) {
     p <- plotly::layout(
