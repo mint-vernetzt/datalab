@@ -294,9 +294,16 @@ mod_ausserschulisch_start_ui <- function(id){
                                        column(
                                          width = 9,
                                          shinycssloaders::withSpinner(
-                                           highcharter::highchartOutput(ns("plot_mv_gender"), height = "600px"),
+                                           plotly::plotlyOutput(ns("plot_mv_gender"), height = "500px"),
                                            color = "#154194"),
 
+                                         p(style= "font-size:16px",
+                                           "Die Gruppe der bislang moderat aktiven MINT-Bildungsanbieter:innen zeichnet
+                              sich durch einen großen Vernetzungswunsch und eine hohe Motivation aus,
+                              sich aktiv in Netzwerke zum Thema MINT-Förderung für Mädchen einzubringen,
+                              was auf ein großes Aktivierungspotenzial hinweist.
+                              Die Gruppe der hoch Aktiven ist bereits sehr motiviert und engagiert in ihrem Netzwerk.
+                                           Die kleinste Gruppe der Befragten nimmt lieber passiv an Netzwerkaktivitäten teil."),
 
                                          p(style = "font-size:16px; font-weight: 600;",
                                            br(),
@@ -510,7 +517,7 @@ mod_ausserschulisch_start_server <- function(id, r){
       plot_mv_stimmung(r)
     )
 
-    output$plot_mv_gender <- highcharter::renderHighchart(
+    output$plot_mv_gender <- plotly::renderPlotly(
       plot_mv_genderb()
     )
 
