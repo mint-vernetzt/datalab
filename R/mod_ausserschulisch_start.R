@@ -148,7 +148,7 @@ mod_ausserschulisch_start_ui <- function(id){
                                        shiny::mainPanel(
                                          width = 9,
                                          shinycssloaders::withSpinner(
-                                           highcharter::highchartOutput(ns("plot_cp_projekte"), height = "500px"),
+                                           plotly::plotlyOutput(ns("plot_cp_projekte")), #, height = "500px"
                                                                       color = "#154194"),
     )
                               ),
@@ -493,7 +493,7 @@ mod_ausserschulisch_start_server <- function(id, r){
       plot_cp_orgas(r)
     })
 
-    output$plot_cp_projekte <- highcharter::renderHighchart({
+    output$plot_cp_projekte <- plotly::renderPlotly({
       plot_cp_projekte(r)
     })
 

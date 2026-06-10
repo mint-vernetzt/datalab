@@ -510,13 +510,21 @@ mod_schule_kurse_server <- function(id, r){
 
     output$plot_einstieg_comparison <- renderUI({
       plot_list <- kurse_einstieg_comparison(r)
-      r$plot_einstieg_comparison <- plot_list
 
-      r$plot_einstieg_comparison_title <- get_plot_title(
-        plot = r$plot_einstieg_comparison
-      )
-
-      plot_list
+      if(length(plot_list) > 2){
+        plot_list
+      }else{
+        fluidRow(
+          column(
+            width = 6,
+            plot_list[1]
+          ),
+          column(
+            width = 6,
+            plot_list[2]
+          )
+        )
+      }
 
     })
 
@@ -545,7 +553,23 @@ mod_schule_kurse_server <- function(id, r){
 
     ## Waffle Geschlecht
     output$plot_wahl <- renderUI({
-      kurse_wahl(r)
+
+      plot_list <- kurse_wahl(r)
+
+      if(length(plot_list) > 2){
+        plot_list
+      }else{
+        fluidRow(
+          column(
+            width = 6,
+            plot_list[1]
+          ),
+          column(
+            width = 6,
+            plot_list[2]
+          )
+        )
+      }
     })
 
     ## Karte Gender
@@ -682,8 +706,23 @@ mod_schule_kurse_server <- function(id, r){
     # Box 3 - Frauen ----
 
     output$plot_comparison_gender <- renderUI({
-      kurse_comparison_gender(r)
 
+      plot_list <- kurse_comparison_gender(r)
+
+      if(length(plot_list) > 2){
+        plot_list
+      }else{
+        fluidRow(
+          column(
+            width = 6,
+            plot_list[1]
+          ),
+          column(
+            width = 6,
+            plot_list[2]
+          )
+        )
+      }
 
     })
 

@@ -1375,6 +1375,262 @@ piebuilder <- function(df, titel, x, y, tooltip, color = c("#b16fab", "#efe8e6")
   return(out)
 }
 
+piebuilder_plotly <- function(
+    df,
+    titel,
+    x,
+    y,
+    color = c("#b16fab", "#efe8e6"),
+    quelle = "Quelle",
+    subtitel = NULL
+) {
+
+  # Umgang für leere Datensätze
+  if (nrow(df) == 0) {
+
+    p <- plotly::plot_ly() |>
+      plotly::layout(
+        title = list(
+          text = titel,
+          x = 0.5,
+          xanchor = "center",
+          font = list(
+            family = "Calibri, sans-serif",
+            size = 20,
+            color = "black"
+          )
+        ),
+        annotations = list(
+          list(
+            text = "Für die gewählte Kombination sind keine Daten verfügbar.",
+            x = 0.5,
+            y = 0.5,
+            xref = "paper",
+            yref = "paper",
+            showarrow = FALSE,
+            font = list(
+              family = "Calibri, sans-serif",
+              size = 14,
+              color = "gray"
+            )
+          )
+        ),
+        xaxis = list(visible = FALSE),
+        yaxis = list(visible = FALSE),
+        margin = list(t = 80, b = 100, r = 50, l = 40)
+      )
+
+    return(p)
+  }
+
+  # JSON für Download (nur relevante Spalten)
+  df_export <- df[, c(x, y)]
+  df_json <- jsonlite::toJSON(
+    df_export,
+    dataframe = "rows",
+    auto_unbox = TRUE,
+    na = "null"
+  )
+
+  # Strings sicher
+  titel_js  <- jsonlite::toJSON(titel, auto_unbox = TRUE)
+  subtitel_js  <- jsonlite::toJSON(subtitel, auto_unbox = TRUE)
+  quelle_js <- jsonlite::toJSON(quelle, auto_unbox = TRUE)
+
+  # Überschriften-Umbruch vorbereiten
+
+  titel_wrapped <- stringr::str_wrap(titel, width = 60)
+  titel_wrapped <- gsub("\n", "<br>", titel_wrapped)
+  subtitel_wrapped <- stringr::str_wrap(subtitel, width = 80)
+  subtitel_wrapped <- gsub("\n", "<br>", subtitel_wrapped)
+
+  # Plot erstellen
+  p <- plotly::plot_ly(
+    data = df,
+    labels = as.formula(paste0("~`", x, "`")),
+    values = as.formula(paste0("~`", y, "`")),
+    type = "pie",
+    textinfo = "none",
+    hovertext = ~tooltip,
+    hovertemplate = "%{hovertext}<extra></extra>",
+    marker = list(colors = color),
+    sort = FALSE
+  ) |>
+    plotly::style(
+      hoverlabel = list(bgcolor = "white",
+                        font = list(size = 12))
+    )
+
+  # Layout
+  p <- p |>
+    plotly::layout(
+      title = list(
+        text = titel_wrapped,
+        x = 0.5,
+        xanchor = "center",
+        font = list(
+          family = "Calibri, sans-serif",
+          size = 20,
+          color = "black"
+        )
+      ),
+      font = list(
+        family = "Calibri, sans-serif",
+        size = 14,
+        color = "black"
+      ),
+      legend = list(
+        orientation = "h",
+        x = 0.5,
+        y = -0.1,
+        xanchor = "center",
+        yanchor = "top",
+        traceorder = "reversed"
+      ),
+      annotations = list(
+        list(
+          text = quelle,
+          x = 1,
+          y = -0.3,
+          xref = "paper",
+          yref = "paper",
+          xanchor = "right",
+          yanchor = "top",
+          showarrow = FALSE,
+          font = list(size = 11, color = "gray", family = "Calibri Regular", align = "right")
+        )
+      ),
+      margin = list(t = 90, b = 120, r = 50, l = 50)
+    ) |>
+    plotly::config(
+      displaylogo = FALSE,
+      modeBarButtonsToRemove = c(
+        "sendDataToCloud", "autoScale2d", "resetScale2d", "toggleSpikelines",
+        "hoverClosestCartesian", "hoverCompareCartesian", "hoverClosestPie",
+        "zoom2d", "pan2d", "select2d", "lasso2d", "zoomIn2d", "zoomOut2d"
+      ),
+      modeBarButtonsToAdd = list(
+
+        # CSV Download
+        list(
+          name = "Download CSV",
+          icon = list(
+            path = "M16,2H8C6.9,2,6,2.9,6,4v16c0,1.1,0.9,2,2,2h8c1.1,0,2-0.9,2-2V4C18,2.9,17.1,2,16,2z M16,20H8V4h8V20z M14.5,14h-2v3h-1v-3h-2l2.5-3.5L14.5,14z",
+            width = 24,
+            height = 24
+          ),
+          click = htmlwidgets::JS(
+            paste0("
+              function(gd) {
+                var rows = ", df_json, ";
+
+                var date = new Date().toISOString().slice(0,10);
+                var filename = 'export_' + date + '.csv';
+
+                if (!rows.length) return;
+
+                var cols = Object.keys(rows[0]);
+                var csv = cols.join(';') + '\\n';
+
+                rows.forEach(function(row) {
+                  var values = cols.map(function(col) {
+                    var value = row[col];
+                    if (value == null) return '';
+                    value = String(value).replace(/\"/g, '\"\"');
+                    if (value.search(/[\";\\n]/) >= 0) {
+                      value = '\"' + value + '\"';
+                    }
+                    return value;
+                  });
+                  csv += values.join(';') + '\\n';
+                });
+
+                var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+
+                var link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = filename;
+                link.click();
+              }
+            ")
+          )
+        ),
+
+        # TXT Download für KI
+        list(
+          name = "Download Daten für KI-Chats als txt",
+          icon = list(
+            path = "M14,2H6C4.9,2,4,2.9,4,4v16c0,1.1,0.9,2,2,2h12c1.1,0,2-0.9,2-2V8L14,2z M14,4.5L17.5,8H14V4.5z M18,20H6V4h6v6h6V20z",
+            width = 24,
+            height = 24
+          ),
+          click = htmlwidgets::JS(
+            paste0("
+              function(gd) {
+                var rows = ", df_json, ";
+                var titel = ", titel_js, ";
+                var subtitel = ", subtitel_js, ";
+                var quelle = ", quelle_js, ";
+
+                var date = new Date().toISOString().slice(0,10);
+                var chartTitle = titel.replace(/\\s+/g, '_');
+                var filename = chartTitle + '_' + date + '.txt';
+
+                if (!rows.length) return;
+
+                var cols = Object.keys(rows[0]);
+
+                var text = '';
+                text += 'Titel: ' + titel + '\\n';
+                text += 'Untertitel: ' + subtitel + '\\n';
+                text += 'Quelle: ' + quelle + '\\n\\n';
+                text += 'Daten:\\n';
+
+                text += cols.join('\\t') + '\\n';
+
+                rows.forEach(function(row) {
+                  var values = cols.map(function(col) {
+                    var value = row[col];
+                    if (value === null || value === undefined) return '';
+                    return String(value);
+                  });
+                  text += values.join('\\t') + '\\n';
+                });
+
+                var blob = new Blob([text], { type: 'text/plain;charset=utf-8;' });
+
+                var link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = filename;
+                link.click();
+              }
+            ")
+          )
+        )
+      )
+    )
+
+  # Subtitel
+  if (!is.null(subtitel)) {
+
+    p <- plotly::layout(
+      p,
+      title = list(
+        text = paste0(
+          titel_wrapped,
+          "<br>",
+          "<span style='font-size:14px; color:gray; font-family:Calibri;'>",
+          subtitel_wrapped, "</span>"
+        ),
+        x = 0.5,
+        font = list(family = "Calibri Regular", size = 20, color = "black")
+      )
+    )
+  }
+
+  return(p)
+}
+
 
 linebuilder_plotly <- function(
     df,
@@ -1390,6 +1646,44 @@ linebuilder_plotly <- function(
     area = NULL
 ) {
 
+  # Umgang für leere Datensätze
+  if (nrow(df) == 0) {
+
+    p <- plotly::plot_ly() |>
+      plotly::layout(
+        title = list(
+          text = titel,
+          x = 0.5,
+          xanchor = "center",
+          font = list(
+            family = "Calibri, sans-serif",
+            size = 20,
+            color = "black"
+          )
+        ),
+        annotations = list(
+          list(
+            text = "Für die gewählte Kombination sind keine Daten verfügbar.",
+            x = 0.5,
+            y = 0.5,
+            xref = "paper",
+            yref = "paper",
+            showarrow = FALSE,
+            font = list(
+              family = "Calibri, sans-serif",
+              size = 14,
+              color = "gray"
+            )
+          )
+        ),
+        xaxis = list(visible = FALSE),
+        yaxis = list(visible = FALSE),
+        margin = list(t = 80, b = 100, r = 50, l = 40)
+      )
+
+    return(p)
+  }
+
   # df für JS verfügbar machen
   df_json <- subset(df, select = c(x, y, group))
   df_json <- jsonlite::toJSON(df_json, dataframe = "rows",
@@ -1397,6 +1691,7 @@ linebuilder_plotly <- function(
 
   # Strings sicher für JS
   titel_js  <- jsonlite::toJSON(titel, auto_unbox = TRUE)
+  subtitel_js  <- jsonlite::toJSON(subtitel, auto_unbox = TRUE)
   quelle_js <- jsonlite::toJSON(quelle, auto_unbox = TRUE)
 
 
@@ -1574,6 +1869,7 @@ linebuilder_plotly <- function(
               function(gd) {
                 var rows = ", df_json, ";
                 var titel = ", titel_js, ";
+                var subtitel = ", subtitel_js, ";
                 var quelle = ", quelle_js, ";
 
                 var date = new Date().toISOString().slice(0,10);
@@ -1586,6 +1882,7 @@ linebuilder_plotly <- function(
 
                 var text = '';
                 text += 'Titel: ' + titel + '\\n';
+                text += 'Untertitel: ' + subtitel + '\\n';
                 text += 'Quelle: ' + quelle + '\\n\\n';
                 text += 'Daten:\\n';
 
@@ -1633,120 +1930,120 @@ linebuilder_plotly <- function(
 
 #df, titel, x, y, tooltip
 
-linebuilder <- function(df, titel, x , y, group = NULL, tooltip, format, color = c("#b16fab", "#154194","#66cbaf", "#fbbf24"), quelle="Quelle"){
-
-  df <- df %>%
-    dplyr::mutate(!!y := round(!!rlang::sym(y), 1))
-
-  out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = !!rlang::sym(x), y = !!rlang::sym(y), group = !!rlang::sym(group))) %>%
-    highcharter::hc_tooltip(pointFormat = tooltip) %>%
-    highcharter::hc_yAxis(title = list(text = " "), labels = list(format = format),
-                          style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular")) %>%
-    highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular")) %>%
-    highcharter::hc_title(text = titel,
-                          margin = 45,
-                          align = "center",
-                          style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
-    highcharter::hc_colors(color) %>%
-    highcharter::hc_chart(
-    style = list(fontFamily = "Calibri Regular", fontSize = "14px")
-    )  %>%
-    highcharter::hc_caption(text = quelle,
-                            style = list(fontSize = "11px", color = "gray")) %>%
-    highcharter::hc_exporting(enabled = TRUE,
-                              buttons = list(
-                                contextButton = list(
-                                  menuItems = list("downloadPNG", "downloadCSV",
-                                                   list(
-                                                     text = "Daten für GPT",
-                                                     onclick = htmlwidgets::JS(sprintf(
-                                                       "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
-
-     var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle: %s';
-
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-   }",
-                                                       gsub("'", "\\\\'", titel),
-                                                       gsub("'", "\\\\'", titel),
-                                                       gsub("'", "\\\\'", quelle)
-                                                     ))
-
-   #                                                   onclick = htmlwidgets::JS(sprintf(
-   #                                                     "function () {
-   #   var date = new Date().toISOString().slice(0,10);
-   #   var chartTitle = '%s'.replace(/\\s+/g, '_');
-   #   var filename = chartTitle + '_' + date + '.txt';
-   #
-   #   var data = this.getCSV();
-   #
-   #   data += '\\n%s';  // <- Quelle anhängen
-   #
-   #   var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-   #   if (window.navigator.msSaveBlob) {
-   #     window.navigator.msSaveBlob(blob, filename);
-   #   } else {
-   #     var link = document.createElement('a');
-   #     link.href = URL.createObjectURL(blob);
-   #     link.download = filename;
-   #     link.click();
-   #   }
-   #
-   # }",
-   #                                                     gsub("'", "\\\\'", titel),  # Titel escapen
-   #                                                     gsub("'", "\\\\'", quelle)  # Quelle escapen
-   #                                                   ))
-
-                                                   ))
-                                )
-                              )
-    )
-
-
-}
+# linebuilder <- function(df, titel, x , y, group = NULL, tooltip, format, color = c("#b16fab", "#154194","#66cbaf", "#fbbf24"), quelle="Quelle"){
+#
+#   df <- df %>%
+#     dplyr::mutate(!!y := round(!!rlang::sym(y), 1))
+#
+#   out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = !!rlang::sym(x), y = !!rlang::sym(y), group = !!rlang::sym(group))) %>%
+#     highcharter::hc_tooltip(pointFormat = tooltip) %>%
+#     highcharter::hc_yAxis(title = list(text = " "), labels = list(format = format),
+#                           style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular")) %>%
+#     highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular")) %>%
+#     highcharter::hc_title(text = titel,
+#                           margin = 45,
+#                           align = "center",
+#                           style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
+#     highcharter::hc_colors(color) %>%
+#     highcharter::hc_chart(
+#     style = list(fontFamily = "Calibri Regular", fontSize = "14px")
+#     )  %>%
+#     highcharter::hc_caption(text = quelle,
+#                             style = list(fontSize = "11px", color = "gray")) %>%
+#     highcharter::hc_exporting(enabled = TRUE,
+#                               buttons = list(
+#                                 contextButton = list(
+#                                   menuItems = list("downloadPNG", "downloadCSV",
+#                                                    list(
+#                                                      text = "Daten für GPT",
+#                                                      onclick = htmlwidgets::JS(sprintf(
+#                                                        "function () {
+#      var date = new Date().toISOString().slice(0,10);
+#      var chartTitle = '%s'.replace(/\\s+/g, '_');
+#      var filename = chartTitle + '_' + date + '.txt';
+#
+#      var data = 'Titel: %s\\n' + this.getCSV();
+#      data += '\\nQuelle: %s';
+#
+#      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+#      if (window.navigator.msSaveBlob) {
+#        window.navigator.msSaveBlob(blob, filename);
+#      } else {
+#        var link = document.createElement('a');
+#        link.href = URL.createObjectURL(blob);
+#        link.download = filename;
+#        link.click();
+#      }
+#    }",
+#                                                        gsub("'", "\\\\'", titel),
+#                                                        gsub("'", "\\\\'", titel),
+#                                                        gsub("'", "\\\\'", quelle)
+#                                                      ))
+#
+#    #                                                   onclick = htmlwidgets::JS(sprintf(
+#    #                                                     "function () {
+#    #   var date = new Date().toISOString().slice(0,10);
+#    #   var chartTitle = '%s'.replace(/\\s+/g, '_');
+#    #   var filename = chartTitle + '_' + date + '.txt';
+#    #
+#    #   var data = this.getCSV();
+#    #
+#    #   data += '\\n%s';  // <- Quelle anhängen
+#    #
+#    #   var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+#    #   if (window.navigator.msSaveBlob) {
+#    #     window.navigator.msSaveBlob(blob, filename);
+#    #   } else {
+#    #     var link = document.createElement('a');
+#    #     link.href = URL.createObjectURL(blob);
+#    #     link.download = filename;
+#    #     link.click();
+#    #   }
+#    #
+#    # }",
+#    #                                                     gsub("'", "\\\\'", titel),  # Titel escapen
+#    #                                                     gsub("'", "\\\\'", quelle)  # Quelle escapen
+#    #                                                   ))
+#
+#                                                    ))
+#                                 )
+#                               )
+#     )
+#
+#
+# }
 
 #}
 
-linebuilder_light <- function(df, titel, x , y, group = NULL, tooltip, format, color = c("#b16fab", "#154194","#66cbaf", "#fbbf24"), quelle="Quelle"){
-
-  df <- df %>%
-    dplyr::mutate(!!y := round(!!rlang::sym(y), 1))
-
-  out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = !!rlang::sym(x), y = !!rlang::sym(y), group = !!rlang::sym(group))) %>%
-    highcharter::hc_tooltip(pointFormat = tooltip) %>%
-    highcharter::hc_yAxis(title = list(text = " "), labels = list(format = format),
-                          style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular")) %>%
-    highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular")) %>%
-    highcharter::hc_title(text = titel,
-                          margin = 45,
-                          align = "center",
-                          style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
-    highcharter::hc_colors(color) %>%
-    highcharter::hc_chart(
-      style = list(fontFamily = "Calibri Regular", fontSize = "14px")
-    )  %>%
-    highcharter::hc_caption(text = quelle,
-                            style = list(fontSize = "11px", color = "gray")) %>%
-    highcharter::hc_exporting(enabled = TRUE,
-                              buttons = list(
-                                contextButton = list(
-                                  menuItems = list("downloadPNG", "downloadCSV"))
-                              )
-    )
-
-
-}
+# linebuilder_light <- function(df, titel, x , y, group = NULL, tooltip, format, color = c("#b16fab", "#154194","#66cbaf", "#fbbf24"), quelle="Quelle"){
+#
+#   df <- df %>%
+#     dplyr::mutate(!!y := round(!!rlang::sym(y), 1))
+#
+#   out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = !!rlang::sym(x), y = !!rlang::sym(y), group = !!rlang::sym(group))) %>%
+#     highcharter::hc_tooltip(pointFormat = tooltip) %>%
+#     highcharter::hc_yAxis(title = list(text = " "), labels = list(format = format),
+#                           style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular")) %>%
+#     highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular")) %>%
+#     highcharter::hc_title(text = titel,
+#                           margin = 45,
+#                           align = "center",
+#                           style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
+#     highcharter::hc_colors(color) %>%
+#     highcharter::hc_chart(
+#       style = list(fontFamily = "Calibri Regular", fontSize = "14px")
+#     )  %>%
+#     highcharter::hc_caption(text = quelle,
+#                             style = list(fontSize = "11px", color = "gray")) %>%
+#     highcharter::hc_exporting(enabled = TRUE,
+#                               buttons = list(
+#                                 contextButton = list(
+#                                   menuItems = list("downloadPNG", "downloadCSV"))
+#                               )
+#     )
+#
+#
+# }
 
 balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color,
                           optional=NULL, reverse = TRUE, TF=NULL, stacking=NULL, subtitel = NULL, quelle="Quelle"){

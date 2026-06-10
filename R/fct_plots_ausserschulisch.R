@@ -93,14 +93,22 @@ plot_cp_orgas <- function(r){
 
     titel <- paste0("Für die gewählten Eingaben hat keine Organisation eine Angabe gemacht.")
 
-    tooltip <- "{point.indikator} <br> Anteil: {point.prop_disp} %"
-    format <- "{value}%"
+    df <- df %>%
+      dplyr::mutate(
+        tooltip = paste0(
+          "<b>", indikator, "</b><br>",
+          "Jahr: ", jahr, "<br>",
+          "Anteil: ", prop_disp, " %"
+        )
+      )
+
     color <- c("#b16fab", "#154194","#66cbaf","#112c5f", "#35bd97", "#5d335a",
                "#5f94f9", "#007655", "#d0a9cd")
 
 
     quelke <- "Quelle der Daten: MINTvernetzt Community Plattform, Stand 14. April 2025."
-    out <- linebuilder(df, titel, x = "indikator", y = "wert", group = "region", tooltip, format, color, quelle = quelke)
+    out <- linebuilder(df, titel, x = "indikator", y = "wert", group = "region",
+                       color = color, quelle = quelke)
 
     #keine quelle weil net relevant
 
@@ -359,14 +367,20 @@ plot_cp_projekte <- function(r){
 
     titel <- paste0("Für die gewählten Eingaben hat keine Organisation eine Angabe gemacht.")
 
-    tooltip <- "{point.indikator} <br> Anteil: {point.prop_disp} %"
-    format <- "{value}%"
+
+    df <- df %>%
+      dplyr::mutate(
+        tooltip = paste0(
+          "<b>", indikator, "</b><br>",
+          "Jahr: ", jahr, "<br>",
+          "Anteil: ", prop_disp, " %"
+        )
+      )
+
     color <- c("#b16fab", "#154194","#66cbaf","#112c5f", "#35bd97", "#5d335a",
                "#5f94f9", "#007655", "#d0a9cd")
 
-
-
-    out <- linebuilder(df, titel, x = "indikator", y = "wert", group = "region", tooltip, format, color)
+    out <- linebuilder(df, titel, x = "indikator", y = "wert", group = "region", color = color)
 
 
   }else if(abs_rel_select == "In Prozent"){
@@ -1238,19 +1252,6 @@ plot_mv_genderb <- function(){
         )
       )
 
-    # tooltip <- paste('Anteil: {point.wert} %')
-    # color <- c("#b16fab", "#154194", "#66cbaf")
-    # titel <- titel
-    # subtitel <- subtitel
-    # format <- '{point.wert}%'
-    #
-    # x = "gruppe"
-    # y = "wert"
-    #
-    # quelle <- "Quelle der Daten: MINTvernetzt 2024"
-    #
-    #
-    # plot <- piebuilder(df, titel, x,y, tooltip, color, format, subtitel, quelle = quelle )
 
     plot <- df %>%
       highcharter::hchart(

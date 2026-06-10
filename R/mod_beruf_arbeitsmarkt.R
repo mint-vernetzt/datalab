@@ -711,7 +711,22 @@ mod_beruf_arbeitsmarkt_server <- function(id, r){
     # Box 1 ----
     # Tab
     output$plot_arbeitsmarkt_faecher_anteil <- renderUI({
-      arbeitsmarkt_faecher_anteil(r)
+      plot_list <- arbeitsmarkt_faecher_anteil(r)
+
+      if(length(plot_list) > 2){
+        plot_list
+      }else{
+        fluidRow(
+          column(
+            width = 6,
+            plot_list[1]
+          ),
+          column(
+            width = 6,
+            plot_list[2]
+          )
+        )
+      }
     })
 
     ##
@@ -746,8 +761,8 @@ mod_beruf_arbeitsmarkt_server <- function(id, r){
     # Tab 3
 
     output$plot_einstieg_vergleich <- renderUI({
-      plot_list <- beruf_einstieg_vergleich(r)
-      plot_list
+      beruf_einstieg_vergleich(r)
+
     })
 
 
@@ -980,7 +995,42 @@ mod_beruf_arbeitsmarkt_server <- function(id, r){
 
     # tab 1
     output$plot_einstieg_pie_gender <- renderUI({
-      arbeitsmarkt_einstieg_pie_gender(r)
+
+      plots <- arbeitsmarkt_einstieg_pie_gender(r)
+
+      if(length(plots) > 4){
+        plots
+      }else if(length(plots) == 2){
+        fluidRow(
+          column(
+            width = 6,
+            plots[1]
+          ),
+          column(
+            width = 6,
+            plots[2]
+          )
+        )
+      }else if(length(plots) == 4){
+        fluidRow(
+          column(
+            width = 6,
+            plots[1]
+          ),
+          column(
+            width = 6,
+            plots[2]
+          ),
+          column(
+            width = 6,
+            plots[3]
+          ),
+          column(
+            width = 6,
+            plots[4]
+          )
+        )
+      }
     })
 
 
@@ -995,7 +1045,17 @@ mod_beruf_arbeitsmarkt_server <- function(id, r){
     # tab 3
 
     output$plot_arbeitsmarkt_wahl_gender <- renderUI({
-      arbeitsmarkt_wahl_gender(r)
+      plots <- arbeitsmarkt_wahl_gender(r)
+      fluidRow(
+        column(
+          width = 6,
+          plots[1]
+        ),
+        column(
+          width = 6,
+          plots[2]
+        )
+      )
     })
 
 

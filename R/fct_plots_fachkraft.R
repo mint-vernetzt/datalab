@@ -366,13 +366,6 @@ plot_fachkraft_prognose_detail  <- function(r) {
                                                wirkhebel == "MINT-Bildung" ~ "MINT-Nachwuchs fördern",
                                                T ~ wirkhebel))
 
-  # plot_data <- plot_data %>%
-  #   dplyr::arrange(jahr, indikator) %>%
-  #   dplyr::group_by(jahr) %>%
-  #   dplyr::mutate(
-  #     wert_cum = cumsum(wert)
-  #   ) %>%
-  #   dplyr::ungroup()
 
   if(filter_wirkhebel == "Frauen in MINT") filter_wirkhebel <- "Mädchen und Frauen in MINT fördern"
   if(filter_wirkhebel == "MINT-Bildung") filter_wirkhebel <- "MINT-Nachwuchs fördern"
