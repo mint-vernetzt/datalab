@@ -106,7 +106,7 @@ mod_studium_studienzahl_ui <- function(id){
                                mod_studium_studienzahl_anteil_ui("mod_studium_studienzahl_anteil_ui_1")
                                ),
                              shiny::mainPanel(width = 9,
-                              shinycssloaders::withSpinner(htmlOutput(ns("mint_anteil_studium")),
+                              shinycssloaders::withSpinner(plotly::plotlyOutput(ns("mint_anteil_studium"), height = "500px"),
                                                            color = "#154194"),
 
                                shinyBS::bsPopover(id="h_studium_mint_1", title = "",
@@ -145,7 +145,7 @@ mod_studium_studienzahl_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(htmlOutput(ns("plot_studienzahl_bula_mint")),
+                               shinycssloaders::withSpinner(plotly::plotlyOutput(ns("plot_studienzahl_bula_mint"), height = "700px"),
                                                             color = "#154194"),
 
                                shinyBS::bsPopover(id="h_studium_fach_2", title="",
@@ -207,7 +207,7 @@ mod_studium_studienzahl_ui <- function(id){
                                mod_studium_studienzahl_mint_fach_ui("mod_studium_studienzahl_mint_fach_ui_1")),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(htmlOutput(ns("plot_anteil_mint_faecher")),
+                               shinycssloaders::withSpinner(plotly::plotlyOutput(ns("plot_anteil_mint_faecher"), height = "600px"),
                                                             color = "#154194"),
 
                                shinyBS::bsPopover(id="h_studium_mint_2", title = "",
@@ -251,7 +251,7 @@ mod_studium_studienzahl_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(htmlOutput(ns("plot_studienzahl_bula_faecher_mint")),
+                               shinycssloaders::withSpinner(plotly::plotlyOutput(ns("plot_studienzahl_bula_faecher_mint"), height = "700px"),
                                                             color = "#154194"),
 
 
@@ -299,7 +299,7 @@ mod_studium_studienzahl_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(htmlOutput(ns("plot_einstieg_gender")),
+                               shinycssloaders::withSpinner(plotly::plotlyOutput(ns("plot_einstieg_gender"), height = "650px"),
                                                             color = "#154194"),
 
                                shinyBS::bsPopover(id="h_studium_frauen_1", title="",
@@ -385,12 +385,10 @@ mod_studium_studienzahl_ui <- function(id){
                              mod_studium_studienzahl_mintfrauen_ui("mod_studium_studienzahl_mintfrauen_ui_1")),
                            shiny::mainPanel(
                              width = 9,
-                             shinycssloaders::withSpinner(htmlOutput(ns("plot_anteil_mint_faecher_frauen")),
+                             shinycssloaders::withSpinner(plotly::plotlyOutput(ns("plot_anteil_mint_faecher_frauen"), height = "600px"),
                                                           color = "#154194"),
                              p(),
-                             p(style="font-size:12px;color:grey",
-                               "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
-                             shinyBS::bsPopover(id="h_studium_mint_2_fruen", title = "",
+                            shinyBS::bsPopover(id="h_studium_mint_2_fruen", title = "",
                                                 content = paste0("In die Kategorie &quotStudienanfänger:innen (1. Fachsemester)&quot fallen alle Studierenden, die das betrachtete Studium aktuell im ersten Semester studieren. Hierbei werden z. B. auch Studierende mitgezählt, die einen Master beginnen oder in das betrachtete Fach hineingewechselt sind. <br> Unter &quotStudienanfänger:innen (1. Hochschulsemester)&quot nehmen wir nur die Personen in den Blick, die zum ersten mal ein Studium aufnehmen.", "<br><br>Für Studierende im Lehramt wird das belegte Hauptfach für die Kategorisierung in &quotMINT&quot oder &quotNicht-MINT&quot betrachtet.", "<br> <br> Durch Rundungen kann es zu minimalen Abbweichungen zwischen den Grafiken kommen.", "<br><br>Die Zahlen beziehen sich auf die eingeschriebenen Studierenden des Herbst-/Wintersemesters im betrachteten Jahr."),
                                                 placement = "top",
                                                 trigger = "hover"),
@@ -425,16 +423,11 @@ mod_studium_studienzahl_ui <- function(id){
                                     tags$style(".well {background-color:#FFFFFF;}"),
                                     tags$head(tags$style(HTML(".small-box {height: 140px}"))),
                                     mod_studium_studienzahl_ausl_ui("mod_studium_studienzahl_ausl_ui"),
-                                    # br(),br(),
-                                    # downloadButton(
-                                    #   outputId = ns("download_btn_plot_auslaender_test"),
-                                    #   label = "Download",
-                                    #   icon = icon("download")),
-                                  ),
+                                                                      ),
                                   shiny::mainPanel(
                                     width = 9,
                                     tags$head(tags$style(HTML(".small-box {height: 400px}"))),
-                                    shinycssloaders::withSpinner(htmlOutput(ns("plot_auslaender_test"), height = "650px"),
+                                    shinycssloaders::withSpinner(plotly::plotlyOutput(ns("plot_auslaender_test"), height = "650px"),
                                                                  color = "#154194"),
                                     shinyBS::bsPopover(id="h_studium_international_1", title="",
                                                        content = paste0("In manchen Bundesländern sind einzelne Studienfachgruppen nicht definiert. In diesen Fällen werden nur die vorhandenen Studienfachgruppen angezeigt.", "<br><br>Die Zahlen beziehen sich auf die eingeschriebenen Studierenden des Herbst-/Wintersemesters im betrachteten Jahr."),
@@ -477,7 +470,7 @@ mod_studium_studienzahl_ui <- function(id){
                                   ),
                                   shiny::mainPanel(
                                     width = 9,
-                                    shinycssloaders::withSpinner(htmlOutput(ns("plot_auslaender_international_bula")),
+                                    shinycssloaders::withSpinner(plotly::plotlyOutput(ns("plot_auslaender_international_bula"), height = "600px"),
                                                                  color = "#154194"),
 
 
@@ -514,7 +507,7 @@ mod_studium_studienzahl_server <- function(id, r){
     # Box 1 - Wer Wählt MINT ----
 
     ## Pies MINT
-    output$mint_anteil_studium <- renderUI({
+    output$mint_anteil_studium <- plotly::renderPlotly({
       studienzahl_mint(r)
     })
 
@@ -666,11 +659,11 @@ mod_studium_studienzahl_server <- function(id, r){
 
     ## MINT-Fächer-Anteil
 
-    output$plot_anteil_mint_faecher <- renderUI(
+    output$plot_anteil_mint_faecher <- plotly::renderPlotly(
       plot_mint_faecher(r)
     )
 
-    output$plot_studienzahl_bula_faecher_mint <- renderUI(
+    output$plot_studienzahl_bula_faecher_mint <- plotly::renderPlotly(
       plot_studierende_bula_faecher(r)
     )
 
@@ -708,7 +701,7 @@ mod_studium_studienzahl_server <- function(id, r){
     })
 
 
-    output$plot_anteil_mint_faecher_frauen <- renderUI({
+    output$plot_anteil_mint_faecher_frauen <- plotly::renderPlotly({
       plot_mint_faecher_frauen(r)
     })
 
@@ -751,7 +744,7 @@ mod_studium_studienzahl_server <- function(id, r){
     )
 
     ## Karte
-    output$plot_studienzahl_bula_mint <- renderUI({
+    output$plot_studienzahl_bula_mint <- plotly::renderPlotly({
       studierende_bula_mint(r)
     })
 
@@ -846,8 +839,8 @@ mod_studium_studienzahl_server <- function(id, r){
     # Box 3 - Frauen -----
 
     ## Pie Gender
-    output$plot_einstieg_gender <- renderUI({
-      studienzahl_einstieg_gender(r)#
+    output$plot_einstieg_gender <- plotly::renderPlotly({
+      studienzahl_einstieg_gender(r)
     })
 
 
@@ -909,38 +902,11 @@ mod_studium_studienzahl_server <- function(id, r){
 
     # Box 4 - Internationale Studierende ----
 
-    # Tab 1
-    # output$plot_auslaender_test <-  highcharter::renderHighchart({
-    #   plot_auslaender_mint( r)
-    # })
 
-    output$plot_auslaender_test <- renderUI({
-      plot_list <- plot_auslaender_mint(r)
-      r$plot_auslaender_test <- plot_list
-
-      r$plot_auslaender_test_title <- get_plot_title(
-        plot = r$plot_auslaender_test
-      )
-
-      plot_list
+    output$plot_auslaender_test <- plotly::renderPlotly({
+      plot_auslaender_mint(r)
     })
 
-    output$download_btn_plot_auslaender_test <- downloadHandler(
-      contentType = "image/png",
-      filename = function() {r$plot_auslaender_test_title},
-      content = function(file) {
-        # creating the file with the screenshot and prepare it to download
-
-        add_caption_and_download(
-          hc = r$plot_auslaender_test,
-          filename =  r$plot_auslaender_test_title,
-          width = 700,
-          height = 400)
-
-        file.copy(r$plot_auslaender_test_title, file)
-        file.remove(r$plot_auslaender_test_title)
-      }
-    )
 
     # Tab 2
 
@@ -952,30 +918,10 @@ mod_studium_studienzahl_server <- function(id, r){
 
     # Tab 3
 
-    output$plot_auslaender_international_bula <- renderUI({
-      studierende_international_bula_mint(r)
-
+    output$plot_auslaender_international_bula <- plotly::renderPlotly({
+    studierende_international_bula_mint(r)
     })
 
-
-
-
-    output$download_btn_plot_auslaender_zeit <- downloadHandler(
-      contentType = "image/png",
-      filename = function() {r$studierende_international_bula_mint},
-      content = function(file) {
-        # creating the file with the screenshot and prepare it to download
-
-        add_caption_and_download(
-          hc = r$plot_auslaender_international_bula,
-          filename =  r$studierende_international_bula_mint,
-          width = 700,
-          height = 400)
-
-        file.copy(r$studierende_international_bula_mint, file)
-        file.remove(r$studierende_international_bula_mint)
-      }
-    )
 
 
 
