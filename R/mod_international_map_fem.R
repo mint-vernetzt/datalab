@@ -60,16 +60,16 @@ mod_international_map_fem_ui <- function(id) {
                        selected = "2023"
                      ),
 
-                     p("Fachbereich:"),
-                     shinyWidgets::pickerInput(
-                       inputId = ns("map_f_oecd_f"),
-                       choices = c("MINT",
-                                   "---Informatik & Kommunikationstechnologie" = "Informatik & Kommunikationstechnologie",
-                                   "---Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe" = "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
-                                   "---Naturwissenschaften, Mathematik und Statistik"= "Naturwissenschaften, Mathematik und Statistik")
+                     # p("Fachbereich:"),
+                     # shinyWidgets::pickerInput(
+                     #   inputId = ns("map_f_oecd_f"),
+                     #   choices = c("MINT",
+                     #               "---Informatik & Kommunikationstechnologie" = "Informatik & Kommunikationstechnologie",
+                     #               "---Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe" = "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
+                     #               "---Naturwissenschaften, Mathematik und Statistik"= "Naturwissenschaften, Mathematik und Statistik")
                        #selected = c("MINT"),
                        #multiple = FALSE
-                     ),
+                     # ),
 
                      # p("Anforderungsniveau:"),
                      # shinyWidgets::pickerInput(
@@ -111,23 +111,28 @@ mod_international_map_fem_server <- function(id, r){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
+
     # region change updates respective sub inputs, which will otherwise
     # still be the last values.
+    # observeEvent(input$map_l_f, {
+    #   r$map_l_f <- input$map_l_f
+    #   if (r$map_l_f == "EU") {
+    #     r$map_y_f <- input$map_y_eu_f
+    #     r$map_f_f <- input$map_f_eu_f
+    #     r$map_le_betr <- input$map_betr_eu_f
+    #
+    #   }
+    #   if (r$map_l_f == "OECD") {
+    #     r$map_y_f <- input$map_y_oecd_f
+    #     r$map_f_f <- input$map_f_oecd_f
+    #     r$map_le_f <- input$map_lev_oecd_f
+    #     r$map_le_betr <- input$map_betr_oecd_f
+    #   }
+    # })
     observeEvent(input$map_l_f, {
       r$map_l_f <- input$map_l_f
-      if (input$map_l_f == "EU") {
-        r$map_y_f <- input$map_y_eu_f
-        r$map_f_f <- input$map_f_eu_f
-        r$map_le_betr <- input$map_betr_eu_f
-
-      }
-      if (input$map_l_f == "OECD") {
-        r$map_y_f <- input$map_y_oecd_f
-        r$map_f_f <- input$map_f_oecd_f
-        r$map_le_f <- input$map_lev_oecd_f
-        r$map_le_betr <- input$map_betr_oecd_f
-      }
     })
+
 
     observeEvent(input$map_y_oecd_f, {
       r$map_y_f <- input$map_y_oecd_f
@@ -145,21 +150,21 @@ mod_international_map_fem_server <- function(id, r){
       r$map_le_betr <- input$map_betr_oecd_f
     })
 
+
+
     # eu check should be after oecd check, since it is the default and will
     # otherwise be overwritten on initial load up
     observeEvent(input$map_y_eu_f, {
-      r$map_y_f <- input$map_y_eu_f
+      r$map_y_eu_f <- input$map_y_eu_f
     })
 
     observeEvent(input$map_f_eu_f, {
-      r$map_f_f <- input$map_f_eu_f
+      r$map_f_eu_f <- input$map_f_eu_f
     })
 
     observeEvent(input$map_betr_eu_f, {
-      r$map_le_betr <- input$map_betr_eu_f
+      r$map_le_eu_betr <- input$map_betr_eu_f
     })
-
-
 
   })
 }

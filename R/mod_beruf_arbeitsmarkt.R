@@ -52,7 +52,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
           width = 7,
           p(style = "text-align: left; font-size = 16px",tags$a(href="#beruf_mint",
 
-            span(tags$b(span("MINT-Anteil:")))),"Jede:r Fünfte arbeitet in MINT-Berufen."
+            span(tags$b(span("→ MINT-Anteil:")))),"Jede:r Fünfte arbeitet in MINT-Berufen."
 
             ),
           p(style = "text-align: left; font-size = 16px",tags$a(href="#beruf_fach",
@@ -134,7 +134,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(htmlOutput(ns("plot_einstieg_verlauf")),
+                               shinycssloaders::withSpinner(plotly::plotlyOutput(ns("plot_einstieg_verlauf")),
                                                             color = "#154194"),
 
                                shinyBS::bsPopover(id = "h_beruf_mint_2", title = "",
@@ -244,7 +244,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(htmlOutput(ns("plot_arbeitsmarkt_verlauf_faecher")),
+                               shinycssloaders::withSpinner(plotly::plotlyOutput(ns("plot_arbeitsmarkt_verlauf_faecher")),
                                                             color = "#154194"),
 
                                shinyBS::bsPopover(id = "h_beruf_fach_mint_2", title = "",
@@ -332,7 +332,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(htmlOutput(ns("plot_einstieg_verlauf_gender")),
+                               shinycssloaders::withSpinner(plotly::plotlyOutput(ns("plot_einstieg_verlauf_gender")),
                                                             color = "#154194"),
                                shinyBS::bsPopover(id = "h_beruf_frauen_2", title = "",
                                                   content = paste0("Die Kategorisierung in MINT entspricht der Zuordnung durch die Bundesagentur für Arbeit. Beschäftigte werden nur als MINT klassifiziert, wenn sie einer so definierten MINT-Tätigkeit nachgehen. Der akademische Hintergrund, z. B. ein Studium in einem MINT-Fach, ist nicht ausschlaggebend. Weitere Infos dazu unter &quotDatenquellen und Hinweise&quot", "<br> <br> In den vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden."),
@@ -529,7 +529,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(htmlOutput(ns("fachbereich_beruf_arbeitsmarkt_landkreis_verlauf")),
+                               shinycssloaders::withSpinner(plotly::plotlyOutput(ns("fachbereich_beruf_arbeitsmarkt_landkreis_verlauf")),
                                                             color = "#154194"),
                                shinyBS::bsPopover(id = "h_beruf_fach_mint_2", title = "",
                                                   content = paste0("Die Kategorisierung in MINT entspricht der Zuordnung durch die Bundesagentur für Arbeit. Beschäftigte werden nur als MINT klassifiziert, wenn sie einer so definierten MINT-Tätigkeit nachgehen. Der akademische Hintergrund, z. B. ein Studium in einem MINT-Fach, ist nicht ausschlaggebend. Weitere Infos dazu unter &quotDatenquellen und Hinweise&quot"),
@@ -619,7 +619,7 @@ fluidRow( id="beruf_entgelt",
                                    )
                           ),
                           # Tab 2
-                          tabPanel("MINT-Anteil im Zeitverlauf", br(),
+                          tabPanel("Entgelte im Zeitverlauf", br(),
 
                                    shiny::sidebarPanel(
                                      width = 3,
@@ -724,15 +724,9 @@ mod_beruf_arbeitsmarkt_server <- function(id, r){
     })
 
 
-    output$plot_einstieg_verlauf <- renderUI({
-      plot_list <- beruf_verlauf_single(r)
-      r$plot_einstieg_verlauf <- plot_list
+    output$plot_einstieg_verlauf <- plotly::renderPlotly({
+      beruf_verlauf_single(r)
 
-      r$plot_einstieg_verlauf_title <- get_plot_title(
-        plot = r$plot_einstieg_verlauf
-      )
-
-      plot_list
     })
 
     output$download_btn_plot_einstieg_verlauf <- downloadHandler(
@@ -860,7 +854,7 @@ mod_beruf_arbeitsmarkt_server <- function(id, r){
 
 
     #Tab 2
-    output$plot_arbeitsmarkt_verlauf_faecher <- renderUI({
+    output$plot_arbeitsmarkt_verlauf_faecher <- plotly::renderPlotly({
       beruf_verlauf_faecher(r)
     })
 
@@ -992,33 +986,12 @@ mod_beruf_arbeitsmarkt_server <- function(id, r){
     })
 
 
-    output$plot_einstieg_verlauf_gender  <- renderUI({
-      plot_list <- arbeitsmarkt_einstieg_verlauf_gender(r)
-      r$plot_einstieg_verlauf_gender <- plot_list
+    output$plot_einstieg_verlauf_gender  <- plotly::renderPlotly({
+      arbeitsmarkt_einstieg_verlauf_gender(r)
 
-      r$plot_einstieg_verlauf_gender_title <- get_plot_title(
-        plot = r$plot_einstieg_verlauf_gender
-      )
-
-      plot_list
     })
 
-    output$download_btn_plot_einstieg_verlauf_gender <- downloadHandler(
-      contentType = "image/png",
-      filename = function() {r$plot_einstieg_verlauf_gender_title},
-      content = function(file) {
-        # creating the file with the screenshot and prepare it to download
 
-        add_caption_and_download(
-          hc = r$plot_einstieg_verlauf_gender,
-          filename =  r$plot_einstieg_verlauf_gender_title,
-          width = 700,
-          height = 400)
-
-        file.copy(r$plot_einstieg_verlauf_gender_title, file)
-        file.remove(r$plot_einstieg_verlauf_gender_title)
-
-      })
 
 
     # tab 3
@@ -1081,7 +1054,7 @@ mod_beruf_arbeitsmarkt_server <- function(id, r){
 
   # tab 3
 
-   output$fachbereich_beruf_arbeitsmarkt_landkreis_verlauf <- renderUI({
+   output$fachbereich_beruf_arbeitsmarkt_landkreis_verlauf <- plotly::renderPlotly({
      arbeitsmarkt_lk_verlauf(r)
    })
 

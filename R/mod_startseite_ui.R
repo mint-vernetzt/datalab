@@ -44,9 +44,7 @@ mod_startseite_start_ui <- function(id){
           h2(style = "color: #008F68;",
              "Was ist Neu?"),
           tags$ul(
-            tags$li("Erstellen Sie einfach MINT-Berichten durch das neue Angebot \"Datenanalyse mit KI\""),
-            tags$li("Aktualisierte Daten im Bereich Studium, Arbeitsmarkt, Fachkräfte und Internationales"),
-            tags$li("Neue Darstellungen zum Thema Entgelte")
+            tags$li("Erstellen Sie einfach MINT-Berichten durch das neue Angebot \"Datenanalyse mit KI\" - jetzt auch zum Thema Mädchenförderung in MINT"),
           ),
           h2(style = "color: #008F68;",
              "Woran wir aktuell arbeiten:"),

@@ -244,10 +244,11 @@ mod_fachkraft_start_ui <- function(id){
             ),
             shiny::mainPanel(
               width = 9,
-              shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_fachkraft_prog_item_1"),
-                                                                        height = "600px"),
+              shinycssloaders::withSpinner(plotly::plotlyOutput(ns("plot_fachkraft_prog_item_1"),
+                                                                height = "500px"),
                                                     color = "#154194"),
-
+              p("Vorausberechnung durch das IW Köln, 2025, beauftragt durch MINTvernetzt",
+                style = "font-size: 12px;"),
               p(),
               tags$a(href = "www/MINTvernetzt_Methodenbericht_MINT-Fachkräfteszenarien.pdf", target = "_blank", "Methodenbericht des IW Köln als PDF")
             )
@@ -264,10 +265,11 @@ mod_fachkraft_start_ui <- function(id){
       ),
       shiny::mainPanel(
         width = 9,
-        shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_fachkraft_prog_alle_1"),
-                                                                  height = "600px"),
+        shinycssloaders::withSpinner(plotly::plotlyOutput(ns("plot_fachkraft_prog_alle_1"),
+                                                          height = "500px"),
                                      color = "#154194"),
-
+        p("Vorausberechnung durch das IW Köln, 2025, beauftragt durch MINTvernetzt",
+          style = "font-size: 12px;"),
         p(),
         tags$a(href = "www/MINTvernetzt_Methodenbericht_MINT-Fachkräfteszenarien.pdf", target = "_blank", "Methodenbericht des IW Köln als PDF")
       )
@@ -284,10 +286,11 @@ mod_fachkraft_start_ui <- function(id){
             ),
             shiny::mainPanel(
               width = 9,
-              shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_fachkraft_prog_detail_item_1"),
-                                                                        height = "600px"),
+              shinycssloaders::withSpinner(plotly::plotlyOutput(ns("plot_fachkraft_prog_detail_item_1"),
+                                                                        height = "500px"),
                                             color = "#154194"),
-
+              p("Vorausberechnung durch das IW Köln, 2025, beauftragt durch MINTvernetzt",
+                style = "font-size: 12px;"),
               p(),
               tags$a(href = "www/MINTvernetzt_Methodenbericht_MINT-Fachkräfteszenarien.pdf", target = "_blank", "Methodenbericht des IW Köln als PDF")
             )
@@ -589,36 +592,18 @@ mod_fachkraft_start_server <- function(id, r){
     # )
 
     #ohne download
-    output$plot_fachkraft_prog_item_1 <- highcharter::renderHighchart({
+    output$plot_fachkraft_prog_item_1 <- plotly::renderPlotly({
       plot_fachkraft_prognose(r)
     })
 
 
-    # # Download erstellen
-    # output$download_btn_plot_fachkraft_prog_item_1 <- downloadHandler(
-    #   contentType = "image/png",
-    #   filename = function() {r$plot_fachkraft_prog_item_1_title},
-    #   content = function(file) {
-    #     # creating the file with the screenshot and prepare it to download
-    #
-    #     add_caption_and_download(
-    #       hc = r$plot_fachkraft_prog_item_1,
-    #       filename =  r$plot_fachkraft_prog_item_1_title,
-    #       width = 700,
-    #       height = 400)
-    #
-    #     file.copy(r$plot_fachkraft_prog_item_1_title, file)
-    #     file.remove(r$plot_fachkraft_prog_item_1_title)
-    #   }
-    # )
-
     #ohne download
-    output$plot_fachkraft_prog_alle_1 <- highcharter::renderHighchart({
+    output$plot_fachkraft_prog_alle_1 <- plotly::renderPlotly({
       plot_fachkraft_prognose_alle(r)
     })
 
     # ohne download
-    output$plot_fachkraft_prog_detail_item_1 <- highcharter::renderHighchart({
+    output$plot_fachkraft_prog_detail_item_1 <- plotly::renderPlotly({
       plot_fachkraft_prognose_detail(r)
       })
 

@@ -1376,6 +1376,259 @@ piebuilder <- function(df, titel, x, y, tooltip, color = c("#b16fab", "#efe8e6")
 }
 
 
+linebuilder_plotly <- function(
+    df,
+    titel,
+    x,
+    y,
+    group,
+    format = ".1f",
+    color = c("#b16fab", "#154194", "#66cbaf", "#fbbf24"),
+    quelle = "Quelle",
+    subtitel = NULL,
+    label = NULL,
+    area = NULL
+) {
+
+  # df für JS verfügbar machen
+  df_json <- subset(df, select = c(x, y, group))
+  df_json <- jsonlite::toJSON(df_json, dataframe = "rows",
+                              auto_unbox = TRUE, na = "null")
+
+  # Strings sicher für JS
+  titel_js  <- jsonlite::toJSON(titel, auto_unbox = TRUE)
+  quelle_js <- jsonlite::toJSON(quelle, auto_unbox = TRUE)
+
+
+  # Plot erzeugen
+  if(!is.null(label)) {
+    p <- plotly::plot_ly(
+      data = df,
+      x = as.formula(paste0("~`", x, "`")),
+      y = as.formula(paste0("~`", y, "`")),
+      color = as.formula(paste0("~`", group, "`")),
+      colors = color,
+      type = "scatter",
+      text = ~ label,
+      mode = "lines+markers+text",
+      hovertext = ~tooltip,
+      hovertemplate = "%{hovertext}<extra></extra>"
+    )
+  }else if (!is.null(area)){
+    p <- plotly::plot_ly(
+      data = df,
+      x = as.formula(paste0("~`", x, "`")),
+      y = as.formula(paste0("~`", y, "`")),
+      color = as.formula(paste0("~`", group, "`")),
+      colors = color,
+      type = "scatter",
+      mode = "lines+markers",
+      fill = "tonexty",
+      stackgroup = "one",
+      opacity = "0.6",
+      hovertext = ~tooltip,
+      hovertemplate = "%{hovertext}<extra></extra>"
+    )
+    }else{
+    p <- plotly::plot_ly(
+      data = df,
+      x = as.formula(paste0("~`", x, "`")),
+      y = as.formula(paste0("~`", y, "`")),
+      color = as.formula(paste0("~`", group, "`")),
+      colors = color,
+      type = "scatter",
+      mode = "lines+markers",
+      hovertext = ~tooltip,
+      hovertemplate = "%{hovertext}<extra></extra>"
+    )
+  }
+
+  p <- p |>
+    plotly::style(
+      hoverlabel = list(bgcolor = "white",
+                        font = list(size = 12)),
+      textposition = "top center",
+      cliponaxis = FALSE
+    ) |>
+    plotly::layout(
+      title = list(
+        text = titel,
+        x = 0.5,
+        xanchor = "center",
+        font = list(
+          family = "Calibri, sans-serif",
+          size = 20,
+          color = "black"
+        )
+      ),
+      xaxis = list(
+        title = list(text = ""),
+        tickformat = "d",
+        showgrid = FALSE,
+        zeroline = FALSE,
+        tickfont = list(family = "Calibri, sans-serif", size = 16, color = "black"),
+        titlefont = list(family = "Calibri, sans-serif", size = 16, color = "black")
+      ),
+      yaxis = list(
+        title = list(text = ""),
+        tickformat = format,
+        showgrid = TRUE,
+        zeroline = FALSE,
+        tickfont = list(family = "Calibri, sans-serif", size = 16, color = "black"),
+        titlefont = list(family = "Calibri, sans-serif", size = 16, color = "black")
+      ),
+      separators = ",.",
+      font = list(
+        family = "Calibri, sans-serif",
+        size = 16,
+        color = "black"
+      ),
+      legend = list(
+        orientation = "h",
+        x = 0.5,
+        y = -0.13,
+        xanchor = "center",
+        yanchor = "top",
+        traceorder = "reversed"
+      ),
+      annotations = list(
+        list(
+          text = quelle,
+          x = 1,
+          y = -0.38,
+          xref = "paper",
+          yref = "paper",
+          xanchor = "right",
+          yanchor = "top",
+          showarrow = FALSE,
+          font = list(size = 11, color = "gray", family = "Calibri Regular")
+        )
+      ),
+      margin = list(t = 80, b = 100, r = 50)
+    ) |>
+      plotly::config(
+      displaylogo = FALSE,
+      modeBarButtonsToRemove = c(
+        "sendDataToCloud", "autoScale2d", "resetScale2d", "toggleSpikelines",
+        "hoverClosestCartesian", "hoverCompareCartesian",
+        "zoom2d", "pan2d", "select2d", "lasso2d", "zoomIn2d", "zoomOut2d"
+      ),
+      modeBarButtonsToAdd = list(
+
+        # CSV-Download
+        list(
+          name = "Download CSV",
+          icon = list(
+            path = "M16,2H8C6.9,2,6,2.9,6,4v16c0,1.1,0.9,2,2,2h8c1.1,0,2-0.9,2-2V4C18,2.9,17.1,2,16,2z M16,20H8V4h8V20z M14.5,14h-2v3h-1v-3h-2l2.5-3.5L14.5,14z",
+            width = 24,
+            height = 24
+          ),
+
+          click = htmlwidgets::JS(
+            paste0("
+              function(gd) {
+                var rows = ", df_json, ";
+
+                var date = new Date().toISOString().slice(0,10);
+                var filename = 'export_' + date + '.csv';
+
+                if (!rows.length) return;
+
+                var cols = Object.keys(rows[0]);
+                var csv = cols.join(';') + '\\n';
+
+                rows.forEach(function(row) {
+                  var values = cols.map(function(col) {
+                    var value = row[col];
+                    if (value == null) return '';
+                    value = String(value).replace(/\"/g, '\"\"');
+                    if (value.search(/[\";\\n]/) >= 0) {
+                      value = '\"' + value + '\"';
+                    }
+                    return value;
+                  });
+                  csv += values.join(';') + '\\n';
+                });
+
+                var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+
+                var link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = filename;
+                link.click();
+              }
+            ")
+          )
+        ),
+
+        # TXT-Download für KI
+        list(
+          name = "Download Daten für KI-Chats als txt",
+          icon = list(
+            path = "M14,2H6C4.9,2,4,2.9,4,4v16c0,1.1,0.9,2,2,2h12c1.1,0,2-0.9,2-2V8L14,2z M14,4.5L17.5,8H14V4.5z M18,20H6V4h6v6h6V20z",
+            width = 24,
+            height = 24
+          ),
+          click = htmlwidgets::JS(
+            paste0("
+              function(gd) {
+                var rows = ", df_json, ";
+                var titel = ", titel_js, ";
+                var quelle = ", quelle_js, ";
+
+                var date = new Date().toISOString().slice(0,10);
+                var chartTitle = titel.replace(/\\s+/g, '_');
+                var filename = chartTitle + '_' + date + '.txt';
+
+                if (!rows.length) return;
+
+                var cols = Object.keys(rows[0]);
+
+                var text = '';
+                text += 'Titel: ' + titel + '\\n';
+                text += 'Quelle: ' + quelle + '\\n\\n';
+                text += 'Daten:\\n';
+
+                text += cols.join('\\t') + '\\n';
+
+                rows.forEach(function(row) {
+                  var values = cols.map(function(col) {
+                    var value = row[col];
+                    if (value === null || value === undefined) return '';
+                    return String(value);
+                  });
+                  text += values.join('\\t') + '\\n';
+                });
+
+                var blob = new Blob([text], { type: 'text/plain;charset=utf-8;' });
+
+                var link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = filename;
+                link.click();
+              }
+            ")
+          )
+        )
+      )
+    )
+
+
+  if (!is.null(subtitel)) {
+    p <- plotly::layout(
+      p,
+      title = list(
+      text = paste0(
+        titel,
+        "<br>",
+        "<span style='font-size:14px; color:gray; font-family:Calibri;'>",
+        subtitel, "</span>"),
+      x = 0.5,
+      font = list(family = "Calibri Regular", size = 20, color = "black")))
+  }
+
+  return(p)
+}
 
 
 #df, titel, x, y, tooltip

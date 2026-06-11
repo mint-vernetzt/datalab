@@ -125,7 +125,7 @@ mod_studium_studienzahl_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(htmlOutput(ns("plot_einstieg_verlauf")),
+                               shinycssloaders::withSpinner(plotly::plotlyOutput(ns("plot_einstieg_verlauf")),
                                                             color = "#154194"),
 
                                shinyBS::bsPopover(id="h_studium_mint_3", title = "",
@@ -232,7 +232,7 @@ mod_studium_studienzahl_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(htmlOutput(ns("mint_anteil")),
+                               shinycssloaders::withSpinner(plotly::plotlyOutput(ns("mint_anteil")),
                                                             color = "#154194"),
 
                                shinyBS::bsPopover(id="h_studium_fach_4", title="",
@@ -324,7 +324,7 @@ mod_studium_studienzahl_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(htmlOutput(ns("plot_einstieg_verlauf_gender")),
+                               shinycssloaders::withSpinner(plotly::plotlyOutput(ns("plot_einstieg_verlauf_gender")),
                                                             color = "#154194"),
 
                                shinyBS::bsPopover(id="h_studium_frauen_2", title="",
@@ -514,15 +514,9 @@ mod_studium_studienzahl_server <- function(id, r){
     ## Zeitverlauf
 
 
-    output$plot_einstieg_verlauf <- renderUI({
-      plot_list <- studienzahl_verlauf_single(r)
-      r$plot_einstieg_verlauf <- plot_list
+    output$plot_einstieg_verlauf <- plotly::renderPlotly({
+      studienzahl_verlauf_single(r)
 
-      r$plot_einstieg_verlauf_title <- get_plot_title(
-        plot = r$plot_einstieg_verlauf
-      )
-
-      plot_list
     })
 
     output$download_btn_plot_einstieg_verlauf <- downloadHandler(
@@ -787,17 +781,9 @@ mod_studium_studienzahl_server <- function(id, r){
     ## Balken MINT
 
 
-    output$mint_anteil <- renderUI({
-      plot_list <- mint_anteile(r)
-      r$mint_anteil <- plot_list
-
-      r$mint_anteil_title <- get_plot_title(
-        plot = r$mint_anteil
-      )
-
-      plot_list
-
-    })
+    output$mint_anteil <- plotly::renderPlotly({
+       mint_anteile(r)
+      })
 
     output$download_btn_mint_anteil <- downloadHandler(
       contentType = "image/png",
@@ -861,15 +847,8 @@ mod_studium_studienzahl_server <- function(id, r){
 
     ## Verlauf Gender
 
-    output$plot_einstieg_verlauf_gender <- renderUI({
-      plot_list <- studienzahl_verlauf_single_gender(r)
-      r$plot_einstieg_verlauf_gender <- plot_list
-
-      r$plot_einstieg_verlauf_gender_title <- get_plot_title(
-        plot = r$plot_einstieg_verlauf_gender
-      )
-
-      plot_list
+    output$plot_einstieg_verlauf_gender <- plotly::renderPlotly({
+      studienzahl_verlauf_single_gender(r)
 
     })
 
@@ -933,35 +912,9 @@ mod_studium_studienzahl_server <- function(id, r){
 
 
     output$plot_auslaender_zeit <- renderUI({
-      plot_list <- plot_auslaender_mint_zeit(r)
-      r$plot_auslaender_zeit <- plot_list
+      plot_auslaender_mint_zeit(r)
 
-      r$plot_auslaender_zeit_title <- get_plot_title(
-        plot = r$plot_auslaender_zeit
-      )
-
-      plot_list
     })
-
-    output$download_btn_plot_auslaender_zeit <- downloadHandler(
-      contentType = "image/png",
-      filename = function() {r$plot_auslaender_zeit_title},
-      content = function(file) {
-        # creating the file with the screenshot and prepare it to download
-
-        add_caption_and_download(
-          hc = r$plot_auslaender_zeit,
-          filename =  r$plot_auslaender_zeit_title,
-          width = 700,
-          height = 400)
-
-        file.copy(r$plot_auslaender_zeit_title, file)
-        file.remove(r$plot_auslaender_zeit_title)
-      }
-    )
-
-
-
 
     # Tab 3
 

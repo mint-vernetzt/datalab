@@ -109,7 +109,7 @@ mod_home_start_ui <- function(id){
                           ),
                         shiny::mainPanel(
                           width = 9,
-                          shinycssloaders::withSpinner(htmlOutput(ns("plot_mint_1")),
+                          shinycssloaders::withSpinner(plotly::plotlyOutput(ns("plot_mint_1")),
                                                        color = "#154194"),
                           shinyBS::bsPopover(id="h_alle_mint_2", title = "",
                                              content = paste0("Anders als z. B. bei Studierenden wählen Schüler:innen mehrere Grund- und Leistungskurse. Um dennoch einen Anteil von &quotMINT&quot vs. &quotNicht-MINT&quot angeben zu können, nutzen wir die Kursbelegungszahlen der Schüler:innen."),
@@ -164,7 +164,7 @@ mod_home_start_ui <- function(id){
                           ),
                         shiny::mainPanel(
                           width = 9,
-                          shinycssloaders::withSpinner(htmlOutput(ns("plot_verlauf_mint")),
+                          shinycssloaders::withSpinner(plotly::plotlyOutput(ns("plot_verlauf_mint")),
                                                        color = "#154194"),
                           shinyBS::bsPopover(id="h_alle_frauen_2", title = "",
                                              content = paste0("Anders als z. B. bei Studierenden wählen Schüler:innen mehrere Grund- und Leistungskurse. Um dennoch einen Anteil von &quotMINT&quot vs. &quotNicht-MINT&quot angeben zu können, nutzen wir die Kursbelegungszahlen der Schüler:innen.", "<br> <br> In den uns vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden.<br><br>Baden-Württemberg erfasst keine geschelchterspezifischen Kursbelegungszahlen von Schüler:innen."),
@@ -227,33 +227,10 @@ mod_home_start_server <- function(id,r){
     #### Box 1 ----
 
     #tab 2
-    output$plot_mint_1 <- renderUI({
-      plot_list <- home_rest_mint_verlauf(r)
-      r$plot_mint_1 <- plot_list
+    output$plot_mint_1 <- plotly::renderPlotly({
+      home_rest_mint_verlauf(r)
 
-      r$plot_mint_1_title <- get_plot_title(
-        plot = r$plot_mint_1
-      )
-
-      plot_list
     })
-
-    output$download_btn_plot_mint_1 <- downloadHandler(
-      contentType = "image/png",
-      filename = function() {r$plot_mint_1_title},
-      content = function(file) {
-        # creating the file with the screenshot and prepare it to download
-
-        add_caption_and_download(
-          hc = r$plot_mint_1,
-          filename =  r$plot_mint_1_title,
-          width = 700,
-          height = 400)
-
-        file.copy(r$plot_mint_1_title, file)
-        file.remove(r$plot_mint_1_title)
-      }
-    )
 
 
     #### Box 2 ----
@@ -262,33 +239,10 @@ mod_home_start_server <- function(id,r){
 
     # tab 2
 
-    output$plot_verlauf_mint <- renderUI({
-      plot_list <- home_comparison_line(r)
-      r$plot_verlauf_mint <- plot_list
-
-      r$plot_verlauf_mint_title <- get_plot_title(
-        plot = r$plot_verlauf_mint
-      )
-
-      plot_list
+    output$plot_verlauf_mint <- plotly::renderPlotly({
+      home_comparison_line(r)
     })
 
-    output$download_btn_plot_verlauf_mint <- downloadHandler(
-      contentType = "image/png",
-      filename = function() {r$plot_verlauf_mint_title},
-      content = function(file) {
-        # creating the file with the screenshot and prepare it to download
-
-        add_caption_and_download(
-          hc = r$plot_verlauf_mint,
-          filename =  r$plot_verlauf_mint_title,
-          width = 700,
-          height = 400)
-
-        file.copy(r$plot_verlauf_mint_title, file)
-        file.remove(r$plot_verlauf_mint_title)
-      }
-    )
 
     # tab 3
     output$plot_comparison_gender <- renderUI({

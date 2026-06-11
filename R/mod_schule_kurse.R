@@ -216,7 +216,7 @@ mod_schule_kurse_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(htmlOutput(ns("plot_verlauf_kurse_bl_subjects")),
+                               shinycssloaders::withSpinner(plotly::plotlyOutput(ns("plot_verlauf_kurse_bl_subjects")),
                                                             color = "#154194"),
                                shinyBS::bsPopover(id="h_schule_fach_3", title = "",
                                                   content = paste0("Der Anteil und die Anzahl von &quotMINT&quot vs. &quotNicht-MINT&quot bezieht sich auf die Belegungszahlen in den Grund- und Leistungskursen der Oberstufe.", "<br><br> Mit Grundkursen sind nach der Definition der KMK Fächer mit bis zu 3 Wochenstunden gemeint.<br> Mit Leistungskursen Fächer mit mindestens 4 Wochenstunden."),
@@ -311,7 +311,7 @@ mod_schule_kurse_ui <- function(id){
                                tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_schule_frauen_1")
                                )
                     ),
-                    tabPanel("Zeitverlauf Mädchenanteil in MINT", br(), #kann raus
+                    tabPanel("Zeitverlauf Mädchenanteil in MINT", br(),
 
                              tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
                                            .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
@@ -322,13 +322,13 @@ mod_schule_kurse_ui <- function(id){
                                  tags$style(".well {background-color:#FFFFFF;}"),
                                  tags$head(tags$style(HTML(".small-box {height: 140px}"))),
                                  mod_schule_kurse_verlauf_gender_ui("mod_schule_kurse_verlauf_gender_ui_1")
-                               ),
-                               tags$img(src = "www/ti.png", style = "margin-top: 10px; width: 90%; display: block; margin-left: auto; margin-right: auto;")
-                             ),###########
+                               )
+
+                             ),
 
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_verlauf_gender")),
+                               shinycssloaders::withSpinner(plotly::plotlyOutput(ns("plot_verlauf_gender")),
                                                             color = "#154194"),
                                shinyBS::bsPopover(id="h_schule_frauen_123", title = "",
                                                   content = paste0("Der Anteil und die Anzahl von &quotMINT&quot vs. &quotNicht-MINT&quot bezieht sich auf die Belegungszahlen in den Grund- und Leistungskursen der Oberstufe. Die möglichen Belegungen sind dabei auch von den Vorgaben der Bundesländer und dem Angebot der Schulen abhängig.", "<br> <br> In den uns vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden."),
@@ -515,34 +515,11 @@ mod_schule_kurse_server <- function(id, r){
     })
 
 
-    output$plot_einstieg_verlauf <- renderUI({
-      plot_list <- kurse_verlauf_single(r)
-      r$plot_einstieg_verlauf <- plot_list
-
-      r$plot_einstieg_verlauf_title <- get_plot_title(
-        plot = r$plot_einstieg_verlauf
-      )
-
-      plot_list
+    output$plot_einstieg_verlauf <- plotly::renderPlotly({
+      kurse_verlauf_single(r)
 
     })
 
-    output$download_btn_plot_einstieg_verlauf <- downloadHandler(
-      contentType = "image/png",
-      filename = function() {r$plot_einstieg_verlauf_title},
-      content = function(file) {
-        # creating the file with the screenshot and prepare it to download
-
-        add_caption_and_download(
-          hc = r$plot_einstieg_verlauf,
-          filename =  r$plot_einstieg_verlauf_title,
-          width = 700,
-          height = 400)
-
-        file.copy(r$plot_einstieg_verlauf_title, file)
-        file.remove(r$plot_einstieg_verlauf_title)
-      }
-    )
 
     ## Waffle Geschlecht
     output$plot_wahl <- renderUI({
@@ -564,10 +541,7 @@ mod_schule_kurse_server <- function(id, r){
 
 
     output$plot_mint_map_kurse <- renderUI({
-      plot_list <- kurse_mint_map(r)
-
-
-      plot_list
+      kurse_mint_map(r)
 
     })
 
@@ -611,34 +585,10 @@ mod_schule_kurse_server <- function(id, r){
     )
 
 
-    output$plot_verlauf_kurse_bl_subjects <- renderUI({
-      plot_list <- kurse_verlauf_subjects_bl(r)
-      r$plot_verlauf_kurse_bl_subject <- plot_list
-
-      r$plot_verlauf_kurse_bl_subject_title <- get_plot_title(
-        plot = r$plot_verlauf_kurse_bl_subject
-      )
-
-      plot_list
+    output$plot_verlauf_kurse_bl_subjects <- plotly::renderPlotly({
+      kurse_verlauf_subjects_bl(r)
 
     })
-
-    output$download_btn_plot_verlauf_kurse_bl_subjects <- downloadHandler(
-      contentType = "image/png",
-      filename = function() {r$plot_verlauf_kurse_bl_subject_title},
-      content = function(file) {
-        # creating the file with the screenshot and prepare it to download
-
-        add_caption_and_download(
-          hc = r$plot_verlauf_kurse_bl_subject,
-          filename =  r$plot_verlauf_kurse_bl_subject_title,
-          width = 700,
-          height = 400)
-
-        file.copy(r$plot_verlauf_kurse_bl_subject_title, file)
-        file.remove(r$plot_verlauf_kurse_bl_subject_title)
-      }
-    )
 
     ## Dumbbell-Plot Mädchen
     output$plot_ranking_gender <- renderPlot({
@@ -716,7 +666,7 @@ mod_schule_kurse_server <- function(id, r){
     })
 
 
-    output$plot_verlauf_gender <- highcharter::renderHighchart({
+    output$plot_verlauf_gender <- plotly::renderPlotly({
       kurse_verlauf_gender(r)
     })
 

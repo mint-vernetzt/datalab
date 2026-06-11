@@ -143,7 +143,11 @@ kurse_einstieg_comparison <- function(r) {
 
     df1$wert <- as.numeric(as.character(df1$wert)) #wert ist charakter
 
-    titel <- paste0("MINT-Anteil in ", titel_help,  " in ", regio, " (", timerange, ")")
+    titel <- ist_saarland(
+      gruppe = paste0("MINT-Anteil ", titel_help),
+      regio = regio,
+      timerange = timerange
+    )
     tooltip <- paste('Anteil: {point.proportion} % <br> Anzahl: {point.wert}')
     format <- "{point.proportion} %"
 
@@ -208,13 +212,23 @@ kurse_verlauf_single <- function(r) {
    df <- df[with(df, order(jahr, decreasing = FALSE)), ]
 
     # plot
-    titel <- paste0("Anteil von MINT-Belegungen in der Schule in ", regio)
-    tooltip <- "Anteil: {point.indikator} <br> Wert: {point.y} %"
-    format <- "{value}%"
+   titel <- ifelse(regio == "Saarland",
+                  paste0("Anzahl an MINT-Belegungen in der Schule im ", regio),
+                  paste0("Anzahl an MINT-Belegungen in der Schule in ", regio))
+
+   df <- df %>%
+     dplyr::mutate(
+       tooltip = paste0(
+         "<b>", indikator, "</b><br>",
+         "Jahr: ", jahr, "<br>",
+         "Anteil: ", round(prop,1), " %"
+       )
+     )
+
     color <- c("#b16fab", "#154194","#66cbaf")
 
     quelle <- "Quelle der Daten: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
-    out <- linebuilder(df, titel, x = "jahr", y = "prop", group = "indikator", tooltip, format, color, quelle = quelle)
+    out <- linebuilder_plotly(df, titel, x = "jahr", y = "prop", group = "indikator", color = color, quelle = quelle)
 
 
   } else if (absolut_selector=="Anzahl") {
@@ -226,13 +240,24 @@ kurse_verlauf_single <- function(r) {
     # order years for plot
     df <- df[with(df, order(jahr, decreasing = FALSE)), ]
 
-    titel <- paste0("Anzahl an MINT-Belegungen in der Schule in ", regio)
-    tooltip <- "Anzahl: {point.y}"
-    format <-  "{value:, f}"
+    titel <- ifelse(regio == "Saarland",
+                    paste0("Anzahl an MINT-Belegungen in der Schule im ", regio),
+                    paste0("Anzahl an MINT-Belegungen in der Schule in ", regio))
+
+    df <- df %>%
+      dplyr::mutate(
+        tooltip = paste0(
+          "<b>", indikator, "</b><br>",
+          "Jahr: ", jahr, "<br>",
+          "Anzahl: ", prettyNum(wert, big.mark = ".", decimal.mark = ",")
+        )
+      )
+
+    format <- ",d"
     color <- c("#b16fab", "#154194","#66cbaf")
     quelle <- "Quelle der Daten: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
-    out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color, quelle = quelle)
-
+    out <- linebuilder_plotly(df, titel, x = "jahr", y = "wert", group = "indikator",
+                              format = format, color = color, quelle = quelle)
 
   }
  return(out)
@@ -335,13 +360,21 @@ kurse_mint_map <- function(r) {
       # plot
 
       titel <- paste0("Anteil von ", help_title, " an allen ", title_help)
-      tooltip <- "MINT-Anteil in {point.region} <br> Wert: {point.y} %"
-      format <-  "{value}%"
+
+      df <- df %>%
+        dplyr::mutate(
+          tooltip = paste0(
+            "<b>", region, "</b><br>",
+            "Jahr: ", jahr, "<br>",
+            "Anteil: ", round(wert,1), " %"
+          )
+        )
+
       color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
                  "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5")
 
       quelle <- "Quelle der Daten: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
-      out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "region", tooltip, format, color, quelle = quelle)
+      out <- linebuilder_plotly(df, titel, x = "jahr", y = "wert", group = "region", color = color, quelle = quelle)
 
     } else if(absolut_selector =="Anzahl"){
 
@@ -351,7 +384,6 @@ kurse_mint_map <- function(r) {
 
       df <- df %>%
         dplyr::filter(selector=="Anzahl")
-
 
 
       if(indikator_select == "Grundkurse") {
@@ -372,12 +404,20 @@ kurse_mint_map <- function(r) {
       # plot
 
       titel <- paste0("Anzahl an ", title_help ,help_title)
-      tooltip <- "{point.region} <br> Anzahl: {point.y}"
-      format <-  "{value:, f}"
+      df <- df %>%
+        dplyr::mutate(
+          tooltip = paste0(
+            "<b>", indikator, "</b><br>",
+            "Jahr: ", jahr, "<br>",
+            "Anzahl: ", prettyNum(wert, big.mark = ".", decimal.mark = ",")
+          )
+        )
+      format <-  ",d"
       color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
                  "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5")
       quelle <- "Quelle der Daten: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
-      out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "region", tooltip, format, color, quelle = quelle)
+      out <- linebuilder_plotly(df, titel, x = "jahr", y = "wert", group = "region",
+                                format = format, color = color, quelle = quelle)
     }
 
 
@@ -851,40 +891,45 @@ kurse_verlauf_subjects_bl <- function(r) {
   #titel hilfe für Plot
   kurs_help <- ifelse(indikator_kurse == "Grundkurse", "Grundkursbelegungen", "Leistungskursbelegungen")
 
+  sorted_subjects <- df %>%
+    dplyr::group_by(fachbereich) %>%
+    dplyr::summarize(m_value = mean(round(wert, 1), na.rm = TRUE)) %>%
+    dplyr::arrange(desc(m_value)) %>%
+    dplyr::pull(fachbereich)
+
+  df$fachbereich <- factor(df$fachbereich, levels = sorted_subjects)
+  colors <- color_fach[sorted_subjects]
+  df <- df %>% dplyr::arrange(fachbereich)
+
+  # order years for plot
+  df <- df[with(df, order(region, jahr, decreasing = FALSE)), ]
 
   if(absolut_selector=="In Prozent"){
 
     df <- df %>%
       dplyr::filter(selector == "In Prozent")
 
-    df <- df %>% dplyr::mutate(color = color_fach[(fachbereich)])
-
-    sorted_subjects <- df %>%
-      dplyr::group_by(fachbereich) %>%
-      dplyr::summarize(m_value = mean(round(wert, 1), na.rm = TRUE)) %>%
-      dplyr::arrange(desc(m_value)) %>%
-      dplyr::pull(fachbereich)
-
-    df$fachbereich <- factor(df$fachbereich, levels = sorted_subjects)
-    df <- df %>% dplyr::arrange(fachbereich)
-
-    # order years for plot
-    df <- df[with(df, order(region, jahr, decreasing = FALSE)), ]
-
     # plot
     quelle <- "Quelle der Daten: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
-    titel <- paste0("Anteil einzelner Fächer an den ", kurs_help ," in ", states)
-    tooltip <-  "{point.fachbereich} <br> Anteil: {point.y} %"
-    format <-  "{value}%"
-    color <- as.character(df$color)
+    titel <- ifelse(states == "Saarland",
+                    paste0("Anteil einzelner Fächer an den ", kurs_help, " im ", states),
+                    paste0("Anteil einzelner Fächer an den ", kurs_help, " in ", states))
 
-    out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "fachbereich", tooltip, format, color, quelle = quelle)
+    df <- df %>%
+      dplyr::mutate(
+        tooltip = paste0(
+          "<b>", fachbereich, "</b><br>",
+          "Jahr: ", jahr, "<br>",
+          "Anteil: ", wert, " %"
+        )
+      )
+
+    color <- as.character(colors)
+
+    out <- linebuilder_plotly(df, titel, x = "jahr", y = "wert", group = "fachbereich",
+                       color = color, quelle = quelle)
 
   } else if (absolut_selector=="Anzahl"){
-
-    hcoptslang <- getOption("highcharter.lang")
-    hcoptslang$thousandsSep <- "."
-    options(highcharter.lang = hcoptslang)
 
     df <- df %>%
       dplyr::filter(selector == "Anzahl")
@@ -892,12 +937,22 @@ kurse_verlauf_subjects_bl <- function(r) {
     df <- df[with(df, order(region, jahr, decreasing = FALSE)), ]
 
     quelle2 <- "Quelle der Daten: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
-    titel <- paste0("Anzahl der ", kurs_help, " in einzelnen Fächern in ", states)
-    tooltip <-  "{point.fachbereich} <br> Anzahl: {point.y}"
-    format <-  "{value:, f}"
-    color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#d0a9cd",
-               "#bfc6d3", "#5f94f9", "#B45309")
-    out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "fachbereich", tooltip, format, color, quelle = quelle2)
+    titel <- ifelse(states == "Saarland",
+                    paste0("Anzahl der ", kurs_help, " in einzelnen Fächern im ", states),
+                    paste0("Anzahl der ", kurs_help, " in einzelnen Fächern in ", states))
+
+    df <- df %>%
+      dplyr::mutate(
+        tooltip = paste0(
+          "<b>", fachbereich, "</b><br>",
+          "Jahr: ", jahr, "<br>",
+          "Anzahl: ", prettyNum(wert, big.mark = ".", decimal.mark = ",")
+        )
+      )
+    format <-  ",d"
+    color <-  as.character(colors)
+    out <- linebuilder_plotly(df, titel, x = "jahr", y = "wert", group = "fachbereich",
+                       format = format, color = color, quelle = quelle2)
 
   }
 
@@ -1103,17 +1158,23 @@ kurse_map <- function(r) {
       help_title <- ifelse(help_title == "andere Fächer (gesamt)", "allen Fächern außer MINT", help_title)
 
     titel <- paste0("Anteil von ", help_title, " an allen ", title_help)
-    tooltip <-  "MINT-Anteil in {point.region} <br> Wert: {point.y} %"
-    format <-  "{value}%"
+
+    df <- df %>%
+      dplyr::mutate(
+        tooltip = paste0(
+          "<b>", region, "</b><br>",
+          "Jahr: ", jahr, "<br>",
+          "Anteil: ", round(wert,1), " %"
+        )
+      )
     color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
                "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5")
     quelle <- "Quelle der Daten: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
-    out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "region", tooltip, format, color, quelle = quelle)
+
+    out <- linebuilder_plotly(df, titel, x = "jahr", y = "wert", group = "region",
+                              color = color, quelle = quelle)
 
     } else if(absolut_selector =="Anzahl"){
-      hcoptslang <- getOption("highcharter.lang")
-      hcoptslang$thousandsSep <- "."
-      options(highcharter.lang = hcoptslang)
 
       df <- df %>%
         dplyr::filter(selector=="Anzahl")
@@ -1133,12 +1194,21 @@ kurse_map <- function(r) {
       help_title <- ifelse(grepl("andere Fächer", help_title), "in allen Fächern außer MINT", help_title)
 
       titel <- paste0("Anzahl an ", title_help, help_title)
-      tooltip <- "{point.region} <br> Anzahl: {point.y}"
-      format <-  "{value:, f}"
+
+      df <- df %>%
+        dplyr::mutate(
+          tooltip = paste0(
+            "<b>", region, "</b><br>",
+            "Jahr: ", jahr, "<br>",
+            "Anzahl: ", prettyNum(wert, big.mark = ".", decimal.mark = ",")
+          )
+        )
+      format <-  ",d"
       color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
                  "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5")
       quelle <- "Quelle der Daten: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
-      out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "region", tooltip, format, color, quelle = quelle)
+      out <- linebuilder_plotly(df, titel, x = "jahr", y = "wert", group = "region",
+                                format = format, color = color, quelle = quelle)
     }
 
     return(out)
@@ -1389,7 +1459,9 @@ kurse_comparison_gender <- function(r) {
       ) %>%
       # Layout anpassen
       plotly::layout(
-        title = paste0("Mädchen-Anteil nach Fächern in ",regio, " (", timerange, ")"),
+        title = ifelse(regio == "Saarland",
+                       paste0("Mädchen-Anteil nach Fächern im ",regio, " (", timerange, ")"),
+                       paste0("Mädchen-Anteil nach Fächern in ",regio, " (", timerange, ")")),
         xaxis = list(title = ""),
         yaxis = list(title = ""),
         margin = list(l = 100, r = 50, t = 50, b = 50),
@@ -1408,7 +1480,7 @@ kurse_comparison_gender <- function(r) {
             x = 0, y = -0.3,
             xanchor = "left", yanchor = "top",
             showarrow = FALSE,
-            font = list(size = 10, color = "gray")
+            font = list(size = 10, color = "gray", family = "SourceSans3-Regular")
           )
         )
       ) %>%
@@ -1509,8 +1581,12 @@ kurse_comparison_gender <- function(r) {
       df_rest <- df1 %>%
         dplyr::filter(fachbereich != "MINT")
 
-      titel <- paste0("Mädchen-Anteil in MINT-", titel_help,  " in ", regio, " (", timerange, ")")
-      titelg <- paste0("Mädchen-Anteil in anderen ", titel_help,  " in ", regio, " (", timerange, ")")
+      titel <- ifelse(regio == "Saarland",
+                      paste0("Mädchen-Anteil in MINT-", titel_help,  " im ", regio, " (", timerange, ")"),
+                      paste0("Mädchen-Anteil in MINT-", titel_help,  " in ", regio, " (", timerange, ")"))
+      titelg <- ifelse(regio == "Saarland",
+                       paste0("Mädchen-Anteil in anderen ", titel_help,  " im ", regio, " (", timerange, ")"),
+                       paste0("Mädchen-Anteil in anderen ", titel_help,  " in ", regio, " (", timerange, ")"))
       tooltip <- paste('Anteil: {point.proportion}% <br> Anzahl: {point.wert}')
 
       quelle <- "Quelle der Daten: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
@@ -1533,7 +1609,9 @@ kurse_comparison_gender <- function(r) {
         dplyr::filter(fachbereich == "MINT")
 
 
-      titel = paste0("Mädchen-Anteil in MINT-", titel_help,  " in ", regio, " (", timerange, ")")
+      titel = ifelse(regio == "Saarland",
+                paste0("Mädchen-Anteil in MINT-", titel_help,  " im ", regio, " (", timerange, ")"),
+                paste0("Mädchen-Anteil in MINT-", titel_help,  " in ", regio, " (", timerange, ")"))
       tooltip = paste('Anteil: {point.proportion}% <br> Anzahl: {point.wert}')
 
 
@@ -1664,64 +1742,76 @@ kurse_verlauf_gender <- function(r){
   df <- DBI::dbGetQuery(con, df_query)
 
 
-  df <-  df %>%
-    dplyr::group_by(fachbereich, indikator, jahr) %>%
-    dplyr::mutate(props = wert[anzeige_geschlecht == "Frauen"] +
-                  wert[anzeige_geschlecht == "Männer"])
-
-
-
-  df <- df %>% dplyr::filter(anzeige_geschlecht == "Frauen")
-
-
-
-  # calcualte proportions
-  df <- df %>% dplyr::group_by(indikator, fachbereich, anzeige_geschlecht, jahr) %>%
-    dplyr::mutate(proportion = wert/props)
-
-  df$proportion <- round(df$proportion*100,1)
-
-  df$anzeige_geschlecht[df$anzeige_geschlecht == "Frauen"] <- "Mädchen"
-
-  #Trennpunkte für lange Zahlen ergänzen
-  df$wert_anzeige <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
-
   if(abs_rel == "Anzahl"){
 
-    # order years for plot
-    df <- df[with(df, order(jahr, decreasing = FALSE)), ]
+    df <- df %>%
+      dplyr::filter(anzeige_geschlecht == "Frauen")
 
-    hcoptslang <- getOption("highcharter.lang")
-    hcoptslang$thousandsSep <- "."
-    options(highcharter.lang = hcoptslang)
+    df$anzeige_geschlecht[df$anzeige_geschlecht == "Frauen"] <- "Mädchen"
+
+
+    # order years for plot
+    df <- df %>%
+      dplyr::arrange(indikator, jahr)
+
 
     # plot
+    titel <- ifelse(regio == "Saarland",
+                    paste0("Anteil von Mädchen in MINT-Oberstufenkursen im ", regio),
+                    paste0("Anteil von Mädchen in MINT-Oberstufenkursen in ", regio))
 
-    titel <- paste0("Anzahl von Mädchen in MINT-Oberstufenkursen in ", regio)
-    tooltip <-  "{point.indikator} <br> Wert: {point.wert_anzeige}"
-    format <-  "{value:, f}"
+    df <- df %>%
+      dplyr::mutate(
+        tooltip = paste0(
+          "<b>", indikator, "</b><br>",
+          "Jahr: ", jahr, "<br>",
+          "Anzahl: ", prettyNum(wert, big.mark = ".", decimal.mark = ",")
+        )
+      )
+    format <-  ",d"
     color <- colors_mint_vernetzt$general
     quelle <- "Quelle der Daten: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
-    out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color, quelle = quelle)
-
+    out <- linebuilder_plotly(df, titel, x = "jahr", y = "wert", group = "indikator",
+                       format = format, color = color, quelle = quelle)
 
 
   } else if (abs_rel =="In Prozent") {
 
-
+    df <- df %>%
+      tidyr::pivot_wider(
+        names_from = anzeige_geschlecht,
+        values_from = wert
+      ) %>%
+      dplyr::mutate(
+        props = Frauen + Männer,
+        proportion = round((Frauen / props) * 100, 1),
+        anzeige_geschlecht = "Mädchen"
+      ) %>%
+      dplyr::select(indikator, fachbereich, jahr, proportion)
 
     # order years for plot
-    df <- df[with(df, order(jahr, decreasing = FALSE)), ]
+    df <- df %>%
+      dplyr::arrange(indikator, jahr)
 
+    titel <- ifelse(regio == "Saarland",
+                    paste0("Anteil von Mädchen in MINT-Oberstufenkursen im ", regio),
+                    paste0("Anteil von Mädchen in MINT-Oberstufenkursen in ", regio))
 
-    titel <- paste0("Mädchenanteil in MINT-Oberstufenkursen", regio)
-    tooltip <-  "{point.indikator} <br> Wert: {point.y}%"
-    format <-  "{value}%"
+    df <- df %>%
+      dplyr::mutate(
+        tooltip = paste0(
+          "<b>", indikator, "</b><br>",
+          "Jahr: ", jahr, "<br>",
+          "Anteil: ", proportion, " %"
+        )
+      )
     color <- colors_mint_vernetzt$general
     quelle <- "Quelle der Daten: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
-    out <- linebuilder(df, titel, x = "jahr", y = "proportion", group = "indikator", tooltip, format, color, quelle = quelle)
+    out <- linebuilder_plotly(df, titel, x = "jahr", y = "proportion", group = "indikator",
+                       color = color, quelle = quelle)
 
   }
+  return(out)
 }
 
 
@@ -1807,10 +1897,6 @@ kurse_wahl <- function(r) {
     )
 
 
-
-
-
-
     if(vergleich == "Ja"){
 
       df_f <- df %>%
@@ -1818,8 +1904,12 @@ kurse_wahl <- function(r) {
       df_m <- df %>%
         dplyr::filter(anzeige_geschlecht == "Männer")
 
-      titelf <- paste0(titel_help, " von Mädchen in ", regio, " (", timerange, ")")
-      titelm <- paste0(titel_help, " von Jungen in ", regio, " (", timerange, ")")
+      titelf <- ifelse(regio == "Saarland",
+                       paste0(titel_help, " von Mädchen im ", regio, " (", timerange, ")"),
+                       paste0(titel_help, " von Mädchen in ", regio, " (", timerange, ")"))
+      titelm <- ifelse(regio == "Saarland",
+                       paste0(titel_help, " von Jungen im ", regio, " (", timerange, ")"),
+                       paste0(titel_help, " von Jungen in ", regio, " (", timerange, ")"))
       tooltip <- paste('Anteil: {point.proportion}% <br> Anzahl: {point.wert}')
       color = as.character(df_f$col)
 
@@ -1839,7 +1929,9 @@ kurse_wahl <- function(r) {
       df_f <- df %>%
         dplyr::filter(anzeige_geschlecht == "Frauen")
 
-      titel <- paste0(titel_help, " von Mädchen in ", regio, " (", timerange, ")")
+      titel <- ifelse(regio == "Saarland",
+                      paste0(titel_help, " von Mädchen im ", regio, " (", timerange, ")"),
+                      paste0(titel_help, " von Mädchen in ", regio, " (", timerange, ")"))
       tooltip <- paste('Anteil: {point.proportion}% <br> Anzahl: {point.wert}')
       format = '{point.proportion}%'
       color = as.character(df_f$col)
@@ -1899,7 +1991,7 @@ kurse_wahl <- function(r) {
 
     help_title <- ifelse(subjects == "MINT-Fächer (gesamt)", "MINT-Fächern (gesamt)", subjects)
     help_title <- ifelse(help_title == "andere Fächer (gesamt)", "anderen Fächern (gesamt)", help_title)
-    help_kurs <- ifelse(kurs_select == "Grundkurse", "Grundkurs-B", "Leistungskurs-B")
+    help_kurs <- ifelse(kurs_select == "Grundkurse", "Grundkurs", "Leistungskurs")
     help_kurs <- ifelse(kurs_select == "Oberstufenbelegungen", "Oberstufen", help_kurs)
 
 
@@ -2213,9 +2305,6 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
 
       titel <- paste0("Anteil der Schüler:innen, die den Mindeststandard in Mathematik nicht erreichen,<br>", "nach Geschlecht", praep , bl_select, " (", klasse_select, ")")
 
-
-
-
       df <- df %>%
         dplyr::mutate(
           geschlecht = factor(geschlecht, levels = c("Mädchen", "Jungen"))
@@ -2317,7 +2406,10 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
 
         df$wert <- round(df$wert,1)
 
-        titel <- paste0("Durchschnittliche Leistung der Schüler:innen im Mathematik-Kompetenztest ", indikator_select, " in " , bl_select, " (", klasse_select, ")")
+        titel <- ifelse(bl_select == "Saarland",
+                        paste0("Durchschnittliche Leistung der Schüler:innen im Mathematik-Kompetenztest ", indikator_select, " im " , bl_select, " (", klasse_select, ")"),
+                        paste0("Durchschnittliche Leistung der Schüler:innen im Mathematik-Kompetenztest ", indikator_select, " in " , bl_select, " (", klasse_select, ")"))
+
 
 
         jahr_order <- sort(unique(df$jahr))
@@ -2402,7 +2494,9 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
           df$wert <- round(df$wert,1)
 
 
-          titel <- paste0("Durchschnittliche Leistung der Schüler:innen im ", fach_select, "-Kompetenztest ", indikator_select, " in " , bl_select, " (", klasse_select, ")")
+          titel <- ifelse(bl_select == "Saarland",
+                          paste0("Durchschnittliche Leistung der Schüler:innen im ", fach_select, "-Kompetenztest ", indikator_select, " im " , bl_select, " (", klasse_select, ")"),
+                          paste0("Durchschnittliche Leistung der Schüler:innen im ", fach_select, "-Kompetenztest ", indikator_select, " in " , bl_select, " (", klasse_select, ")"))
 
 
 
@@ -2458,7 +2552,9 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
           df$wert <- round(df$wert,1)
 
 
-          titel <-  paste0("Durchschnittliche Leistung der Schüler:innen im ", fach_select, "-Kompetenztest ", indikator_select, " in " , bl_select, " (", klasse_select, ")")
+          titel <-  ifelse(bl_select == "Saarland",
+                           paste0("Durchschnittliche Leistung der Schüler:innen im ", fach_select, "-Kompetenztest ", indikator_select, " im " , bl_select, " (", klasse_select, ")"),
+                           paste0("Durchschnittliche Leistung der Schüler:innen im ", fach_select, "-Kompetenztest ", indikator_select, " in " , bl_select, " (", klasse_select, ")"))
 
           out <- highcharter::hchart(df, 'column', highcharter::hcaes(y = wert, x = jahr, group = indikator))%>%
             highcharter::hc_plotOptions(column = list(pointWidth = 90))%>%
@@ -2468,7 +2564,7 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
                                                                           "2018",
                                                                           "2024")) %>%
             highcharter::hc_colors(color) %>%
-            highcharter::hc_title(text = paste0("Durchschnittliche Leistung der Schüler:innen im ", fach_select, "-Kompetenztest ", indikator_select, " in " , bl_select, " (", klasse_select, ")"),
+            highcharter::hc_title(text = titel,
                                   margin = 45,
                                   align = "center",
                                   style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
@@ -2561,8 +2657,7 @@ iqb_fragebogen <- function(r){
     df$geschlecht <- as.factor(df$geschlecht)
     df$geschlecht <- factor(df$geschlecht, levels = c("Mädchen", "Jungen"))
 
-    titel <- paste0("Selbsteinschätzung des Interesses und der eigenen Fähigkeiten in ", fach_select,
-                    " von Schüler:innen der 4. Klasse (", jahr_select, ")"         )
+    titel <- paste0("Selbsteinschätzung des Interesses und der eigenen Fähigkeiten in ", fach_select," von Schüler:innen der 4. Klasse (", jahr_select, ")")
     tooltip_text <- "{point.geschlecht} <br> {point.display_rel}"
     quelle_text <- "Quelle der Daten: Institut zur Qualitätsentwicklung im Bildungswesen, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
@@ -2590,8 +2685,8 @@ iqb_fragebogen <- function(r){
     AND geschlecht IN ({gruppe_select[1]}, {gruppe_select[2]})
                                ", .con = con)
     df <- DBI::dbGetQuery(con, df_query)
-#
-#
+
+
     # als Faktor speichern für Reihenfolge und Selbstkonzept umbennenen
     df <- df %>%
       dplyr::mutate(
