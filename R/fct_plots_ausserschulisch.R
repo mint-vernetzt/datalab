@@ -93,14 +93,22 @@ plot_cp_orgas <- function(r){
 
     titel <- paste0("Für die gewählten Eingaben hat keine Organisation eine Angabe gemacht.")
 
-    tooltip <- "{point.indikator} <br> Anteil: {point.prop_disp} %"
-    format <- "{value}%"
+    df <- df %>%
+      dplyr::mutate(
+        tooltip = paste0(
+          "<b>", indikator, "</b><br>",
+          "Jahr: ", jahr, "<br>",
+          "Anteil: ", prop_disp, " %"
+        )
+      )
+
     color <- c("#b16fab", "#154194","#66cbaf","#112c5f", "#35bd97", "#5d335a",
                "#5f94f9", "#007655", "#d0a9cd")
 
 
     quelke <- "Quelle der Daten: MINTvernetzt Community Plattform, Stand 14. April 2025."
-    out <- linebuilder(df, titel, x = "indikator", y = "wert", group = "region", tooltip, format, color, quelle = quelke)
+    out <- linebuilder(df, titel, x = "indikator", y = "wert", group = "region",
+                       color = color, quelle = quelke)
 
     #keine quelle weil net relevant
 
@@ -359,14 +367,20 @@ plot_cp_projekte <- function(r){
 
     titel <- paste0("Für die gewählten Eingaben hat keine Organisation eine Angabe gemacht.")
 
-    tooltip <- "{point.indikator} <br> Anteil: {point.prop_disp} %"
-    format <- "{value}%"
+
+    df <- df %>%
+      dplyr::mutate(
+        tooltip = paste0(
+          "<b>", indikator, "</b><br>",
+          "Jahr: ", jahr, "<br>",
+          "Anteil: ", prop_disp, " %"
+        )
+      )
+
     color <- c("#b16fab", "#154194","#66cbaf","#112c5f", "#35bd97", "#5d335a",
                "#5f94f9", "#007655", "#d0a9cd")
 
-
-
-    out <- linebuilder(df, titel, x = "indikator", y = "wert", group = "region", tooltip, format, color)
+    out <- linebuilder(df, titel, x = "indikator", y = "wert", group = "region", color = color)
 
 
   }else if(abs_rel_select == "In Prozent"){
@@ -1235,82 +1249,25 @@ plot_mv_genderb <- function(){
           gruppe == "Die moderat Aktiven" ~ "Die moderat Aktiven",
           gruppe == "Die hoch Aktiven" ~ "Die hoch Aktiven",
           gruppe == "Die moderat Passiven" ~ "Die moderat Passiven"
+        ),
+        wert = as.numeric(wert)
+      )
+    df <- df %>%
+      dplyr::mutate(
+        tooltip = paste0(
+          "<b>", gruppe, "</b><br>",
+          "Anteil: ", wert, " %<br>"
         )
       )
 
-    # tooltip <- paste('Anteil: {point.wert} %')
-    # color <- c("#b16fab", "#154194", "#66cbaf")
-    # titel <- titel
-    # subtitel <- subtitel
-    # format <- '{point.wert}%'
-    #
-    # x = "gruppe"
-    # y = "wert"
-    #
-    # quelle <- "Quelle der Daten: MINTvernetzt 2024"
-    #
-    #
-    # plot <- piebuilder(df, titel, x,y, tooltip, color, format, subtitel, quelle = quelle )
-
-    plot <- df %>%
-      highcharter::hchart(
-        "pie", highcharter::hcaes(x = gruppe, y = as.numeric(wert))
-      )%>%
-      highcharter::hc_tooltip(
-        pointFormat=paste('Anteil: {point.wert} %')) %>%
-      highcharter::hc_colors( c("#b16fab", "#154194", "#66cbaf")) %>%
-      highcharter::hc_title(text = titel,
-                            margin = 45,
-                            align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-      highcharter::hc_subtitle(text = subtitel,
-                               align = "center",
-                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "16px")) %>%
-      highcharter::hc_chart(
-        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
-      highcharter::hc_caption(text =  "Die Gruppe der bislang moderat aktiven MINT-Bildungsanbieter:innen zeichnet
-                              sich durch einen großen Vernetzungswunsch und eine hohe Motivation aus,
-                              sich aktiv in Netzwerke zum Thema MINT-Förderung für Mädchen einzubringen,
-                              was auf ein großes Aktivierungspotenzial hinweist.
-                              Die Gruppe der hoch Aktiven ist bereits sehr motiviert und engagiert in ihrem Netzwerk. Die kleinste Gruppe der Befragten nimmt lieber passiv an Netzwerkaktivitäten teil.") %>%
-      highcharter::hc_plotOptions(
-        pie = list(
-          dataLabels = list(
-            style = list(
-              fontSize = "14px",  # Schriftgröße für die Labels anpassen
-              fontFamily = "SourceSans3-Regular"
-            )
-          )
-        )
+    plot <- piebuilder_plotly(df, x = "gruppe", y = "wert",
+                              titel = titel,
+                              subtitel = subtitel,
+                              color = c("#b16fab", "#154194", "#66cbaf"),
+                              quelle = "Quelle: MINTvernetzt") |>
+      plotly::layout(
+        margin = list(t = 110, b = 120, r = 50, l = 50)
       )
-
-    #%>%
-   #      highcharter::hc_exporting(enabled = TRUE,
-   #                                buttons = list(
-   #                                  contextButton = list(
-   #                                    menuItems = list("downloadPNG", "downloadCSV",
-   #                                                     list(
-   #                                                       text = "Daten für GPT",
-   #                                                       onclick = htmlwidgets::JS(sprintf(
-   #                                                         "function () {
-   #   var date = new Date().toISOString().slice(0,10);
-   #   var chartTitle = '%s'.replace(/\\s+/g, '_');
-   #   var filename = chartTitle + '_' + date + '.txt';
-   #
-   #   var data = this.getCSV();
-   #   var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-   #   if (window.navigator.msSaveBlob) {
-   #     window.navigator.msSaveBlob(blob, filename);
-   #   } else {
-   #     var link = document.createElement('a');
-   #     link.href = URL.createObjectURL(blob);
-   #     link.download = filename;
-   #     link.click();
-   #   }
-   # }", gsub("'", "\\\\'", titel))  #
-   #                                                       )))
-   #                                  ))
-        # )
 
   return(plot)
 }

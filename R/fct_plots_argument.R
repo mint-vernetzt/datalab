@@ -2011,51 +2011,6 @@ if (regio == "Deutschland"){
 
 }
 
-# argument_frauen_gehen <- function(r) {
-#
-#   # load UI inputs from reactive value
-#   t<- 2024
-#   indikator_choice <- c("Leistungskurse", "Studierende",
-#                         "Auszubildende", "Beschäftigte")
-#
-#   query <- glue::glue_sql("
-#   SELECT bereich, indikator, fachbereich, geschlecht, jahr, wert
-#   FROM zentral
-#   WHERE jahr IN ({t*})
-#     AND region IN ({regio*})
-#     AND geschlecht = 'Frauen'
-#     AND fachbereich = 'MINT'
-#     AND indikator IN ({indikator_choice*})
-# ", .con = con)
-#
-#   df <- DBI::dbGetQuery(con, query)
-#
-#     hcoptslang <- getOption("highcharter.lang")
-#     hcoptslang$thousandsSep <- "."
-#     options(highcharter.lang = hcoptslang)
-#
-#     df <- df[with(df, order(indikator, jahr, decreasing = FALSE)), ]
-#
-#     # Ordnen der Legende
-#     sorted_indicators <- df %>%
-#       dplyr::group_by(indikator) %>%
-#       dplyr::summarize(m_value = mean(round(wert, 1), na.rm = TRUE)) %>%
-#       dplyr::arrange(desc(m_value)) %>%
-#       dplyr::pull(indikator)
-#
-#     df$indikator <- factor(df$indikator, levels = sorted_indicators)
-#
-#     titel <- paste0("Anzahl von Frauen in MINT nach Bildungsbereichen in ", regio)
-#     tooltip <- "Anzahl Frauen <br> Indikator: {point.indikator} <br> Anzahl: {point.y} "
-#     format <- "{value}"
-#
-#     color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24" )
-#     quelle <- "Quellen: Destatis, 2025; Bundesagentur für Arbeit, 2025; KMK, 2025, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
-#
-#     out <- linebuilder(df,titel,x="jahr", y="wert", group="indikator", tooltip, format, color, quelle = quelle)
-#
-#   return (out)
-# }
 
 argument_großer_unterschied <- function(r) {
 

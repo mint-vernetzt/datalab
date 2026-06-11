@@ -507,12 +507,28 @@ mod_studium_studienzahl_server <- function(id, r){
     # Box 1 - Wer Wählt MINT ----
 
     ## Pies MINT
-    output$mint_anteil_studium <- plotly::renderPlotly({
-      studienzahl_mint(r)
+    output$mint_anteil_studium <- renderUI({
+
+      plot_list <- studienzahl_mint(r)
+
+      if(length(plot_list) > 2){
+        plot_list
+      }else{
+        fluidRow(
+          column(
+            width = 6,
+            plot_list[1]
+          ),
+          column(
+            width = 6,
+            plot_list[2]
+          )
+        )
+      }
+
     })
 
     ## Zeitverlauf
-
 
     output$plot_einstieg_verlauf <- plotly::renderPlotly({
       studienzahl_verlauf_single(r)
@@ -619,7 +635,23 @@ mod_studium_studienzahl_server <- function(id, r){
     )
 
     output$plot_choice_gender <- renderUI({
-      studienzahl_choice_gender(r)
+
+      plot_list <- studienzahl_choice_gender(r)
+
+      if(length(plot_list) > 2){
+        plot_list
+      }else{
+        fluidRow(
+          column(
+            width = 6,
+            plot_list[1]
+          ),
+          column(
+            width = 6,
+            plot_list[2]
+          )
+        )
+      }
     })
 
     ## Zeitverlauf Gender
@@ -659,9 +691,24 @@ mod_studium_studienzahl_server <- function(id, r){
 
     ## MINT-Fächer-Anteil
 
-    output$plot_anteil_mint_faecher <- plotly::renderPlotly(
-      plot_mint_faecher(r)
-    )
+    output$plot_anteil_mint_faecher <- renderUI({
+      plot_list <- plot_mint_faecher(r)
+
+      if(length(plot_list) > 2){
+        plot_list
+      }else{
+        fluidRow(
+          column(
+            width = 6,
+            plot_list[1]
+          ),
+          column(
+            width = 6,
+            plot_list[2]
+          )
+        )
+      }
+    })
 
     output$plot_studienzahl_bula_faecher_mint <- plotly::renderPlotly(
       plot_studierende_bula_faecher(r)
@@ -839,8 +886,43 @@ mod_studium_studienzahl_server <- function(id, r){
     # Box 3 - Frauen -----
 
     ## Pie Gender
-    output$plot_einstieg_gender <- plotly::renderPlotly({
-      studienzahl_einstieg_gender(r)
+    output$plot_einstieg_gender <- renderUI({
+
+      plots <- studienzahl_einstieg_gender(r)
+
+      if(length(plots) > 4){
+        plots
+      }else if(length(plots) == 2){
+        fluidRow(
+          column(
+            width = 6,
+            plots[1]
+          ),
+          column(
+            width = 6,
+            plots[2]
+          )
+        )
+      }else if(length(plots) == 4){
+        fluidRow(
+          column(
+            width = 6,
+            plots[1]
+          ),
+          column(
+            width = 6,
+            plots[2]
+          ),
+          column(
+            width = 6,
+            plots[3]
+          ),
+          column(
+            width = 6,
+            plots[4]
+          )
+        )
+      }
     })
 
 

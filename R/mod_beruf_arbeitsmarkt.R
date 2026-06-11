@@ -709,13 +709,24 @@ mod_beruf_arbeitsmarkt_server <- function(id, r){
     ns <- session$ns
 
     # Box 1 ----
+    # Tab
+    output$plot_arbeitsmarkt_faecher_anteil <- renderUI({
+      plot_list <- arbeitsmarkt_faecher_anteil(r)
 
-
-
-    # Box 2, Tab 1 MINT
-
-    output$plot_arbeitsmarkt_faecher_anteil <- plotly::renderPlotly({
-      arbeitsmarkt_faecher_anteil(r)
+      if(length(plot_list) > 2){
+        plot_list
+      }else{
+        fluidRow(
+          column(
+            width = 6,
+            plot_list[1]
+          ),
+          column(
+            width = 6,
+            plot_list[2]
+          )
+        )
+      }
     })
 
     # Box 3, Tab 5 Frauenanteil im MINT Fächervergleich
@@ -751,7 +762,6 @@ mod_beruf_arbeitsmarkt_server <- function(id, r){
 
     output$plot_einstieg_vergleich <- plotly::renderPlotly({
       beruf_einstieg_vergleich(r)
-
     })
 
 
@@ -981,8 +991,43 @@ mod_beruf_arbeitsmarkt_server <- function(id, r){
     # Box3 ----
 
     # tab 1
-    output$plot_einstieg_pie_gender <- plotly::renderPlotly({
-      arbeitsmarkt_einstieg_pie_gender(r)
+    output$plot_einstieg_pie_gender <- renderUI({
+
+      plots <- arbeitsmarkt_einstieg_pie_gender(r)
+
+      if(length(plots) > 4){
+        plots
+      }else if(length(plots) == 2){
+        fluidRow(
+          column(
+            width = 6,
+            plots[1]
+          ),
+          column(
+            width = 6,
+            plots[2]
+          )
+        )
+      }else if(length(plots) == 4){
+        fluidRow(
+          column(
+            width = 6,
+            plots[1]
+          ),
+          column(
+            width = 6,
+            plots[2]
+          ),
+          column(
+            width = 6,
+            plots[3]
+          ),
+          column(
+            width = 6,
+            plots[4]
+          )
+        )
+      }
     })
 
 
@@ -997,7 +1042,17 @@ mod_beruf_arbeitsmarkt_server <- function(id, r){
     # tab 3
 
     output$plot_arbeitsmarkt_wahl_gender <- renderUI({
-      arbeitsmarkt_wahl_gender(r)
+      plots <- arbeitsmarkt_wahl_gender(r)
+      fluidRow(
+        column(
+          width = 6,
+          plots[1]
+        ),
+        column(
+          width = 6,
+          plots[2]
+        )
+      )
     })
 
 

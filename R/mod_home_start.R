@@ -213,16 +213,74 @@ mod_home_start_server <- function(id,r){
     # Box 1, Tab1 ----
 
 
-    output$plot_mint_rest_einstieg_1 <- plotly::renderPlotly({
-      home_einstieg( r)
+    # output$plot_mint_rest_einstieg_1 <- renderUI({
+    #   home_einstieg( r)
+    # })
+
+    output$plot_mint_rest_einstieg_1 <- renderUI({
+
+      if(r$ansicht_start_einstieg == "Gruppenvergleich - Balkendiagramm"){
+        home_einstieg( r)
+      }else if(length(r$indikator_start_einstieg_1) == 1){
+        home_einstieg_pie(r)
+      }else if(length(r$indikator_start_einstieg_1) == 2){
+        indikator1 <- r$indikator_start_einstieg_1[1]
+        indikator2 <- r$indikator_start_einstieg_1[2]
+        fluidRow(
+          column(
+            width = 6,
+            home_einstieg_pie(r, indikator1)
+          ),
+          column(
+            width = 6,
+            home_einstieg_pie(r, indikator2)
+          )
+        )
+      }
+
     })
 
 
-    output$plot_pie_mint_gender <- plotly::renderPlotly({
-      home_einstieg_gender( r)
+    output$plot_pie_mint_gender <- renderUI({
+
+      plots <- home_einstieg_gender( r)
+
+      if(length(plots) > 4){
+        plots
+      }else if(length(plots) == 2){
+        fluidRow(
+          column(
+            width = 6,
+            plots[1]
+          ),
+          column(
+            width = 6,
+            plots[2]
+          )
+        )
+      }else if(length(plots) == 4){
+        fluidRow(
+          column(
+            width = 6,
+            plots[1]
+          ),
+          column(
+            width = 6,
+            plots[2]
+          ),
+          column(
+            width = 6,
+            plots[3]
+          ),
+          column(
+            width = 6,
+            plots[4]
+          )
+        )
+      }
     })
 
-    ### Downloads ----
+
 
     #### Box 1 ----
 
