@@ -2045,6 +2045,398 @@ linebuilder_plotly <- function(
 #
 # }
 
+
+
+
+
+
+
+
+
+
+balkenbuilder_plotly <- function(df, titel, x, y, yaxis_size = 11, orientation = "h", group = NULL, ticktext = NULL, tickvals = NULL,
+                                 order = NULL, color = NULL, percent = FALSE, reverse_legend = FALSE, yaxis_titel = "", titel_y = 0.96,
+                                 stacking = FALSE, subtitel = NULL,legend_y = -0.12, quelle_y = -0.30, quelle = "Quelle") {
+
+  df_json <- jsonlite::toJSON(df, dataframe = "rows", auto_unbox = TRUE, na = "null")
+  titel_js  <- gsub("'", "\\\\'", titel)
+  quelle_js <- gsub("'", "\\\\'", quelle)
+  x_js      <- gsub("'", "\\\\'", x)
+  y_js      <- gsub("'", "\\\\'", y)
+  group_js <- if (is.null(group)) "" else gsub("'", "\\\\'", group)
+
+
+  if (is.numeric(df[[y]])) df[[y]] <- round(df[[y]], 1)
+
+  if (!is.null(order)) {
+    df[[x]] <- factor(df[[x]], levels = order)
+  }
+
+  if (orientation == "h") {
+
+
+      if (is.null(group)) {
+
+        if (!is.null(color) && !is.null(names(color)) && x %in% names(df)) {
+          color <- unname(color[as.character(df[[x]])])
+        }
+
+        out <- plotly::plot_ly(df, x = as.formula(paste0("~`", y, "`")), y = as.formula(paste0("~`", x, "`")),
+                               marker = list(color = color),
+                               type = "bar", orientation = "h", hovertext = as.formula("~`.tooltip`"), hovertemplate = "%{hovertext}<extra></extra>")
+      } else {
+
+        out <- plotly::plot_ly(df, x = as.formula(paste0("~`", y, "`")), y = as.formula(paste0("~`", x, "`")),
+                               color = as.formula(paste0("~`", group, "`")), colors = color,
+                               type = "bar", orientation = "h", hovertext = as.formula("~`.tooltip`"),
+                               hovertemplate = "%{hovertext}<extra></extra>")
+      }
+
+      out <- out %>%
+        plotly::layout(
+          xaxis = list(title = "", tickfont = list(size = 11),
+                       range = if (percent & stacking) c(0, 100) else if (percent) c(0, max(max(df[[y]], na.rm = TRUE), 10)) else NULL, automargin = TRUE,
+                       tickmode = if (percent) "linear" else "auto",
+                       dtick =  if (percent) 10 else NULL,
+                       gridcolor = "lightgray",gridwidth = 0.1,
+                       ticksuffix = if (percent) "%" else "",
+                       tickformat = if (percent) NULL else ",.0f"),
+          yaxis = list(title = yaxis_titel, tickfont = list(size = yaxis_size), ticksuffix = "   ", automargin = TRUE,
+                       ticktext = ticktext, tickvals = tickvals,
+                       tickmode = if (!is.null(ticktext)) "array" else "auto",
+                       categoryorder = if (!is.null(order)) "array" else "trace",
+                       categoryarray = if (!is.null(order)) rev(order) else NULL),
+          separators = ",.",
+                       font = list(family = "Calibri, sans-serif", size = 16,color = "black"),
+          title = list(text = titel, x = 0.5, y = titel_y,
+                       font = list(family = "Calibri Regular", size = 20, color = "black")),
+          font = list(family = "Calibri Regular"),
+          hoverlabel = list(bgcolor = "white", bordercolor = "black",
+                            font = list(family = "Calibri Regular", size = 9, color = "black")),
+          legend = list(orientation = "h",
+                        x = 0.5,
+                        xanchor = "center",
+                        y = legend_y,
+                        traceorder = if (isTRUE(reverse_legend)) "reversed" else "normal"),
+          bargap = 0.3,
+          annotations = list(list(text = quelle, x = 1, y = quelle_y, xref = "paper", yref = "paper", showarrow = FALSE,
+                                  xanchor = "right", yanchor = "top",
+                                  font = list(size = 11, color = "gray", family = "Calibri Regular"))),
+          margin = list(t = 60, b = 100)
+          ) %>%
+        plotly::config(
+          displaylogo = FALSE,
+          modeBarButtonsToRemove = c(
+            "sendDataToCloud", "autoScale2d", "resetScale2d", "toggleSpikelines",
+            "hoverClosestCartesian", "hoverCompareCartesian",
+            "zoom2d", "pan2d", "select2d", "lasso2d", "zoomIn2d", "zoomOut2d"
+          ),
+          modeBarButtonsToAdd = list(
+
+            # CSV-Download
+            list(
+              name = "Download CSV",
+              icon = list(
+                path = "M16,2H8C6.9,2,6,2.9,6,4v16c0,1.1,0.9,2,2,2h8c1.1,0,2-0.9,2-2V4C18,2.9,17.1,2,16,2z M16,20H8V4h8V20z M14.5,14h-2v3h-1v-3h-2l2.5-3.5L14.5,14z",
+                width = 24,
+                height = 24
+              ),
+              click = htmlwidgets::JS(sprintf("
+            function(gd) {
+              var rows = %s;
+              var date = new Date().toISOString().slice(0,10);
+              var chartTitle = '%s'.replace(/\\s+/g, '_');
+              var filename = chartTitle + '_' + date + '.csv';
+
+              if (!rows.length) return;
+
+              var cols = Object.keys(rows[0]);
+              var csv = cols.join(';') + '\\n';
+
+              rows.forEach(function(row) {
+                var values = cols.map(function(col) {
+                  var value = row[col];
+                  if (value === null || value === undefined) return '';
+                  value = String(value).replace(/\"/g, '\"\"');
+                  if (value.search(/[\";\\n]/) >= 0) {
+                    value = '\"' + value + '\"';
+                  }
+                  return value;
+                });
+                csv += values.join(';') + '\\n';
+              });
+
+              var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+
+              if (window.navigator.msSaveBlob) {
+                window.navigator.msSaveBlob(blob, filename);
+              } else {
+                var link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = filename;
+                link.click();
+              }
+            }
+          ", df_json, titel_js))
+            ),
+
+            # TXT-Download für KI
+            list(
+              name = "Download Daten für KI als txt",
+              icon = list(
+                path = "M14,2H6C4.9,2,4,2.9,4,4v16c0,1.1,0.9,2,2,2h12c1.1,0,2-0.9,2-2V8L14,2z M14,4.5L17.5,8H14V4.5z M18,20H6V4h6v6h6V20z",
+                width = 24,
+                height = 24
+              ),
+              click = htmlwidgets::JS(sprintf("
+            function(gd) {
+              var rows = %s;
+              var date = new Date().toISOString().slice(0,10);
+              var chartTitle = '%s'.replace(/\\s+/g, '_');
+              var filename = chartTitle + '_' + date + '.txt';
+
+              if (!rows.length) return;
+
+              var cols = Object.keys(rows[0]);
+
+              var text = '';
+              text += 'Titel: %s\\n';
+              text += 'X-Achse: %s\\n';
+              text += 'Y-Achse: %s\\n';
+              text += 'Gruppe: %s\\n';
+              text += 'Quelle: %s\\n\\n';
+              text += 'Daten:\\n';
+
+              text += cols.join('\\t') + '\\n';
+
+              rows.forEach(function(row) {
+                var values = cols.map(function(col) {
+                  var value = row[col];
+                  if (value === null || value === undefined) return '';
+                  return String(value);
+                });
+                text += values.join('\\t') + '\\n';
+              });
+
+              var blob = new Blob([text], { type: 'text/plain;charset=utf-8;' });
+
+              if (window.navigator.msSaveBlob) {
+                window.navigator.msSaveBlob(blob, filename);
+              } else {
+                var link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = filename;
+                link.click();
+              }
+            }
+          ", df_json, titel_js, titel_js, x_js, y_js, group_js, quelle_js))
+            )
+          )
+        )
+
+
+    }
+
+
+  else if (orientation == "v") {
+
+      if (is.null(group)) {
+
+        if (!is.null(color) && !is.null(names(color))) {
+          color <- unname(color[as.character(df[[x]])])
+        }
+
+        out <- plotly::plot_ly(df, x = as.formula(paste0("~`", x, "`")), y = as.formula(paste0("~`", y, "`")),
+                               marker = list(color = color),
+                               type = "bar", orientation = "v", hovertext = as.formula("~`.tooltip`"), hovertemplate = "%{hovertext}<extra></extra>")
+      } else {
+        out <- plotly::plot_ly(df, x = as.formula(paste0("~`", x, "`")), y = as.formula(paste0("~`", y, "`")),
+                               color = as.formula(paste0("~`", group, "`")), colors = color,
+                               type = "bar", orientation = "v", hovertext = as.formula("~`.tooltip`"), hovertemplate = "%{hovertext}<extra></extra>")
+      }
+
+    out <- out %>%
+      plotly::layout(
+      yaxis = list(title = yaxis_titel, tickfont = list(size = yaxis_size), automargin = TRUE,
+                   tickmode = if (percent) "linear" else "auto",
+                   dtick = if (percent) 10 else NULL,
+                   range = if (percent & stacking) c(0, 100) else NULL,
+                   gridcolor = "lightgray",gridwidth = 0.1,
+                   ticksuffix = if (percent) "%" else "",
+                   tickformat = if (percent) NULL else ",.0f"),
+      xaxis = list(title = "", automargin = TRUE, ticktext = ticktext, tickvals = tickvals,
+                   tickmode = if (!is.null(ticktext)) "array" else "auto",
+                   tickfont = list(size = 11)),
+      separators = ",.",
+                   font = list(family = "Calibri, sans-serif", size = 16, color = "black"),
+      title = list(text = titel, x = 0.5, y = titel_y,
+                   font = list(family = "Calibri Regular", size = 20, color = "black")),
+      font = list(family = "Calibri Regular"),
+      hoverlabel = list(bgcolor = "white", bordercolor = "black",
+                        font = list(family = "Calibri Regular", size = 9, color = "black")),
+      legend = list(orientation = "h",
+                    x = 0.5,
+                    xanchor = "center",
+                    y = legend_y,
+                    traceorder = if (isTRUE(reverse_legend)) "reversed" else "normal"),
+      bargap = 0.3,
+      annotations = list(list(text = quelle, x = 1, y = quelle_y, xref = "paper", yref = "paper", showarrow = FALSE,
+                              xanchor = "right", yanchor = "top",
+                              font = list(size = 11, color = "gray", family = "Calibri Regular"))),
+      margin = list(t = 60, b = 100)
+    ) %>%
+    plotly::config(
+          displaylogo = FALSE,
+          modeBarButtonsToRemove = c(
+            "sendDataToCloud", "autoScale2d", "resetScale2d", "toggleSpikelines",
+            "hoverClosestCartesian", "hoverCompareCartesian",
+            "zoom2d", "pan2d", "select2d", "lasso2d", "zoomIn2d", "zoomOut2d"
+          ),
+          modeBarButtonsToAdd = list(
+
+            # CSV-Download
+            list(
+              name = "Download CSV",
+              icon = list(
+                path = "M16,2H8C6.9,2,6,2.9,6,4v16c0,1.1,0.9,2,2,2h8c1.1,0,2-0.9,2-2V4C18,2.9,17.1,2,16,2z M16,20H8V4h8V20z M14.5,14h-2v3h-1v-3h-2l2.5-3.5L14.5,14z",
+                width = 24,
+                height = 24
+              ),
+              click = htmlwidgets::JS(sprintf("
+            function(gd) {
+              var rows = %s;
+              var date = new Date().toISOString().slice(0,10);
+              var chartTitle = '%s'.replace(/\\s+/g, '_');
+              var filename = chartTitle + '_' + date + '.csv';
+
+              if (!rows.length) return;
+
+              var cols = Object.keys(rows[0]);
+              var csv = cols.join(';') + '\\n';
+
+              rows.forEach(function(row) {
+                var values = cols.map(function(col) {
+                  var value = row[col];
+                  if (value === null || value === undefined) return '';
+                  value = String(value).replace(/\"/g, '\"\"');
+                  if (value.search(/[\";\\n]/) >= 0) {
+                    value = '\"' + value + '\"';
+                  }
+                  return value;
+                });
+                csv += values.join(';') + '\\n';
+              });
+
+              var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+
+              if (window.navigator.msSaveBlob) {
+                window.navigator.msSaveBlob(blob, filename);
+              } else {
+                var link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = filename;
+                link.click();
+              }
+            }
+          ", df_json, titel_js))
+            ),
+
+            # TXT-Download für KI
+            list(
+              name = "Download Daten für KI als txt",
+              icon = list(
+                path = "M14,2H6C4.9,2,4,2.9,4,4v16c0,1.1,0.9,2,2,2h12c1.1,0,2-0.9,2-2V8L14,2z M14,4.5L17.5,8H14V4.5z M18,20H6V4h6v6h6V20z",
+                width = 24,
+                height = 24
+              ),
+              click = htmlwidgets::JS(sprintf("
+            function(gd) {
+              var rows = %s;
+              var date = new Date().toISOString().slice(0,10);
+              var chartTitle = '%s'.replace(/\\s+/g, '_');
+              var filename = chartTitle + '_' + date + '.txt';
+
+              if (!rows.length) return;
+
+              var cols = Object.keys(rows[0]);
+
+              var text = '';
+              text += 'Titel: %s\\n';
+              text += 'X-Achse: %s\\n';
+              text += 'Y-Achse: %s\\n';
+              text += 'Gruppe: %s\\n';
+              text += 'Quelle: %s\\n\\n';
+              text += 'Daten:\\n';
+
+              text += cols.join('\\t') + '\\n';
+
+              rows.forEach(function(row) {
+                var values = cols.map(function(col) {
+                  var value = row[col];
+                  if (value === null || value === undefined) return '';
+                  return String(value);
+                });
+                text += values.join('\\t') + '\\n';
+              });
+
+              var blob = new Blob([text], { type: 'text/plain;charset=utf-8;' });
+
+              if (window.navigator.msSaveBlob) {
+                window.navigator.msSaveBlob(blob, filename);
+              } else {
+                var link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = filename;
+                link.click();
+              }
+            }
+          ", df_json, titel_js, titel_js, x_js, y_js, group_js, quelle_js))
+            )
+          )
+        )
+
+
+ } else {
+     stop("orientation must be 'h' or 'v'")
+  }
+
+
+  if (isTRUE(stacking)) {
+    out <- plotly::layout(out, barmode = "stack")
+  } else {
+    out <- plotly::layout(out, barmode = "group")
+  }
+
+  if (!is.null(subtitel)) {
+    out <- plotly::layout(out, title = list(
+      text = paste0(
+        titel,
+        "<br>",
+        "<span style='font-size:14px; color:gray; font-family:Calibri;'>",
+        subtitel, "</span>"),
+      x = 0.5,
+      font = list(family = "Calibri Regular", size = 20, color = "black")))
+  }
+
+
+
+  return(out)
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color,
                           optional=NULL, reverse = TRUE, TF=NULL, stacking=NULL, subtitel = NULL, quelle="Quelle"){
 

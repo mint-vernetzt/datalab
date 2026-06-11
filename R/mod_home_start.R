@@ -93,7 +93,7 @@ mod_home_start_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(htmlOutput(ns("plot_mint_rest_einstieg_1")),
+                               shinycssloaders::withSpinner(plotly::plotlyOutput(ns("plot_mint_rest_einstieg_1")),
                                                             color = "#154194"),
                         shinyBS::bsPopover(id="h_alle_mint_1", title = "",
                                            content = paste0("Anders als z. B. bei Studierenden wählen Schüler:innen mehrere Grund- und Leistungskurse. Um dennoch einen Anteil von &quotMINT&quot vs. &quotNicht-MINT&quot angeben zu können, nutzen wir die Kursbelegungszahlen der Schüler:innen."),
@@ -147,7 +147,7 @@ mod_home_start_ui <- function(id){
 
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(htmlOutput(ns("plot_pie_mint_gender")),
+                               shinycssloaders::withSpinner(plotly::plotlyOutput(ns("plot_pie_mint_gender")),
                                                             color = "#154194"),
                                shinyBS::bsPopover(id="h_alle_frauen_1", title = "",
                                                   content = paste0("Anders als z. B. bei Studierenden wählen Schüler:innen mehrere Grund- und Leistungskurse. Um dennoch einen Anteil von &quotMINT&quot vs. &quotNicht-MINT&quot angeben zu können, nutzen wir die Kursbelegungszahlen der Schüler:innen.", "<br> <br> In den uns vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden. <br><br>Baden-Württemberg erfasst keine geschelchterspezifischen Kursbelegungszahlen von Schüler:innen."),
@@ -344,12 +344,6 @@ mod_home_start_server <- function(id,r){
 # mod_home_start_server("home_start_1")
 
 
-
-
-
-
-
-# Alte Start-Box
 
 
 
