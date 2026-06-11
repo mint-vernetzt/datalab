@@ -176,17 +176,6 @@ home_einstieg <- function(r) {
 
     out <- highcharter::hw_grid(out1, out2, ncol = 2, browsable = TRUE)
 
-    # if(exists("out_1") && exists("out_2")){
-    #
-    #   out <- highcharter::hw_grid(out_1, out_2, ncol = 2, browsable = TRUE)
-    #
-    # } else if(exists("out_1") && !exists("out_2")){
-    #   out <- out_1
-    # } else if(!exists("out_1") && exists("out_2")){
-    #   out <- out_2
-    # } else {
-    #   out <- out
-    # }
 
 
 
@@ -203,8 +192,9 @@ home_einstieg <- function(r) {
    df <- df %>%
      dplyr::mutate(
        .tooltip = paste0(
-         "<b>", indikator, "</b><br>",
-         fachbereich, "-Bereich <br>",
+         "<b><span style='font-size:15px;'>", indikator, "</span></b><br>",
+         "<span style='font-size:15px;'>", fachbereich, "-Bereich </span><br>",
+         "Anzahl: ", formatC(as.numeric(wert), format = "f", digits = 0, big.mark = "."), "<br>",
          "Anteil: ", prop, " %"
        )
      )
@@ -218,7 +208,7 @@ home_einstieg <- function(r) {
    quelle <- "Quelle der Daten: Destatis, 2025; Bundesagentur für Arbeit, 2025; KMK, 2025, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
 
-   out <- balkenbuilder_plotly(df=df, x=x, y=y, titel=titel, orientation = "h", group, color = color,
+   out <- balkenbuilder_plotly(df=df, x=x, y=y, titel=titel, orientation = "h", group=group, color = color,
                                order = order, stacking = TRUE, percent = TRUE, quelle=quelle)
 
 
@@ -689,8 +679,8 @@ home_einstieg_gender <- function(r) {
       df <- df %>%
         dplyr::mutate(
           .tooltip = paste0(
-            "<b>", indikator, "</b><br>",
-            geschlecht, "<br>",
+            "<b><span style='font-size:15px;'>", indikator, "</span></b><br>",
+            "<span style='font-size:15px;'>", geschlecht, "</span><br>",
             "Anzahl: ", prettyNum(wert, big.mark = ".", decimal.mark = ","), "<br>",
             "Anteil: ", prop, " %"
           )
@@ -706,7 +696,7 @@ home_einstieg_gender <- function(r) {
 
 
 
-      out <- balkenbuilder_plotly(df=df, x=x, y=y, titel=titel, orientation = "h", group, color = color,
+      out <- balkenbuilder_plotly(df=df, x=x, y=y, titel=titel, orientation = "h", group=group, color = color,
                                   order = order, stacking = TRUE, percent = TRUE, quelle=quelle)
 
 
@@ -731,8 +721,8 @@ home_einstieg_gender <- function(r) {
       df <- df %>%
         dplyr::mutate(
           .tooltip = paste0(
-            "<b>", indikator, "</b><br>",
-            geschlecht, "<br>",
+            "<b><span style='font-size:15px;'>", indikator, "</span></b><br>",
+            "<span style='font-size:15px;'>", geschlecht, "</span><br>",
             "Anzahl: ", prettyNum(wert, big.mark = ".", decimal.mark = ","), "<br>",
             "Anteil: ", prop, " %"
           )
@@ -744,12 +734,13 @@ home_einstieg_gender <- function(r) {
       group <- "geschlecht"
       titel <- paste0("Anteil von Frauen in MINT nach Bildungsbereichen", praep, regio, " (", zeit, ")")
       color <- c("#154194", "#efe8e6")
+      legend_y <- -0.09
       quelle <- "Quelle der Daten: Destatis, 2025; Bundesagentur für Arbeit, 2025; KMK, 2025, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
 
 
-      out <- balkenbuilder_plotly(df=df, x=x, y=y, titel=titel, orientation = "h", group, color = color,
-                                  order = order, stacking = TRUE, percent = TRUE, quelle=quelle)
+      out <- balkenbuilder_plotly(df=df, x=x, y=y, titel=titel, orientation = "h", group=group, color = color,
+                                  order = order, stacking = TRUE, percent = TRUE, legend_y=legend_y, quelle=quelle)
 
 
 

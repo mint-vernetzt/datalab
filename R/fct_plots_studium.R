@@ -157,7 +157,7 @@ studienzahl_mint <- function(r){
          df <- df %>%
            dplyr::mutate(
              .tooltip = paste0(
-               "<span style='font-size:15px;'><b>", indikator, "</b></span><br>",
+               "<b><span style='font-size:15px;'>", indikator, "</span></b><br>",
                "<span style='font-size:15px;'>",fach, "</span><br>",
                "Anteil: ", round(proportion, 1), " %<br>",
                "Anzahl: ", wert_label
@@ -187,7 +187,7 @@ studienzahl_mint <- function(r){
            df <- df %>%
              dplyr::mutate(
                .tooltip = paste0(
-                 "<span style='font-size:15px;'><b>", indikator, "</b></span><br>",
+                 "<b><span style='font-size:15px;'>", indikator, "</span></b><br>",
                  "<span style='font-size:15px;'>",fach, "</span><br>",
                  "Anteil: ", round(proportion, 1), " %<br>",
                  "Anzahl: ", wert_label
@@ -595,7 +595,7 @@ studierende_bula_mint <- function(r) {
     df <- df %>%
       dplyr::mutate(
         .tooltip = paste0(
-          "<span style='font-size:15px;'><b>", region, "</b></span><br>",
+          "<b><span style='font-size:15px;'>", region, "</span></b><br>",
           "<span style='font-size:15px;'>","Alle MINT-Fächer", "</span><br>",
           "Anteil: ", round(proportion, 1), " %<br>",
           "Anzahl: ", wert
@@ -648,7 +648,7 @@ studierende_bula_mint <- function(r) {
       dplyr::mutate(
         wert_label = prettyNum(wert, big.mark = ".", decimal.mark = ","),
         .tooltip = paste0(
-          "<span style='font-size:15px;'><b>", region, "</b></span><br>",
+          "<b><span style='font-size:15px;'>", region, "</span></b><br>",
           "<span style='font-size:15px;'>","Alle MINT-Fächer", "</span><br>",
           "Anteil: ", round(proportion, 1), " %<br>",
           "Anzahl: ", wert_label
@@ -1464,7 +1464,7 @@ plot_mint_faecher <- function(r){
       df <- df %>%
         dplyr::mutate(
           .tooltip = paste0(
-            "<span style='font-size:15px;'><b>",fach, "</b></span><br>",
+            "<b><span style='font-size:15px;'>",fach, "</span></b><br>",
             "Anteil: ", round(prop, 1), " %<br>",
             "Anzahl: ", wert
           ))
@@ -1500,7 +1500,7 @@ plot_mint_faecher <- function(r){
         dplyr::mutate(
           wert_label = formatC(wert, format = "f", digits = 0,big.mark = ".", decimal.mark = ","),
           .tooltip = paste0(
-            "<span style='font-size:15px;'><b>", fach, "</b></span><br>",
+            "<b><span style='font-size:15px;'>",fach, "</span></b><br>",
             "Anteil: ", round(prop, 1), " %<br>",
             "Anzahl: ", wert_label
           ))
@@ -2104,7 +2104,7 @@ plot_studierende_bula_faecher <- function(r){
       df <- df %>%
         dplyr::mutate(
           .tooltip = paste0(
-            "<span style='font-size:15px;'><b>",region, "</b></span><br>",
+            "<b><span style='font-size:15px;'>", region, "</span></b><br>",
             "Anteil: ", round(prop, 1), " %<br>",
             "Anzahl: ", wert
           ))
@@ -2154,7 +2154,7 @@ plot_studierende_bula_faecher <- function(r){
           wert = as.numeric(gsub("\\.", "", wert)),
           wert_label = formatC(wert, format = "f", digits = 0, big.mark = ".", decimal.mark = ","),
           .tooltip = paste0(
-            "<span style='font-size:15px;'><b>",region, "</b></span><br>",
+            "<b><span style='font-size:15px;'>", region, "</span></b><br>",
             "Anteil: ", round(prop, 1), " %<br>",
             "Anzahl: ", wert_label
           ))
@@ -4113,8 +4113,7 @@ plot_auslaender_mint <- function(r){
              betr_ebene == "Fachbereiche" & fach == "Alle Nicht MINT-Fächer" ~ 3,
              TRUE ~ 4
            ),
-           dplyr::desc(wert_plot)
-         ) %>%
+           dplyr::desc(wert_plot)) %>%
          dplyr::pull(fach)
 
 

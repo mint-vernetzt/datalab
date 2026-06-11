@@ -113,7 +113,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(htmlOutput(ns("plot_einstieg_vergleich")),
+                               shinycssloaders::withSpinner(plotly::plotlyOutput(ns("plot_einstieg_vergleich"), height = "500px"),
                                                             color = "#154194"),
 
                                shinyBS::bsPopover(id = "h_beruf_mint_3", title = "",
@@ -155,7 +155,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(htmlOutput(ns("plot_beruf_arbeitsmarkt_mint_bulas")),
+                               shinycssloaders::withSpinner(plotly::plotlyOutput(ns("plot_beruf_arbeitsmarkt_mint_bulas"), height = "600px"),
                                                             color = "#154194"),
 
 
@@ -216,7 +216,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(htmlOutput(ns("plot_arbeitsmarkt_faecher_anteil")),
+                               shinycssloaders::withSpinner(plotly::plotlyOutput(ns("plot_arbeitsmarkt_faecher_anteil"), height = "500px"),
                                                             color = "#154194"),
 
 
@@ -264,7 +264,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(htmlOutput(ns("plot_arbeitsmarkt_faecher_bl")),
+                               shinycssloaders::withSpinner(plotly::plotlyOutput(ns("plot_arbeitsmarkt_faecher_bl"), height = "600px"),
                                                             color = "#154194"),
 
                                shinyBS::bsPopover(id = "h_beruf_fach_1", title = "",
@@ -312,7 +312,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(htmlOutput(ns("plot_einstieg_pie_gender")),
+                               shinycssloaders::withSpinner(plotly::plotlyOutput(ns("plot_einstieg_pie_gender"), height = "500px"),
                                                             color = "#154194"),
                                shinyBS::bsPopover(id = "h_beruf_frauen_1", title = "",
                                                   content = paste0("Die Kategorisierung in MINT entspricht der Zuordnung durch die Bundesagentur für Arbeit. Beschäftigte werden nur als MINT klassifiziert, wenn sie einer so definierten MINT-Tätigkeit nachgehen. Der akademische Hintergrund, z. B. ein Studium in einem MINT-Fach, ist nicht ausschlaggebend. Weitere Infos dazu unter &quotDatenquellen und Hinweise&quot", "<br> <br> In den vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden."),
@@ -393,7 +393,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                      ),
                      shiny::mainPanel(
                        width = 9,
-                       shinycssloaders::withSpinner(htmlOutput(ns("plot_arbeitsmarkt_faecher_anteil_frauen")),
+                       shinycssloaders::withSpinner(plotly::plotlyOutput(ns("plot_arbeitsmarkt_faecher_anteil_frauen"), height = "450px"),
                                                     color = "#154194"),
 
 
@@ -458,7 +458,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
         )
     ),
 
-    # Box Regional ----
+    # Box 4 Regional ----
 
     fluidRow(id="beruf_regional",
       shinydashboard::box(
@@ -506,7 +506,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
 
                                # ),
                                shinycssloaders::withSpinner(
-                                 htmlOutput(ns("plot_arbeitsmarkt_detail_vergleich"),height = "1600px"),
+                                 plotly::plotlyOutput(ns("plot_arbeitsmarkt_detail_vergleich"), height = "1600px"),
                                 color = "#154194"),
 
                                shinyBS::bsPopover(id = "h_beruf_regional_23", title = "",
@@ -709,13 +709,17 @@ mod_beruf_arbeitsmarkt_server <- function(id, r){
     ns <- session$ns
 
     # Box 1 ----
-    # Tab
-    output$plot_arbeitsmarkt_faecher_anteil <- renderUI({
+
+
+
+    # Box 2, Tab 1 MINT
+
+    output$plot_arbeitsmarkt_faecher_anteil <- plotly::renderPlotly({
       arbeitsmarkt_faecher_anteil(r)
     })
 
-    ##
-    output$plot_arbeitsmarkt_faecher_anteil_frauen <- renderUI({
+    # Box 3, Tab 5 Frauenanteil im MINT Fächervergleich
+    output$plot_arbeitsmarkt_faecher_anteil_frauen <- plotly::renderPlotly({
       arbeitsmarkt_faecher_anteil_frauen(r)
     })
 
@@ -749,11 +753,11 @@ mod_beruf_arbeitsmarkt_server <- function(id, r){
     )
 
 
-    # Tab 3
+    # Box 1, Tab 1 Aktueller MINT-Anteil
 
-    output$plot_einstieg_vergleich <- renderUI({
-      plot_list <- beruf_einstieg_vergleich(r)
-      plot_list
+    output$plot_einstieg_vergleich <- plotly::renderPlotly({
+      beruf_einstieg_vergleich(r)
+
     })
 
 
@@ -769,11 +773,11 @@ mod_beruf_arbeitsmarkt_server <- function(id, r){
       plot_list <- arbeitsmarkt_bl_gender(r)
 
 
-      # return plots
-      out <- highcharter::hw_grid(
-        plot_list,
-        ncol = 2)
-      out
+      # # return plots
+      # out <- highcharter::hw_grid(
+      #   plot_list,
+      #   ncol = 2)
+      # out
 
     })
 
@@ -813,11 +817,13 @@ mod_beruf_arbeitsmarkt_server <- function(id, r){
 
 
 
-    # Tab 7
+    # Tab 2: Bundeslandvergleich
 
-    output$plot_beruf_arbeitsmarkt_mint_bulas <- renderUI({
+    output$plot_beruf_arbeitsmarkt_mint_bulas <- plotly::renderPlotly({
       arbeitsmarkt_mint_bulas(r)
     })
+
+    # ?
 
     output$plot_beruf_arbeitsmarkt_bl_verlauf  <- renderUI({
       plot_list <- arbeitsmarkt_bl_verlauf(r)
@@ -852,21 +858,17 @@ mod_beruf_arbeitsmarkt_server <- function(id, r){
 
     #Tab 1
 
+
     #Tab 2
     output$plot_arbeitsmarkt_verlauf_faecher <- renderUI({
       beruf_verlauf_faecher(r)
     })
 
-    # ALT
-    # Tab 1
 
-    output$plot_arbeitsmarkt_faecher_bl <- renderUI({
-      plot_list <- arbeitsmarkt_bula_faecher(r)
+    # Tab 3 - Bundeslandvergleich MINT-Disziplinen
 
-
-      # return plots
-      plot_list
-
+    output$plot_arbeitsmarkt_faecher_bl <- plotly::renderPlotly({
+      arbeitsmarkt_bula_faecher(r)
     })
 
 
@@ -985,7 +987,7 @@ mod_beruf_arbeitsmarkt_server <- function(id, r){
     # Box3 ----
 
     # tab 1
-    output$plot_einstieg_pie_gender <- renderUI({
+    output$plot_einstieg_pie_gender <- plotly::renderPlotly({
       arbeitsmarkt_einstieg_pie_gender(r)
     })
 
@@ -1055,32 +1057,26 @@ mod_beruf_arbeitsmarkt_server <- function(id, r){
       })
 
 
-    # Box Regional ----
+    # Box 4 Regional ----
 
     # tab 1
 
     output$plot_arbeitsmarkt_detail_map <- renderUI({
      arbeitsmarkt_lk_detail_map(r)
 
-
     })
 
 
-
-
     # tab 2
-
-
 
     observeEvent(input$search_in_bar_chart, {
       r$search_in_bar_chart <- input$search_in_bar_chart
     })
 
-    output$plot_arbeitsmarkt_detail_vergleich <- renderUI({
+    output$plot_arbeitsmarkt_detail_vergleich <- plotly::renderPlotly({
       arbeitsmarkt_lk_detail_vergleich(r)
 
     })
-
 
 
   # tab 3

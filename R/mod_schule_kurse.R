@@ -447,7 +447,7 @@ mod_schule_kurse_ui <- function(id){
 
                                   shiny::mainPanel(
                                     width = 9,
-                                    shinycssloaders::withSpinner(htmlOutput(ns("plot_iqb_fragebogen"), height = "500px"),
+                                    shinycssloaders::withSpinner(plotly::plotlyOutput(ns("plot_iqb_fragebogen"), height = "500px"),
                                                                  color = "#154194"),
                                     shinyBS::bsPopover(id="h_schule_kompetenz_3", title = "",
                                                        content = paste0("Das Interesse und die Einschätzung der eigenen Fähigkeiten (fachspezifisches Selbstkonzept) wurden durch mehrere Fragen auf einer Skala von 1 bis 4 erfasst. Es werden Gruppenmittelwerte berichtet.", "<br> <br> Gesamte realisierte Stichprobengröße:", "<br> 2024: 1.556 Schulen mit N = 48.279 Schüler:innen", "<br> 2021: 1.464 Schulen mit N = 26.844 Schüler:innen", "<br> 2016: 1.508 Schulen mit N = 29.259 Schüler:innen", "<br> 2011: 1.349 Schulen mit N = 27.081 Schüler:innen"),
@@ -727,9 +727,7 @@ mod_schule_kurse_server <- function(id, r){
     # Tab 1
 
     output$plot_iqb_standard_zeitverlauf <- plotly::renderPlotly({
-
        iqb_standard_zeitverlauf(r)
-
     })
 
 
@@ -744,36 +742,10 @@ mod_schule_kurse_server <- function(id, r){
 
     # Tab 3
 
-    output$plot_iqb_fragebogen <- renderUI({
-      plot_list <- iqb_fragebogen(r)
-      r$plot_iqb_fragebogen <- plot_list
-
-      r$plot_iqb_fragebogen_title <- get_plot_title(
-        plot = r$plot_iqb_fragebogen
-      )
-
-      plot_list
-
+    output$plot_iqb_fragebogen <- plotly::renderPlotly({
+    iqb_fragebogen(r)
     })
 
-    output$download_btn_plot_iqb_fragebogen <- downloadHandler(
-      contentType = "image/png",
-      filename = function() {r$plot_iqb_fragebogen_title},
-      content = function(file) {
-        # creating the file with the screenshot and prepare it to download
-
-        add_caption_and_download(
-          hc = r$plot_iqb_fragebogen,
-          filename =  r$plot_iqb_fragebogen_title,
-          width = 700,
-          height = 400)
-
-        file.copy(r$plot_iqb_fragebogen_title, file)
-        file.remove(r$plot_iqb_fragebogen_title)
-      }
-    )
-
-    ### Rest
 
 
 

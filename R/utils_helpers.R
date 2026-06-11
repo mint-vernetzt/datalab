@@ -1505,7 +1505,7 @@ linebuilder_light <- function(df, titel, x , y, group = NULL, tooltip, format, c
 
 
 balkenbuilder_plotly <- function(df, titel, x, y, yaxis_size = 11, orientation = "h", group = NULL, ticktext = NULL, tickvals = NULL,
-                                 order = NULL, color = NULL, percent = FALSE, reverse_legend = FALSE,
+                                 order = NULL, color = NULL, percent = FALSE, reverse_legend = FALSE, yaxis_titel = "", titel_y = 0.96,
                                  stacking = FALSE, subtitel = NULL,legend_y = -0.12, quelle_y = -0.30, quelle = "Quelle") {
 
   df_json <- jsonlite::toJSON(df, dataframe = "rows", auto_unbox = TRUE, na = "null")
@@ -1551,14 +1551,14 @@ balkenbuilder_plotly <- function(df, titel, x, y, yaxis_size = 11, orientation =
                        gridcolor = "lightgray",gridwidth = 0.1,
                        ticksuffix = if (percent) "%" else "",
                        tickformat = if (percent) NULL else ",.0f"),
-          yaxis = list(title = "", tickfont = list(size = yaxis_size), ticksuffix = "   ", automargin = TRUE,
+          yaxis = list(title = yaxis_titel, tickfont = list(size = yaxis_size), ticksuffix = "   ", automargin = TRUE,
                        ticktext = ticktext, tickvals = tickvals,
                        tickmode = if (!is.null(ticktext)) "array" else "auto",
                        categoryorder = if (!is.null(order)) "array" else "trace",
                        categoryarray = if (!is.null(order)) rev(order) else NULL),
           separators = ",.",
                        font = list(family = "Calibri, sans-serif", size = 16,color = "black"),
-          title = list(text = titel, x = 0.5,
+          title = list(text = titel, x = 0.5, y = titel_y,
                        font = list(family = "Calibri Regular", size = 20, color = "black")),
           font = list(family = "Calibri Regular"),
           hoverlabel = list(bgcolor = "white", bordercolor = "black",
@@ -1707,7 +1707,7 @@ balkenbuilder_plotly <- function(df, titel, x, y, yaxis_size = 11, orientation =
 
     out <- out %>%
       plotly::layout(
-      yaxis = list(title = "", tickfont = list(size = yaxis_size), automargin = TRUE,
+      yaxis = list(title = yaxis_titel, tickfont = list(size = yaxis_size), automargin = TRUE,
                    tickmode = if (percent) "linear" else "auto",
                    dtick = if (percent) 10 else NULL,
                    range = if (percent & stacking) c(0, 100) else NULL,
@@ -1719,7 +1719,7 @@ balkenbuilder_plotly <- function(df, titel, x, y, yaxis_size = 11, orientation =
                    tickfont = list(size = 11)),
       separators = ",.",
                    font = list(family = "Calibri, sans-serif", size = 16, color = "black"),
-      title = list(text = titel, x = 0.5,
+      title = list(text = titel, x = 0.5, y = titel_y,
                    font = list(family = "Calibri Regular", size = 20, color = "black")),
       font = list(family = "Calibri Regular"),
       hoverlabel = list(bgcolor = "white", bordercolor = "black",
