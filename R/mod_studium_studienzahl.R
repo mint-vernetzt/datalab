@@ -346,7 +346,7 @@ mod_studium_studienzahl_ui <- function(id){
                            ),
                            shiny::mainPanel(
                              width = 9,
-                             shinycssloaders::withSpinner(htmlOutput(ns("plot_choice_gender")),
+                             shinycssloaders::withSpinner(plotly::plotlyOutput(ns("plot_choice_gender")),
                                                           color = "#154194"),
 
                              shinyBS::bsPopover(id="h_studium_mint_7", title = "",
@@ -507,7 +507,7 @@ mod_studium_studienzahl_server <- function(id, r){
     # Box 1 - Wer Wählt MINT ----
 
     ## Pies MINT
-    output$mint_anteil_studium <- renderUI({
+    output$mint_anteil_studium <- plotly::renderPlotly({
 
       plot_list <- studienzahl_mint(r)
 
@@ -535,106 +535,27 @@ mod_studium_studienzahl_server <- function(id, r){
 
     })
 
-    output$download_btn_plot_einstieg_verlauf <- downloadHandler(
-      contentType = "image/png",
-      filename = function() {r$plot_einstieg_verlauf_title},
-      content = function(file) {
-        # creating the file with the screenshot and prepare it to download
-
-        add_caption_and_download(
-          hc = r$plot_einstieg_verlauf,
-          filename =  r$plot_einstieg_verlauf_title,
-          width = 700,
-          height = 400)
-
-        file.copy(r$plot_einstieg_verlauf_title, file)
-        file.remove(r$plot_einstieg_verlauf_title)
-      }
-    )
-
     ## Zeitverlauf BULAS Fächer
 
-      output$plot_verlauf_studienzahl_bl_subject <- renderUI({
-        plot_list <- studienzahl_verlauf_bl_subject(r)
-        r$plot_verlauf_studienzahl_bl_subject <- plot_list
+      output$plot_verlauf_studienzahl_bl_subject <- plotly::renderPlotly({
+        studienzahl_verlauf_bl_subject(r)
 
-        r$plot_verlauf_studienzahl_bl_subject_title <- get_plot_title(
-          plot = r$plot_verlauf_studienzahl_bl_subject
-        )
-
-        plot_list
       })
-
-      output$download_btn_plot_verlauf_studienzahl_bl_subject <- downloadHandler(
-        contentType = "image/png",
-        filename = function() {r$plot_verlauf_studienzahl_bl_subject_title},
-        content = function(file) {
-          # creating the file with the screenshot and prepare it to download
-
-          add_caption_and_download(
-            hc = r$plot_verlauf_studienzahl_bl_subject,
-            filename =  r$plot_verlauf_studienzahl_bl_subject_title,
-            width = 700,
-            height = 400)
-
-          file.copy(r$plot_verlauf_studienzahl_bl_subject_title, file)
-          file.remove(r$plot_verlauf_studienzahl_bl_subject_title)
-        }
-      )
 
 
     ## Fächer
 
 
-    output$plot_studienzahl_bl_verlauf <- renderUI({
-      plot_list <- studierende_verlauf_multiple_bl(r)
-      r$plot_studienzahl_bl_verlauf <- plot_list
+    output$plot_studienzahl_bl_verlauf <- plotly::renderPlotly({
+      studierende_verlauf_multiple_bl(r)
 
-      r$plot_studienzahl_bl_verlauf_title <- get_plot_title(
-        plot = r$plot_studienzahl_bl_verlauf
-      )
-
-      plot_list
     })
 
-    output$download_btn_plot_studienzahl_bl_verlauf <- downloadHandler(
-      contentType = "image/png",
-      filename = function() {r$plot_studienzahl_bl_verlauf_title},
-      content = function(file) {
-        # creating the file with the screenshot and prepare it to download
-
-        add_caption_and_download(
-          hc = r$plot_studienzahl_bl_verlauf,
-          filename =  r$plot_studienzahl_bl_verlauf_title,
-          width = 700,
-          height = 400)
-
-        file.copy(r$plot_studienzahl_bl_verlauf_title, file)
-        file.remove(r$plot_studienzahl_bl_verlauf_title)
-      }
-    )
 
     ## Balken Vergleich
 
 
-    output$download_btn_plot_einstieg_comparison <- downloadHandler(
-      contentType = "image/png",
-      filename = function() {r$plot_einstieg_comparison_title},
-      content = function(file) {
-        # creating the file with the screenshot and prepare it to download
-
-        add_caption_and_download(
-          hc = r$plot_einstieg_comparison,
-          filename =  r$plot_einstieg_comparison_title,
-          width = 700,
-          height = 400)
-
-        file.copy(r$plot_einstieg_comparison_title, file)
-        file.remove(r$plot_einstieg_comparison_title)
-      }
-    )
-
-    output$plot_choice_gender <- renderUI({
+    output$plot_choice_gender <- plotly::renderPlotly({
 
       plot_list <- studienzahl_choice_gender(r)
 

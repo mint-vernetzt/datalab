@@ -135,7 +135,7 @@ mod_schule_kurse_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(plotly::plotlyOutput(ns("plot_einstieg_verlauf"), height = "550px"),
+                               shinycssloaders::withSpinner(plotly::plotlyOutput(ns("plot_einstieg_verlauf")),
                                                             color = "#154194"),
                                shinyBS::bsPopover(id="h_schule_mint_3", title = "",
                                                   content = paste0("Der Anteil und die Anzahl von &quotMINT&quot vs. &quotNicht-MINT&quot bezieht sich auf die Belegungszahlen in den Grund- und Leistungskursen der Oberstufe. Es wird der Anteil von MINT-Belegungen an allen Belegungen betrachtet. Die möglichen Belegungen sind dabei auch von den Vorgaben der Bundesländer und dem Angebot der Schulen abhängig.", "<br><br> Mit Grundkursen sind nach der Definition der KMK Fächer mit bis zu 3 Wochenstunden gemeint.<br> Mit Leistungskursen Fächer mit mindestens 4 Wochenstunden."),
@@ -348,7 +348,7 @@ mod_schule_kurse_ui <- function(id){
                                mod_schule_kurse_multiple_ui("mod_schule_kurse_multiple_ui_1")),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(htmlOutput(ns("plot_wahl")),
+                               shinycssloaders::withSpinner(plotly::renderPlotly(ns("plot_wahl")),
                                                             color = "#154194"),
                                shinyBS::bsPopover(id="h_schule_mint_4", title = "",
                                                   content = paste0("Der Anteil und die Anzahl von &quotMINT&quot vs. &quotNicht-MINT&quot bezieht sich auf die Belegungszahlen in den Grund- und Leistungskursen der Oberstufe. Die möglichen Belegungen sind dabei auch von den Vorgaben der Bundesländer und dem Angebot der Schulen abhängig.", "<br> <br> In den uns vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden." , "<br> <br> Durch Rundungen kann es zu minimalen Abbweichungen zwischen den Grafiken kommen.", "<br><br> Mit Grundkursen sind nach der Definition der KMK Fächer mit bis zu 3 Wochenstunden gemeint.<br> Mit Leistungskursen Fächer mit mindestens 4 Wochenstunden."),
@@ -508,7 +508,7 @@ mod_schule_kurse_server <- function(id, r){
 
     ## Balkendiagramm
 
-    output$plot_einstieg_comparison <- renderUI({
+    output$plot_einstieg_comparison <- plotly::renderPlotly({
       plot_list <- kurse_einstieg_comparison(r)
 
       if(length(plot_list) > 2){
@@ -536,7 +536,7 @@ mod_schule_kurse_server <- function(id, r){
 
 
     ## Waffle Geschlecht
-    output$plot_wahl <- renderUI({
+    output$plot_wahl <- plotly::renderPlotly({
 
       plot_list <- kurse_wahl(r)
 
@@ -570,7 +570,7 @@ mod_schule_kurse_server <- function(id, r){
     })
 
 
-    output$plot_mint_map_kurse <- renderUI({
+    output$plot_mint_map_kurse <- plotly::renderPlotly({
       kurse_mint_map(r)
 
     })
