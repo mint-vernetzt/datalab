@@ -216,7 +216,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(plotly::plotlyOutput(ns("plot_arbeitsmarkt_faecher_anteil"), height = "500px"),
+                               shinycssloaders::withSpinner(uiOutput(ns("plot_arbeitsmarkt_faecher_anteil"), height = "500px"),
                                                             color = "#154194"),
 
 
@@ -312,7 +312,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(plotly::plotlyOutput(ns("plot_einstieg_pie_gender"), height = "500px"),
+                               shinycssloaders::withSpinner(uiOutput(ns("plot_einstieg_pie_gender"), height = "500px"),
                                                             color = "#154194"),
                                shinyBS::bsPopover(id = "h_beruf_frauen_1", title = "",
                                                   content = paste0("Die Kategorisierung in MINT entspricht der Zuordnung durch die Bundesagentur für Arbeit. Beschäftigte werden nur als MINT klassifiziert, wenn sie einer so definierten MINT-Tätigkeit nachgehen. Der akademische Hintergrund, z. B. ein Studium in einem MINT-Fach, ist nicht ausschlaggebend. Weitere Infos dazu unter &quotDatenquellen und Hinweise&quot", "<br> <br> In den vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden."),
@@ -714,7 +714,7 @@ mod_beruf_arbeitsmarkt_server <- function(id, r){
       plot_list <- arbeitsmarkt_faecher_anteil(r)
 
       if(length(plot_list) > 2){
-        plot_list
+        arbeitsmarkt_faecher_anteil(r)
       }else{
         fluidRow(
           column(
@@ -996,7 +996,7 @@ mod_beruf_arbeitsmarkt_server <- function(id, r){
       plots <- arbeitsmarkt_einstieg_pie_gender(r)
 
       if(length(plots) > 4){
-        plots
+        arbeitsmarkt_einstieg_pie_gender(r)
       }else if(length(plots) == 2){
         fluidRow(
           column(

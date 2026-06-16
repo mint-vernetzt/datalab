@@ -320,7 +320,8 @@ home_einstieg_pie <- function(r,
                                   "Bundesagentur für Arbeit, 2025"))
     quelle <- paste0(daten_quelle, " auf Anfrage, eigene Berechnungen durch MINTvernetzt")
 
-    out <- piebuilder_plotly(df,titel,  x = "fachbereich", y = "prop", quelle = quelle)
+    out <- piebuilder_plotly(df,titel,  x = "fachbereich", y = "prop", quelle = quelle) |>
+      plotly::layout(height = 450)
 
   return(out)
 }
@@ -608,8 +609,7 @@ home_einstieg_gender <- function(r) {
     }
     if(gegenwert == "Ja"){
 
-     titel <- ""
-     subtitel <- paste0(df_mint$titel_help2[1], " ", praep, " ", regio, " (", zeit, ")")
+     titel <- paste0(df_mint$titel_help2[1], " ", praep, " ", regio, " (", zeit, ")")
      daten_quelle <- ifelse(indi == "Leistungskurse", "KMK, 2025",
                             ifelse(indi == "Studierende", "Destatis, 2025",
                                    "Bundesagentur für Arbeit, 2025"))
@@ -623,8 +623,8 @@ home_einstieg_gender <- function(r) {
          )
        )
      nmint1 <- piebuilder_plotly(df_rest, titel, x = "geschlecht", y = "prop",
-                                 color = color, quelle = quelle,
-                                 subtitel = subtitel)
+                                 color = color, quelle = quelle) |>
+       plotly::layout(height = 400)
 
      out <- list(mint1, nmint1)
 
@@ -698,11 +698,12 @@ home_einstieg_gender <- function(r) {
               "Anzahl: ", wert_besr
             )
           )
-        titel <- ""
-        subtitel <- paste0(df_1_rest$titel_help2[1], " ", praep, " ", regio, " (", zeit, ")")
-         nmint1 <- piebuilder_plotly(df_1_rest, titel = titel, subtitel = subtitel,
+
+        titel <- paste0(df_1_rest$titel_help2[1], " ", praep, " ", regio, " (", zeit, ")")
+         nmint1 <- piebuilder_plotly(df_1_rest, titel = titel,
                              x = "geschlecht", y = "prop",
-                             c("#efe8e6", "#154194"), quelle = quelle)
+                             c("#efe8e6", "#154194"), quelle = quelle) |>
+           plotly::layout(height = 400)
 
          daten_quelle <- ifelse(indi[2] == "Leistungskurse", "KMK, 2025",
                                 ifelse(indi[2] == "Studierende", "Destatis, 2025",
@@ -717,12 +718,13 @@ home_einstieg_gender <- function(r) {
                "Anzahl: ", wert_besr
              )
            )
-         titel <- ""
-         subtitel <- paste0(df_2_rest$titel_help2[1], " ", praep, " ", regio, " (", zeit, ")")
 
-         nmint2 <- piebuilder_plotly(df_2_rest, titel = titel, subtitel = subtitel,
+         titel <- paste0(df_2_rest$titel_help2[1], " ", praep, " ", regio, " (", zeit, ")")
+
+         nmint2 <- piebuilder_plotly(df_2_rest, titel = titel,
                               x = "geschlecht", y = "prop",
-                              c("#efe8e6", "#154194"), quelle = quelle)
+                              c("#efe8e6", "#154194"), quelle = quelle) |>
+           plotly::layout(height = 400)
 
          out <- list(mint1, mint2, nmint1, nmint2)
       }

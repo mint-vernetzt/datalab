@@ -1463,7 +1463,7 @@ plot_mint_faecher <- function(r){
               list(
                 text = quelle,
                 x = 1,
-                y = -0.5,
+                y = -0.4,
                 xref = "paper",
                 yref = "paper",
                 xanchor = "right",
@@ -1480,7 +1480,7 @@ plot_mint_faecher <- function(r){
               list(
                 text = quelle,
                 x = 1,
-                y = -0.5,
+                y = -0.4,
                 xref = "paper",
                 yref = "paper",
                 xanchor = "right",
@@ -2632,8 +2632,7 @@ studienzahl_einstieg_gender <- function(r) {
 
              df_g <- df[df$fach == "Alle Nicht MINT-Fächer",]
 
-             titel <- ""
-             subtitel <- ifelse(regio == "Saarland",
+             titel <- ifelse(regio == "Saarland",
                              paste0("Frauenanteil unter ", title_n, " in Nicht MINT-Fächern im ", regio, " (", timerange, ")"),
                              paste0("Frauenanteil unter ", title_n, " in Nicht MINT-Fächern in ", regio, " (", timerange, ")"))
 
@@ -2650,7 +2649,8 @@ studienzahl_einstieg_gender <- function(r) {
              quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
              p1g <- piebuilder_plotly(df_g, titel, x = "geschlecht", y = "prop",
-                                      color, subtitel = subtitel, quelle = quelle)
+                                      color, quelle = quelle) |>
+               plotly::layout(height = 400)
 
              out <- list(out, p1g)
 
@@ -2723,8 +2723,7 @@ studienzahl_einstieg_gender <- function(r) {
             df1_g <- df[df$fach == "Alle Nicht MINT-Fächer" & df$indikator == genl[1],]
             df2_g <- df[df$fach == "Alle Nicht MINT-Fächer" & df$indikator == genl[2],]
 
-            titel <- ""
-            subtitel <- ifelse(regio == "Saarland",
+            titel <- ifelse(regio == "Saarland",
                             paste0("Frauenanteil unter ", title_n1, " in Nicht-MINT-Fächern im ", regio, " (", timerange, ")"),
                             paste0("Frauenanteil unter ", title_n1, " in Nicht-MINT-Fächern in ", regio, " (", timerange, ")"))
 
@@ -2742,10 +2741,11 @@ studienzahl_einstieg_gender <- function(r) {
             color = c("#efe8e6", "#154194")
 
             p1g <- piebuilder_plotly(df1_g, titel, x = "geschlecht", y = "prop",
-                                     color, quelle = quelle, subtitel = subtitel)
+                                     color, quelle = quelle) |>
+              plotly::layout(height = 400)
 
-            titel2 <- ""
-            subtitel2 <- ifelse(regio == "Saarland",
+
+            titel2 <- ifelse(regio == "Saarland",
                              paste0("Frauenanteil unter ", title_n2, " in Nicht-MINT-Fächern im ", regio, " (", timerange, ")"),
                              paste0("Frauenanteil unter ", title_n2, " in Nicht-MINT-Fächern in ", regio, " (", timerange, ")"))
             df2_g <- df2_g %>%
@@ -2757,7 +2757,8 @@ studienzahl_einstieg_gender <- function(r) {
                 )
               )
             p2g <- piebuilder_plotly(df2_g, titel2, x = "geschlecht", y = "prop",
-                                     color, quelle = quelle, subtitel = subtitel2)
+                                     color, quelle = quelle) |>
+              plotly::layout(height = 400)
 
             out <- list(p1, p2, p1g, p2g)
 
@@ -3213,7 +3214,7 @@ studienzahl_choice_gender <- function(r) {
             list(
               text = quelle,
               x = 1,
-              y = -0.6,
+              y = -0.45,
               xref = "paper",
               yref = "paper",
               xanchor = "right",
@@ -3241,7 +3242,8 @@ studienzahl_choice_gender <- function(r) {
               font = list(size = 11, color = "gray", family = "Calibri Regular", align = "right")
             )
           ),
-          margin = list(t = 110, b = 120, r = 50, l = 50)
+          margin = list(t = 110, b = 120, r = 50, l = 50),
+          height = 400
         )
 
       out <- list(p1, p2)

@@ -106,7 +106,7 @@ mod_studium_studienzahl_ui <- function(id){
                                mod_studium_studienzahl_anteil_ui("mod_studium_studienzahl_anteil_ui_1")
                                ),
                              shiny::mainPanel(width = 9,
-                              shinycssloaders::withSpinner(plotly::plotlyOutput(ns("mint_anteil_studium"), height = "500px"),
+                              shinycssloaders::withSpinner(uiOutput(ns("mint_anteil_studium")),
                                                            color = "#154194"),
 
                                shinyBS::bsPopover(id="h_studium_mint_1", title = "",
@@ -207,7 +207,7 @@ mod_studium_studienzahl_ui <- function(id){
                                mod_studium_studienzahl_mint_fach_ui("mod_studium_studienzahl_mint_fach_ui_1")),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(plotly::plotlyOutput(ns("plot_anteil_mint_faecher"), height = "600px"),
+                               shinycssloaders::withSpinner(uiOutput(ns("plot_anteil_mint_faecher"), height = "600px"),
                                                             color = "#154194"),
 
                                shinyBS::bsPopover(id="h_studium_mint_2", title = "",
@@ -299,7 +299,7 @@ mod_studium_studienzahl_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(plotly::plotlyOutput(ns("plot_einstieg_gender"), height = "650px"),
+                               shinycssloaders::withSpinner(uiOutput(ns("plot_einstieg_gender")),
                                                             color = "#154194"),
 
                                shinyBS::bsPopover(id="h_studium_frauen_1", title="",
@@ -346,7 +346,7 @@ mod_studium_studienzahl_ui <- function(id){
                            ),
                            shiny::mainPanel(
                              width = 9,
-                             shinycssloaders::withSpinner(plotly::plotlyOutput(ns("plot_choice_gender")),
+                             shinycssloaders::withSpinner(uiOutput(ns("plot_choice_gender")),
                                                           color = "#154194"),
 
                              shinyBS::bsPopover(id="h_studium_mint_7", title = "",
@@ -385,7 +385,7 @@ mod_studium_studienzahl_ui <- function(id){
                              mod_studium_studienzahl_mintfrauen_ui("mod_studium_studienzahl_mintfrauen_ui_1")),
                            shiny::mainPanel(
                              width = 9,
-                             shinycssloaders::withSpinner(plotly::plotlyOutput(ns("plot_anteil_mint_faecher_frauen"), height = "600px"),
+                             shinycssloaders::withSpinner(plotly::plotlyOutput(ns("plot_anteil_mint_faecher_frauen")),
                                                           color = "#154194"),
                              p(),
                             shinyBS::bsPopover(id="h_studium_mint_2_fruen", title = "",
@@ -507,12 +507,12 @@ mod_studium_studienzahl_server <- function(id, r){
     # Box 1 - Wer Wählt MINT ----
 
     ## Pies MINT
-    output$mint_anteil_studium <- plotly::renderPlotly({
+    output$mint_anteil_studium <- renderUI({
 
       plot_list <- studienzahl_mint(r)
 
       if(length(plot_list) > 2){
-        plot_list
+        studienzahl_mint(r)
       }else{
         fluidRow(
           column(
@@ -555,7 +555,7 @@ mod_studium_studienzahl_server <- function(id, r){
     ## Balken Vergleich
 
 
-    output$plot_choice_gender <- plotly::renderPlotly({
+    output$plot_choice_gender <- renderUI({
 
       plot_list <- studienzahl_choice_gender(r)
 
@@ -616,7 +616,7 @@ mod_studium_studienzahl_server <- function(id, r){
       plot_list <- plot_mint_faecher(r)
 
       if(length(plot_list) > 2){
-        plot_list
+        plot_mint_faecher(r)
       }else{
         fluidRow(
           column(

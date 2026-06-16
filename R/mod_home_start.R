@@ -93,7 +93,7 @@ mod_home_start_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(plotly::plotlyOutput(ns("plot_mint_rest_einstieg_1"), height = "500px"),
+                               shinycssloaders::withSpinner(uiOutput(ns("plot_mint_rest_einstieg_1"),height = "700px"),
                                                             color = "#154194"),
                         shinyBS::bsPopover(id="h_alle_mint_1", title = "",
                                            content = paste0("Anders als z. B. bei Studierenden wählen Schüler:innen mehrere Grund- und Leistungskurse. Um dennoch einen Anteil von &quotMINT&quot vs. &quotNicht-MINT&quot angeben zu können, nutzen wir die Kursbelegungszahlen der Schüler:innen."),
@@ -148,7 +148,7 @@ mod_home_start_ui <- function(id){
 
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(plotly::plotlyOutput(ns("plot_pie_mint_gender"), height = "500px"),
+                               shinycssloaders::withSpinner(uiOutput(ns("plot_pie_mint_gender"), height = "500px"),
                                                             color = "#154194"),
                                shinyBS::bsPopover(id="h_alle_frauen_1", title = "",
                                                   content = paste0("Anders als z. B. bei Studierenden wählen Schüler:innen mehrere Grund- und Leistungskurse. Um dennoch einen Anteil von &quotMINT&quot vs. &quotNicht-MINT&quot angeben zu können, nutzen wir die Kursbelegungszahlen der Schüler:innen.", "<br> <br> In den uns vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden. <br><br>Baden-Württemberg erfasst keine geschelchterspezifischen Kursbelegungszahlen von Schüler:innen."),
@@ -213,11 +213,19 @@ mod_home_start_server <- function(id,r){
 
     # Box 1, Tab1 ----
 
-    output$plot_mint_rest_einstieg_1 <- plotly::renderPlotly({
+    output$plot_mint_rest_einstieg_1 <- renderUI({
 
       if(r$ansicht_start_einstieg == "Gruppenvergleich - Balkendiagramm"){
 
-        home_einstieg( r)
+        plotly::plotlyOutput(ns("home_einstieg_balken"), height = "500px") |>
+          htmltools::tagAppendAttributes(
+            style = "height:500px !important;"
+          )
+
+
+        output$home_einstieg_balken <- plotly::renderPlotly({
+          home_einstieg( r)
+        })
 
       }else if(length(r$indikator_start_einstieg_1) == 1){
         home_einstieg_pie(r)
@@ -239,33 +247,8 @@ mod_home_start_server <- function(id,r){
     })
 
 
-    output$plot_pie_mint_gender <- plotly::renderPlotly({
+    output$plot_pie_mint_gender <- renderUI({
 
-      # if(r$ansicht_start_comparison_mint_gender == "Gruppenvergleich - Balkendiagramm"){
-      #   home_einstieg_gender(r)
-      # }else{
-      #
-      #   if(length(r$indikator_start_einstieg_1_gender) == 2 & r$gegenwert_start_comparison_gender == T){
-      #     fluidRow(
-      #       column(
-      #         width = 6,
-      #         home_einstieg_gender(r, r$indikator_start_einstieg_1_gender[1])
-      #       ),
-      #       column(
-      #         width = 6,
-      #         home_einstieg_gender(r, r$indikator_start_einstieg_1_gender[2])
-      #       ),
-      #       column(
-      #         width = 6,
-      #         home_einstieg_gender(r, r$indikator_start_einstieg_1_gender[1])
-      #       ),
-      #       column(
-      #         width = 6,
-      #         plots[4]
-      #       )
-      #     )
-      #   }
-      # }
       plots <- home_einstieg_gender( r)
 
       if(length(plots) > 4){

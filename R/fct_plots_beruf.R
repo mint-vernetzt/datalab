@@ -1119,19 +1119,10 @@ arbeitsmarkt_faecher_anteil <- function(r) {
 
       preposition <- ifelse(grepl("aarland$", regio), "im", "in")
 
-      # df$titel_help <- paste0(df$indikator, "n <br>")
-      # df$titel_help <- ifelse(df$indikator == "Auszubildende (1. Jahr)", "Auszubildenden <br>mit neuem Lehrvertrag ", df$titel_help)
-      # df$titel_help <- ifelse(df$indikator == "ausländische Auszubildende", "ausländischen <br> Auszubildenden ", df$titel_help)
-      # df$titel_help <- ifelse(df$indikator == "ausländische Beschäftigte", "ausländischen <br> Beschäftigten ", df$titel_help)
-      # df$titel_help <- ifelse(df$indikator == "Beschäftigte 25-55", "Beschäftigten <br> zwischen 25 und 55 Jahren ", df$titel_help)
-      # df$titel_help <- ifelse(df$indikator == "Beschäftigte u25", "Beschäftigten <br> unter 25 Jahren ", df$titel_help)
-      # df$titel_help <- ifelse(df$indikator == "Beschäftigte ü55", "Beschäftigten <br> über 55 Jahren ", df$titel_help)
-
       df$wert_disp <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
       df$prop_disp <- prettyNum(df$prop, big.mark = ".", decimal.mark = ",")
     }
     else{
-
 
       df_query <- glue::glue_sql("
       SELECT indikator, jahr, bundesland, fachbereich, wert
@@ -1163,14 +1154,6 @@ arbeitsmarkt_faecher_anteil <- function(r) {
 
 
       preposition <- ifelse(grepl("aarland$", regio), "im", "in")
-
-      # df$titel_help <- paste0(df$indikator, "n <br>")
-      # df$titel_help <- ifelse(df$indikator == "Auszubildende (1. Jahr)", "Auszubildenden mit neuem Lehrvertrag ", df$titel_help)
-      # df$titel_help <- ifelse(df$indikator == "ausländische Auszubildende", "ausländischen Auszubildenden ", df$titel_help)
-      # df$titel_help <- ifelse(df$indikator == "ausländische Beschäftigte", "ausländischen Beschäftigten ", df$titel_help)
-      # df$titel_help <- ifelse(df$indikator == "Beschäftigte 25-55", "Beschäftigten 25-55 ", df$titel_help)
-      # df$titel_help <- ifelse(df$indikator == "Beschäftigte u25", "Beschäftigten u25 ", df$titel_help)
-      # df$titel_help <- ifelse(df$indikator == "Beschäftigte ü55", "Beschäftigten ü55 ", df$titel_help)
 
       df$wert_disp <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
       df$prop_disp <- prettyNum(df$prop, big.mark = ".", decimal.mark = ",")
@@ -1233,7 +1216,7 @@ arbeitsmarkt_faecher_anteil <- function(r) {
             list(
               text = quelle,
               x = 1,
-              y = -0.6,
+              y = -0.5,
               xref = "paper",
               yref = "paper",
               xanchor = "right",
@@ -1252,7 +1235,7 @@ arbeitsmarkt_faecher_anteil <- function(r) {
             list(
               text = quelle,
               x = 1,
-              y = -0.6,
+              y = -0.5,
               xref = "paper",
               yref = "paper",
               xanchor = "right",
@@ -1341,7 +1324,7 @@ arbeitsmarkt_faecher_anteil <- function(r) {
 
     df <- df[with(df, order(prop, decreasing = TRUE)), ]
     df <- df %>%
-      dplyr::mutate(color = color_fachbereich_balken[fachbereich])
+      dplyr::mutate(color = bereich_balken[fachbereich])
 
     # titel-helper
     title_help <- paste0(indikator_choice, "n")
@@ -1356,7 +1339,7 @@ arbeitsmarkt_faecher_anteil <- function(r) {
 
     titel <- paste0( "Überblick über die Berufsfelder von ", title_help, "<br>", praep, regio, " (", timerange, ")")
 
-    color <- color_fachbereich_balken
+    color <- bereich_balken
 
     quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
@@ -2240,8 +2223,7 @@ arbeitsmarkt_einstieg_pie_gender <- function(r) {
      if(gegenwert == "Ja"){
        df_g <- df[df$fachbereich == "Andere Berufe",]
 
-       titel1 = ""
-       subtitel1 <- ifelse(regio == "Saarland",
+       titel1 <- ifelse(regio == "Saarland",
                         paste0("Frauenanteil unter ", title_help, " in Nicht MINT-Berufen im ", regio, " (", timerange, ")"),
                         paste0("Frauenanteil unter ", title_help, " in Nicht MINT-Berufen in ", regio, " (", timerange, ")"))
        df_g <- df_g %>%
@@ -2258,7 +2240,8 @@ arbeitsmarkt_einstieg_pie_gender <- function(r) {
        quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
        p1g <- piebuilder_plotly(df_g, titel1, x="geschlecht", y = "proportion",
-                                color, quelle = quelle, subtitel = subtitel1)
+                                color, quelle = quelle) |>
+         plotly::layout(height = 400)
 
        out <- list(p1, p1g)
 
@@ -2324,12 +2307,11 @@ arbeitsmarkt_einstieg_pie_gender <- function(r) {
        df1_g <- df[df$fachbereich == "Andere Berufe" & df$indikator == indi[1],]
        df2_g <- df[df$fachbereich == "Andere Berufe" & df$indikator == indi[2],]
 
-       titel1 <- ""
-       subtitel1 <- ifelse(regio == "Saarland",
+       titel1 <- ifelse(regio == "Saarland",
                        paste0("Frauenanteil unter ", title_help1 , " in Nicht MINT-Berufen im ", regio , " (", timerange, ")"),
                        paste0("Frauenanteil unter ", title_help1 , " in Nicht MINT-Berufen in ", regio , " (", timerange, ")"))
-       titel2 <- ""
-       subtitel2 <- ifelse(regio == "Saarland",
+
+       titel2 <- ifelse(regio == "Saarland",
                         paste0("Frauenanteil unter ", title_help2, " in Nicht MINT-Berufen im ", regio , " (", timerange, ")"),
                         paste0("Frauenanteil unter ", title_help2, " in Nicht MINT-Berufen in ", regio , " (", timerange, ")"))
 
@@ -2338,9 +2320,11 @@ arbeitsmarkt_einstieg_pie_gender <- function(r) {
        quelle <- "Quelle: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
        p1g <- piebuilder_plotly(df1_g, titel1, x="geschlecht", y = "proportion",
-                         color, quelle=quelle, subtitel = subtitel1)
+                         color, quelle=quelle)|>
+         plotly::layout(height = 400)
        p2g <- piebuilder_plotly(df2_g, titel2, x="geschlecht", y = "proportion",
-                         color, quelle=quelle, subtitel = subtitel2)
+                         color, quelle=quelle)|>
+         plotly::layout(height = 400)
 
 
        out <- list(p1, p2, p1g, p2g)
@@ -2708,7 +2692,7 @@ arbeitsmarkt_wahl_gender <- function(r) {
            list(
              text = quelle,
              x = 1,
-             y = -0.6,
+             y = -0.5,
              xref = "paper",
              yref = "paper",
              xanchor = "right",
@@ -2725,7 +2709,7 @@ arbeitsmarkt_wahl_gender <- function(r) {
            list(
              text = quelle,
              x = 1,
-             y = -0.6,
+             y = -0.5,
              xref = "paper",
              yref = "paper",
              xanchor = "right",

@@ -19,7 +19,8 @@ map_selection_germany <- readRDS("data/map_data/map_selection_german.rds")
 #' @param r Reactive variable that stores all the inputs from the UI
 #' @noRd
 
-kurse_einstieg_comparison <- function(r) {
+kurse_einstieg_comparison <- function(r,
+                                      indika = NULL) {
 
   # load UI inputs from reactive value
   timerange <- r$date_kurse_einstieg_comparison
@@ -130,13 +131,10 @@ kurse_einstieg_comparison <- function(r) {
   }
   else if(betrachtung == "Einzelansicht - Kuchendiagramm"){
 
-    indika <- r$indikator_kurse_einstieg_comparison
-
     df1 <- df1 %>%
       dplyr::filter(indikator %in% indika)
     df1$proportion <- round(df1$proportion, 1)
 
-    if(length(indika) == 1){
       df1 <- df1[with(df1, order(fachbereich, decreasing = FALSE)), ]
 
       titel_help <- sprintf("den %sn", indika)
@@ -160,72 +158,8 @@ kurse_einstieg_comparison <- function(r) {
         )
       quelle <- paste0("KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt")
       out <- piebuilder_plotly(df1, titel, x = "fachbereich", y = "proportion",
-                        color =  c("#b16fab", "#efe8e6"), quelle = quelle)
-
-    }else{
-      df11 <- df1 %>%
-        dplyr::filter(indikator == indika[1])
-      df11 <- df11[with(df11, order(fachbereich, decreasing = FALSE)), ]
-
-      titel_help <- sprintf("den %sn", indika[1])
-      titel_help <- ifelse(indika[1] == "Oberstufenbelegungen", "der Oberstufe",
-                           titel_help)
-
-      df11$wert <- as.numeric(as.character(df11$wert))
-
-      titel <- ist_saarland(
-        gruppe = paste0("MINT-Anteil ", titel_help),
-        regio = regio,
-        timerange = timerange
-      )
-
-      df11 <- df11 %>%
-        dplyr::mutate(
-          tooltip = paste0(
-            "<b>", fachbereich, "</b><br>",
-            "Anteil: ", proportion, " %<br>",
-            "Anzahl: ", wert
-          )
-        )
-      quelle <- paste0("KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt")
-
-      out1 <- piebuilder_plotly(df11, titel, x = "fachbereich", y = "proportion",
-                         color =  c("#b16fab", "#efe8e6"), quelle = quelle)
-
-
-      df12 <- df1 %>%
-        dplyr::filter(indikator == indika[2])
-      df12 <- df12[with(df12, order(fachbereich, decreasing = FALSE)), ]
-
-      titel_help <- sprintf("den %sn", indika[2])
-      titel_help <- ifelse(indika[2] == "Oberstufenbelegungen", "der Oberstufe",
-                           titel_help)
-
-      df12$wert <- as.numeric(as.character(df12$wert))
-
-      titel <- ist_saarland(
-        gruppe = paste0("MINT-Anteil ", titel_help),
-        regio = regio,
-        timerange = timerange
-      )
-
-      df12 <- df12 %>%
-        dplyr::mutate(
-          tooltip = paste0(
-            "<b>", fachbereich, "</b><br>",
-            "Anteil: ", proportion, " %<br>",
-            "Anzahl: ", wert
-          )
-        )
-
-      quelle <- paste0("KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt")
-
-      out2 <- piebuilder_plotly(df12, titel, x = "fachbereich", y = "proportion",
-                                color =  c("#b16fab", "#efe8e6"), quelle = quelle)
-
-      out <- list(out1, out2)
-    }
-
+                        color =  c("#b16fab", "#efe8e6"), quelle = quelle) |>
+        plotly::layout(height = 450)
 
   }
 
@@ -674,7 +608,7 @@ kurse_waffle_mint <- function(r) {
     titel_help <- ifelse(indika == "Oberstufenbelegungen", "der Oberstufe",
                          titel_help)
     titel <- paste0("MINT-Fächeranteile in ", titel_help , praep, regio, " (", timerange, ")")
-    
+
     df <- df %>%
       dplyr::mutate(
         tooltip = paste0(
@@ -683,7 +617,7 @@ kurse_waffle_mint <- function(r) {
           "Anzahl: ", wert
         )
       )
-     
+
     color <- as.character(df$color)
 
     quelle <- "Quelle der Daten: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
@@ -1437,7 +1371,8 @@ kurse_map <- function(r) {
 #' @param r Reactive variable that stores all the inputs from the UI
 #' @noRd
 
-kurse_comparison_gender <- function(r) {
+kurse_comparison_gender <- function(r,
+                                    fokus = "mint") {
 
   # load UI inputs from reactive value
   betrachtung <- r$ansicht_kurse_comparison_gender
@@ -1451,7 +1386,6 @@ kurse_comparison_gender <- function(r) {
     gegenwert <- r$gegenwert_kurse_comparison_gender
   }else if(betrachtung == "Gruppenvergleich - Balkendiagramm"){
     gegenwert <- r$gegenwert_kurse_comparison_gender_balken
-   # indika <- DBI:dbGetQuery(con, "SELECT DISTINCT indikator FROM kurse")
   }
 
   if (betrachtung == "Kursvergleich - Hanteldiagramm"){
@@ -1654,56 +1588,31 @@ kurse_comparison_gender <- function(r) {
 
     if(gegenwert == "Ja"){
 
-      df_mint <- df1 %>%
-        dplyr::filter(fachbereich == "MINT")
-      df_rest <- df1 %>%
-        dplyr::filter(fachbereich != "MINT")
+      if(fokus == "vergleich"){
+        df1 <- df1 %>%
+          dplyr::filter(fachbereich != "MINT")
 
-      titel <- ifelse(regio == "Saarland",
-                      paste0("Mädchen-Anteil in MINT-", titel_help,  " im ", regio, " (", timerange, ")"),
-                      paste0("Mädchen-Anteil in MINT-", titel_help,  " in ", regio, " (", timerange, ")"))
-      titelg <- ""
-      subtitelg <- ifelse(regio == "Saarland",
-                       paste0("Mädchen-Anteil in anderen ", titel_help,  " im ", regio, " (", timerange, ")"),
-                       paste0("Mädchen-Anteil in anderen ", titel_help,  " in ", regio, " (", timerange, ")"))
+        titel = ifelse(regio == "Saarland",
+                       paste0("Mädchen-Anteil in allen ", titel_help,  " außer MINT im ", regio, " (", timerange, ")"),
+                       paste0("Mädchen-Anteil in allen ", titel_help,  " außer MINT in ", regio, " (", timerange, ")"))
 
-      quelle <- "Quelle der Daten: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      }else{
+        df1 <- df1 %>%
+          dplyr::filter(fachbereich == "MINT")
 
-      df_mint <- df_mint %>%
-        dplyr::mutate(
-          tooltip = paste0(
-            "<b>", anzeige_geschlecht, "</b><br>",
-            "Anteil: ", proportion, " %<br>",
-            "Anzahl: ", wert
-          )
-        )
-      mint <- piebuilder_plotly(df_mint, titel, x = "anzeige_geschlecht", y = "proportion",
-                                color = c("#154194" ,"#efe8e6"), quelle = quelle)
-
-      df_rest <- df_rest %>%
-        dplyr::mutate(
-          tooltip = paste0(
-            "<b>", anzeige_geschlecht, "</b><br>",
-            "Anteil: ", proportion, " %<br>",
-            "Anzahl: ", wert
-          )
-        )
-      rest <- piebuilder_plotly(df_rest, titelg, subtitel = subtitelg,
-                                x = "anzeige_geschlecht", y = "proportion",
-                                color = c("#154194" ,"#efe8e6"), quelle = quelle)
-
-
-      out <- list(mint, rest)
-
-    }else if(gegenwert == "Nein"){
-
+        titel = ifelse(regio == "Saarland",
+                       paste0("Mädchen-Anteil in MINT-", titel_help,  " im ", regio, " (", timerange, ")"),
+                       paste0("Mädchen-Anteil in MINT-", titel_help,  " in ", regio, " (", timerange, ")"))
+      }
+    }else{
       df1 <- df1 %>%
         dplyr::filter(fachbereich == "MINT")
-
-
       titel = ifelse(regio == "Saarland",
-                paste0("Mädchen-Anteil in MINT-", titel_help,  " im ", regio, " (", timerange, ")"),
-                paste0("Mädchen-Anteil in MINT-", titel_help,  " in ", regio, " (", timerange, ")"))
+                     paste0("Mädchen-Anteil in MINT-", titel_help,  " im ", regio, " (", timerange, ")"),
+                     paste0("Mädchen-Anteil in MINT-", titel_help,  " in ", regio, " (", timerange, ")"))
+    }
+
+
       df1 <- df1 %>%
         dplyr::mutate(
           tooltip = paste0(
@@ -1714,11 +1623,16 @@ kurse_comparison_gender <- function(r) {
         )
 
       quelle <- "Quelle: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      color <- c("Mädchen" = "#154194" , "Jungen" = "#efe8e6")
 
       out <- piebuilder_plotly(df1, titel, x = "anzeige_geschlecht", y = "proportion",
-                        color = c("#154194" ,"#efe8e6"), quelle = quelle)
+                        color = color, quelle = quelle)
 
-    }
+      if(fokus == "vergleich"){
+        out <- out |>
+          plotly::layout(height = 400)
+      }
+
 
   }else if(betrachtung == "Gruppenvergleich - Balkendiagramm"){
 
@@ -1765,10 +1679,6 @@ kurse_comparison_gender <- function(r) {
 
       out <- balkenbuilder_plotly(df=df1, x=x, y=y, titel=titel, orientation = "h",percent=TRUE, group=group, color=color,
                                   order=order, stacking = TRUE, quelle=quelle)
-
-
-
-
 
     }else if(gegenwert == "Nein"){
 
@@ -1926,7 +1836,8 @@ kurse_verlauf_gender <- function(r){
 #' @param r Reactive variable that stores all the inputs from the UI
 #' @noRd
 
-kurse_wahl <- function(r) {
+kurse_wahl <- function(r,
+                       fokus = "mädchen") {
 
   betrachtung <- r$ansicht_kurse_gender
   timerange <- r$date_kurse
@@ -1997,6 +1908,31 @@ kurse_wahl <- function(r) {
 
     if(vergleich == "Ja"){
 
+      if(fokus != "mädchen"){
+        df <- df %>%
+          dplyr::filter(anzeige_geschlecht == "Männer")
+
+        titel <- ifelse(regio == "Saarland",
+                         paste0(titel_help, " von Jungen im ", regio, " (", timerange, ")"),
+                         paste0(titel_help, " von Jungen in ", regio, " (", timerange, ")"))
+
+        subtitel <- paste0("Von allen ", titel_help, " von Jungen fallen ",
+                            100-df$proportion[df$fachbereich=="andere Fächer"],
+                            " % auf ein MINT-Fach.")
+      }else{
+        df <- df %>%
+          dplyr::filter(anzeige_geschlecht == "Frauen")
+
+        titel <- ifelse(regio == "Saarland",
+                         paste0(titel_help, " von Mädchen im ", regio, " (", timerange, ")"),
+                         paste0(titel_help, " von Mädchen in ", regio, " (", timerange, ")"))
+
+        subtitel <- paste0("Von allen ", titel_help, " von Mädchen fallen ",
+                           100-df$proportion[df$fachbereich=="andere Fächer"],
+                           " % auf ein MINT-Fach.")
+      }
+
+
       df <- df %>%
         dplyr::mutate(
           tooltip = paste0(
@@ -2005,29 +1941,12 @@ kurse_wahl <- function(r) {
             "Anzahl: ", wert
           )
         )
-      df_f <- df %>%
-        dplyr::filter(anzeige_geschlecht == "Frauen")
-      df_m <- df %>%
-        dplyr::filter(anzeige_geschlecht == "Männer")
 
-      titelf <- ifelse(regio == "Saarland",
-                       paste0(titel_help, " von Mädchen im ", regio, " (", timerange, ")"),
-                       paste0(titel_help, " von Mädchen in ", regio, " (", timerange, ")"))
-      titelm <- ifelse(regio == "Saarland",
-                       paste0(titel_help, " von Jungen im ", regio, " (", timerange, ")"),
-                       paste0(titel_help, " von Jungen in ", regio, " (", timerange, ")"))
-
-      subtitel <- paste0("Von allen ", titel_help, " von Mädchen fallen ",
-                         100-df_f$proportion[df_f$fachbereich=="andere Fächer"],
-                         " % auf ein MINT-Fach.")
-      subtitelm <- paste0("Von allen ", titel_help, " von Jungen fallen ",
-                          100-df_m$proportion[df_m$fachbereich=="andere Fächer"],
-                          " % auf ein MINT-Fach.")
-      color <- as.character(df_f$col)
+      color <- as.character(df$col)
 
       quelle <- "Quelle: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
-      frauen <- piebuilder_plotly(df_f, titelf, x = "fachbereich", y = "proportion",
+      out <- piebuilder_plotly(df, titel, x = "fachbereich", y = "proportion",
                                   color, quelle = "", subtitel = subtitel) |>
         plotly::layout(
           annotations = list(
@@ -2045,39 +1964,24 @@ kurse_wahl <- function(r) {
           )
         )
 
-      männer <- piebuilder_plotly(df_m, titelm, x = "fachbereich", y = "proportion",
-                           color, quelle = "", subtitel = subtitelm) |>
-        plotly::layout(
-          annotations = list(
-            list(
-              text = quelle,
-              x = 1,
-              y = -0.4,
-              xref = "paper",
-              yref = "paper",
-              xanchor = "right",
-              yanchor = "top",
-              showarrow = FALSE,
-              font = list(size = 11, color = "gray", family = "Calibri Regular", align = "right")
-            )
-          )
-        )
-      out <- list(
-        frauen, männer
-      )
+      if(fokus != "mädchen"){
+        out <- out |>
+          plotly::layout(height = 400)
+      }
+
 
     }else if(vergleich == "Nein"){
 
-      df_f <- df %>%
+      df <- df %>%
         dplyr::filter(anzeige_geschlecht == "Frauen")
 
       titel <- ifelse(regio == "Saarland",
                       paste0(titel_help, " von Mädchen im ", regio, " (", timerange, ")"),
                       paste0(titel_help, " von Mädchen in ", regio, " (", timerange, ")"))
       subtitel <- paste0("Von allen ", titel_help, " von Mädchen fallen ",
-                         100-df_f$proportion[df_f$fachbereich=="andere Fächer"],
+                         100-df$proportion[df$fachbereich=="andere Fächer"],
                          " % auf ein MINT-Fach.")
-      df_f <- df_f %>%
+      df <- df %>%
         dplyr::mutate(
           tooltip = paste0(
             "<b>", anzeige_geschlecht, "</b><br>",
@@ -2086,11 +1990,11 @@ kurse_wahl <- function(r) {
           )
         )
 
-      color <- as.character(df_f$col)
+      color <- as.character(df$col)
 
       quelle <- "Quelle: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
-      out <- piebuilder_plotly(df_f, titel, x = "fachbereich", y = "proportion",
+      out <- piebuilder_plotly(df, titel, x = "fachbereich", y = "proportion",
                                color, quelle=quelle, subtitel = subtitel)
 
     }

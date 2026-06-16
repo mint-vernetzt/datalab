@@ -1500,6 +1500,7 @@ piebuilder_plotly <- function(
           font = list(size = 11, color = "gray", family = "Calibri Regular", align = "right")
         )
       ),
+      height= 450,
       margin = list(t = 90, b = 120, r = 50, l = 50)
     ) |>
     plotly::config(

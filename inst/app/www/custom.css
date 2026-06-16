@@ -45,8 +45,14 @@ a {
 }
 
 .plotly .hoverlayer text {
-  font-size: 12px !important;
+  font-size: 12px;
 }
+
+
+div.plotly.html-widget.js-plotly-plot {
+  height: 550px !important;
+}
+
 
 /*
 p {
