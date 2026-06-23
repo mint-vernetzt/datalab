@@ -1782,7 +1782,7 @@ linebuilder_plotly <- function(
       legend = list(
         orientation = "h",
         x = 0.5,
-        y = -0.13,
+        y = -0.09,
         xanchor = "center",
         yanchor = "top",
         traceorder = "reversed"
@@ -1791,7 +1791,7 @@ linebuilder_plotly <- function(
         list(
           text = quelle,
           x = 1,
-          y = -0.38,
+          y = -0.20,
           xref = "paper",
           yref = "paper",
           xanchor = "right",
@@ -2057,7 +2057,7 @@ linebuilder_plotly <- function(
 
 balkenbuilder_plotly <- function(df, titel, x, y, yaxis_size = 11, orientation = "h", group = NULL, ticktext = NULL, tickvals = NULL,
                                  order = NULL, color = NULL, percent = FALSE, reverse_legend = FALSE, yaxis_titel = "", titel_y = 0.96,
-                                 stacking = FALSE, subtitel = NULL,legend_y = -0.12, quelle_y = -0.30, quelle = "Quelle") {
+                                 stacking = FALSE, subtitel = NULL, subtitel_y = NULL,subtitel_x = NULL, margin_t= 60, legend_y = -0.09, quelle_y = -0.20, quelle = "Quelle") {
 
   df_json <- jsonlite::toJSON(df, dataframe = "rows", auto_unbox = TRUE, na = "null")
   titel_js  <- gsub("'", "\\\\'", titel)
@@ -2123,7 +2123,7 @@ balkenbuilder_plotly <- function(df, titel, x, y, yaxis_size = 11, orientation =
           annotations = list(list(text = quelle, x = 1, y = quelle_y, xref = "paper", yref = "paper", showarrow = FALSE,
                                   xanchor = "right", yanchor = "top",
                                   font = list(size = 11, color = "gray", family = "Calibri Regular"))),
-          margin = list(t = 60, b = 100)
+          margin = list(t = margin_t, b = 100)
           ) %>%
         plotly::config(
           displaylogo = FALSE,
@@ -2284,7 +2284,7 @@ balkenbuilder_plotly <- function(df, titel, x, y, yaxis_size = 11, orientation =
       annotations = list(list(text = quelle, x = 1, y = quelle_y, xref = "paper", yref = "paper", showarrow = FALSE,
                               xanchor = "right", yanchor = "top",
                               font = list(size = 11, color = "gray", family = "Calibri Regular"))),
-      margin = list(t = 60, b = 100)
+      margin = list(t = margin_t, b = 100)
     ) %>%
     plotly::config(
           displaylogo = FALSE,
@@ -2415,7 +2415,7 @@ balkenbuilder_plotly <- function(df, titel, x, y, yaxis_size = 11, orientation =
         "<br>",
         "<span style='font-size:14px; color:gray; font-family:Calibri;'>",
         subtitel, "</span>"),
-      x = 0.5,
+      x = subtitel_x, y=subtitel_y,
       font = list(family = "Calibri Regular", size = 20, color = "black")))
   }
 

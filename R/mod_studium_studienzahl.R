@@ -649,24 +649,23 @@ mod_studium_studienzahl_server <- function(id, r){
 
 
     output$plot_top_faecher <- renderUI({
-      plot_list <- plot_ranking_top_faecher(r)
-      r$plot_top_faecher_left <- plot_list[[1]]
-      r$plot_top_faecher_right <- plot_list[[2]]
 
-      r$plot_top_faecher_left_title <- get_plot_title(
-        plot = r$plot_top_faecher_left
+    plots <- plot_ranking_top_faecher(r)
+
+    fluidRow(
+      column(
+        width = 6,
+        plots[[1]]
+      ),
+      column(
+        width = 6,
+        plots[[2]]
       )
-      r$plot_top_faecher_right_title <- get_plot_title(
-        plot = r$plot_top_faecher_right
-      )
+    )
 
-      # return plots
-      out <- highcharter::hw_grid(
-        plot_list,
-        ncol = 2)
-      out
+  })
 
-    })
+
 
 
     output$plot_anteil_mint_faecher_frauen <- plotly::renderPlotly({
