@@ -995,7 +995,7 @@ div(
                width = 9,
                shiny::mainPanel(
                  width = 12,
-                 shinycssloaders::withSpinner(htmlOutput(ns("plot_argument_demografie")),
+                 shinycssloaders::withSpinner(plotly::plotlyOutput(ns("plot_argument_demografie")),
                                               color = "#154194"),
                  shinyBS::bsPopover(id="h_argument_31", title = "",
                                     content = paste0("Es werden nur sozialversicherungspflichtige Beschäftigte betrachtet. Die Kategorisierung in MINT entspricht der Zuordnung durch die Bundesagentur für Arbeit. Weitere Informationen finden Sie unter dem Reiter \"Datenquellen und Hinweise\"."),
@@ -1166,7 +1166,7 @@ div(
                width = 9,
                shiny::mainPanel(
                  width = 12,
-                 shinycssloaders::withSpinner(htmlOutput(ns("plot_argument_wirkhebel")),
+                 shinycssloaders::withSpinner(plotly::plotlyOutput(ns("plot_argument_wirkhebel")),
                                               color = "#154194"),
                  shinyBS::bsPopover(id="erkl_wirkhebel_argument", title="",
                                     content = paste0("Gesamteffekt: Wirkung aller Hebel kombiniert.", br(),br(), "MINT-Nachwuchs fördern: Zunahme von MINT-Fachkräften unter 35 zwischen 2012 und 2022 setzt sich so in den nächsten Jahren fort.", br(),br(), "Mädchen- und Frauen-Förderung in MINT: Zunahme von weiblichen MINT-Fachkräften unter 35 zwischen 2012 und 2022 setzt sich so in den nächsten Jahren fort.", br(),br(), "Zuwanderung MINT-Fachkräfte: „Hohe Zuwanderung“-Szenario der 15. koordinierten Bevölkerungsvorausberechnung des Statistischen Bundesamts.", br(),br(), "Verbleib älterer MINT-Fachkräfte: Anteil an erwerbstätigen MINT-Fachkräften unter den 55-59-, 60-64-, und 65-69-Jährigen wächst weiterhin so an wie zwischen 2012-2022."),
@@ -1722,13 +1722,20 @@ mod_argumentation_server <- function(id){
 
       plots <- argument_fachkraft(r)
 
-      div(
-        style = "width: 1000px;",
-        plots
+      fluidRow(
+        column(
+          width = 6,
+          plots[1]
+        ),
+        column(
+          width = 6,
+          plots[2]
+        )
       )
     })
 
-    output$plot_argument_demografie <- renderUI({
+
+    output$plot_argument_demografie <- plotly::renderPlotly({
       argument_demografie(r)
     })
 
@@ -1736,7 +1743,7 @@ mod_argumentation_server <- function(id){
       argument_nachwuchs(r)
     })
 
-    output$plot_argument_wirkhebel <- renderUI({
+    output$plot_argument_wirkhebel <- plotly::renderPlotly({
       argument_wirkhebel(r)
     })
 
@@ -1746,9 +1753,22 @@ mod_argumentation_server <- function(id){
       argument_frauen_bildungskette(r)
     })
 
+
     output$argument_frauen_beruf <- renderUI({
-      argument_großer_unterschied(r)
+      plots <- argument_großer_unterschied(r)
+      fluidRow(
+        column(
+          width = 6,
+          plots[1]
+        ),
+        column(
+          width = 6,
+          plots[2]
+        )
+      )
     })
+
+
 
     output$argument_frauen_selbstkonzept <- renderUI({
       argument_selbstkonzept(r)

@@ -608,7 +608,7 @@ fluidRow( id="beruf_entgelt",
                                    ),
                                    shiny::mainPanel(
                                      width = 9,
-                                     shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_entgelt_vergleich")),
+                                     shinycssloaders::withSpinner(plotly::plotlyOutput(ns("plot_entgelt_vergleich")),
                                                                   color = "#154194"),
 
                                      shinyBS::bsPopover(id = "h_beruf_mint_3_entgel", title = "",
@@ -932,59 +932,20 @@ mod_beruf_arbeitsmarkt_server <- function(id, r){
 
 
     output$plot_arbeitsmarkt_top10 <- renderUI({
-      plot_list <- arbeitsmarkt_top10(r)
-      r$plot_arbeitsmarkt_top10_left <- plot_list[[1]]
-      r$plot_arbeitsmarkt_top10_right <- plot_list[[2]]
+      plots <- arbeitsmarkt_top10(r)
 
-      r$plot_arbeitsmarkt_top10_left_title <- get_plot_title(
-        plot = r$plot_arbeitsmarkt_top10_left
+      fluidRow(
+        column(
+          width = 6,
+          plots[[1]]
+        ),
+        column(
+          width = 6,
+          plots[[2]]
+        )
       )
-      r$plot_arbeitsmarkt_top10_right_title <- get_plot_title(
-        plot = r$plot_arbeitsmarkt_top10_right
-      )
-
-      # return plots
-      out <- highcharter::hw_grid(
-        plot_list,
-        ncol = 2)
-      out
 
     })
-
-    output$download_btn_plot_arbeitsmarkt_top10_1 <- downloadHandler(
-      contentType = "image/png",
-      filename = function() {r$plot_arbeitsmarkt_top10_left_title},
-      content = function(file) {
-        # creating the file with the screenshot and prepare it to download
-
-        add_caption_and_download(
-          hc = r$plot_arbeitsmarkt_top10_left,
-          filename =  r$plot_arbeitsmarkt_top10_left_title,
-          width = 700,
-          height = 400,
-          with_labels = FALSE)
-
-        file.copy(r$plot_arbeitsmarkt_top10_left_title, file)
-        file.remove(r$plot_arbeitsmarkt_top10_left_title)
-      }
-    )
-
-    output$download_btn_plot_arbeitsmarkt_top10_2 <- downloadHandler(
-      contentType = "image/png",
-      filename = function() {r$plot_arbeitsmarkt_top10_right_title},
-      content = function(file) {
-        # creating the file with the screenshot and prepare it to download
-        add_caption_and_download(
-          hc = r$plot_arbeitsmarkt_top10_right,
-          filename =  r$plot_arbeitsmarkt_top10_right_title,
-          width = 700,
-          height = 400,
-          with_labels = FALSE)
-
-        file.copy(r$plot_arbeitsmarkt_top10_right_title, file)
-        file.remove(r$plot_arbeitsmarkt_top10_right_title)
-      }
-    )
 
 
 
@@ -1121,19 +1082,9 @@ mod_beruf_arbeitsmarkt_server <- function(id, r){
    # Box 5 ----
    # Tab
 
-   output$plot_entgelt_vergleich <- highcharter::renderHighchart({
+   output$plot_entgelt_vergleich <- plotly::renderPlotly({
      out <- entgelte_vergleich_1(r)
    })
-
-   # output$plot_entgelt_vergleich <- renderUI({
-   #   plot_list <- entgelte_vergleich_1(r)
-   #   highcharter::highchartOutput("hc_tmp")
-   # })
-   #
-   # output$hc_tmp <- highcharter::renderHighchart({
-   #   entgelte_vergleich_1(r)
-   # })
-   #
 
 
 
