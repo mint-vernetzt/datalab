@@ -49,8 +49,11 @@ a {
 }
 
 
+#mod_beruf_arbeitsmarkt_ui_1-plot_arbeitsmarkt_detail_vergleich.plotly.html-widget.js-plotly-plot{
+  height: 1600px !important;
+}
 div.plotly.html-widget.js-plotly-plot {
-  height: 550px !important;
+  height: 650px !important;
 }
 
 

@@ -66,7 +66,7 @@ mod_international_top10_mint_ui <- function(id){
                        inputId = ns("map_y_ww_int_top10"),
                        label = NULL,
                        choices = international_ui_years(region = "Weltweit"),
-                       selected = "2024"
+                       selected = "2023"
                      )),
 
     p("Durchschnitt anzeigen:"),

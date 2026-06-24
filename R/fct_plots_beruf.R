@@ -29,9 +29,6 @@ map_selection_international <- readRDS("data/map_data/map_selection_internationa
 
 beruf_einstieg_vergleich <- function(r) {
 
-# ANZAHL BARPLOT FUNKTIONIERT NICHT
-
-
 
   # load UI inputs from reactive value
   betrachtung <- r$ansicht_arbeitsmarkt_einsteig_vergleich
@@ -78,7 +75,6 @@ beruf_einstieg_vergleich <- function(r) {
     dplyr::select( "indikator", "bundesland", "landkreis", "fachbereich",
                    "landkreis_zusatz", "landkreis_nummer", "jahr", "anforderung", "geschlecht", "wert")
 
-  if(is.null(abs_rel) | abs_rel == "In Prozent"){
     #Anteil MINT berechnen
 
     df_query <- glue::glue_sql("
@@ -115,14 +111,13 @@ beruf_einstieg_vergleich <- function(r) {
       dplyr::mutate(proportion = round((wert/wert_gesamt)*100, 1))
 
     df <- rbind(df3, df_andere)
-  }
+
 
   #Graifken
   if(betrachtung == "Einzelansicht - Kuchendiagramm"){
 
     df$wert <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
 
-    #titel <- ist_saarland(gruppe, regio, timerange)
     titel <- ifelse(regio != "Saarland",
                     paste0(gruppe, " in ", regio, " (", timerange, ")"),
                     paste0(gruppe, " im ", regio, " (", timerange, ")"))
@@ -1707,7 +1702,7 @@ arbeitsmarkt_bula_faecher <- function(r) {
 
 
 
-    titel <- paste0("Anteil von ", title_help, " im Berufsfeld ", faecher, " <br> an allen ", title_help, " in ", timerange)
+    titel <- paste0("Anteil von ", title_help, " im Berufsfeld ", faecher, " an allen ", title_help, " in ", timerange)
 
     quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
@@ -1753,7 +1748,7 @@ arbeitsmarkt_bula_faecher <- function(r) {
         y <- "prop"
         quelle_y <- -0.15
         out <- balkenbuilder_plotly(df=df, x=x, y=y, titel=titel, orientation = "h",percent=TRUE, color=color,
-                                    order=order, stacking=FALSE, quelle_y=quelle_y, quelle=quelle)
+                                    order=order, stacking=FALSE, quelle_y=quelle_y,margin_t=80, quelle=quelle)
 
 
 
@@ -1779,7 +1774,7 @@ arbeitsmarkt_bula_faecher <- function(r) {
         quelle_y <- -0.15
 
         out <- balkenbuilder_plotly(df=df, x=x, y=y, titel=titel, orientation = "h",percent=FALSE, color=color,
-                                    order=order, stacking=FALSE, quelle_y=quelle_y, quelle=quelle)
+                                    order=order, stacking=FALSE, quelle_y=quelle_y, margin_t=80, quelle=quelle)
 
       }
 
@@ -3018,6 +3013,18 @@ arbeitsmarkt_top10 <- function( r){
     dplyr::filter(geschlecht != "Gesamt")
 
 
+
+  df <- df %>%
+    dplyr::mutate(
+      beruf_short = stringr::str_trunc(
+        as.character(beruf),
+        width = 30
+      )
+    )
+
+  praep <- ifelse(bula == "Saarland", " im ", " in ")
+
+
   # Split dataframe by gender and create plots
   if(abs_rel == "In Prozent"){
 
@@ -3043,155 +3050,79 @@ arbeitsmarkt_top10 <- function( r){
     }
 
 
-    #balkenbuilder wird nicht verwendet, da es hier erneut spezialiserte balken sind (zB mit extra styl)
+# Create female plot
 
-    # Create female plot
-    if(nrow(berufe_frauen) == 0){
-      #leerer ersatz-Plot
-      titel <- "Keine MINT-Ausbildung dieser Region mit mehr als 50 neuen Auszubildenden hat in diesem Jahr neue weibliche Auszubildende, weshalb kein Top-Ranking angezeigt werden kann."
-      plot_frau <- highcharter::hchart(berufe_frauen, 'line', highcharter::hcaes(x = reorder(jahr, wert), y = wert, group = fachbereich)) %>%
-        highcharter::hc_tooltip(pointFormat = "Anzahl: {point.wert}") %>%
-        highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular")) %>%
-        highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(fontFamily = "Calibri Regular")) %>%
-        highcharter::hc_title(text = titel,
-                              margin = 45,
-                              align = "center",
-                              style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px"))
-
-    }else{
-
-      titel <- paste0("Höchster Frauenanteil unter den neuen Auszubildenden im Fachbereich " ,fb ," in ", bula, " (", time, ")")
-
-    plot_frau <- highcharter::hchart(berufe_frauen, 'bar', highcharter::hcaes(y = prop, x = beruf)) %>%
-      highcharter::hc_plotOptions(
-        series = list(
-          boderWidth = 0,
-          dataLabels = list(enabled = TRUE, format = "{point.prop} %",
-                            style = list(textOutline = "none"))
-        )) %>%
-      highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.fachbereich} <br> Anteil an allen neuen MINT-Ausbildungsverträgen: {point.y} % <br> Anzahl der neu abgeschlossenen Ausbildugnsverträge: {point.wert}") %>%
-      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value} %", rotation = -45), min = 0, max = 100, tickInterval = 10) %>%
-      highcharter::hc_xAxis(title = list(text = "")) %>%
-      highcharter::hc_colors(c("#154194")) %>%
-      highcharter::hc_title(text = paste0("Höchster Frauenanteil unter den neuen Auszubildenden im Fachbereich " ,fb ," in ", bula, " (", time, ")"),
-                            margin = 45,
-                            align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-      highcharter::hc_chart(
-        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
-      ) %>%
-      highcharter::hc_caption(text = "Quelle der Daten: Bundesagentur für Arbeit, 2025, freier Download, eigene Berechnungen durch MINTvernetzt.",
-                              style = list(fontSize = "11px", color = "gray")) %>%
-      highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
-      highcharter::hc_exporting(enabled = TRUE,
-                                buttons = list(
-                                  contextButton = list(
-                                    menuItems = list("downloadPNG", "downloadCSV",
-                                                     list(
-                                                       text = "Daten für GPT",
-                                                       onclick = htmlwidgets::JS(sprintf(
-                                                         "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
+    titel <- paste0("Höchster Frauenanteil unter den neuen Auszubildenden im Fachbereich " ,fb ,praep, bula, " (", time, ")")
 
 
-     var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle: Quelle der Daten: Bundesagentur für Arbeit, 2025, freier Download, eigene Berechnungen durch MINTvernetzt';
 
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-   }", gsub("'", "\\\\'", titel),gsub("'", "\\\\'", titel) )))
-                                                     )
+    order <- unique(berufe_frauen$beruf)
 
-                                  )
+
+    berufe_frauen <- berufe_frauen %>%
+      dplyr::mutate(
+        .tooltip = paste0(
+          "<b><span style='font-size:15px;'>", beruf, "</span></b><br>",
+          "Anzahl: ", formatC(as.numeric(wert), format = "f", digits = 0, big.mark = "."), "<br>",
+          "Anteil: ", prop, " %"
         )
       )
 
-    }
+
+    x <- "beruf"
+    y <- "prop"
+
+    color <- c("#154194")
+    quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle_y <- -0.16
+
+    plot_female <- balkenbuilder_plotly(df=berufe_frauen, x=x, y=y, titel=titel, orientation = "h", group=NULL, color = color,
+                                        tickvals = df$beruf, ticktext = df$beruf_short, wrap_width=40,
+                                        order = order, stacking = FALSE, percent = TRUE, quelle=quelle, quelle_y=quelle_y)
 
 
-    #balkenbuilder wird nicht verwendet, da es hier erneut spezialiserte balken sind (zB mit extra styl)
+
+
     # Create male plot
 
-    if(nrow(berufe_maenner) == 0){
-      #leerer ersatz-Plot
-      titel <- "Keine MINT-Ausbildung dieser Region mit mehr als 50 neuen Auszubildenden hat in diesem Jahr neue männliche Auszubildende, weshalb kein Top-Ranking angezeigt werden kann."
-      plot_mann <- highcharter::hchart(berufe_maenner, 'line', highcharter::hcaes(x = reorder(jahr, wert), y = wert, group = fachbereich)) %>%
-        highcharter::hc_tooltip(pointFormat = "Anzahl: {point.wert}") %>%
-        highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular")) %>%
-        highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(fontFamily = "Calibri Regular")) %>%
-        highcharter::hc_title(text = titel,
-                              margin = 45,
-                              align = "center",
-                              style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px"))
+    titel <- paste0("Höchster Männeranteil unter den neuen Auszubildenden im Fachbereich " ,fb ,praep, bula, " (", time, ")")
 
-    }else{
 
-     titel <- paste0("Höchster Männeranteil unter den neuen Auszubildenden im Fachbereich ", fb ," in ", bula ," (", time, ")")
+    order <- unique(berufe_maenner$beruf)
 
-    plot_mann <- highcharter::hchart(berufe_maenner, 'bar', highcharter::hcaes(y = prop, x = beruf)) %>%
-      highcharter::hc_plotOptions(
-        series = list(
-          boderWidth = 0,
-          dataLabels = list(enabled = TRUE,
-                            format = "{point.prop} %",
-                            style = list(textOutline = "none"))
-        )) %>%
-      highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.fachbereich} <br> Anteil an allen neuen MINT-Ausbildungsverträgen: {point.y} % <br> Anzahl der neu abgeschlossenen Ausbildugnsverträge: {point.wert}") %>%
-      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value} %", rotation = -45), min = 0, max = 100, tickInterval = 10) %>%
-      highcharter::hc_xAxis(title = list(text = "")) %>%
-      highcharter::hc_colors(c("#66cbaf")) %>%
-      highcharter::hc_title(text = paste0("Höchster Männeranteil unter den neuen Auszubildenden im Fachbereich ", fb ," in ", bula ," (", time, ")"),
-                            margin = 45,
-                            align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
-      highcharter::hc_chart(
-        style = list(fontFamily = "Calibri Regular", fontSize = "14px")
-      ) %>%
-      highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
-      highcharter::hc_caption(text = "Quelle der Daten: Bundesagentur für Arbeit, 2025, freier Download, eigene Berechnungen durch MINTvernetzt.",
-                              style = list(fontSize = "11px", color = "gray")) %>%
-      highcharter::hc_exporting(enabled = TRUE,
-                                buttons = list(
-                                  contextButton = list(
-                                    menuItems = list("downloadPNG", "downloadCSV",
-                                                     list(
-                                                       text = "Daten für GPT",
-                                                       onclick = htmlwidgets::JS(sprintf(
-                                                         "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
 
-     var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle:Quelle der Daten: Bundesagentur für Arbeit, 2025, freier Download, eigene Berechnungen durch MINTvernetzt';
-
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-   }", gsub("'", "\\\\'", titel),gsub("'", "\\\\'", titel)))))
-                                  )
-                                )
+    berufe_maenner <- berufe_maenner %>%
+      dplyr::mutate(
+        .tooltip = paste0(
+          "<b><span style='font-size:15px;'>", beruf, "</span></b><br>",
+          "Anzahl: ", formatC(as.numeric(wert), format = "f", digits = 0, big.mark = "."), "<br>",
+          "Anteil: ", prop, " %"
+        )
       )
-}
+
+
+    x <- "beruf"
+    y <- "prop"
+
+    color <- c("#66cbaf")
+    quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle_y <- -0.16
+
+    plot_male <- balkenbuilder_plotly(df=berufe_maenner, x=x, y=y, titel=titel, orientation = "h", group=NULL, color = color,
+                                      tickvals = df$beruf, ticktext = df$beruf_short, wrap_width=40,
+                                      order = order, stacking = FALSE, percent = TRUE, quelle=quelle, quelle_y=quelle_y)
+
+
+
+
+
+
+
   } else if(abs_rel == "Anzahl"){
 
     df <- df %>%
       dplyr::mutate(display_abs = prettyNum(df$wert, big.mark = ".", decimal.mark = ","))
+
     # female
     berufe_frauen <- df %>%
       dplyr::filter(geschlecht == "Frauen") %>%
@@ -3204,157 +3135,87 @@ arbeitsmarkt_top10 <- function( r){
       dplyr::arrange(desc(wert)) %>%
       dplyr::slice(1:10)
 
-    # das bleibt ohne verallgemeinerung da es spezialisierter ist.
 
-
-    #balkenbuilder wird nicht verwendet, da es hier erneut spezialiserte balken sind (zB mit extra styl)
     # Create female plot
 
-    if(nrow(berufe_frauen) == 0){
-      #leerer ersatz-Plot
-      titel <- "Keine MINT-Ausbildung dieser Region mit mehr als 50 neuen Auszubildenden hat in diesem Jahr neue weibliche Auszubildende, weshalb kein Top-Ranking angezeigt werden kann."
-      plot_frau <- highcharter::hchart(berufe_frauen, 'line', highcharter::hcaes(x = reorder(jahr, wert), y = wert, group = fachbereich)) %>%
-        highcharter::hc_tooltip(pointFormat = "Anzahl: {point.wert}") %>%
-        highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular")) %>%
-        highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(fontFamily = "Calibri Regular")) %>%
-        highcharter::hc_title(text = titel,
-                              margin = 45,
-                              align = "center",
-                              style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px"))
+    titel <- paste0("Am häufigsten gewählte MINT-Ausbildungsberufe von weiblichen Neu-Auszubildenden im Fachbereich " ,fb , praep, bula ," (", time, ")")
 
-    }else{
-titel <- paste0("Am häufigsten gewählte MINT-Ausbildungsberufe von weiblichen Neu-Auszubildenden im Fachbereich " ,fb ,"  in ", bula ," (", time, ")")
 
-      plot_frau <- highcharter::hchart(berufe_frauen, 'bar', highcharter::hcaes(y = wert, x = beruf)) %>%
-      highcharter::hc_plotOptions(
-        series = list(
-          boderWidth = 0,
-          dataLabels = list(enabled = TRUE, format = "{point.display_abs}",
-                            style = list(textOutline = "none"))
-        )) %>%
-      highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.fachbereich} <br> Anteil: {point.prop} % <br> Anzahl: {point.display_abs}") %>%
-      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}", rotation = -45), min = 0, max = plyr::round_any(max(berufe_frauen$wert), 500, f = ceiling), tickInterval = 1000) %>%
-      highcharter::hc_xAxis(title = list(text = "")) %>%
-      highcharter::hc_colors(c("#154194")) %>%
-      highcharter::hc_title(text = paste0("Am häufigsten gewählte MINT-Ausbildungsberufe von weiblichen Neu-Auszubildenden im Fachbereich " ,fb ,"  in ", bula ," (", time, ")"),
-                            margin = 45,
-                            align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
-      highcharter::hc_chart(
-        style = list(fontFamily = "Calibri Regular", fontSize = "14px")
-      ) %>%
-      highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
-      highcharter::hc_caption(text = "Quelle der Daten: Bundesagentur für Arbeit, 2025, freier Download, eigene Berechnungen durch MINTvernetzt.",
-                              style = list(fontSize = "11px", color = "gray")) %>%
-      highcharter::hc_exporting(enabled = TRUE,
-                                buttons = list(
-                                  contextButton = list(
-                                    menuItems = list("downloadPNG", "downloadCSV",
-                                                     list(
-                                                       text = "Daten für GPT",
-                                                       onclick = htmlwidgets::JS(sprintf(
-                                                         "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
+    order <- unique(berufe_frauen$beruf)
 
-     var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle:Quelle der Daten: Bundesagentur für Arbeit, 2025, freier Download, eigene Berechnungen durch MINTvernetzt';
 
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-   }", gsub("'", "\\\\'", titel),gsub("'", "\\\\'", titel)))))
-                                  )
-                                )
+    berufe_frauen <- berufe_frauen %>%
+      dplyr::mutate(
+        .tooltip = paste0(
+          "<b><span style='font-size:15px;'>", beruf, "</span></b><br>",
+          "Anzahl: ", formatC(as.numeric(wert), format = "f", digits = 0, big.mark = "."), "<br>",
+          "Anteil: ", prop, " %"
+        )
       )
-    }
 
 
-    #balkenbuilder wird nicht verwendet, da es hier erneut spezialiserte balken sind (zB mit extra styl)
-    # Create male plot
+    x <- "beruf"
+    y <- "wert"
 
-    if(nrow(berufe_maenner) == 0){
-      #leerer ersatz-Plot
-      titel <- "Keine MINT-Ausbildung dieser Region mit mehr als 50 neuen Auszubildenden hat in diesem Jahr neue männliche Auszubildende, weshalb kein Top-Ranking angezeigt werden kann."
-      plot_mann <- highcharter::hchart(berufe_maenner, 'line', highcharter::hcaes(x = reorder(jahr, wert), y = wert, group = fachbereich)) %>%
-        highcharter::hc_tooltip(pointFormat = "Anzahl: {point.wert}") %>%
-        highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular")) %>%
-        highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(fontFamily = "Calibri Regular")) %>%
-        highcharter::hc_title(text = titel,
-                              margin = 45,
-                              align = "center",
-                              style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px"))
+    color <- c("#154194")
+    quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle_y <- -0.16
 
-    }else{
-     titel <- paste0("Am häufigsten gewählte MINT-Ausbildungsberufe von männlichen Neu-Auszubildenden im Fachbereich ",fb," in ", bula ," (", time, ")")
+    plot_female <- balkenbuilder_plotly(df=berufe_frauen, x=x, y=y, titel=titel, orientation = "h", group=NULL, color = color,
+                                        tickvals = df$beruf, ticktext = df$beruf_short,wrap_width=40,
+                                        order = order, stacking = FALSE, percent = FALSE, quelle=quelle, quelle_y=quelle_y)
 
-    plot_mann <- highcharter::hchart(berufe_maenner, 'bar', highcharter::hcaes(y = wert, x = beruf)) %>%
-      highcharter::hc_plotOptions(
-        series = list(
-          boderWidth = 0,
-          dataLabels = list(enabled = TRUE, format = "{point.display_abs}",
-                            style = list(textOutline = "none"))
-        )) %>%
-      highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.fachbereich} <br> Anteil: {point.prop} % <br> Absolut: {point.display_abs}") %>%
-      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}", rotation = -45), min = 0, max = plyr::round_any(max(berufe_maenner$wert), 1000, f = ceiling), tickInterval = 1000) %>%
-      highcharter::hc_xAxis(title = list(text = "")) %>%
-      highcharter::hc_colors(c("#66cbaf")) %>%
-      highcharter::hc_title(text = paste0("Am häufigsten gewählte MINT-Ausbildungsberufe von männlichen Neu-Auszubildenden im Fachbereich ",fb," in ", bula ," (", time, ")"),
-                            margin = 45,
-                            align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
-      highcharter::hc_chart(
-        style = list(fontFamily = "Calibri Regular", fontSize = "14px")
-      ) %>%
-      highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
-      highcharter::hc_caption(text = "Quelle der Daten: Bundesagentur für Arbeit, 2025, freier Download, eigene Berechnungen durch MINTvernetzt.",
-                              style = list(fontSize = "11px", color = "gray")) %>%
-      highcharter::hc_exporting(enabled = TRUE,
-                                buttons = list(
-                                  contextButton = list(
-                                    menuItems = list("downloadPNG", "downloadCSV",
-                                                     list(
-                                                       text = "Daten für GPT",
-                                                       onclick = htmlwidgets::JS(sprintf(
-                                                         "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
 
-     var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle:Quelle der Daten: Bundesagentur für Arbeit, 2025, freier Download, eigene Berechnungen durch MINTvernetzt';
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-   }", gsub("'", "\\\\'", titel),gsub("'", "\\\\'", titel)))))
-                                  )
-                                )
+
+
+
+
+
+
+# Create male plot
+
+    titel <- paste0("Am häufigsten gewählte MINT-Ausbildungsberufe von männlichen Neu-Auszubildenden im Fachbereich  " ,fb , praep, bula ," (", time, ")")
+
+
+    order <- unique(berufe_maenner$beruf)
+
+
+    berufe_maenner <- berufe_maenner %>%
+      dplyr::mutate(
+        .tooltip = paste0(
+          "<b><span style='font-size:15px;'>", beruf, "</span></b><br>",
+          "Anzahl: ", formatC(as.numeric(wert), format = "f", digits = 0, big.mark = "."), "<br>",
+          "Anteil: ", prop, " %"
+        )
       )
-}
+
+
+    x <- "beruf"
+    y <- "wert"
+
+    color <- c("#66cbaf")
+    quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle_y <- -0.16
+
+    plot_male <- balkenbuilder_plotly(df=berufe_maenner, x=x, y=y, titel=titel, orientation = "h", group=NULL, color = color,
+                                      tickvals = df$beruf, ticktext = df$beruf_short, wrap_width=40,
+                                      order = order, stacking = FALSE, percent = FALSE, quelle=quelle, quelle_y=quelle_y)
+
 
   }
 
-  out <- list(
-    plot_frau,
-    plot_mann)
+
+  out <- list(plot_female, plot_male)
 
   return(out)
 
-
 }
+
+
+
+
+
+
 
 
 
@@ -3479,7 +3340,7 @@ arbeitsmarkt_faecher_anteil_frauen <- function(r) {
 
       praep <- ifelse(regio == "Saarland", " im ", " in ")
 
-      titel <- paste0( "Überblick über die Berufsfelder von weiblichen ", title_help, "<br>", praep, regio, " (", timerange, ")")
+      titel <- paste0( "Überblick über die Berufsfelder von weiblichen ", title_help, praep, regio, " (", timerange, ")")
       quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
 
@@ -3901,7 +3762,7 @@ arbeitsmarkt_lk_detail_vergleich <- function(r){
 
     y <- "prob"
 
-    titel <- paste0("Anteil von ", titel_sub2, titel_gesamt_1, "<br>", titel_gesamt_2, praep, states, " (", timerange, ")")
+    titel <- paste0("Anteil von ", titel_sub2, titel_gesamt_1, titel_gesamt_2, praep, states, " (", timerange, ")")
 
   } else if(display_form== "Anzahl") {
 
@@ -3913,7 +3774,7 @@ arbeitsmarkt_lk_detail_vergleich <- function(r){
     y <- "wert"
 
     titel_gesamt_1 <- stringr::str_remove(titel_gesamt_1, "an allen")
-    titel <- paste0("Anzahl ", titel_sub, "<br>", titel_gesamt_1, praep, states, " (", timerange, ")")
+    titel <- paste0("Anzahl ", titel_sub, titel_gesamt_1, praep, states, " (", timerange, ")")
   }
 
 
@@ -3952,10 +3813,8 @@ arbeitsmarkt_lk_detail_vergleich <- function(r){
   }
 
 
-  out <- balkenbuilder_plotly(df=df_compare, x=x, y=y, titel=titel, orientation = "h", group=NULL, color = color,
-                              order = order, percent=percent, stacking=FALSE, titel_y=titel_y, quelle_y=quelle_y, quelle=quelle)%>%
-    plotly::layout(height = height)
-
+  out <- balkenbuilder_plotly(df=df_compare, x=x, y=y, titel=titel, orientation = "h", group=NULL, color = color, height=height,
+                              order = order, percent=percent, stacking=FALSE, titel_y=titel_y, quelle_y=quelle_y, quelle=quelle)
 
 
 
@@ -4090,7 +3949,6 @@ entgelte_vergleich_1 <- function(r) {
   berufsleb <- "Gesamt"
 
 
- ##)
 
   df_query <- glue::glue_sql("
   SELECT *
@@ -4101,7 +3959,6 @@ entgelte_vergleich_1 <- function(r) {
   AND berufslevel = 'Gesamt'
                                ", .con = con)
 
-#   browser()
 
   df <- DBI::dbGetQuery(con, df_query)
 
@@ -4127,16 +3984,10 @@ entgelte_vergleich_1 <- function(r) {
     geschlecht <- "alle Geschlechter"
   }
 
-  titel <- paste0("Mittleres Entgelt nach Berufsfeldern in ", land, " ", datum,
-                  " (", berufsleb, ", ", geschlecht, ")" )
-  tooltip <- paste('Wert in Euro: {point.y}')
-  format <- "{value}"
-
-  quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
 
-  ##########
 
+  praep <- ifelse(land == "Saarland", " im ", " in ")
 
   df1$wert <- as.numeric(df1$wert)
   df1$berufsgruppe <- as.factor(df1$berufsgruppe)
@@ -4147,79 +3998,41 @@ entgelte_vergleich_1 <- function(r) {
 
 
 
+  titel <- paste0("Mittleres Entgelt nach Berufsfeldern", praep, land, " ", datum,
+                  " (", berufsleb, ", ", geschlecht, ")" )
 
-
-  df1$color <- ifelse(df1$berufsgruppe %in% c("Insgesamt",
-                                              "MINT-Berufe", "Keine MINT-Berufe"),
-                      "#b16fab", "#efe8e6")
-
-
-
-  #out <- balkenbuilder(df1, titel, x = "wert", y = "berufsgruppe", tooltip = tooltip,  color =  c("#b16fab","#b16fab"), format = format , quelle = quelle)
-  out <- highcharter::hchart(df1, 'bar', highcharter::hcaes(y ="wert", x = "berufsgruppe", color = color) ) %>%
-    highcharter::hc_tooltip(pointFormat = tooltip) %>%
-    highcharter::hc_yAxis(title = list(text = ""), labels = list(format = format)) %>%
-    highcharter::hc_xAxis(title = list(text = ""), labels = list(format ="{value}")  ) %>%
-  ############  highcharter::hc_colors(color) %>%
-    highcharter::hc_title(text = titel,
-                          margin = 45, #
-                          align = "center",
-                          style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
-    highcharter::hc_chart(
-      style = list(fontFamily = "Calibri Regular", fontSize = "14px")
-    ) %>%
-    highcharter::hc_legend(enabled = TRUE, reversed = TRUE)  %>%
-    highcharter::hc_caption(text = quelle,
-                            style = list(fontSize = "11px", color = "gray")) %>%
-    highcharter::hc_exporting(enabled = TRUE,
-                              buttons = list(
-                                contextButton = list(
-                                  menuItems = list("downloadPNG", "downloadCSV",
-                                                   list(
-                                                     text = "Daten für GPT",
-                                                     onclick = htmlwidgets::JS(sprintf(
-                                                       "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
-
-     var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle: %s';
-
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-
-   }",
-                                                       gsub("'", "\\\\'", titel),
-                                                       gsub("'", "\\\\'", titel),
-                                                       gsub("'", "\\\\'", quelle)
-                                                     ))
-
-                                                   ))
-                                )
-                              )
-    )
+  quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
 
 
+  order <- unique(df1$berufsgruppe)
+
+  df1 <- df1 %>%
+    dplyr::mutate(
+      .tooltip = paste0(
+        "<b><span style='font-size:15px;'>", berufsgruppe, "</span></b><br>",
+        "Wert in Euro: ", (formatC(as.numeric(wert), format = "f", digits = 0, big.mark = "."))
+      ))
 
 
+  x <- "berufsgruppe"
+  y <- "wert"
+  color <- c( "Insgesamt" = "#b16fab", "MINT-Berufe" = "#b16fab", "Keine MINT-Berufe" = "#b16fab",
+              "Informatik" = "#efe8e6", "Mathematik, Naturwissenschaften" = "#efe8e6", "Technik" = "#efe8e6" )
+
+
+  out <- balkenbuilder_plotly(df=df1, x=x, y=y, titel=titel, orientation = "h",percent=FALSE,
+                              group=NULL, color=color,
+                              order=order, stacking = FALSE, quelle=quelle)
 
 
 
 
   return(out)
 
+}
 
 
-  }
 
 ### Tab 2 -------
 
@@ -4304,59 +4117,9 @@ entgelte_verlauf_1 <- function(r) {
   out <- linebuilder_plotly(df, titel, x = "jahr", y = "wertq", group = "berufsgruppe", format = format, color = color, quelle = quelle)
 
 
-#
-#   out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = "jahr", y = "wertq", group = "berufsgruppe")) %>%
-#     highcharter::hc_tooltip(pointFormat = tooltip) %>%
-#     highcharter::hc_yAxis(title = list(text = " "), labels = list(format = format),
-#                           style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular")) %>%
-#     highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular")) %>%
-#     highcharter::hc_title(text = titel,
-#                           margin = 45,
-#                           align = "center",
-#                           style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
-#     highcharter::hc_colors(color) %>%
-#     highcharter::hc_chart(
-#       style = list(fontFamily = "Calibri Regular", fontSize = "14px")
-#     )  %>%
-#     highcharter::hc_caption(text = quelle,
-#                             style = list(fontSize = "11px", color = "gray")) %>%
-#     highcharter::hc_exporting(enabled = TRUE,
-#                               buttons = list(
-#                                 contextButton = list(
-#                                   menuItems = list("downloadPNG", "downloadCSV",
-#                                                    list(
-#                                                      text = "Daten für GPT",
-#                                                      onclick = htmlwidgets::JS(sprintf(
-#                                                        "function () {
-#      var date = new Date().toISOString().slice(0,10);
-#      var chartTitle = '%s'.replace(/\\s+/g, '_');
-#      var filename = chartTitle + '_' + date + '.txt';
-#
-#      var data = 'Titel: %s\\n' + this.getCSV();
-#      data += '\\nQuelle: %s';
-#
-#      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-#      if (window.navigator.msSaveBlob) {
-#        window.navigator.msSaveBlob(blob, filename);
-#      } else {
-#        var link = document.createElement('a');
-#        link.href = URL.createObjectURL(blob);
-#        link.download = filename;
-#        link.click();
-#      }
-#    }",
-#                                                        gsub("'", "\\\\'", titel),
-#                                                        gsub("'", "\\\\'", titel),
-#                                                        gsub("'", "\\\\'", quelle)
-#                                                      )
-#                                                      )
-#                                                    )
-#                                   )
-#                                 )
-#                               )
-#     )
-#
 }
+
+
 
 ### Tab 3 -------
 

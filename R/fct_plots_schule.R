@@ -72,7 +72,7 @@ kurse_einstieg_comparison <- function(r,
   if (darstellet == "In Prozent"){
 
 
-    order <- c("Grundkurse", "Oberstufenbelegungen", "Leistungskurse")
+    order <- rev(c("Grundkurse", "Oberstufenbelegungen", "Leistungskurse"))
 
     df1 <- df1 %>%
       dplyr::mutate(
@@ -1299,7 +1299,27 @@ kurse_map <- function(r) {
   if(darst == "In Prozent"){
 
     order <- unique(df$region)
-    color <- "#b16fab"
+    color <- c(
+      "Deutschland" = "#b16fab",
+      "Ostdeutschland (inkl. Berlin)" = "#d3a4d7",
+      "Westdeutschland (o. Berlin)" = "#d3a4d7",
+      "Baden-Württemberg" = "#A9A9A9",
+      "Bayern" = "#A9A9A9",
+      "Berlin" = "#A9A9A9",
+      "Brandenburg" = "#A9A9A9",
+      "Bremen" = "#A9A9A9",
+      "Hamburg" = "#A9A9A9",
+      "Hessen" = "#A9A9A9",
+      "Mecklenburg-Vorpommern" = "#A9A9A9",
+      "Niedersachsen" = "#A9A9A9",
+      "Nordrhein-Westfalen" = "#A9A9A9",
+      "Rheinland-Pfalz" = "#A9A9A9",
+      "Saarland" = "#A9A9A9",
+      "Sachsen" = "#A9A9A9",
+      "Sachsen-Anhalt" = "#A9A9A9",
+      "Schleswig-Holstein" = "#A9A9A9",
+      "Thüringen" = "#A9A9A9"
+    )
 
     df <- df %>%
       dplyr::mutate(
@@ -1328,7 +1348,27 @@ kurse_map <- function(r) {
     df$wert <- as.numeric(gsub("\\.", "", df$wert))
 
     order <- unique(df$region)
-    color <- "#b16fab"
+    color <- c(
+      "Deutschland" = "#b16fab",
+      "Ostdeutschland (inkl. Berlin)" = "#d3a4d7",
+      "Westdeutschland (o. Berlin)" = "#d3a4d7",
+      "Baden-Württemberg" = "#A9A9A9",
+      "Bayern" = "#A9A9A9",
+      "Berlin" = "#A9A9A9",
+      "Brandenburg" = "#A9A9A9",
+      "Bremen" = "#A9A9A9",
+      "Hamburg" = "#A9A9A9",
+      "Hessen" = "#A9A9A9",
+      "Mecklenburg-Vorpommern" = "#A9A9A9",
+      "Niedersachsen" = "#A9A9A9",
+      "Nordrhein-Westfalen" = "#A9A9A9",
+      "Rheinland-Pfalz" = "#A9A9A9",
+      "Saarland" = "#A9A9A9",
+      "Sachsen" = "#A9A9A9",
+      "Sachsen-Anhalt" = "#A9A9A9",
+      "Schleswig-Holstein" = "#A9A9A9",
+      "Thüringen" = "#A9A9A9"
+    )
 
     df <- df %>%
       dplyr::mutate(
@@ -1649,7 +1689,7 @@ kurse_comparison_gender <- function(r,
 
 
       titel <- paste0("Anteil von Mädchen in MINT-Fächern", praep, regio, " (", timerange, ")"   )
-      order <- rev(unique(df1$indikator))
+      order <- unique(df1$indikator)
 
 
       df1 <- df1 %>%
@@ -1673,7 +1713,6 @@ kurse_comparison_gender <- function(r,
       group <- "anzeige_geschlecht"
       titel <- paste0("Anteil von MINT-Belegungen in der Schule", praep, regio, " (", timerange,")")
       color <- c("Mädchen" = "#154194" , "Jungen" = "#efe8e6")
-      #color <- c("#efe8e6", "#154194")
       quelle <- "Quelle der Daten: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
 
@@ -2257,6 +2296,7 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
 
 
   # für 9 Klassen Fach filtern
+
   if(klasse_select == "9. Klasse"){
     df <- df %>% dplyr::filter(fach == fach_select)
   }
@@ -2346,92 +2386,18 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
 
   }
 
-    color <- c("#efe8e6", "#66cbaf")
+  df$wert <- round(df$wert,1)
+
+  praep <- ifelse(bl_select == "Saarland", " im ", " in ")
 
 
   # Plot
 
-  if(indikator_select == "nach Geschlecht" & klasse_select == "4. Klasse"){
-    if(score_select == "Mindeststandard"){
+  if (klasse_select == "9. Klasse") {
 
-      df <- df %>%
-        dplyr::mutate(display_rel = prettyNum(df$wert, big.mark = ".", decimal.mark = ","))
+    if (indikator_select == "nach Geschlecht") {
 
 
-      praep <- ifelse(bl_select == "Saarland", "im", "in")
-
-      titel <- paste0("Anteil der Schüler:innen, die den Mindeststandard in Mathematik nicht erreichen,<br>", "nach Geschlecht", praep , bl_select, " (", klasse_select, ")")
-
-      df <- df %>%
-        dplyr::mutate(
-          geschlecht = factor(geschlecht, levels = c("Mädchen", "Jungen"))
-        ) %>%
-        dplyr::arrange(indikator, geschlecht) %>%
-        dplyr::mutate(
-          .tooltip = paste0(
-            "<b><span style='font-size:15px;'>", jahr, "</span></b><br>",
-            "<span style='font-size:15px;'>", geschlecht, "</span><br>",
-            "Anteil Mindeststandard nicht erreicht: ", formatC(wert, format = "f", digits = 1, decimal.mark = ","), " %")
-        )
-
-
-
-      x <- "jahr"
-      y <- "wert"
-      group <- "geschlecht"
-      quelle <- "Quelle der Daten: Institut zur Qualitätsentwicklung im Bildungswesen, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
-      color <- c("Mädchen" = "#154194", "Jungen" = "#efe8e6")
-
-      out <- balkenbuilder_plotly(df=df, x=x, y=y, titel=titel, orientation = "v", group=group, color=color,
-                                  percent = TRUE,stacking=FALSE, quelle=quelle) %>%
-        plotly::layout(
-          bargroupgap = 0.4
-        )
-
-
-
-
-    } else{
-      df$wert <- round(df$wert,1)
-
-
-    titel <- paste0("Durchschnittliche Leistung der Schüler:innen im Mathematik-Kompetenztest, <br>", "nach Geschlecht in " , bl_select, " (", klasse_select, ")")
-    jahr_order <- sort(unique(df$jahr))
-
-      df <- df %>%
-      dplyr::mutate(
-        jahr = factor(jahr, levels = jahr_order),
-        geschlecht = factor(geschlecht, levels = c("Mädchen", "Jungen"))
-      ) %>%
-      dplyr::arrange(indikator, geschlecht) %>%
-      dplyr::mutate(
-        .tooltip = paste0(
-          "<b><span style='font-size:15px;'>", jahr, "</span></b><br>",
-          "<span style='font-size:15px;'>", geschlecht, "</span><br>",
-          "Durchschnittliche Punktzahl: ", wert)
-      )
-
-
-    x <- "jahr"
-    y <- "wert"
-    group <- "geschlecht"
-    quelle <- "Quelle der Daten: Institut zur Qualitätsentwicklung im Bildungswesen, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
-    color <- c("Mädchen" = "#154194", "Jungen" = "#efe8e6")
-
-    out <- balkenbuilder_plotly(df=df, x=x, y=y, titel=titel, orientation = "v", group=group, color=color,
-                                percent = FALSE,stacking=FALSE, quelle=quelle)
-
-
-    }
-  }
-
-  else{
-
-    if(indikator_select == "nach Geschlecht" & klasse_select == "9. Klasse") {
-      df$wert <- round(df$wert,1)
-
-
-      titel <- paste0("Durchschnittliche Leistung der Schüler:innen im ", fach_select, "-Kompetenztest, <br>", "nach Geschlecht in " , bl_select, " (", klasse_select, ")")
       jahr_order <- sort(unique(df$jahr))
 
       df <- df %>%
@@ -2447,227 +2413,179 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
             "Durchschnittliche Punktzahl: ", wert)
         )
 
-      x <- "jahr"
-      y <- "wert"
-      group <- "geschlecht"
-      quelle <- "Quelle der Daten: Institut zur Qualitätsentwicklung im Bildungswesen, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+
+      percent <- FALSE
       color <- c("Mädchen" = "#154194", "Jungen" = "#efe8e6")
-
-      out <- balkenbuilder_plotly(df=df, x=x, y=y, titel=titel, orientation = "v", group=group, color=color,
-                                  percent = FALSE,stacking=FALSE, quelle=quelle)
-
+      group <- "geschlecht"
+      titel <- paste0("Durchschnittliche Leistung der Schüler:innen im ", fach_select, "-Kompetenztest, <br>", "nach Geschlecht" ,praep,  bl_select, " (", klasse_select, ")")
 
 
-    }else {
-      if(klasse_select == "4. Klasse") {
+    } else if (indikator_select == "nach Zuwanderungsgeschichte") {
 
-        df$wert <- round(df$wert,1)
+      if(bl_select %in% c("Berlin", "Bremen", "Saarland")){
+        df <- df %>% dplyr::filter(jahr == "2018") }
 
-        titel <- ifelse(bl_select == "Saarland",
-                        paste0("Durchschnittliche Leistung der Schüler:innen im Mathematik-Kompetenztest ", indikator_select, " im " , bl_select, " (", klasse_select, ")"),
-                        paste0("Durchschnittliche Leistung der Schüler:innen im Mathematik-Kompetenztest ", indikator_select, " in " , bl_select, " (", klasse_select, ")"))
+      jahr_order <- sort(unique(df$jahr))
 
+      df <- df %>%
+        dplyr::mutate(
+          jahr = factor(jahr, levels = jahr_order)) %>%
+        dplyr::arrange(indikator) %>%
+        dplyr::mutate(
+          .tooltip = paste0(
+            "<b><span style='font-size:15px;'>", jahr, "</span></b><br>",
+            "<span style='font-size:15px;'>", indikator, "</span><br>",
+            "Durchschnittliche Punktzahl: ", wert)
+        )
 
-
-        jahr_order <- sort(unique(df$jahr))
-
-        df <- df %>%
-          dplyr::mutate(
-            jahr = factor(jahr, levels = jahr_order)
-          ) %>%
-          dplyr::arrange(indikator, geschlecht) %>%
-          dplyr::mutate(
-            .tooltip = paste0(
-              "<b><span style='font-size:15px;'>", indikator, "</span></b><br>",
-              "<span style='font-size:15px;'>", jahr, "</span><br>",
-              "Durchschnittliche Punktzahl: ", wert)
-          )
+      percent <- FALSE
+      color <- c("#efe8e6", "#66cbaf")
+      group <- "indikator"
+      titel <- paste0("Durchschnittliche Leistung der Schüler:innen im ", fach_select, "-Kompetenztest, <br>", "nach Zuwanderungsgeschichte", praep , bl_select, " (", klasse_select, ")")
 
 
-        x <- "jahr"
-        y <- "wert"
-        group <- "indikator"
-        quelle <- "Quelle der Daten: Institut zur Qualitätsentwicklung im Bildungswesen, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
-        #color <- c("ohne Zuwanderungsgeschichte" = "#efe8e6","mit Zuwanderungsgeschichte" = "#66cbaf")
-        color <- c("#efe8e6", "#66cbaf")
+    } else if (indikator_select == "nach sozialem Status") {
 
-        out <- balkenbuilder_plotly(df=df, x=x, y=y, titel=titel, orientation = "v", group=group, color=color,
-                                    percent = FALSE,stacking=FALSE, quelle=quelle)
+      jahr_order <- sort(unique(df$jahr))
 
+      df <- df %>%
+        dplyr::mutate(
+          jahr = factor(jahr, levels = jahr_order)) %>%
+        dplyr::arrange(indikator) %>%
+        dplyr::mutate(
+          .tooltip = paste0(
+            "<b><span style='font-size:15px;'>", jahr, "</span></b><br>",
+            "<span style='font-size:15px;'>", indikator, "</span><br>",
+            "Durchschnittliche Punktzahl: ", wert)
+        )
 
+      percent <- FALSE
+      color <- c("#efe8e6", "#66cbaf")
+      group <- "indikator"
+      titel <- paste0("Durchschnittliche Leistung der Schüler:innen im ", fach_select, "-Kompetenztest, <br>", "nach sozialem Status", praep , bl_select, " (", klasse_select, ")")
 
+    }
 
-   #      out <- highcharter::hchart(df, 'column', highcharter::hcaes(y = wert, x = jahr, group = indikator))%>%
-   #        highcharter::hc_plotOptions(column = list(pointWidth = 90))%>%
-   #        highcharter::hc_tooltip(pointFormat = "{point.indikator} <br> Durchschnittliche Punktzahl: {point.y}")%>%
-   #        highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}"),min=300) %>%
-   #        highcharter::hc_xAxis(title = list(text = ""), categories = c("2011",
-   #                                                                      "2016",
-   #                                                                      "2021")) %>%
-   #        highcharter::hc_colors(c("#efe8e6", "#66cbaf"
-   #        )) %>%
-   #        highcharter::hc_title(text = paste0("Durchschnittliche Leistung der Schüler:innen im Mathematik-Kompetenztest ", indikator_select, " in " , bl_select, " (", klasse_select, ")"),
-   #                              margin = 45,
-   #                              align = "center",
-   #                              style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
-   #        highcharter::hc_chart(
-   #          style = list(fontFamily = "Calibri Regular", fontSize = "14px")
-   #        ) %>%
-   #        highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
-   #        highcharter::hc_caption(text = "Quelle der Daten: Institut zur Qualitätsentwicklung im Bildungswesen, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
-   #                                style = list(fontSize = "11px", color = "gray")) %>%
-   #        highcharter::hc_exporting(enabled = TRUE,
-   #                                  buttons = list(
-   #                                    contextButton = list(
-   #                                      menuItems = list("downloadPNG", "downloadCSV",
-   #                                                       list(
-   #                                                         text = "Daten für GPT",
-   #                                                         onclick = htmlwidgets::JS(sprintf(
-   #                                                           "function () {
-   #   var date = new Date().toISOString().slice(0,10);
-   #   var chartTitle = '%s'.replace(/\\s+/g, '_');
-   #   var filename = chartTitle + '_' + date + '.txt';
-   #
-   #
-   #   var data = 'Titel: %s\\n' + this.getCSV();
-   #   data += '\\nQuelle: Institut zur Qualitätsentwicklung im Bildungswesen, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt';
-   #
-   #   var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-   #   if (window.navigator.msSaveBlob) {
-   #     window.navigator.msSaveBlob(blob, filename);
-   #   } else {
-   #     var link = document.createElement('a');
-   #     link.href = URL.createObjectURL(blob);
-   #     link.download = filename;
-   #     link.click();
-   #   }
-   # }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel)    ))))
-   #                                    )
-   #                                  )
-   #        )
-      }else{
-        if(bl_select %in% c("Berlin", "Bremen", "Saarland")){
-          df <- df %>% dplyr::filter(jahr == "2018")
-          df$wert <- round(df$wert,1)
-
-
-          titel <- ifelse(bl_select == "Saarland",
-                          paste0("Durchschnittliche Leistung der Schüler:innen im ", fach_select, "-Kompetenztest ", indikator_select, " im " , bl_select, " (", klasse_select, ")"),
-                          paste0("Durchschnittliche Leistung der Schüler:innen im ", fach_select, "-Kompetenztest ", indikator_select, " in " , bl_select, " (", klasse_select, ")"))
-
-
-
-
-   #        out <- highcharter::hchart(df, 'column', highcharter::hcaes(y = wert, x = jahr, group = indikator))%>%
-   #          highcharter::hc_plotOptions(column = list(pointWidth = 90))%>%
-   #          highcharter::hc_tooltip(pointFormat = "{point.indikator} Durchschnittliche Punktzahl: {point.y}")%>%
-   #          highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}"),min=300) %>%
-   #          highcharter::hc_xAxis(title = list(text = "")) %>%
-   #          highcharter::hc_colors(color) %>%
-   #          highcharter::hc_title(text = paste0("Durchschnittliche Leistung der Schüler:innen im ", fach_select, "-Kompetenztest ", indikator_select, " in " , bl_select, " (", klasse_select, ")"),
-   #                                margin = 45,
-   #                                align = "center",
-   #                                style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
-   #          highcharter::hc_chart(
-   #            style = list(fontFamily = "Calibri Regular", fontSize = "14px")
-   #          ) %>%
-   #          highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
-   #          highcharter::hc_caption(text = "Quelle der Daten: Institut zur Qualitätsentwicklung im Bildungswesen, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
-   #                                  style = list(fontSize = "11px", color = "gray")) %>%
-   #          highcharter::hc_exporting(enabled = TRUE,
-   #                                    buttons = list(
-   #                                      contextButton = list(
-   #                                        menuItems = list("downloadPNG", "downloadCSV",
-   #                                                         list(
-   #                                                           text = "Daten für GPT",
-   #                                                           onclick = htmlwidgets::JS(sprintf(
-   #                                                             "function () {
-   #   var date = new Date().toISOString().slice(0,10);
-   #   var chartTitle = '%s'.replace(/\\s+/g, '_');
-   #   var filename = chartTitle + '_' + date + '.txt';
-   #
-   #
-   #   var data = 'Titel: %s\\n' + this.getCSV();
-   #   data += '\\nQuelle: Institut zur Qualitätsentwicklung im Bildungswesen, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt';
-   #
-   #
-   #   var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-   #   if (window.navigator.msSaveBlob) {
-   #     window.navigator.msSaveBlob(blob, filename);
-   #   } else {
-   #     var link = document.createElement('a');
-   #     link.href = URL.createObjectURL(blob);
-   #     link.download = filename;
-   #     link.click();
-   #   }
-   # }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel)    ))))
-   #                                      )
-   #                                    )
-   #          )
-
-        }else{
-          df$wert <- round(df$wert,1)
-
-
-          titel <-  ifelse(bl_select == "Saarland",
-                           paste0("Durchschnittliche Leistung der Schüler:innen im ", fach_select, "-Kompetenztest ", indikator_select, " im " , bl_select, " (", klasse_select, ")"),
-                           paste0("Durchschnittliche Leistung der Schüler:innen im ", fach_select, "-Kompetenztest ", indikator_select, " in " , bl_select, " (", klasse_select, ")"))
-
-          out <- highcharter::hchart(df, 'column', highcharter::hcaes(y = wert, x = jahr, group = indikator))%>%
-            highcharter::hc_plotOptions(column = list(pointWidth = 90))%>%
-            highcharter::hc_tooltip(pointFormat = "{point.indikator} Durchschnittliche Punktzahl: {point.y}")%>%
-            highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}"),min=300) %>%
-            highcharter::hc_xAxis(title = list(text = ""), categories = c("2012",
-                                                                          "2018",
-                                                                          "2024")) %>%
-            highcharter::hc_colors(color) %>%
-            highcharter::hc_title(text = titel,
-                                  margin = 45,
-                                  align = "center",
-                                  style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
-            highcharter::hc_chart(
-              style = list(fontFamily = "Calibri Regular", fontSize = "14px")
-            ) %>%
-            highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
-            highcharter::hc_caption(text = "Quelle der Daten: Institut zur Qualitätsentwicklung im Bildungswesen, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
-                                    style = list(fontSize = "11px", color = "gray")) %>%
-            highcharter::hc_exporting(enabled = TRUE,
-                                      buttons = list(
-                                        contextButton = list(
-                                          menuItems = list("downloadPNG", "downloadCSV",
-                                                           list(
-                                                             text = "Daten für GPT",
-                                                             onclick = htmlwidgets::JS(sprintf(
-                                                               "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
-
-
-     var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle: Institut zur Qualitätsentwicklung im Bildungswesen, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt';
-
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-   }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel)    ))))
-                                        )
-                                      )
-            )
-        }
-
-      }}
-
-    return(out)
   }
 
+  if (klasse_select == "4. Klasse") {
+
+    if (indikator_select == "nach Geschlecht" &&
+        score_select == "Mindeststandard") {
+
+      df <- df %>%
+        dplyr::mutate(
+          geschlecht = factor(geschlecht, levels = c("Mädchen", "Jungen"))
+        ) %>%
+        dplyr::arrange(indikator, geschlecht) %>%
+        dplyr::mutate(
+          .tooltip = paste0(
+            "<b><span style='font-size:15px;'>", jahr, "</span></b><br>",
+            "<span style='font-size:15px;'>", geschlecht, "</span><br>",
+            "Anteil Mindeststandard nicht erreicht: ", formatC(wert, format = "f", digits = 1, decimal.mark = ","), " %")
+        )
+
+      percent <- TRUE
+      color <- c("Mädchen" = "#154194", "Jungen" = "#efe8e6")
+      group <- "geschlecht"
+      titel <- paste0("Anteil der Schüler:innen, die den Mindeststandard in Mathematik nicht erreichen,<br>", "nach Geschlecht", praep , bl_select, " (", klasse_select, ")")
+
+
+    } else if (indikator_select == "nach Geschlecht") {
+
+
+      jahr_order <- sort(unique(df$jahr))
+
+      df <- df %>%
+        dplyr::mutate(
+          jahr = factor(jahr, levels = jahr_order),
+          geschlecht = factor(geschlecht, levels = c("Mädchen", "Jungen"))
+        ) %>%
+        dplyr::arrange(indikator, geschlecht) %>%
+        dplyr::mutate(
+          .tooltip = paste0(
+            "<b><span style='font-size:15px;'>", jahr, "</span></b><br>",
+            "<span style='font-size:15px;'>", geschlecht, "</span><br>",
+            "Durchschnittliche Punktzahl: ", wert)
+        )
+
+
+      percent <- FALSE
+      color <- c("Mädchen" = "#154194", "Jungen" = "#efe8e6")
+      group <- "geschlecht"
+      titel <- paste0("Durchschnittliche Leistung der Schüler:innen im Mathematik-Kompetenztest, <br>", "nach Geschlecht in " , bl_select, " (", klasse_select, ")")
+
+
+    } else if (indikator_select == "nach Zuwanderungsgeschichte") {
+
+
+      jahr_order <- sort(unique(df$jahr))
+
+      df <- df %>%
+        dplyr::mutate(
+          jahr = factor(jahr, levels = jahr_order)
+        ) %>%
+        dplyr::arrange(indikator) %>%
+        dplyr::mutate(
+          .tooltip = paste0(
+            "<b><span style='font-size:15px;'>", indikator, "</span></b><br>",
+            "<span style='font-size:15px;'>", jahr, "</span><br>",
+            "Durchschnittliche Punktzahl: ", wert)
+        )
+
+      percent <- FALSE
+      color <- c("#efe8e6", "#66cbaf")
+      group <- "indikator"
+      titel <- paste0("Durchschnittliche Leistung der Schüler:innen im Mathematik-Kompetenztest <br> ", indikator_select, praep , bl_select, " (", klasse_select, ")")
+
+
+    } else if (indikator_select == "nach Bildungskapital") {
+
+      jahr_order <- sort(unique(df$jahr))
+
+      df <- df %>%
+        dplyr::mutate(
+          jahr = factor(jahr, levels = jahr_order)
+        ) %>%
+        dplyr::arrange(indikator) %>%
+        dplyr::mutate(
+          .tooltip = paste0(
+            "<b><span style='font-size:15px;'>", indikator, "</span></b><br>",
+            "<span style='font-size:15px;'>", jahr, "</span><br>",
+            "Durchschnittliche Punktzahl: ", wert)
+        )
+
+      percent <- FALSE
+      color <- c("#efe8e6", "#66cbaf")
+      group <- "indikator"
+      titel <- paste0("Durchschnittliche Leistung der Schüler:innen im Mathematik-Kompetenztest <br> ", indikator_select, praep , bl_select, " (", klasse_select, ")")
+
+    }
+
+  }
+
+
+  x <- "jahr"
+  y <- "wert"
+
+  legend_y <- -0.06
+  quelle_y <- -0.14
+  quelle <- "Quelle der Daten: Institut zur Qualitätsentwicklung im Bildungswesen, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+
+
+  out <- balkenbuilder_plotly(df=df, x=x, y=y, titel=titel, orientation = "v", group=group, color=color, legend_y=legend_y, quelle_y=quelle_y,
+                              percent = percent,stacking=FALSE, quelle=quelle) %>%
+    plotly::layout(
+      bargroupgap = 0.4
+    )
+
+
+    return(out)
 }
+
+
+
+
 
 #' A function to create a bar plot
 #'
@@ -2714,9 +2632,16 @@ iqb_fragebogen <- function(r){
     df$geschlecht <- as.factor(df$geschlecht)
     df$geschlecht <- factor(df$geschlecht, levels = c("Mädchen", "Jungen"))
 
-    titel <- paste0("Selbsteinschätzung des Interesses und der eigenen Fähigkeiten in ", fach_select," von Schüler:innen der 4. Klasse (", jahr_select, ")")
-    tooltip_text <- "{point.geschlecht} <br> {point.display_rel}"
-    quelle_text <- "Quelle der Daten: Institut zur Qualitätsentwicklung im Bildungswesen, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    df <- df %>%
+      dplyr::mutate(
+        .tooltip = paste0(
+          "<b><span style='font-size:15px;'>", indikator, "</span></b><br>",
+          "<span style='font-size:15px;'>", geschlecht, "</span><br>",
+          "Wert: ", formatC(wert, format = "f", digits = 1, decimal.mark = ","))
+      )
+
+    titel <- paste0("Selbsteinschätzung des Interesses und der eigenen Fähigkeiten in <br> ", fach_select," von Schüler:innen der 4. Klasse (", jahr_select, ")")
+
 
   }else{
     jahr_select <- r$jahr_iqb_fragebogen_9
@@ -2777,24 +2702,23 @@ iqb_fragebogen <- function(r){
       df$geschlecht <- factor(df$geschlecht, levels = c("mehr als 100 Bücher", "maximal 100 Bücher"))
     }
 
-
     praep <- ifelse(region_select == "Saarland", " im ", " in ")
     titel <- paste0("Selbsteinschätzung des Interesses und der eigenen Fähigkeiten in ", fach_select, "<br>",
                     " von Schüler:innen der 9. Klasse", praep, region_select, " (", jahr_select, ")"         )
+
+    df <- df %>%
+      dplyr::mutate(
+        .tooltip = paste0(
+          "<b><span style='font-size:15px;'>", indikator, "</span></b><br>",
+          "<span style='font-size:15px;'>", geschlecht, "</span><br>",
+          "Wert: ", formatC(wert, format = "f", digits = 1, decimal.mark = ","), " (SD = ", sd,")" )
+      )
 
   }
 
 
   # plot
 
-
-  df <- df %>%
-    dplyr::mutate(
-      .tooltip = paste0(
-        "<b><span style='font-size:15px;'>", indikator, "</span></b><br>",
-        "<span style='font-size:15px;'>", geschlecht, "</span><br>",
-        "Wert: ", formatC(wert, format = "f", digits = 1, decimal.mark = ","), " (SD = ", sd,")" )
-    )
 
 
   order <- levels(df$indikator)

@@ -734,21 +734,23 @@ plot_international_top10 <- function(r) {
   show_avg <- r$show_avg_top10_mint_line_m
 
 
-  ###if (is.null(fach_m)) { fach_m <- ""}
-
   if (label_m == "Weltweit") {
 
     fach_m <- "MINT"
 
-    df <- dplyr::tbl(con, from = "studierende_absolventen_weltweit")  %>%
-      dplyr::filter(fach == "Alle MINT-Fächer" &
-                      jahr == timerange &
-                      land != "San Marino") %>%
-      dplyr::mutate(wert = round(wert, 1)) %>%
+
+    df <- dplyr::tbl(con, from = "studierende_absolventen_weltweit") %>%
+      dplyr::filter(
+        fach == "Alle MINT-Fächer",
+        jahr == timerange,
+        land != "San Marino"
+      ) %>%
       dplyr::select(land, wert) %>%
-      dplyr::collect()
-
-
+      dplyr::collect() %>%
+      dplyr::mutate(
+        wert = as.numeric(wert),
+        wert = round(wert, 1)
+      )
 
 
   }
@@ -802,19 +804,19 @@ plot_international_top10 <- function(r) {
     # Prüfe, ob mint_select existiert, falls nicht, setze Standardwert
     if (!exists("mint_select") || is.null(mint_select)) mint_select <- "mint"
 
-    df_query <- glue::glue_sql("
-SELECT land, ROUND(wert, 1) AS wert
-FROM studierende_europa
-WHERE geschlecht = 'Gesamt'
-AND jahr = {timerange}
-AND (
-    {mint_select} = 'mint'
-    OR ({mint_select} = 'nicht mint' AND {fach_m} = 'Alle MINT-Fächer')
-)
-AND fach = {fach_m}
-AND indikator = 'Fächerwahl'
-AND land != 'Lichtenstein'
-", .con = con)
+      df_query <- glue::glue_sql("
+    SELECT land, ROUND(wert, 1) AS wert
+    FROM studierende_europa
+    WHERE geschlecht = 'Gesamt'
+    AND jahr = {timerange}
+    AND (
+        {mint_select} = 'mint'
+        OR ({mint_select} = 'nicht mint' AND {fach_m} = 'Alle MINT-Fächer')
+    )
+    AND fach = {fach_m}
+    AND indikator = 'Fächerwahl'
+    AND land != 'Lichtenstein'
+    ", .con = con)
 
 df <- DBI::dbGetQuery(con, df_query)
 
@@ -829,19 +831,7 @@ df <- df %>%
   df <- df %>%
     dplyr::filter(!is.na(wert))
 
-  # Grenze für die X-Achse ist immer etwas größer als der maximale wert
-  # aber nie größer als 100%
-  # Grenze soll immer in 10er Schritten gehen
-  max_percent_used <- ceiling(min(c(100, max(df$wert) * 1.2)) / 10) * 10
 
-
-  # Hover vorbereiten
-  df$wert_display <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
-  hover <- "Anteil: {point.wert_display} %"
-  if(label_m == "OECD"){
-    df$wert_absolut_display <- prettyNum(df$wert_absolut, big.mark = ".", decimal.mark = ",")
-    hover <- "Anteil: {point.wert_display} % <br> Anzahl: {point.wert_absolut_display}"
-  }
 
   # Überschrift vorbereiten
   t_gruppe <- "Studierenden in "
@@ -856,44 +846,139 @@ df <- df %>%
   t_quelle1 <- ifelse(label_m == "EU", "Europäische ", t_quelle1)
 
 
+  quelle <- dplyr::case_when(
+    label_m == "Weltweit" ~ "Quelle der Daten: UNESCO, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+    label_m == "OECD" ~ "Quelle der Daten: OECD, 2025, eigene Berechnungen durch MINTvernetzt.",
+    label_m == "EU" ~ "Quelle der Daten: Eurostat, 2025, eigene Berechnungen durch MINTvernetzt.",
+    TRUE ~ "Quelle der Daten: eigene Berechnungen durch MINTvernetzt."
+  )
 
-  # Create top 10 plot
+  df_top <- df %>%
+    dplyr::arrange(dplyr::desc(wert)) %>%
+    dplyr::slice_head(n = 10)
 
-  #dies ist schon als funktion automatisiert, too complex
+  df_bottom <- df %>%
+    dplyr::arrange(wert) %>%
+    dplyr::slice_head(n = 10)
+
+# Create top 10 plot
+
+  titel_top = paste0(
+    t_quelle1, "Länder mit dem größten Anteil an <br>",
+    t_gruppe,"<br>", t_fach, "<br> in ", timerange, t_quelle)
+
+  titel_bottom = paste0(
+    t_quelle1, "Länder mit dem niedrigsten Anteil an <br>",
+    t_gruppe,"<br>", t_fach, "<br> in ", timerange, t_quelle)
+
+  order_top <- unique(df_top$land)
+
+  order_bottom <- rev(df_bottom$land)
+
+  df_top <- df_top %>%
+    dplyr::mutate(
+      .tooltip = paste0(
+        "<b><span style='font-size:15px;'>", land, "</span></b><br>",
+        "Anteil: ", wert, " %"
+      )
+    )
+
+  df_bottom <- df_bottom %>%
+    dplyr::mutate(
+      .tooltip = paste0(
+        "<b><span style='font-size:15px;'>", land, "</span></b><br>",
+        "Anteil: ", wert, " %"
+      )
+    )
+
+
+  x <- "land"
+  y <- "wert"
+
+  color <- c("#b16fab")
+
+
+  plot_top <- balkenbuilder_plotly(df=df_top, x=x, y=y, titel=titel_top, orientation = "h",
+                                   group=NULL, color = color,order = order_top, margin_t=100, titel_y=0.97,
+                                   stacking = FALSE, percent = TRUE, quelle=quelle)
+
+  plot_bottom <- balkenbuilder_plotly(df=df_bottom, x=x, y=y, titel=titel_bottom, orientation = "h",
+                                   group=NULL, color = color,order = order_bottom, margin_t=100, titel_y=0.97,
+                                   stacking = FALSE, percent = TRUE, quelle=quelle)
 
 
 
+   if (show_avg == "Ja") {
 
-  plot_top <- highcharter::hchart(
-    df %>% dplyr::arrange(desc(wert)) %>% dplyr::slice(1:10),
-    'bar',
-    highcharter::hcaes(y = wert, x = land)) %>%
-    get_top10_hc_plot_options_int(
-      hc_title = paste0(t_quelle1, "Länder mit dem größten Anteil an ", t_gruppe, t_fach, " in ", timerange, t_quelle),
-      hc_tooltip = hover,
-      max_percent_used = max_percent_used,
-      marker="OECD")
+     avg <- mean(df$wert, na.rm = TRUE)
 
-  # Create bottom 10 plot
-  #dies ist schon als funktion automatisiert, too complex
-  plot_bottom <- highcharter::hchart(
-    df %>% dplyr::arrange(desc(wert)) %>% dplyr::slice_tail(n = 10),
-    'bar',
-    highcharter::hcaes(y = wert, x = land)) %>%
-    get_top10_hc_plot_options_int(
-      hc_title = paste0(t_quelle1, "Länder mit dem niedrigsten Anteil an ", t_gruppe, t_fach, " in ", timerange, t_quelle),
-      hc_tooltip = hover,
-      max_percent_used = max_percent_used,
-      marker="OECD")
+     max_percent_bottom <- ceiling(min(100, max(c(df_bottom$wert, avg), na.rm = TRUE) * 1.2) / 20) * 20
+
+     plot_top <- plot_top %>%
+       plotly::layout(
+         shapes = list(
+           list(
+             type = "line",
+             xref = "x",
+             yref = "paper",
+             x0 = avg, x1 = avg,
+             y0 = 0, y1 = 1,
+             line = list(color = "#154194",width = 2
+             ))))
 
 
-  if (show_avg == "Ja") {
-    plot_top <- plot_top %>%
-      add_avg_to_hc(hc_mean = mean(df$wert, na.rm = TRUE), type = "MINT")
-    plot_bottom <- plot_bottom %>%
-      add_avg_to_hc(hc_mean = mean(df$wert, na.rm = TRUE), type = "MINT")
+     plot_bottom <- plot_bottom %>%
+       plotly::layout(
+         xaxis = list(range = c(0, max_percent_bottom)),
+         shapes = list(
+           list(
+             type = "line",
+             xref = "x",
+             yref = "paper",
+             x0 = avg, x1 = avg,
+             y0 = 0, y1 = 1,
+             line = list(color = "#154194",width = 2
+             ))))
+
+
+     }
+
+
+
+  if(length(df$wert) < 16){
+    plot_bottom <- plotly::plot_ly() |>
+      plotly::layout(
+        title = list(
+          text = paste0("Es liegen nur ", length(df$wert),
+                        " Datenpunkte <br> für das gewählte Jahr vor. <br> Deshalb ist kein Vergleich zwischen den <br>höchsten und geringsten MINT-Anteilen <br> der Länder möglich."),
+          x = 0.5,
+          xanchor = "center",
+          font = list(
+            family = "Calibri, sans-serif",
+            size = 20,
+            color = "black"
+          )
+        ),
+        annotations = list(
+          list(
+            text = "",
+            x = 0.5,
+            y = 0.5,
+            xref = "paper",
+            yref = "paper",
+            showarrow = FALSE,
+            font = list(
+              family = "Calibri, sans-serif",
+              size = 14,
+              color = "gray"
+            )
+          )
+        ),
+        xaxis = list(visible = FALSE),
+        yaxis = list(visible = FALSE),
+        margin = list(t = 80, b = 100, r = 50, l = 40)
+      )
   }
-
 
   out <- list(plot_top, plot_bottom)
 
@@ -1043,13 +1128,6 @@ plot_international_top10_gender <- function(r) {
     # meiste Frauen wählen MINT
 
 
-
-
-
-
-
-
-
     fach_m <- r$map_f_g_e_u
     if (is.null(fach_m)) { fach_m <- ""}
 
@@ -1073,14 +1151,8 @@ plot_international_top10_gender <- function(r) {
       dplyr::select(land, wert)
 
 
-
   }
 
-
-  # Grenze für die X-Achse ist immer etwas größer als der maximale wert
-  # aber nie größer als 100%
-  # Grenze soll immer in 10er Schritten gehen
-  max_percent_used <- ceiling(min(c(100, max(df$wert) * 1.2)) / 10) * 10
 
 
   # filter missing values
@@ -1089,13 +1161,6 @@ plot_international_top10_gender <- function(r) {
     dplyr::mutate(wert = round(wert, 1))
 
 
-  # Hover vorbereiten
-  df$wert_display <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
-  hover <- "Anteil: {point.wert_display} %"
-  if(label_m == "OECD"){
-    df$wert_absolut_display <- prettyNum(df$wert_absolut, big.mark = ".", decimal.mark = ",")
-    hover <- "Anteil: {point.wert_display} % <br> Anzahl: {point.wert_absolut_display}"
-  }
 
   # Überschrift vorbereiten
   t_quelle1 <- "OECD-"
@@ -1104,62 +1169,149 @@ plot_international_top10_gender <- function(r) {
   t_fach <- ifelse(t_fach == "Dienstleistungen", "Fächern aus dem Bereich 'Dienstleistungen'", t_fach)
 
   if(art == "meisten Frauen wählen MINT"){
-    titel1 <- paste0(t_quelle1, "Länder, in denen sich der höchste Anteil an Frauen für ein Studium in ",
-                     t_fach, " entscheidet (", timerange, ")")
-    titel2 <- paste0(t_quelle1, "Länder, in denen sich der geringste Anteil an Frauen für ein Studium in ",
-                     t_fach, " entscheidet (", timerange, ")")
+    titel1 <- paste0(t_quelle1, "Länder, in denen sich der höchste Anteil <br> an Frauen für ein Studium in <br> ",
+                     t_fach, " <br> entscheidet (", timerange, ")")
+    titel2 <- paste0(t_quelle1, "Länder, in denen sich der geringste Anteil <br> an Frauen für ein Studium in <br>  ",
+                     t_fach, " <br> entscheidet (", timerange, ")")
   }else{
-    titel1 <- paste0(t_quelle1, "Länder mit dem größten Frauenanteil unter Studierenden in ",
+    titel1 <- paste0(t_quelle1, "Länder mit dem größten <br> Frauenanteil unter Studierenden in <br>",
                      t_fach, " (", timerange, ")")
-    titel2 <- paste0(t_quelle1, "Länder mit dem niedrigsten Frauenanteil unter Studierenden in ",
+    titel2 <- paste0(t_quelle1, "Länder mit dem niedrigsten <br>Frauenanteil unter Studierenden in <br> ",
                      t_fach, " (", timerange, ")")
+  }
+
+  if (label_m == "EU") {
+   quelle <- paste0("Quelle der Daten: Eurostat, 2025, eigene Berechnungen durch MINTvernetzt.")
+  } else {
+    quelle <- paste0("Quelle der Daten: OECD, 2025, eigene Berechnungen durch MINTvernetzt.")
+
   }
 
 
 
+  df_top <- df %>%
+    dplyr::arrange(dplyr::desc(wert)) %>%
+    dplyr::slice_head(n = 10)
+
+  df_bottom <- df %>%
+    dplyr::arrange(wert) %>%
+    dplyr::slice_head(n = 10)
+
   # Create top 10 plot
-  #dies ist schon als funktion automatisiert, too complex
-  plot_top <- highcharter::hchart(
-    df %>% dplyr::arrange(desc(wert)) %>% dplyr::slice(1:10),
-    'bar',
-    highcharter::hcaes(y = wert, x = land)) %>%
-    get_top10_hc_plot_options_int(
-      hc_title = titel1,
-      hc_tooltip = hover,
-      max_percent_used = max_percent_used,
-      col = "#154194",
-      marker="OECD"
+
+
+  order_top <- unique(df_top$land)
+
+  order_bottom <- rev(df_bottom$land)
+
+  df_top <- df_top %>%
+    dplyr::mutate(
+      .tooltip = paste0(
+        "<b><span style='font-size:15px;'>", land, "</span></b><br>",
+        "Anteil: ", wert, " %"
+      )
+    )
+
+  df_bottom <- df_bottom %>%
+    dplyr::mutate(
+      .tooltip = paste0(
+        "<b><span style='font-size:15px;'>", land, "</span></b><br>",
+        "Anteil: ", wert, " %"
+      )
     )
 
 
-  # Create bottom 10 plot
-  #dies ist schon als funktion automatisiert, too complex
-  plot_bottom <- highcharter::hchart(
-    df %>% dplyr::arrange(desc(wert)) %>% dplyr::slice_tail(n = 10),
-    'bar',
-    highcharter::hcaes(y = wert, x = land)) %>%
-    get_top10_hc_plot_options_int(
-      hc_title = titel2,
-      hc_tooltip = "Anteil: {point.wert} % <br> Anzahl: {point.wert_absolut}" ,
-      max_percent_used = max_percent_used,
-      col = "#154194",
-      marker="OECD"
-    )
+  x <- "land"
+  y <- "wert"
+
+  color <- c("#154194")
+
+
+  plot_top <- balkenbuilder_plotly(df=df_top, x=x, y=y, titel=titel1, orientation = "h",
+                                   group=NULL, color = color,order = order_top, margin_t=100, titel_y=0.97,
+                                   stacking = FALSE, percent = TRUE, quelle=quelle)
+
+  plot_bottom <- balkenbuilder_plotly(df=df_bottom, x=x, y=y, titel=titel2, orientation = "h",
+                                      group=NULL, color = color,order = order_bottom, margin_t=100, titel_y=0.97,
+                                      stacking = FALSE, percent = TRUE, quelle=quelle)
+
 
 
   if (show_avg == "Ja") {
+
+    avg <- mean(df$wert, na.rm = TRUE)
+
+    max_percent_bottom <- ceiling(min(100, max(c(df_bottom$wert, avg), na.rm = TRUE) * 1.2) / 20) * 20
+
     plot_top <- plot_top %>%
-      add_avg_to_hc(hc_mean = mean(df$wert, na.rm = TRUE), type = "Frauen")
+      plotly::layout(
+        shapes = list(
+          list(
+            type = "line",
+            xref = "x",
+            yref = "paper",
+            x0 = avg, x1 = avg,
+            y0 = 0, y1 = 1,
+            line = list(color = "#b16fab",width = 2
+            ))))
+
+
     plot_bottom <- plot_bottom %>%
-      add_avg_to_hc(hc_mean = mean(df$wert, na.rm = TRUE), type = "Frauen")
+      plotly::layout(
+        xaxis = list(range = c(0, max_percent_bottom)),
+        shapes = list(
+          list(
+            type = "line",
+            xref = "x",
+            yref = "paper",
+            x0 = avg, x1 = avg,
+            y0 = 0, y1 = 1,
+            line = list(color = "#b16fab",width = 2
+            ))))
+
+
+  }
+
+
+
+  if(length(df$wert) < 16){
+    plot_bottom <- plotly::plot_ly() |>
+      plotly::layout(
+        title = list(
+          text = paste0("Es liegen nur ", length(df$wert),
+                        " Datenpunkte <br> für das gewählte Jahr vor. <br> Deshalb ist kein Vergleich zwischen den <br>höchsten und geringsten MINT-Anteilen <br> der Länder möglich."),
+          x = 0.5,
+          xanchor = "center",
+          font = list(
+            family = "Calibri, sans-serif",
+            size = 20,
+            color = "black"
+          )
+        ),
+        annotations = list(
+          list(
+            text = "",
+            x = 0.5,
+            y = 0.5,
+            xref = "paper",
+            yref = "paper",
+            showarrow = FALSE,
+            font = list(
+              family = "Calibri, sans-serif",
+              size = 14,
+              color = "gray"
+            )
+          )
+        ),
+        xaxis = list(visible = FALSE),
+        yaxis = list(visible = FALSE),
+        margin = list(t = 80, b = 100, r = 50, l = 40)
+      )
   }
 
   out <- list(plot_top, plot_bottom)
 
   return(out)
-
-
-
 
 }
 
@@ -1167,7 +1319,6 @@ plot_international_top10_gender <- function(r) {
 
 plot_international_mint_top_10 <- function(r){
 
-# Überschriften anpassen, einheitlich mit anderen plots
 
 # ui inputs laden
 avg_line <- r$show_avg_ti
@@ -1201,230 +1352,119 @@ df_query <- glue::glue_sql("
     unique()%>%
     dplyr::ungroup()%>%
     # filtern für input
-    dplyr::filter(jahr == inpy) %>%
-    # wert für hover vorbereiten
-    dplyr::mutate(display_total = prettyNum(.$wert, big.mark = ".", decimal.mark = ","))
-
+    dplyr::filter(jahr == inpy)
 
 
 
   # titel vorbereiten
-  title_dyn_top <- paste("Länder Europas mit der höchsten Zahl an \ninternationalen Studierenden in MINT im Jahr", inpy)
-  title_dyn_bot <- paste("Länder Europas mit der niedrigsten Zahl an \ninternationalen Studierenden in MINT im Jahr", inpy)
-
-
-if (avg_line == "Ja"){
-
-  data_avg <- round(mean(data1$wert, na.rm = T),1)
+  title_dyn_top <- paste("Länder Europas mit der <br> höchsten Zahl an internationalen Studierenden <br> in MINT im Jahr", inpy)
+  title_dyn_bot <- paste("Länder Europas mit der <br> niedrigsten Zahl an internationalen Studierenden <br> in MINT im Jahr", inpy)
 
 
 
 
- titel <- title_dyn_top
+  df_top <- data1 %>%
+    dplyr::arrange(dplyr::desc(wert)) %>%
+    dplyr::slice_head(n = 10)
 
-  #dies ist schon als funktion automatisiert, too complex
+  df_bottom <- data1 %>%
+    dplyr::arrange(wert) %>%
+    dplyr::slice_head(n = 10)
 
-    plot_top <- highcharter::hchart(
-      data1 %>% dplyr::arrange(desc(wert)) %>% dplyr::slice(1:10),
-      'bar',
-      highcharter::hcaes(y = wert, x = land))%>%
-      highcharter::hc_plotOptions(
-        series = list(
-          borderWidth = 0,
-          dataLabels = list(enabled = TRUE, format = "{point.display_total}")
-        )) %>%
-      highcharter::hc_tooltip(pointFormat = "Anzahl: {point.display_total}") %>%
-      highcharter::hc_yAxis(plotLines = list(
-        list(
-          value = data_avg,
-          color = "#B16FAB",
-          width = 3,
-          zIndex = 4
-        )
-      ),title = list(text = ""),
-      labels = list(format = "{value}"),
-      min = 0,
-      max = max(data1$wert)*1.2)%>%
-      highcharter::hc_xAxis(title = list(text = " ")) %>%
-      highcharter::hc_colors(c("#66CBAF")) %>%
-      highcharter::hc_title(text = title_dyn_top,
-                            margin = 10,
-                            align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")
-                            ) %>%
-      highcharter::hc_chart(
-        style = list(fontFamily = "Calibri Regular", fontSize = "14px")
-      ) %>%
-      highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
-      highcharter::hc_caption(text = "Quelle der Daten: Eurostat, 2023; OECD, 2023; UNESCO, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.",
-                              style = list(fontSize = "11px", color = "gray")) %>%
-      highcharter::hc_exporting(enabled = TRUE,
-                                buttons = list(
-                                  contextButton = list(
-                                    menuItems = list("downloadPNG", "downloadCSV")
-                                    )
-                                  )
-                                )
-   #  ,
-   #                                                   list(
-   #                                                     text = "Daten für GPT",
-   #                                                     onclick = htmlwidgets::JS(sprintf(
-   #                                                       "function () {
-   #   var date = new Date().toISOString().slice(0,10);
-   #   var chartTitle = '%s'.replace(/\\s+/g, '_');
-   #   var filename = chartTitle + '_' + date + '.txt';
-   #
-   #   var data = this.getCSV();
-   #   var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-   #   if (window.navigator.msSaveBlob) {
-   #     window.navigator.msSaveBlob(blob, filename);
-   #   } else {
-   #     var link = document.createElement('a');
-   #     link.href = URL.createObjectURL(blob);
-   #     link.download = filename;
-   #     link.click();
-   #   }
-   # }", gsub("'", "\\\\'", titel)))))
-   #                                )
-   #                              )
-   #    )
+  # Create top 10 plot
 
 
-  titel <- title_dyn_bot
+  order_top <- unique(df_top$land)
 
-    #dies ist schon als funktion automatisiert, too complex
+  order_bottom <- rev(df_bottom$land)
 
-    plot_bottom <- highcharter::hchart(
-      data1 %>% dplyr::arrange(desc(wert)) %>% dplyr::slice_tail(n = 10),
-      'bar',
-      highcharter::hcaes(y = wert, x = land))%>%
-      highcharter::hc_plotOptions(
-        series = list(
-          borderWidth = 0,
-          dataLabels = list(enabled = TRUE, format = "{point.display_total}")
-        )) %>%
-      highcharter::hc_tooltip(pointFormat = "Anzahl: {point.display_total}") %>%
-      highcharter::hc_yAxis(
-                            plotLines = list(
-                              list(
-                                value = data_avg,
-                                color = "#B16FAB",
-                                width = 3,
-                                zIndex = 4
-                              )
-                            ),title = list(text = ""),
-                            labels = list(format = "{value}"),
-                            min = 0,
-                            max = max(data1$wert)*1.2)%>%
-      highcharter::hc_xAxis(title = list(text = " ")) %>%
-      highcharter::hc_colors(c("#154194")) %>%
-      highcharter::hc_title(text =  title_dyn_bot,
-                            margin = 10,
-                            align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")
-      ) %>%
-      highcharter::hc_chart(
-        style = list(fontFamily = "Calibri Regular", fontSize = "14px")
-      ) %>%
-      highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
-      highcharter::hc_caption(text = "Quelle der Daten: Eurostat, 2023; OECD, 2023; UNESCO, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.",
-                              style = list(fontSize = "11px", color = "gray")) %>%
-      highcharter::hc_exporting(enabled = TRUE,
-                                buttons = list(
-                                  contextButton = list(
-                                    menuItems = list("downloadPNG", "downloadCSV")
-                                    )
-                                  )
-                                )
-
-
-   #    )
-
-
-
-
-} else if (avg_line == "Nein"){
-
-
-  titel <- title_dyn_top
-
-  #dies ist schon als funktion automatisiert, too complex
-
-  plot_top <- highcharter::hchart(
-    data1 %>% dplyr::arrange(desc(wert)) %>% dplyr::slice(1:10),
-    'bar',
-    highcharter::hcaes(y = wert, x = land))%>%
-    highcharter::hc_plotOptions(
-      series = list(
-        borderWidth = 0,
-        dataLabels = list(enabled = TRUE, format = "{point.display_total}")
-      )) %>%
-    highcharter::hc_tooltip(pointFormat = "Anzahl: {point.display_total}") %>%
-    highcharter::hc_xAxis(title = list(text = " ")) %>%
-    highcharter::hc_colors(c("#66CBAF")) %>%
-    highcharter::hc_title(text = title_dyn_top,
-                          margin = 10,
-                          align = "center",
-                          style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")
-    ) %>%
-    highcharter::hc_chart(
-      style = list(fontFamily = "Calibri Regular", fontSize = "14px")
-    ) %>%
-    highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
-    highcharter::hc_caption(text = "Quelle der Daten: Eurostat, 2023; OECD, 2023; UNESCO, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.",
-                            style = list(fontSize = "11px", color = "gray")) %>%
-    highcharter::hc_exporting(enabled = TRUE,
-                              buttons = list(
-                                contextButton = list(
-                                  menuItems = list("downloadPNG", "downloadCSV")
-                                )
-                              )
+  df_top <- df_top %>%
+    dplyr::mutate(
+      .tooltip = paste0(
+        "<b><span style='font-size:15px;'>", land, "</span></b><br>",
+        "Anzahl: ", (formatC(as.numeric(wert), format = "f", digits = 0, big.mark = "."))
+      )
     )
-  #
 
-
-  titel <- title_dyn_bot
-
-  #dies ist schon als funktion automatisiert, too complex
-
-  plot_bottom <- highcharter::hchart(
-    data1 %>% dplyr::arrange(desc(wert)) %>% dplyr::slice_tail(n = 10),
-    'bar',
-    highcharter::hcaes(y = wert, x = land))%>%
-    highcharter::hc_plotOptions(
-      series = list(
-        borderWidth = 0,
-        dataLabels = list(enabled = TRUE, format = "{point.display_total}")
-      )) %>%
-    highcharter::hc_tooltip(pointFormat = "Anzahl: {point.display_total}") %>%
-    highcharter::hc_xAxis(title = list(text = " ")) %>%
-    highcharter::hc_colors(c("#154194")) %>%
-    highcharter::hc_title(text =  title_dyn_bot,
-                          margin = 10,
-                          align = "center",
-                          style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")
-    ) %>%
-    highcharter::hc_chart(
-      style = list(fontFamily = "Calibri Regular", fontSize = "14px")
-    ) %>%
-    highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
-    highcharter::hc_caption(text = "Quelle der Daten: Eurostat, 2023; OECD, 2023; UNESCO, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.",
-                            style = list(fontSize = "11px", color = "gray")) %>%
-    highcharter::hc_exporting(enabled = TRUE,
-                              buttons = list(
-                                contextButton = list(
-                                  menuItems = list("downloadPNG", "downloadCSV")
-                                )
-                              )
+  df_bottom <- df_bottom %>%
+    dplyr::mutate(
+      .tooltip = paste0(
+        "<b><span style='font-size:15px;'>", land, "</span></b><br>",
+        "Anzahl: ", (formatC(as.numeric(wert), format = "f", digits = 0, big.mark = "."))
+      )
     )
+
+
+  x <- "land"
+  y <- "wert"
+
+  color_bottom <- c("#154194")
+  color_top <- c("#66CBAF")
+
+  quelle <- paste0("Quelle der Daten: Eurostat, 2023; OECD, 2023; UNESCO, 2023, freier Download, eigene Berechnungen durch MINTvernetzt.")
+
+
+
+  plot_top <- balkenbuilder_plotly(df=df_top, x=x, y=y, titel=title_dyn_top, orientation = "h",
+                                   group=NULL, color = color_top,order = order_top, margin_t=100, titel_y=0.97,
+                                   stacking = FALSE, percent = FALSE, quelle=quelle)
+
+  plot_bottom <- balkenbuilder_plotly(df=df_bottom, x=x, y=y, titel=title_dyn_bot, orientation = "h",
+                                      group=NULL, color = color_bottom,order = order_bottom, margin_t=100, titel_y=0.97,
+                                      stacking = FALSE, percent = FALSE, quelle=quelle)%>%
+    plotly::layout(
+      xaxis = list(range = c(0, 800000))
+    )
+
+
+
+  if (avg_line == "Ja"){
+
+    avg <- mean(data1$wert, na.rm = TRUE)
+
+    #max_percent_bottom <- ceiling(min(100, max(c(df_bottom$wert, avg), na.rm = TRUE) * 1.03))
+
+    plot_top <- plot_top %>%
+      plotly::layout(
+        shapes = list(
+          list(
+            type = "line",
+            xref = "x",
+            yref = "paper",
+            x0 = avg, x1 = avg,
+            y0 = 0, y1 = 1,
+            line = list(color = "#b16fab",width = 2
+            ))))
+
+
+    plot_bottom <- plot_bottom %>%
+      plotly::layout(
+        xaxis = list(range = c(0, 80000)),
+        shapes = list(
+          list(
+            type = "line",
+            xref = "x",
+            yref = "paper",
+            x0 = avg, x1 = avg,
+            y0 = 0, y1 = 1,
+            line = list(color = "#b16fab",width = 2
+            ))))
+
+
+  }
+
+
+  out <- list(plot_top, plot_bottom)
+
+  return(out)
 
 }
 
- out <- list(plot_top, plot_bottom)
 
- return(out)
 
-}
+
+
+
 
 ## schule ----
 plot_international_schule_map <- function(r) {
@@ -3269,8 +3309,6 @@ plot_international_top10_mint_arb <- function(r) {
 
 
 
-
-
     data2 <- data2 %>%
       tidyr::pivot_wider(names_from = variable, values_from = wert)%>%
       dplyr::mutate(across(`Anzahl in Tsd.`, ~ as.numeric(.)*1000))%>%
@@ -3287,12 +3325,13 @@ plot_international_top10_mint_arb <- function(r) {
       dplyr::mutate(alpha2= toupper(alpha2))%>%
       dplyr::filter(!is.na(.$wert) & wert!=0)
 
-    # Hover vorbereiten
-    plotopshov <- "Anteil: {point.display_rel}% <br> Anzahl: {point.display_total}"
+    data_fn <- data_fn %>%
+      dplyr::distinct(land, .keep_all = TRUE)
+
 
 # Titel vorbereiten
-title_top <- paste0("Länder Europas mit dem höchsten Anteil von ", inpp, "n in MINT an allen ", inpp, "n ", inpy )
-title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von ", inpp, "n in MINT an allen ", inpp, "n ",  inpy )
+title_top <- paste0("Länder Europas mit dem höchsten Anteil von <br>", inpp, "n <br> in MINT an allen ", inpp, "n <br>", inpy )
+title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von <br>", inpp, "n <br> in MINT an allen ", inpp, "n <br>",  inpy )
 
   }
 
@@ -3562,504 +3601,149 @@ title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von ", inpp, "n 
   # Kodition für Durschnittslinie laden
   avg_line <- r$show_ave
 
-  # Create top 10 plot
-    if (avg_line == "Ja"){
+
+# Create top 10 plot
+
+  df_top <- data_fn %>%
+    dplyr::arrange(dplyr::desc(wert)) %>%
+    dplyr::slice_head(n = 10)
+
+  df_bottom <- data_fn %>%
+    dplyr::arrange(wert) %>%
+    dplyr::slice_head(n = 10)
+
+
+  order_top <- unique(df_top$land)
+
+  order_bottom <- rev(df_bottom$land)
+
+  df_top <- df_top %>%
+    dplyr::mutate(
+      .tooltip = paste0(
+        "<b><span style='font-size:15px;'>", land, "</span></b><br>",
+        "Anteil: ", wert, " % <br>",
+        "Anzahl: ", display_total
+      )
+    )
+
+  df_bottom <- df_bottom %>%
+    dplyr::mutate(
+      .tooltip = paste0(
+        "<b><span style='font-size:15px;'>", land, "</span></b><br>",
+        "Anteil: ", wert, " % <br>",
+        "Anzahl: ", display_total
+      )
+    )
+
+
+  x <- "land"
+  y <- "wert"
+
+  color <- c("#b16fab")
+  quelle <- paste0("Quelle der Daten: Eurostat, 2023; OECD, 2023, freier Download, eigene Berechnungen durch MINTvernetzt.")
+
+
+  plot_top <- balkenbuilder_plotly(df=df_top, x=x, y=y, titel=title_top, orientation = "h",
+                                   group=NULL, color = color,order = order_top,  margin_t=100, titel_y=0.97,
+                                   stacking = FALSE, percent = TRUE, quelle=quelle)
+
+  plot_bottom <- balkenbuilder_plotly(df=df_bottom, x=x, y=y, titel=title_bot, orientation = "h",
+                                      group=NULL, color = color,order = order_bottom, margin_t=100, titel_y=0.97,
+                                      stacking = FALSE, percent = TRUE, quelle=quelle)
 
 
 
+  if (avg_line == "Ja") {
 
-      if(map_l == "Europa"){
+    avg <- mean(data_fn$wert, na.rm = TRUE)
 
-      data_avg <- round(mean(data_fn$wert, na.rm = T),1)
-      #dies ist schon als funktion automatisiert, too complex
-      plot_top <- highcharter::hchart(
-        data_fn %>% dplyr::arrange(desc(wert)) %>% dplyr::slice(1:10),
-        'bar',
-        highcharter::hcaes(y = wert, x = land))%>%
-        highcharter::hc_plotOptions(
-          series = list(
-            borderWidth = 0,
-            dataLabels = list(enabled = TRUE, format = "{point.display_rel} %",
-                              style = list(textOutline = "none"))
-          )) %>%
-        highcharter::hc_tooltip(pointFormat = plotopshov )%>%
-        highcharter::hc_yAxis(plotLines = list(
+    max_percent_bottom <- ceiling(min(100, max(c(df_bottom$wert, avg), na.rm = TRUE) * 1.03) )
+
+    plot_top <- plot_top %>%
+      plotly::layout(
+        shapes = list(
           list(
-            value = data_avg,
-            color = "#154194",
-            width = 3,
-            zIndex = 4
+            type = "line",
+            xref = "x",
+            yref = "paper",
+            x0 = avg, x1 = avg,
+            y0 = 0, y1 = 1,
+            line = list(color = "#154194",width = 2
+            ))))
+
+
+    plot_bottom <- plot_bottom %>%
+      plotly::layout(
+        xaxis = list(range = c(0, max_percent_bottom)),
+        shapes = list(
+          list(
+            type = "line",
+            xref = "x",
+            yref = "paper",
+            x0 = avg, x1 = avg,
+            y0 = 0, y1 = 1,
+            line = list(color = "#154194",width = 2
+            ))))
+
+
+  }
+
+
+
+  if(length(data_fn$wert) < 16){
+    plot_bottom <- plotly::plot_ly() |>
+      plotly::layout(
+        title = list(
+          text = paste0("Es liegen nur ", length(df$wert),
+                        " Datenpunkte <br> für das gewählte Jahr vor. <br> Deshalb ist kein Vergleich zwischen den <br>höchsten und geringsten MINT-Anteilen <br> der Länder möglich."),
+          x = 0.5,
+          xanchor = "center",
+          font = list(
+            family = "Calibri, sans-serif",
+            size = 20,
+            color = "black"
           )
-        ),title = list(text = ""),
-        labels = list(format = "{value}%"),
-        min = 0,
-        max = max(data_fn$wert, na.rm = T)*1.2)%>%
-        highcharter::hc_xAxis(title = list(text = " ")) %>%
-        highcharter::hc_colors(c("#B16FAB")) %>%
-        highcharter::hc_title(text = title_top,
-                              margin = 10,
-                              align = "center",
-                              style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")
-        ) %>%
-        highcharter::hc_chart(
-          style = list(fontFamily = "Calibri Regular", fontSize = "14px")
-        ) %>%
-        highcharter::hc_caption(text = "Quelle der Daten: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.",
-                                style = list(fontSize = "11px", color = "gray")) %>%
-        highcharter::hc_legend(enabled = TRUE, reversed = TRUE)
-
-    titel <- title_bot
-
-      #dies ist schon als funktion automatisiert, too complex
-
-      plot_bottom <- highcharter::hchart(
-        data_fn %>% dplyr::arrange(desc(wert)) %>% dplyr::slice_tail(n = 10),
-        'bar',
-        highcharter::hcaes(y = wert, x = land))%>%
-        highcharter::hc_plotOptions(
-          series = list(
-            borderWidth = 0,
-            dataLabels = list(enabled = TRUE, format = "{point.display_rel} %",
-                              style = list(textOutline = "none"))
-          )) %>%
-        highcharter::hc_tooltip(pointFormat = plotopshov)%>%
-        highcharter::hc_yAxis(
-          plotLines = list(
-            list(
-              value = data_avg,
-              color = "#154194",
-              width = 3,
-              zIndex = 4
-            )
-          ),title = list(text = ""),
-          labels = list(format = "{value}%"),
-          min = 0,
-          max = max(data_fn$wert, na.rm = T)*1.2)%>%
-        highcharter::hc_xAxis(title = list(text = " ")) %>%
-        highcharter::hc_colors(c("#B16FAB")) %>%
-        highcharter::hc_title(text =  title_bot,
-                              margin = 10,
-                              align = "center",
-                              style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")
-        ) %>%
-        highcharter::hc_chart(
-          style = list(fontFamily = "Calibri Regular", fontSize = "14px")
-        ) %>%
-        highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
-        highcharter::hc_caption(text = "Quelle der Daten: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.",
-                                style = list(fontSize = "11px", color = "gray")) %>%
-        highcharter::hc_exporting(enabled = TRUE,
-                                  buttons = list(
-                                    contextButton = list(
-                                      menuItems = list("downloadPNG", "downloadCSV",
-                                                       list(
-                                                         text = "Daten für GPT",
-                                                         onclick = htmlwidgets::JS(sprintf(
-                                                           "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
-
-     var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle der Daten: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.';
-
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-   }", gsub("'", "\\\\'", titel),gsub("'", "\\\\'", titel)))))
-                                    )
-                                  )
-        )
-
-
-
-     out <- list(plot_top, plot_bottom)
-
-      }
-      else if (map_l == "OECD") {
-
-        data_avg <- round(mean(data_fn$wert, na.rm = T),1)
-        #dies ist schon als funktion automatisiert, too complex
-        plot_top <- highcharter::hchart(
-          data_fn %>% dplyr::arrange(desc(wert)) %>% dplyr::slice(1:10),
-          'bar',
-          highcharter::hcaes(y = wert, x = land))%>%
-          highcharter::hc_plotOptions(
-            series = list(
-              borderWidth = 0,
-              dataLabels = list(enabled = TRUE, format = "{point.display_rel}",
-                                style = list(textOutline = "none"))
-            )) %>%
-          highcharter::hc_tooltip(pointFormat = plotopshov )%>%
-          highcharter::hc_yAxis(plotLines = list(
-            list(
-              value = data_avg,
-              color = "#154194",
-              width = 3,
-              zIndex = 4
-            )
-          ),title = list(text = ""),
-          labels = list(format = "{value}"),
-          min = 0,
-          max = max(data_fn$wert, na.rm = T)*1.2)%>%
-          highcharter::hc_xAxis(title = list(text = " ")) %>%
-          highcharter::hc_colors(c("#B16FAB")) %>%
-          highcharter::hc_title(text = title_top,
-                                margin = 10,
-                                align = "center",
-                                style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")
-          ) %>%
-          highcharter::hc_chart(
-            style = list(fontFamily = "Calibri Regular", fontSize = "14px")
-          ) %>%
-          highcharter::hc_caption(text = "Quelle der Daten: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.",
-                                  style = list(fontSize = "11px", color = "gray")) %>%
-          highcharter::hc_legend(enabled = TRUE, reversed = TRUE)
-
-        titel <- title_bot
-
-        #dies ist schon als funktion automatisiert, too complex
-
-        plot_bottom <- highcharter::hchart(
-          data_fn %>% dplyr::arrange(desc(wert)) %>% dplyr::slice_tail(n = 10),
-          'bar',
-          highcharter::hcaes(y = wert, x = land))%>%
-          highcharter::hc_plotOptions(
-            series = list(
-              borderWidth = 0,
-              dataLabels = list(enabled = TRUE, format = "{point.display_rel}",
-                                style = list(textOutline = "none"))
-            )) %>%
-          highcharter::hc_tooltip(pointFormat = plotopshov)%>%
-          highcharter::hc_yAxis(
-            plotLines = list(
-              list(
-                value = data_avg,
-                color = "#154194",
-                width = 3,
-                zIndex = 4
-              )
-            ),title = list(text = ""),
-            labels = list(format = "{value}"),
-            min = 0,
-            max = max(data_fn$wert, na.rm = T)*1.2)%>%
-          highcharter::hc_xAxis(title = list(text = " ")) %>%
-          highcharter::hc_colors(c("#B16FAB")) %>%
-          highcharter::hc_title(text =  title_bot,
-                                margin = 10,
-                                align = "center",
-                                style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")
-          ) %>%
-          highcharter::hc_chart(
-            style = list(fontFamily = "Calibri Regular", fontSize = "14px")
-          ) %>%
-          highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
-          highcharter::hc_caption(text = "Quelle der Daten: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.",
-                                  style = list(fontSize = "11px", color = "gray")) %>%
-          highcharter::hc_exporting(enabled = TRUE,
-                                    buttons = list(
-                                      contextButton = list(
-                                        menuItems = list("downloadPNG", "downloadCSV",
-                                                         list(
-                                                           text = "Daten für GPT",
-                                                           onclick = htmlwidgets::JS(sprintf(
-                                                             "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
-
-     var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle der Daten: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.';
-
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-   }", gsub("'", "\\\\'", titel),gsub("'", "\\\\'", titel)))))
-                                      )
-                                    )
-          )
-
-
-
-        out <- list(plot_top, plot_bottom)
-
-
-
-      } else {
-        data_avg <- round(mean(data_fn$wert, na.rm = T),1)
-        #dies ist schon als funktion automatisiert, too complex
-        plot_top <- highcharter::hchart(
-          data_fn %>% dplyr::arrange(desc(wert)) %>% dplyr::slice(1:10),
-          'bar',
-          highcharter::hcaes(y = wert, x = land))%>%
-          highcharter::hc_plotOptions(
-            series = list(
-              borderWidth = 0,
-              dataLabels = list(enabled = TRUE, format = "{point.display_rel} %",
-                                style = list(textOutline = "none"))
-            )) %>%
-          highcharter::hc_tooltip(pointFormat = plotopshov )%>%
-          highcharter::hc_yAxis(plotLines = list(
-            list(
-              value = data_avg,
-              color = "#154194",
-              width = 3,
-              zIndex = 4
-            )
-          ),title = list(text = ""),
-          labels = list(format = "{value}%"),
-          min = 0,
-          max = max(data_fn$wert, na.rm = T)*1.2)%>%
-          highcharter::hc_xAxis(title = list(text = " ")) %>%
-          highcharter::hc_colors(c("#B16FAB")) %>%
-          highcharter::hc_title(text = title_top,
-                                margin = 10,
-                                align = "center",
-                                style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")
-          ) %>%
-          highcharter::hc_chart(
-            style = list(fontFamily = "Calibri Regular", fontSize = "14px")
-          ) %>%
-          highcharter::hc_caption(text = "Quelle der Daten: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.",
-                                  style = list(fontSize = "11px", color = "gray")) %>%
-          highcharter::hc_legend(enabled = TRUE, reversed = TRUE)
-
-        titel <- title_bot
-
-        #dies ist schon als funktion automatisiert, too complex
-
-        plot_bottom <- highcharter::hchart(
-          data_fn %>% dplyr::arrange(desc(wert)) %>% dplyr::slice_tail(n = 10),
-          'bar',
-          highcharter::hcaes(y = wert, x = land))%>%
-          highcharter::hc_plotOptions(
-            series = list(
-              borderWidth = 0,
-              dataLabels = list(enabled = TRUE, format = "{point.display_rel} %",
-                                style = list(textOutline = "none"))
-            )) %>%
-          highcharter::hc_tooltip(pointFormat = plotopshov)%>%
-          highcharter::hc_yAxis(
-            plotLines = list(
-              list(
-                value = data_avg,
-                color = "#154194",
-                width = 3,
-                zIndex = 4
-              )
-            ),title = list(text = ""),
-            labels = list(format = "{value}%"),
-            min = 0,
-            max = max(data_fn$wert, na.rm = T)*1.2)%>%
-          highcharter::hc_xAxis(title = list(text = " ")) %>%
-          highcharter::hc_colors(c("#B16FAB")) %>%
-          highcharter::hc_title(text =  title_bot,
-                                margin = 10,
-                                align = "center",
-                                style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")
-          ) %>%
-          highcharter::hc_chart(
-            style = list(fontFamily = "Calibri Regular", fontSize = "14px")
-          ) %>%
-          highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
-          highcharter::hc_caption(text = "Quelle der Daten: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.",
-                                  style = list(fontSize = "11px", color = "gray")) %>%
-          highcharter::hc_exporting(enabled = TRUE,
-                                    buttons = list(
-                                      contextButton = list(
-                                        menuItems = list("downloadPNG", "downloadCSV",
-                                                         list(
-                                                           text = "Daten für GPT",
-                                                           onclick = htmlwidgets::JS(sprintf(
-                                                             "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
-
-     var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle der Daten: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.';
-
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-   }", gsub("'", "\\\\'", titel),gsub("'", "\\\\'", titel)))))
-                                      )
-                                    )
-          )
-
-
-
-        out <- list(plot_top, plot_bottom)
-
-      }
-
-    } else if (avg_line == "Nein") {
-
-      # Gemeinsame Hilfsfunktion für Export-Button
-      export_button_js <- function(titel) {
-        htmlwidgets::JS(sprintf(
-          "function () {
-        var date = new Date().toISOString().slice(0,10);
-        var chartTitle = '%s'.replace(/\\s+/g, '_');
-        var filename = chartTitle + '_' + date + '.txt';
-
-        var data = 'Titel: %s\\n' + this.getCSV();
-        data += '\\nQuelle der Daten: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.';
-
-        var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-        if (window.navigator.msSaveBlob) {
-          window.navigator.msSaveBlob(blob, filename);
-        } else {
-          var link = document.createElement('a');
-          link.href = URL.createObjectURL(blob);
-          link.download = filename;
-          link.click();
-        }
-      }",
-          gsub("'", "\\\\'", titel),  # ersetzt erstes %s
-          gsub("'", "\\\\'", titel)   # ersetzt zweites %s
-        ))
-      }
-
-      # --- Plot Top 10 ---
-      titel <- title_top
-      plot_top <- highcharter::hchart(
-        data_fn %>% dplyr::arrange(desc(wert)) %>% dplyr::slice(1:10),
-        'bar',
-        highcharter::hcaes(y = wert, x = land)
-      ) %>%
-        highcharter::hc_plotOptions(
-          series = list(
-            borderWidth = 0,
-            dataLabels = list(
-              enabled = TRUE,
-              format = "{point.display_rel} %",
-              style = list(textOutline = "none")
+        ),
+        annotations = list(
+          list(
+            text = "",
+            x = 0.5,
+            y = 0.5,
+            xref = "paper",
+            yref = "paper",
+            showarrow = FALSE,
+            font = list(
+              family = "Calibri, sans-serif",
+              size = 14,
+              color = "gray"
             )
           )
-        ) %>%
-        highcharter::hc_tooltip(pointFormat = plotopshov) %>%
-        highcharter::hc_yAxis(
-          title = list(text = ""),
-          labels = list(format = "{value}%"),
-          min = 0,
-          max = max(data_fn$wert, na.rm = TRUE) * 1.2
-        ) %>%
-        highcharter::hc_xAxis(title = list(text = " ")) %>%
-        highcharter::hc_colors(c("#B16FAB")) %>%
-        highcharter::hc_title(
-          text = title_top,
-          margin = 10,
-          align = "center",
-          style = list(
-            color = "black", useHTML = TRUE,
-            fontFamily = "Calibri Regular", fontSize = "20px"
-          )
-        ) %>%
-        highcharter::hc_chart(
-          style = list(fontFamily = "Calibri Regular", fontSize = "14px")
-        ) %>%
-        highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
-        highcharter::hc_caption(
-          text = "Quelle der Daten: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.",
-          style = list(fontSize = "11px", color = "gray")
-        ) %>%
-        highcharter::hc_exporting(
-          enabled = TRUE,
-          buttons = list(
-            contextButton = list(
-              menuItems = list(
-                "downloadPNG",
-                "downloadCSV",
-                list(text = "Daten für GPT", onclick = export_button_js(titel))
-              )
-            )
-          )
-        )
+        ),
+        xaxis = list(visible = FALSE),
+        yaxis = list(visible = FALSE),
+        margin = list(t = 80, b = 100, r = 50, l = 40)
+      )
+  }
 
-      # --- Plot Bottom 10 ---
-      titel <- title_bot
-      plot_bottom <- highcharter::hchart(
-        data_fn %>% dplyr::arrange(desc(wert)) %>% dplyr::slice_tail(n = 10),
-        'bar',
-        highcharter::hcaes(y = wert, x = land)
-      ) %>%
-        highcharter::hc_plotOptions(
-          series = list(
-            borderWidth = 0,
-            dataLabels = list(
-              enabled = TRUE,
-              format = "{point.display_rel} %",
-              style = list(textOutline = "none")
-            )
-          )
-        ) %>%
-        highcharter::hc_tooltip(pointFormat = plotopshov) %>%
-        highcharter::hc_yAxis(
-          title = list(text = ""),
-          labels = list(format = "{value}%"),
-          min = 0,
-          max = max(data_fn$wert, na.rm = TRUE) * 1.2
-        ) %>%
-        highcharter::hc_xAxis(title = list(text = "")) %>%
-        highcharter::hc_colors(c("#B16FAB")) %>%
-        highcharter::hc_title(
-          text = title_bot,
-          margin = 10,
-          align = "center",
-          style = list(
-            color = "black", useHTML = TRUE,
-            fontFamily = "Calibri Regular", fontSize = "20px"
-          )
-        ) %>%
-        highcharter::hc_chart(
-          style = list(fontFamily = "Calibri Regular", fontSize = "14px")
-        ) %>%
-        highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
-        highcharter::hc_caption(
-          text = "Quelle der Daten: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.",
-          style = list(fontSize = "11px", color = "gray")
-        ) %>%
-        highcharter::hc_exporting(
-          enabled = TRUE,
-          buttons = list(
-            contextButton = list(
-              menuItems = list(
-                "downloadPNG",
-                "downloadCSV",
-                list(text = "Daten für GPT", onclick = export_button_js(titel))
-              )
-            )
-          )
-        )
+  out <- list(plot_top, plot_bottom)
 
-      out <- list(plot_top, plot_bottom)
-    }
-
+  return(out)
 
 }
 
 
-plot_international_top10_mint_arb_gender <- function(r) {
 
+
+
+
+
+
+
+
+
+
+
+plot_international_top10_mint_arb_gender <- function(r) {
 
   # Input region laden
   inpl <- r$map_l_top10_mint_arb_gender
@@ -4069,6 +3753,7 @@ plot_international_top10_mint_arb_gender <- function(r) {
   # EU
   if(inpl== "EU"){
 
+# NAT ING FUNKTIONIERT NICHT ??
 
     # Spez. EU inputs
     inpy <- r$map_y_eu_top10_mint_arb_gender_eu
@@ -4084,7 +3769,7 @@ plot_international_top10_mint_arb_gender <- function(r) {
     df_query <- glue::glue_sql("
     SELECT *
     FROM arbeitsmarkt_beschaeftigte_eu
-    WHERE geschlecht IN ('Gesamt', 'Frauen')
+    WHERE geschlecht IN ('Frauen')
     AND jahr = {inpy}
     AND indikator = {inpp}
     AND variable = 'Anteil an Gesamtbevölkerung'
@@ -4092,18 +3777,9 @@ plot_international_top10_mint_arb_gender <- function(r) {
 
     data1 <- DBI::dbGetQuery(con, df_query)
 
-
-
-    data1 <- data1 %>%
-      tidyr::pivot_wider(names_from = geschlecht, values_from = wert)%>%
-      dplyr::rename(wert="Frauen")%>%
-      dplyr::select(-Gesamt)
-
-
     data1$display_rel <- prettyNum(round(data1$wert,1), big.mark = ".", decimal.mark = ",")
-#
 
-#
+
     df_query <- glue::glue_sql("
     SELECT *
     FROM arbeitsmarkt_beschaeftigte_eu
@@ -4117,32 +3793,38 @@ plot_international_top10_mint_arb_gender <- function(r) {
 
 
     data2 <- data2 %>%
-      tidyr::pivot_wider(names_from = variable, values_from = wert)%>%
-      dplyr::mutate(across(`Anzahl in Tsd.`, ~ as.numeric(.)*1000))%>%
-      dplyr::rename(display_total = "Anzahl in Tsd." )%>%
-      dplyr::select(display_total, land)%>%
-      dplyr::mutate(across(display_total, ~ prettyNum(., big.mark = ".", decimal.mark = ",")))
+      tidyr::pivot_wider(names_from = variable, values_from = wert) %>%
+      dplyr::mutate(
+        anzahl = as.numeric(`Anzahl in Tsd.`) * 1000,
+        display_total = prettyNum(anzahl,big.mark = ".",decimal.mark = "," )
+      ) %>%
+      dplyr::select(land, anzahl, display_total)
+
+
 
     # Zusammenführen und Geomappen
     data1 <- data1 %>%
-      dplyr::left_join(data2,by=c("land"))%>%
-      dplyr::left_join(countries_names %>%
-                         dplyr::mutate(land=dplyr::case_when(land == "Tschechien" ~ "Tschechische Republik",
-                                                             T ~ .$land)), by= "land")%>%
-      dplyr::mutate(alpha2= toupper(alpha2))%>%
-      dplyr::filter(!is.na(.$wert) & wert!=0)
+      dplyr::left_join(data2,by=c("land"))
 
-    # Hover vornereiten
-    plotopshov <- "Anteil: {point.display_rel}% <br> Anzahl: {point.display_total}"
 
-    # Tielt vorbereiten
-    title_top <- paste0("Länder Europas mit dem höchsten Anteil von weiblichen ", inpp, "n an allen ", inpp, "n in MINT ", inpy )
-    title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von weiblichen ", inpp, "n an allen ", inpp, "n in MINT  ",  inpy )
+    if (inpp == "Naturwissenschaftler*innen und Ingenieur*innen"){
+
+      title_top <- paste0("Länder Europas mit dem höchsten Anteil <br> von weiblichen ", inpp, "<br> an allen ", inpp, "<br> in MINT ", inpy )
+      title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil <br> von weiblichen ", inpp, "<br> an allen ", inpp, "<br> in MINT  ",  inpy )
+
+
+    } else {
+      title_top <- paste0("Länder Europas mit dem höchsten Anteil <br> von weiblichen ", inpp, "n <br> an allen ", inpp, "n <br> in MINT ", inpy )
+      title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil <br> von weiblichen ", inpp, "n <br> an allen ", inpp, "n <br> in MINT  ",  inpy )
+
+    }
+
 
 
 
     }
 
+# AB HIER GREIFT DAS ALLES NICHT WEIL GIBTS NICHT
 
   # OECD
   else if (inpl== "OECD"){
@@ -4375,8 +4057,6 @@ plot_international_top10_mint_arb_gender <- function(r) {
 
 
 
-
-
       data_fva <- data_fva %>%
         tidyr::pivot_wider(values_from = wert, names_from = geschlecht)%>%
         dplyr::mutate(wert= round(Frauen/Gesamt *100,1))%>%
@@ -4397,10 +4077,6 @@ plot_international_top10_mint_arb_gender <- function(r) {
                                ", .con = con)
 
       data_fvf1 <- DBI::dbGetQuery(con, df_query)
-
-
-
-
 
 
 
@@ -4566,443 +4242,144 @@ plot_international_top10_mint_arb_gender <- function(r) {
 
   }
 
-  # Kodition Durschnittslinie
-  avg_line <- r$show_avg_top10_mint_arb_gender
 
+
+
+
+   quelle <- paste0("Quelle der Daten: Eurostat, 2023, OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.")
+
+
+
+
+  df_top <- data1 %>%
+    dplyr::arrange(dplyr::desc(wert)) %>%
+    dplyr::slice_head(n = 10)
+
+  df_bottom <- data1 %>%
+    dplyr::arrange(wert) %>%
+    dplyr::slice_head(n = 10)
 
 
   # Create top 10 plot
-  if (avg_line == "Ja"){
+  order_top <- unique(df_top$land)
 
-    data_avg <- round(mean(data1$wert, na.rm = T),1)
+  order_bottom <- rev(df_bottom$land)
 
-
-   titel <- title_top
-
-    #dies ist schon als funktion automatisiert, too complex
-
-    plot_top <- highcharter::hchart(
-      data1 %>% dplyr::arrange(desc(wert)) %>% dplyr::slice(1:10),
-      'bar',
-      highcharter::hcaes(y = wert, x = land))%>%
-      highcharter::hc_plotOptions(
-        series = list(
-          borderWidth = 0,
-          dataLabels = list(enabled = TRUE, format = "{point.display_rel} %",
-                            style = list(textOutline = "none"))
-        )) %>%
-      highcharter::hc_tooltip(pointFormat = plotopshov) %>%
-      highcharter::hc_yAxis(plotLines = list(
-        list(
-          value = data_avg,
-          color = "#B16FAB",
-          width = 3,
-          zIndex = 4
-        )
-      ),title = list(text = ""),
-      labels = list(format = "{value}%"),
-      min = 0,
-      max = max(data1$wert, na.rm = T)*1.2)%>%
-      highcharter::hc_xAxis(title = list(text = " ")) %>%
-      highcharter::hc_colors(c("#154194")) %>%
-      highcharter::hc_title(text = title_top,
-                            margin = 10,
-                            align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")
-      ) %>%
-      highcharter::hc_chart(
-        style = list(fontFamily = "Calibri Regular", fontSize = "14px")
-      ) %>%
-      highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
-      highcharter::hc_caption(text = "Quelle der Daten: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.",
-                              style = list(fontSize = "11px", color = "gray")) %>%
-      highcharter::hc_exporting(enabled = TRUE,
-                                buttons = list(#
-                                  contextButton = list(
-                                    menuItems = list("downloadPNG", "downloadCSV",
-
-                                                     list(
-                                                       text = "Daten für GPT",
-                                                       onclick = htmlwidgets::JS(sprintf(
-                                                         "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
-
-     var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle der Daten: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.';
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-   }", gsub("'", "\\\\'", titel),gsub("'", "\\\\'", titel)))))
-                                  )
-                                )
-      )
-
-
-   titel <- title_bot
-
-    #dies ist schon als funktion automatisiert, too complex
-
-    plot_bottom <- highcharter::hchart(
-      data1 %>% dplyr::arrange(desc(wert)) %>% dplyr::slice_tail(n = 10),
-      'bar',
-      highcharter::hcaes(y = wert, x = land))%>%
-      highcharter::hc_plotOptions(
-        series = list(
-          borderWidth = 0,
-          dataLabels = list(enabled = TRUE, format = "{point.display_rel} %",
-                            style = list(textOutline = "none"))
-        )) %>%
-      highcharter::hc_tooltip(pointFormat = plotopshov) %>%
-      highcharter::hc_yAxis(
-        plotLines = list(
-          list(
-            value = data_avg,
-            color = "#B16FAB",
-            width = 3,
-            zIndex = 4
-          )
-        ),title = list(text = ""),
-        labels = list(format = "{value}%"),
-        min = 0,
-        max = max(data1$wert, na.rm = T)*1.2)%>%
-      highcharter::hc_xAxis(title = list(text = " ")) %>%
-      highcharter::hc_colors(c("#154194")) %>%
-      highcharter::hc_title(text =  title_bot,
-                            margin = 10,
-                            align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")
-      ) %>%
-      highcharter::hc_chart(
-        style = list(fontFamily = "Calibri Regular", fontSize = "14px")
-      ) %>%
-      highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
-      highcharter::hc_caption(text = "Quelle der Daten: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.",
-                              style = list(fontSize = "11px", color = "gray")) %>%
-      highcharter::hc_exporting(enabled = TRUE,
-                                buttons = list(
-                                  contextButton = list(
-                                    menuItems = list("downloadPNG", "downloadCSV",
-
-                                                     list(
-                                                       text = "Daten für GPT",
-                                                       onclick = htmlwidgets::JS(sprintf(
-                                                         "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
-
-     var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle der Daten: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.';
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-   }", gsub("'", "\\\\'", titel),gsub("'", "\\\\'", titel)))))
-                                  )
-                                )
-      )
-
-    out <- list(plot_top, plot_bottom)
-    #dies ist schon als funktion automatisiert, too complex
-
-  } else if (avg_line == "Nein"){
-
-
-
-   titel <- title_top
-
-    plot_top <- highcharter::hchart(
-      data1 %>% dplyr::arrange(desc(wert)) %>% dplyr::slice(1:10),
-      'bar',
-      highcharter::hcaes(y = wert, x = land))%>%
-      highcharter::hc_plotOptions(
-        series = list(
-          borderWidth = 0,
-          dataLabels = list(enabled = TRUE, format = "{point.display_rel} %",
-                            style = list(textOutline = "none"))
-        )) %>%
-      highcharter::hc_tooltip(pointFormat = plotopshov) %>%
-      highcharter::hc_yAxis(title = list(text = ""),
-                            labels = list(format = "{value}%"),
-                            min = 0,
-                            max = max(data1$wert, na.rm = T)*1.2) %>%
-      highcharter::hc_xAxis(title = list(text = " ")) %>%
-      highcharter::hc_colors(c("#154194")) %>%
-      highcharter::hc_title(text = title_top,
-                            margin = 10,
-                            align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")
-      ) %>%
-      highcharter::hc_chart(
-        style = list(fontFamily = "Calibri Regular", fontSize = "14px")
-      ) %>%
-      highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
-      highcharter::hc_caption(text = "Quelle der Daten: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.",
-                              style = list(fontSize = "11px", color = "gray")) %>%
-      highcharter::hc_exporting(enabled = TRUE,
-                                buttons = list(
-                                  contextButton = list(
-                                    menuItems = list("downloadPNG", "downloadCSV",
-                                                     list(
-                                                       text = "Daten für GPT",
-                                                       onclick = htmlwidgets::JS(sprintf(
-                                                         "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
-
-     var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle der Daten: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.';
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-   }", gsub("'", "\\\\'", titel),gsub("'", "\\\\'", titel)))))
-                                  )
-                                )
-      )
-
-
-   titel <- title_bot
-
-    #dies ist schon als funktion automatisiert, too complex
-
-    plot_bottom <- highcharter::hchart(
-      data1 %>% dplyr::arrange(desc(wert)) %>% dplyr::slice_tail(n = 10),
-      'bar',
-      highcharter::hcaes(y = wert, x = land))%>%
-      highcharter::hc_plotOptions(
-        series = list(
-          borderWidth = 0,
-          dataLabels = list(enabled = TRUE, format = "{point.display_rel} %",
-                            style = list(textOutline = "none"))
-        )) %>%
-      highcharter::hc_tooltip(pointFormat = plotopshov) %>%
-      highcharter::hc_yAxis(title = list(text = ""),
-                            labels = list(format = "{value}%"),
-                            min = 0,
-                            max = max(data1$wert, na.rm = T)*1.2) %>%
-      highcharter::hc_xAxis(title = list(text = "")) %>%
-      highcharter::hc_colors(c("#154194")) %>%
-      highcharter::hc_title(text =  title_bot,
-                            margin = 10,
-                            align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")
-      ) %>%
-      highcharter::hc_chart(
-        style = list(fontFamily = "Calibri Regular", fontSize = "14px")
-      ) %>%
-      highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
-      highcharter::hc_caption(text = "Quelle der Daten: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.",
-                              style = list(fontSize = "11px", color = "gray")) %>%
-      highcharter::hc_exporting(enabled = TRUE,
-                                buttons = list(
-                                  contextButton = list(
-                                    menuItems = list("downloadPNG", "downloadCSV",
-                                                     list(
-                                                       text = "Daten für GPT",
-                                                       onclick = htmlwidgets::JS(sprintf(
-                                                         "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
-
-     var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle der Daten: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.';
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-   }", gsub("'", "\\\\'", titel),gsub("'", "\\\\'", titel)))))
-                                  )
-                                )
-      )
-
-
-    out <- list(plot_top, plot_bottom)
-
-  }
-
-  }
-
-
-
-
-
-plot_international_arbeitsmarkt_vergleiche <- function(r) {
-
-
-  timerange <- r$vergleich_y_int_arbeitsmarkt
-  land_m <- r$vergleich_l_int_arbeitsmarkt
-  fach_m <- r$vergleich_f_int_arbeitsmarkt
-
-  variable_set <- c("Anteil Absolvent*innen nach Fach an allen Fächern",
-                    "Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern",
-                    "Anzahl der Absolvent:innen",
-                    "Anzahl der Neustudierenden")
-
-
-  df_query <- glue::glue_sql("
-
-  SELECT *
-  FROM arbeitsmarkt_anfaenger_absolv_oecd
-  WHERE geschlecht = 'Gesamt'
-  AND anforderung = 'tertiäre Bildung (gesamt)'
-  AND jahr = {timerange}
-  AND land IN ({land_m*})
-  AND variable IN ({variable_set*})
-  AND fachbereich = {fach_m}
-
-                               ", .con = con)
-
-
-  tmp_df <- DBI::dbGetQuery(con, df_query)
-
-  tmp_df <- unique(tmp_df)
-
-
-
-  # check if variables are present
-  if (!all(variable_set %in% unique(tmp_df$variable))) {
-
-    return("Für diese Kombination an Filtereinstellungen sind leider keine Daten vorhanden.")
-  }
-
-
-  tooltip_data <- tmp_df %>%
-    tidyr::pivot_wider(names_from = variable,
-                       id_cols = land,
-                       values_from = wert) %>%
+  df_top <- df_top %>%
     dplyr::mutate(
-      Difference = round(
-        x = `Anteil Absolvent*innen nach Fach an allen Fächern` -
-          `Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern`,
-        digits = 0),
-      max = pmax(
-        `Anteil Absolvent*innen nach Fach an allen Fächern`,
-        `Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern`,
-        na.rm = TRUE)
-    ) %>%
-    dplyr::select(land, Difference, max) %>%
-    dplyr::distinct()
-
-
-  annotation_data <- lapply(seq_len(nrow(tooltip_data)), function(x){
-    # create annotation only if there is a difference
-    if (is.na(tooltip_data$Difference[x])) {
-      out <- NULL
-    } else {
-      out <- list(point = list(x = x -1,
-                               y = tooltip_data$max[x],
-                               xAxis = 0,
-                               yAxis = 0),
-                  text = as.character(tooltip_data$Difference[x]))
-    }
-    return(out)
-  })
-
-  tmp_df$wert <- round(tmp_df$wert, 1)
-
-  tmp_df$variable <- factor(tmp_df$variable, levels = c("Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern",
-                                                        "Anteil Absolvent*innen nach Fach an allen Fächern"))
-
-
-
-
-
-  titel <- paste0(
-    "Anteil der Ausbildungs-/Studiums-Anfänger*innen und Absolvent*innen in ",
-    fach_m, " in ", timerange)
-  # Create the plot
-  plot <- highcharter::hchart(object = tmp_df,
-                              type = "column",
-                              mapping = highcharter::hcaes(x = land, y = wert, group = variable))  %>%
-    highcharter::hc_xAxis(title="Land") %>%
-    highcharter::hc_yAxis(title = list(text = "")) %>%
-    highcharter::hc_plotOptions(
-      series = list(
-        dataLabels = list(enabled = FALSE))) %>%
-    highcharter::hc_colors(c("#B16FAB", "#66CBAF")) %>%
-    highcharter::hc_title(
-      text = paste0(
-        "Anteil der Ausbildungs-/Studiums-Anfänger*innen und Absolvent*innen in ",
-        fach_m, " in ", timerange)
-    ) %>%
-    highcharter::hc_legend(enabled = TRUE) %>%
-    highcharter::hc_exporting(enabled = FALSE) %>%
-    highcharter::hc_tooltip(
-      pointFormat = paste0(
-        '<span style="color:{point.color}">\u25CF</span>',
-        '{series.name}: ','<b>{point.y} %</b><br/>'),
-      shared = TRUE,
-      useHTML = TRUE) %>%
-    highcharter::hc_annotations(
-      list(
-        labels = annotation_data,
-        labelOptions = list(
-          style = list(color = 'black'),
-          backgroundColor = 'none', # Remove background color
-          borderWidth = 0#, # Remove box
-          #shadow = FALSE,
-        )
+      .tooltip = paste0(
+        "<b><span style='font-size:15px;'>", land, "</span></b><br>",
+        "Anteil: ", wert, " % <br>",
+        "Anzahl: ", .data$display_total
       )
-    ) %>%
-    highcharter::hc_caption(text = "Quelle der Daten: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.",
-                            style = list(fontSize = "11px", color = "gray")) %>%
-    highcharter::hc_exporting(enabled = TRUE,
-                              buttons = list(
-                                contextButton = list(
-                                  menuItems = list("downloadPNG", "downloadCSV",
+    )
 
-                                                   list(
-                                                     text = "Daten für GPT",
-                                                     onclick = htmlwidgets::JS(sprintf(
-                                                       "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
-
-     var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle der Daten: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.';
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-   }", gsub("'", "\\\\'", titel),gsub("'", "\\\\'", titel)))))
-                                )
-                              )
+  df_bottom <- df_bottom %>%
+    dplyr::mutate(
+      .tooltip = paste0(
+        "<b><span style='font-size:15px;'>", land, "</span></b><br>",
+        "Anteil: ", wert, " % <br>",
+        "Anzahl: ", .data$display_total
+      )
     )
 
 
-  return(plot)
+  x <- "land"
+  y <- "wert"
+
+  color <- c("#154194")
+
+
+  plot_top <- balkenbuilder_plotly(df=df_top, x=x, y=y, titel=title_top, orientation = "h",
+                                   group=NULL, color = color,order = order_top, margin_t=100, titel_y=0.97,
+                                   stacking = FALSE, percent = TRUE, quelle=quelle)
+
+  plot_bottom <- balkenbuilder_plotly(df=df_bottom, x=x, y=y, titel=title_bot, orientation = "h",
+                                      group=NULL, color = color,order = order_bottom, margin_t=100, titel_y=0.97,
+                                      stacking = FALSE, percent = TRUE, quelle=quelle)
+
+
+  avg_line <- r$show_avg_top10_mint_arb_gender
+
+  if (avg_line == "Ja") {
+
+    avg <- mean(data1$wert, na.rm = TRUE)
+
+    max_percent_bottom <- ceiling(min(100, max(c(df_bottom$wert, avg), na.rm = TRUE) * 1.03) )
+
+    plot_top <- plot_top %>%
+      plotly::layout(
+        shapes = list(
+          list(
+            type = "line",
+            xref = "x",
+            yref = "paper",
+            x0 = avg, x1 = avg,
+            y0 = 0, y1 = 1,
+            line = list(color = "#b16fab",width = 2
+            ))))
+
+
+    plot_bottom <- plot_bottom %>%
+      plotly::layout(
+        xaxis = list(range = c(0, max_percent_bottom)),
+        shapes = list(
+          list(
+            type = "line",
+            xref = "x",
+            yref = "paper",
+            x0 = avg, x1 = avg,
+            y0 = 0, y1 = 1,
+            line = list(color = "#b16fab",width = 2
+            ))))
+
+
+  }
+
+
+
+  if(length(data1$wert) < 16){
+    plot_bottom <- plotly::plot_ly() |>
+      plotly::layout(
+        title = list(
+          text = paste0("Es liegen nur ", length(df$wert),
+                        " Datenpunkte <br> für das gewählte Jahr vor. <br> Deshalb ist kein Vergleich zwischen den <br>höchsten und geringsten MINT-Anteilen <br> der Länder möglich."),
+          x = 0.5,
+          xanchor = "center",
+          font = list(
+            family = "Calibri, sans-serif",
+            size = 20,
+            color = "black"
+          )
+        ),
+        annotations = list(
+          list(
+            text = "",
+            x = 0.5,
+            y = 0.5,
+            xref = "paper",
+            yref = "paper",
+            showarrow = FALSE,
+            font = list(
+              family = "Calibri, sans-serif",
+              size = 14,
+              color = "gray"
+            )
+          )
+        ),
+        xaxis = list(visible = FALSE),
+        yaxis = list(visible = FALSE),
+        margin = list(t = 80, b = 100, r = 50, l = 40)
+      )
+  }
+
+  out <- list(plot_top, plot_bottom)
+
+  return(out)
+
 }
+
+
+
 
 
