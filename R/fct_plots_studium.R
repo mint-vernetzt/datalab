@@ -578,7 +578,7 @@ studierende_bula_mint <- function(r) {
       "Studienanfänger:innen (1. Hochschulsemester)",
       "internationalen Studierenden",
       "internationalen Absolvent:innen")) {
-      paste0( "Anteil von ", r_lab1," in MINT-Fächern <br> an allen ", help_l," (", timerange, ")")
+      paste0( "Anteil von ", r_lab1," in MINT-Fächern an allen ", help_l," (", timerange, ")")
     } else {
       paste0("Anteil von ", r_lab1," in MINT-Fächern an allen ", help_l," (", timerange, ")")}
 
@@ -2159,7 +2159,7 @@ plot_studierende_bula_faecher <- function(r){
       "Wirtschaftsingenieurwesen mit ingenieurwissenschaftlichem Schwerpunkt",
       "allgemeine naturwissenschaftliche und mathematische Fächer"
       ))) {
-      paste0( "Anteil von ", r_lab1 ," in ", help_s," <br> an allen ", help,  " (", timerange, ")")
+      paste0( "Anteil von ", r_lab1 ," in ", help_s," an allen ", help,  " (", timerange, ")")
     } else {
       paste0( "Anteil von ", r_lab1 ," in ", help_s," an allen ", help,  " (", timerange, ")")}
 
@@ -2858,13 +2858,13 @@ studienzahl_einstieg_gender <- function(r) {
     fach_label <- sel_f1
     fach_label <- ifelse(fach_label == "Alle MINT-Fächer", "MINT", fach_label)
     if(gegenwert == "Ja"){
-      titel <- paste0("Frauenanteil in der Fachgruppe ", fach_label, " <br> und allen Nicht-MINT-Fächern", praep, sel_bl1, " (", timerange, ")")
+      titel <- paste0("Frauenanteil in der Fachgruppe ", fach_label, " und allen Nicht-MINT-Fächern", praep, sel_bl1, " (", timerange, ")")
       }else{
       titel <- paste0("Frauenanteil in der Fachgruppe ",
                       ifelse(
                         fach_label %in% c("Wirtschaftsingenieurwesen mit ingenieurwissenschaftlichem Schwerpunkt",
                                           "allgemeine naturwissenschaftliche und mathematische Fächer"),
-                        paste0(fach_label, "<br>"), fach_label),
+                        paste0(fach_label), fach_label),
                       praep, sel_bl1, " (", timerange, ")")
     }
 
@@ -3884,13 +3884,13 @@ plot_mint_faecher_frauen <- function(r){
 
       color <- color_fachbereich
       titel <- paste0("Anteil der weiblichen ", label_titel,
-                      if (label_w == "Studienanfänger:innen (1. Hochschulsemester)") " <br> nach Fachbereich" else " nach Fachbereich",
+                      if (label_w == "Studienanfänger:innen (1. Hochschulsemester)") " nach Fachbereich" else " nach Fachbereich",
                       praep, regio, " (", timerange, ")")
       }else{
 
       color = color_fach_balken
       titel <- paste0("Anteil der weiblichen ", label_titel,
-               if (label_w == "Studienanfänger:innen (1. Hochschulsemester)") " <br> in allen MINT-Fächergruppen" else " in allen MINT-Fächergruppen",
+               if (label_w == "Studienanfänger:innen (1. Hochschulsemester)") " in allen MINT-Fächergruppen" else " in allen MINT-Fächergruppen",
               praep, regio, " (", timerange, ")")
       }
 

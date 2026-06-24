@@ -2137,6 +2137,7 @@ balkenbuilder_plotly <- function(df, titel, x, y, yaxis_size = 11, orientation =
                         xanchor = "center",
                         y = legend_y,
                         traceorder = if (isTRUE(reverse_legend)) "reversed" else "normal"),
+                        font = list(family = "Calibri, sans-serif", size = 12,color = "black"),
           bargap = 0.3,
           annotations = list(list(text = quelle, x = 1, y = quelle_y, xref = "paper", yref = "paper", showarrow = FALSE,
                                   xanchor = "right", yanchor = "top",
