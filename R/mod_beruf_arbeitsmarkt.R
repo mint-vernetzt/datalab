@@ -485,7 +485,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(htmlOutput(ns("plot_arbeitsmarkt_detail_map"),height = "1600px"),
+                               shinycssloaders::withSpinner(htmlOutput(ns("plot_arbeitsmarkt_detail_map")),
                                                             color = "#154194"),
                                shinyBS::bsPopover(id = "h_beruf_regional_1", title = "",
                                                   content = paste0("Manche Landkreise sind grau dargestellt oder fehlen in der Darstellung. Das liegt daran, dass die zugrundeliegenden Karten vereinzelt alte oder falsche Landkreiszuordnungen (in Niedersachen, Sachsen-Anhalt) enthalten oder einzelne Regionen gar nicht enthalten (Bremen, in Sachsen). Daten zu den fehlenden Regionen sind in der Darstellung im nächstne Tab zu finden.", "<br> <br> Die Kategorisierung in MINT entspricht der Zuordnung durch die Bundesagentur für Arbeit. Beschäftigte werden nur als MINT klassifiziert, wenn sie einer so definierten MINT-Tätigkeit nachgehen. Der akademische Hintergrund, z. B. ein Studium in einem MINT-Fach, ist nicht ausschlaggebend. Weitere Infos dazu unter &quotDatenquellen und Hinweise&quot", "<br> <br> In den vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden.", "<br> <br>In die Kategorie &quotAuszubildende mit neuem Lehrvertrag&quot fallen sowohl neue Auszubilndende als auch Auszubildende nach Vertragswechsel."),
@@ -529,7 +529,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(plotly::plotlyOutput(ns("fachbereich_beruf_arbeitsmarkt_landkreis_verlauf")),
+                               shinycssloaders::withSpinner(plotly::plotlyOutput(ns("fachbereich_beruf_arbeitsmarkt_landkreis_verlauf"), height = "1600px"),
                                                             color = "#154194"),
                                shinyBS::bsPopover(id = "h_beruf_fach_mint_2", title = "",
                                                   content = paste0("Die Kategorisierung in MINT entspricht der Zuordnung durch die Bundesagentur für Arbeit. Beschäftigte werden nur als MINT klassifiziert, wenn sie einer so definierten MINT-Tätigkeit nachgehen. Der akademische Hintergrund, z. B. ein Studium in einem MINT-Fach, ist nicht ausschlaggebend. Weitere Infos dazu unter &quotDatenquellen und Hinweise&quot"),
@@ -607,7 +607,7 @@ fluidRow( id="beruf_entgelt",
                                      mod_beruf_arbeitsmarkt_entgelt_vergleich_ui("mod_beruf_arbeitsmarkt_entgelt_vergleich_ui_1"),
                                    ),
                                    shiny::mainPanel(
-                                     width = 9,
+                                     width = 9, height = 2,
                                      shinycssloaders::withSpinner(plotly::plotlyOutput(ns("plot_entgelt_vergleich")),
                                                                   color = "#154194"),
 

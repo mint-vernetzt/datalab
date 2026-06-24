@@ -3535,7 +3535,7 @@ plot_ranking_top_faecher <- function(r) {
     quelle_y <- -0.20
 
     plot_female <- balkenbuilder_plotly(df=studierende_faecher_frauen, x=x, y=y, titel=titel, orientation = "h", group=NULL, color = color,
-                                tickvals = df$fach, ticktext = df$fach_short,
+                                tickvals = df$fach, ticktext = df$fach_short, wrap_width = 40,
                                 order = order, stacking = FALSE, percent = TRUE, quelle=quelle, quelle_y=quelle_y)
 
 
@@ -3567,7 +3567,7 @@ plot_ranking_top_faecher <- function(r) {
     quelle_y <- -0.20
 
     plot_male <- balkenbuilder_plotly(df=studierende_faecher_maenner, x=x, y=y, titel=titel, orientation = "h", group=NULL, color = color,
-                                      tickvals = df$fach, ticktext = df$fach_short,
+                                      tickvals = df$fach, ticktext = df$fach_short, wrap_width = 40,
                                       order = order, stacking = FALSE, percent = TRUE, quelle=quelle, quelle_y=quelle_y)
 
 
@@ -3619,7 +3619,7 @@ plot_ranking_top_faecher <- function(r) {
     quelle_y <- -0.20
 
     plot_female <- balkenbuilder_plotly(df=studierende_faecher_frauen, x=x, y=y, titel=titel, orientation = "h", group=NULL, color = color,
-                                        tickvals = df$fach, ticktext = df$fach_short,
+                                        tickvals = df$fach, ticktext = df$fach_short, wrap_width = 40,
                                         order = order, stacking = FALSE, percent = FALSE, quelle=quelle, quelle_y=quelle_y)
 
 
@@ -3654,7 +3654,7 @@ plot_ranking_top_faecher <- function(r) {
     quelle_y <- -0.20
 
     plot_male <- balkenbuilder_plotly(df=studierende_faecher_maenner, x=x, y=y, titel=titel, orientation = "h", group=NULL, color = color,
-                                      tickvals = df$fach, ticktext = df$fach_short,
+                                      tickvals = df$fach, ticktext = df$fach_short, wrap_width = 40,
                                       order = order, stacking = FALSE, percent = FALSE, quelle=quelle, quelle_y=quelle_y)
 
 

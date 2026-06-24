@@ -1380,6 +1380,7 @@ piebuilder_plotly <- function(
     titel,
     x,
     y,
+    height=550,
     color = c("#b16fab", "#efe8e6"),
     quelle = "Quelle",
     subtitel = NULL
@@ -1464,6 +1465,7 @@ piebuilder_plotly <- function(
   # Layout
   p <- p |>
     plotly::layout(
+      height = height,
       title = list(
         text = titel_wrapped,
         x = 0.5,
@@ -1747,6 +1749,7 @@ linebuilder_plotly <- function(
       cliponaxis = FALSE
     ) |>
     plotly::layout(
+      height = 550,
       title = list(
         text = titel,
         x = 0.5,
@@ -1762,16 +1765,16 @@ linebuilder_plotly <- function(
         tickformat = "d",
         showgrid = FALSE,
         zeroline = FALSE,
-        tickfont = list(family = "Calibri, sans-serif", size = 16, color = "black"),
-        titlefont = list(family = "Calibri, sans-serif", size = 16, color = "black")
+        tickfont = list(family = "Calibri, sans-serif", size = 12, color = "black"),
+        titlefont = list(family = "Calibri, sans-serif", size = 12, color = "black")
       ),
       yaxis = list(
         title = list(text = ""),
         tickformat = format,
         showgrid = TRUE,
         zeroline = FALSE,
-        tickfont = list(family = "Calibri, sans-serif", size = 16, color = "black"),
-        titlefont = list(family = "Calibri, sans-serif", size = 16, color = "black")
+        tickfont = list(family = "Calibri, sans-serif", size = 12, color = "black"),
+        titlefont = list(family = "Calibri, sans-serif", size = 12, color = "black")
       ),
       separators = ",.",
       font = list(
@@ -1785,13 +1788,17 @@ linebuilder_plotly <- function(
         y = -0.09,
         xanchor = "center",
         yanchor = "top",
-        traceorder = "reversed"
+        traceorder = "reversed",
+        font = list(
+          family = "Calibri, sans-serif",
+          size = 12
+        )
       ),
       annotations = list(
         list(
           text = quelle,
           x = 1,
-          y = -0.20,
+          y = -0.22,
           xref = "paper",
           yref = "paper",
           xanchor = "right",
@@ -2055,9 +2062,12 @@ linebuilder_plotly <- function(
 
 
 
-balkenbuilder_plotly <- function(df, titel, x, y, yaxis_size = 11, orientation = "h", group = NULL, ticktext = NULL, tickvals = NULL,
-                                 order = NULL, color = NULL, percent = FALSE, reverse_legend = FALSE, yaxis_titel = "", titel_y = 0.96,
-                                 stacking = FALSE, subtitel = NULL, subtitel_y = NULL,subtitel_x = NULL, margin_t= 60, legend_y = -0.09, quelle_y = -0.20, quelle = "Quelle") {
+balkenbuilder_plotly <- function(df, titel, x, y, yaxis_size = 11, orientation = "h", group = NULL,
+                                 ticktext = NULL, tickvals = NULL,order = NULL, color = NULL, wrap_width = 80,
+                                 percent = FALSE, reverse_legend = FALSE, yaxis_titel = "", titel_y = 0.96,
+                                 height = 550,
+                                 stacking = FALSE, subtitel = NULL, subtitel_y = NULL, subtitel_x = NULL,
+                                 margin_t= 60, legend_y = -0.09, quelle_y = -0.20, quelle = "Quelle") {
 
   df_json <- jsonlite::toJSON(df, dataframe = "rows", auto_unbox = TRUE, na = "null")
   titel_js  <- gsub("'", "\\\\'", titel)
@@ -2065,6 +2075,13 @@ balkenbuilder_plotly <- function(df, titel, x, y, yaxis_size = 11, orientation =
   x_js      <- gsub("'", "\\\\'", x)
   y_js      <- gsub("'", "\\\\'", y)
   group_js <- if (is.null(group)) "" else gsub("'", "\\\\'", group)
+
+
+  titel_wrapped <- stringr::str_wrap(titel, width = wrap_width)
+  titel_wrapped <- gsub("\n", "<br>", titel_wrapped)
+  #subtitel_wrapped <- stringr::str_wrap(subtitel, width = 80)
+  #subtitel_wrapped <- gsub("\n", "<br>", subtitel_wrapped)
+
 
 
   if (is.numeric(df[[y]])) df[[y]] <- round(df[[y]], 1)
@@ -2095,6 +2112,7 @@ balkenbuilder_plotly <- function(df, titel, x, y, yaxis_size = 11, orientation =
 
       out <- out %>%
         plotly::layout(
+          height = height,
           xaxis = list(title = "", tickfont = list(size = 11),
                        range = if (percent & stacking) c(0, 100) else if (percent) c(0, max(max(df[[y]], na.rm = TRUE), 10)) else NULL, automargin = TRUE,
                        tickmode = if (percent) "linear" else "auto",
@@ -2109,7 +2127,7 @@ balkenbuilder_plotly <- function(df, titel, x, y, yaxis_size = 11, orientation =
                        categoryarray = if (!is.null(order)) rev(order) else NULL),
           separators = ",.",
                        font = list(family = "Calibri, sans-serif", size = 16,color = "black"),
-          title = list(text = titel, x = 0.5, y = titel_y,
+          title = list(text = titel_wrapped, x = 0.5, y = titel_y,
                        font = list(family = "Calibri Regular", size = 20, color = "black")),
           font = list(family = "Calibri Regular"),
           hoverlabel = list(bgcolor = "white", bordercolor = "black",
@@ -2258,7 +2276,8 @@ balkenbuilder_plotly <- function(df, titel, x, y, yaxis_size = 11, orientation =
 
     out <- out %>%
       plotly::layout(
-      yaxis = list(title = yaxis_titel, tickfont = list(size = yaxis_size), automargin = TRUE,
+       height = height,
+       yaxis = list(title = yaxis_titel, tickfont = list(size = yaxis_size), automargin = TRUE,
                    tickmode = if (percent) "linear" else "auto",
                    dtick = if (percent) 10 else NULL,
                    range = if (percent & stacking) c(0, 100) else NULL,
@@ -2270,7 +2289,7 @@ balkenbuilder_plotly <- function(df, titel, x, y, yaxis_size = 11, orientation =
                    tickfont = list(size = 11)),
       separators = ",.",
                    font = list(family = "Calibri, sans-serif", size = 16, color = "black"),
-      title = list(text = titel, x = 0.5, y = titel_y,
+      title = list(text = titel_wrapped, x = 0.5, y = titel_y,
                    font = list(family = "Calibri Regular", size = 20, color = "black")),
       font = list(family = "Calibri Regular"),
       hoverlabel = list(bgcolor = "white", bordercolor = "black",

@@ -1702,7 +1702,7 @@ arbeitsmarkt_bula_faecher <- function(r) {
 
 
 
-    titel <- paste0("Anteil von ", title_help, " im Berufsfeld ", faecher, " <br> an allen ", title_help, " in ", timerange)
+    titel <- paste0("Anteil von ", title_help, " im Berufsfeld ", faecher, " an allen ", title_help, " in ", timerange)
 
     quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
@@ -1748,7 +1748,7 @@ arbeitsmarkt_bula_faecher <- function(r) {
         y <- "prop"
         quelle_y <- -0.15
         out <- balkenbuilder_plotly(df=df, x=x, y=y, titel=titel, orientation = "h",percent=TRUE, color=color,
-                                    order=order, stacking=FALSE, quelle_y=quelle_y, quelle=quelle)
+                                    order=order, stacking=FALSE, quelle_y=quelle_y,margin_t=80, quelle=quelle)
 
 
 
@@ -1774,7 +1774,7 @@ arbeitsmarkt_bula_faecher <- function(r) {
         quelle_y <- -0.15
 
         out <- balkenbuilder_plotly(df=df, x=x, y=y, titel=titel, orientation = "h",percent=FALSE, color=color,
-                                    order=order, stacking=FALSE, quelle_y=quelle_y, quelle=quelle)
+                                    order=order, stacking=FALSE, quelle_y=quelle_y, margin_t=80, quelle=quelle)
 
       }
 
@@ -3052,7 +3052,7 @@ arbeitsmarkt_top10 <- function( r){
 
 # Create female plot
 
-    titel <- paste0("Höchster Frauenanteil unter den neuen Auszubildenden im Fachbereich <br>" ,fb ,praep, bula, " (", time, ")")
+    titel <- paste0("Höchster Frauenanteil unter den neuen Auszubildenden im Fachbereich " ,fb ,praep, bula, " (", time, ")")
 
 
 
@@ -3077,7 +3077,7 @@ arbeitsmarkt_top10 <- function( r){
     quelle_y <- -0.16
 
     plot_female <- balkenbuilder_plotly(df=berufe_frauen, x=x, y=y, titel=titel, orientation = "h", group=NULL, color = color,
-                                        tickvals = df$beruf, ticktext = df$beruf_short,
+                                        tickvals = df$beruf, ticktext = df$beruf_short, wrap_width=40,
                                         order = order, stacking = FALSE, percent = TRUE, quelle=quelle, quelle_y=quelle_y)
 
 
@@ -3085,7 +3085,7 @@ arbeitsmarkt_top10 <- function( r){
 
     # Create male plot
 
-    titel <- paste0("Höchster Männeranteil unter den neuen Auszubildenden im Fachbereich <br> " ,fb ,praep, bula, " (", time, ")")
+    titel <- paste0("Höchster Männeranteil unter den neuen Auszubildenden im Fachbereich " ,fb ,praep, bula, " (", time, ")")
 
 
     order <- unique(berufe_maenner$beruf)
@@ -3109,7 +3109,7 @@ arbeitsmarkt_top10 <- function( r){
     quelle_y <- -0.16
 
     plot_male <- balkenbuilder_plotly(df=berufe_maenner, x=x, y=y, titel=titel, orientation = "h", group=NULL, color = color,
-                                      tickvals = df$beruf, ticktext = df$beruf_short,
+                                      tickvals = df$beruf, ticktext = df$beruf_short, wrap_width=40,
                                       order = order, stacking = FALSE, percent = TRUE, quelle=quelle, quelle_y=quelle_y)
 
 
@@ -3138,7 +3138,7 @@ arbeitsmarkt_top10 <- function( r){
 
     # Create female plot
 
-    titel <- paste0("Am häufigsten gewählte MINT-Ausbildungsberufe von weiblichen Neu-Auszubildenden <br> im Fachbereich " ,fb , praep, bula ," (", time, ")")
+    titel <- paste0("Am häufigsten gewählte MINT-Ausbildungsberufe von weiblichen Neu-Auszubildenden im Fachbereich " ,fb , praep, bula ," (", time, ")")
 
 
     order <- unique(berufe_frauen$beruf)
@@ -3162,7 +3162,7 @@ arbeitsmarkt_top10 <- function( r){
     quelle_y <- -0.16
 
     plot_female <- balkenbuilder_plotly(df=berufe_frauen, x=x, y=y, titel=titel, orientation = "h", group=NULL, color = color,
-                                        tickvals = df$beruf, ticktext = df$beruf_short,,
+                                        tickvals = df$beruf, ticktext = df$beruf_short,wrap_width=40,
                                         order = order, stacking = FALSE, percent = FALSE, quelle=quelle, quelle_y=quelle_y)
 
 
@@ -3174,7 +3174,7 @@ arbeitsmarkt_top10 <- function( r){
 
 # Create male plot
 
-    titel <- paste0("Am häufigsten gewählte MINT-Ausbildungsberufe von männlichen Neu-Auszubildenden <br> im Fachbereich  " ,fb , praep, bula ," (", time, ")")
+    titel <- paste0("Am häufigsten gewählte MINT-Ausbildungsberufe von männlichen Neu-Auszubildenden im Fachbereich  " ,fb , praep, bula ," (", time, ")")
 
 
     order <- unique(berufe_maenner$beruf)
@@ -3198,7 +3198,7 @@ arbeitsmarkt_top10 <- function( r){
     quelle_y <- -0.16
 
     plot_male <- balkenbuilder_plotly(df=berufe_maenner, x=x, y=y, titel=titel, orientation = "h", group=NULL, color = color,
-                                      tickvals = df$beruf, ticktext = df$beruf_short,
+                                      tickvals = df$beruf, ticktext = df$beruf_short, wrap_width=40,
                                       order = order, stacking = FALSE, percent = FALSE, quelle=quelle, quelle_y=quelle_y)
 
 
@@ -3340,7 +3340,7 @@ arbeitsmarkt_faecher_anteil_frauen <- function(r) {
 
       praep <- ifelse(regio == "Saarland", " im ", " in ")
 
-      titel <- paste0( "Überblick über die Berufsfelder von weiblichen ", title_help, "<br>", praep, regio, " (", timerange, ")")
+      titel <- paste0( "Überblick über die Berufsfelder von weiblichen ", title_help, praep, regio, " (", timerange, ")")
       quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
 
@@ -3762,7 +3762,7 @@ arbeitsmarkt_lk_detail_vergleich <- function(r){
 
     y <- "prob"
 
-    titel <- paste0("Anteil von ", titel_sub2, titel_gesamt_1, "<br>", titel_gesamt_2, praep, states, " (", timerange, ")")
+    titel <- paste0("Anteil von ", titel_sub2, titel_gesamt_1, titel_gesamt_2, praep, states, " (", timerange, ")")
 
   } else if(display_form== "Anzahl") {
 
@@ -3774,7 +3774,7 @@ arbeitsmarkt_lk_detail_vergleich <- function(r){
     y <- "wert"
 
     titel_gesamt_1 <- stringr::str_remove(titel_gesamt_1, "an allen")
-    titel <- paste0("Anzahl ", titel_sub, "<br>", titel_gesamt_1, praep, states, " (", timerange, ")")
+    titel <- paste0("Anzahl ", titel_sub, titel_gesamt_1, praep, states, " (", timerange, ")")
   }
 
 
@@ -3813,10 +3813,8 @@ arbeitsmarkt_lk_detail_vergleich <- function(r){
   }
 
 
-  out <- balkenbuilder_plotly(df=df_compare, x=x, y=y, titel=titel, orientation = "h", group=NULL, color = color,
-                              order = order, percent=percent, stacking=FALSE, titel_y=titel_y, quelle_y=quelle_y, quelle=quelle)%>%
-    plotly::layout(height = height)
-
+  out <- balkenbuilder_plotly(df=df_compare, x=x, y=y, titel=titel, orientation = "h", group=NULL, color = color, height=height,
+                              order = order, percent=percent, stacking=FALSE, titel_y=titel_y, quelle_y=quelle_y, quelle=quelle)
 
 
 
