@@ -2124,7 +2124,7 @@ kurse_wahl <- function(r,
     out1 <- mapbuilder_plotly(df = df1,
                               location_col = "bl_ags",
                               value_col = "prop",
-                              maxcolor = col,
+                              maxcolor = maxcolor,
                               titel = titel,
                               quelle = quelle)
     out <- out1
@@ -2147,7 +2147,7 @@ kurse_wahl <- function(r,
       out2 <- mapbuilder_plotly(df = df1,
                                 location_col = "bl_ags",
                                 value_col = "prop",
-                                maxcolor = col,
+                                maxcolor = maxcolor,
                                 titel = titel,
                                 quelle = quelle)
 

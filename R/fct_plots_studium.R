@@ -358,7 +358,7 @@ studierende_bula_mint <- function(r) {
     df <- DBI::dbGetQuery(con, df_query)
 
 
-    praep <- ifelse(regio == "Saarland", " im ", " in ")
+    #praep <- ifelse(region == "Saarland", " im ", " in ")
 
     df <- df %>%
       dplyr::select(-fachbereich,- mint_select, -typ )%>%
@@ -390,16 +390,18 @@ studierende_bula_mint <- function(r) {
 
     # plot
     df <- df[df$fachbereich == "MINT",]
-    joinby <- c("name", "region")
-    name <- paste0(label_m, " in MINT")
-    tooltip <- "{point.region} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.display_abs}"
+    df <- df %>%
+      dplyr::mutate(
+        tooltip = paste0(
+          "<b>", region, "</b><br>",
+          "Anteil: ", display_rel, " %<br>",
+          "Anzahl: ", display_abs
+        )
+      )
     titel <- paste0("MINT-Anteil von ", label_m, " (", timerange, ")")
-    mincolor <- "#f4f5f6"
-    map_selection <- map_selection_germany
-    maxcolor <- "#b16fab"
     quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
-    out <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection, quelle = quelle)
+    out <- mapbuilder_plotly(df, titel = titel, value_col = "proportion", quelle = quelle)
 
 
   }
@@ -1889,16 +1891,20 @@ plot_studierende_bula_faecher <- function(r){
     #quelle null da kein input
 
     joinby <- c("name", "region")
-    name <- paste0(label_m, " in MINT")
-    tooltip <- "{point.region} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.display_abs}"
-    titel <- titel
-    mincolor <- "#f4f5f6"
-    map_selection <- map_selection_germany
-    maxcolor <- "#b16fab"
+    df <- df %>%
+      dplyr::mutate(
+        tooltip = paste0(
+          "<b>", region, "</b><br>",
+          "Anteil: ", display_rel, " %<br>",
+          "Anzahl: ", display_abs
+        )
+      )
     quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
-    out <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor,prop=TRUE,
-                      wert=FALSE, map=map_selection, quelle = quelle)
+    out <- mapbuilder_plotly(df,
+                             titel = titel,
+                             value_col = "prop",
+                             quelle = quelle)
 
 
 
@@ -4569,17 +4575,22 @@ studierende_international_bula_mint <- function(r) {
 
 
     df <- df[df$fachbereich == "MINT",]
-    joinby <- c("name", "region")
-    name <- paste0(label_m, " in MINT")
-    tooltip <- "{point.region} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.display_abs}"
+    df <- df %>%
+      dplyr::mutate(
+        tooltip = paste0(
+          "<b>", region, "</b><br>",
+          "Anteil: ", display_rel, " %<br>",
+          "Anzahl: ", display_abs
+        )
+      )
     titel <- paste0("MINT-Anteil von ", label_m, " (", timerange, ")")
-    mincolor <- "#f4f5f6"
-    map_selection <- map_selection_germany
-    maxcolor <- "#b16fab"
 
     quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
-    out <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection, quelle=quelle)
+    out <- mapbuilder_plotly(df,
+                             titel = titel,
+                             value_col = "proportion",
+                             quelle=quelle)
 
 
   }

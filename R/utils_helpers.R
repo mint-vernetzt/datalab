@@ -9,11 +9,23 @@
 # Karten laden
 map_de_bl <- sf::st_read("data/map_data/VG2500_LAN.shp") |>
   sf::st_make_valid() |>
-  sf::st_transform(4326)
+  dplyr::select(AGS, GEN, geometry) |>
+  sf::st_transform(4326) |>
+  sf::st_simplify(
+    dTolerance = 0.01,
+    preserveTopology = TRUE
+  ) |>
+  sf::st_make_valid()
 # |>
-#   rmapshaper::ms_simplify(keep = 0.05, keep_shapes = TRUE)
-map_de_bl <- map_de_bl |>
-  dplyr::select(AGS, GEN, geometry)
+  # sf::st_make_valid() |>
+  # dplyr::select(AGS, GEN, geometry) |>
+  # sf::st_transform(4326)
+# |>
+#   rmapshaper::ms_simplify(
+#     keep = 0.2,
+#     keep_shapes = TRUE
+#   ) |>
+#   sf::st_make_valid()
 
 map_de_bl_geojson <- map_de_bl |>
   geojsonsf::sf_geojson() |>
@@ -22,9 +34,9 @@ map_de_bl_geojson <- map_de_bl |>
 
 map_bl_krs <- sf::st_read("data/map_data/VG2500_KRS.shp") |>
   sf::st_make_valid() |>
-  sf::st_transform(4326)
-# |>
-#   rmapshaper::ms_simplify(keep = 0.02, keep_shapes = TRUE)
+  sf::st_transform(4326) |>
+  rmapshaper::ms_simplify(keep = 0.02, keep_shapes = TRUE)
+
 map_bl_krs <- map_bl_krs |>
   dplyr::select(AGS, GEN, geometry)
 
@@ -3173,17 +3185,15 @@ balkenbuilder3 <- function(df, titel , x, y, tooltip, format, color, optional, o
 
 #mapbuilder
 
+
 mapbuilder_plotly <- function(
     df,
-    location_col,
     value_col,
     titel,
-    tooltip_col = "tooltip",
     mincolor = "#EFE8E6",
     maxcolor = "#b16fab",
-    quelle = "Quelle",
-    geojson = map_de_bl_geojson,
-    featureidkey = "properties.AGS"
+    na_color = "#D9D9D9",
+    quelle = "Quelle"
 ) {
 
   # Text vorbereiten
@@ -3194,61 +3204,78 @@ mapbuilder_plotly <- function(
   df <- add_bl_key(df)
 
   # Download vorbereiten
-  df_json <- jsonlite::toJSON(df[, c("region", value_col)],
-                              dataframe = "rows",
-                              auto_unbox = TRUE,
-                              na = "null"
+  df_json <- jsonlite::toJSON(
+    df[, c("region", value_col), drop = FALSE],
+    dataframe = "rows",
+    auto_unbox = TRUE,
+    na = "null"
   )
 
   titel_js  <- jsonlite::toJSON(titel, auto_unbox = TRUE)
   quelle_js <- jsonlite::toJSON(quelle, auto_unbox = TRUE)
 
+  # Geodaten mit df verbinden
+  geodata <- readRDS("data/germany_choropleth_federal_states.rds")
+  map_data <-
+    sf::st_as_sf(dplyr::left_join(
+      tibble::tibble(geodata),
+      df,
+      by = c("NAME_1" = "region")
+    )) %>%
+    sf::st_simplify()
 
-  # plot erzeugen
+  map_values <- map_data[!is.na(map_data[[value_col]]), , drop = FALSE]
+  # map_na     <- map_data[is.na(map_data[[value_col]]), , drop = FALSE]
+
+  # Plot erzeugen
   p <- plotly::plot_ly(
-    data = df,
-    type = "choropleth",
-    geojson = geojson,
+    hoverinfo = "text",
+    hoveron = "fills"
+  )
 
-    locations = as.formula(paste0("~`", location_col, "`")),
-    z = as.formula(paste0("~`", value_col, "`")),
+  # Werte-Trace
+  if (nrow(map_values) > 0) {
+    p <- p |>
+      plotly::add_sf(
+        data = map_values,
+        split = ~NAME_1,
+        color = as.formula(paste0("~`", value_col, "`")),
+        colors = c(mincolor, maxcolor),
+        alpha = 1,
+        stroke = I("#FAFAFA"),
+        text = ~tooltip,
+        hoverinfo = "text",
+        hoveron = "fills",
+        showlegend = FALSE
+      )
+  }
 
-    featureidkey = featureidkey,
+  # NA-Trace grau
+  # if (nrow(map_na) > 0) {
+  #   map_na[[".na_fill"]] <- "Fehlend"
+  #
+  #   p <- p |>
+  #     plotly::add_sf(
+  #       data = map_na,
+  #       split =  ~NAME_1,
+  #       color = ~.na_fill,
+  #       colors = c(na_color),
+  #       alpha = 1,
+  #       stroke = I("#FAFAFA"),
+  #       text = "fehlender Wert",
+  #       hoverinfo = "text",
+  #       hoveron = "fills",
+  #       showlegend = FALSE
+  #     )
+  # }
 
-    colorscale = list(
-      c(0, mincolor),
-      c(1, maxcolor)
-    ),
-
-    marker = list(
-      line = list(color = "#FAFAFA", width = 0.5)
-    ),
-
-    hovertext = df$tooltip,
-    hovertemplate = "%{hovertext}<extra></extra>",
-
-    colorbar = list(
-      title = "",
-      orientation = "h",
-      x = 0.5,
-      xanchor = "center",
-      y = -0.015,
-      yanchor = "top",
-      len = 0.35,
-      thickness = 8,
-      tickfont = list(size = 10),
-      borderwidth = 0,
-      outlinewidth = 0
-    )
-  )  |>
-    plotly::style(
-      hoverlabel = list(bgcolor = "white",
-                        font = list(size = 12))
-    )
-
-
-  # Layout
   p <- p |>
+    plotly::style(
+      hoverlabel = list(
+        bgcolor = "white",
+        font = list(size = 12)
+      )
+    ) |>
     plotly::layout(
       title = list(
         text = titel_wrapped,
@@ -3264,6 +3291,7 @@ mapbuilder_plotly <- function(
       geo = list(
         projection = list(type = "mercator"),
         fitbounds = "locations",
+        visible = FALSE,
         showcountries = FALSE,
         showcoastlines = FALSE,
         showland = FALSE,
@@ -3278,7 +3306,7 @@ mapbuilder_plotly <- function(
         )
       ),
 
-      margin = list(t = 60, b = 80, l = 0, r = 0),
+      margin = list(t = 40, b = 80, l = 0, r = 0),
 
       annotations = list(
         list(
@@ -3291,9 +3319,21 @@ mapbuilder_plotly <- function(
           yanchor = "top",
           showarrow = FALSE,
           font = list(size = 11, color = "gray", family = "Calibri Regular")
-
         )
       )
+    ) |>
+    plotly::colorbar(
+      title = "",
+      orientation = "h",
+      x = 0.5,
+      xanchor = "center",
+      y = -0.015,
+      yanchor = "top",
+      len = 0.35,
+      thickness = 8,
+      tickfont = list(size = 10),
+      borderwidth = 0,
+      outlinewidth = 0
     ) |>
     plotly::config(
       displaylogo = FALSE,
@@ -3301,12 +3341,13 @@ mapbuilder_plotly <- function(
         "zoom2d", "pan2d", "select2d", "lasso2d",
         "hoverClosestCartesian", "hoverCompareCartesian",
         "toggleSpikelines", "zoomInGeo", "zoomOutGeo",
-        "autoScale2d", "resetGeo", "hoverClosestGeo"
+        "autoScale2d", "resetScale2d", "resetGeo", "hoverClosestGeo",
+        "zoomInMapbox", "zoomOutMapbox", "resetViewMapbox",
+        "resetViews", "zoom3d", "pan3d", "resetCameraDefault3d",
+        "resetCameraLastSave3d", "zoomin", "zoomout"
       ),
 
       modeBarButtonsToAdd = list(
-
-        # CSV Download
         list(
           name = "Download CSV",
           icon = list(
@@ -3314,12 +3355,10 @@ mapbuilder_plotly <- function(
             width = 24,
             height = 24
           ),
-
           click = htmlwidgets::JS(
             paste0("
               function(gd) {
                 var rows = ", df_json, ";
-
                 var date = new Date().toISOString().slice(0,10);
                 var filename = 'export_' + date + '.csv';
 
@@ -3347,7 +3386,6 @@ mapbuilder_plotly <- function(
           )
         ),
 
-        # TXT Download
         list(
           name = "Download Daten für KI als txt",
           icon = list(
@@ -3355,7 +3393,6 @@ mapbuilder_plotly <- function(
             width = 24,
             height = 24
           ),
-
           click = htmlwidgets::JS(
             paste0("
               function(gd) {
@@ -3393,7 +3430,6 @@ mapbuilder_plotly <- function(
 
   return(p)
 }
-
 
 mapbuilder <- function(df, joinby, name, tooltip,titel, mincolor, maxcolor, prop = FALSE, wert = FALSE, map = NULL, landkarten = FALSE, states=NULL,  quelle="Quelle", reg = "Deutschland"){
 
