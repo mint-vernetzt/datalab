@@ -7,15 +7,15 @@
 # Geodaten vorbereiten ----
 
 # Karten laden
-map_de_bl <- sf::st_read("data/map_data/VG2500_LAN.shp") |>
-  sf::st_make_valid() |>
-  dplyr::select(AGS, GEN, geometry) |>
-  sf::st_transform(4326) |>
-  sf::st_simplify(
-    dTolerance = 0.01,
-    preserveTopology = TRUE
-  ) |>
-  sf::st_make_valid()
+# map_de_bl <- sf::st_read("data/map_data/VG2500_LAN.shp") |>
+#   sf::st_make_valid() |>
+#   dplyr::select(AGS, GEN, geometry) |>
+#   sf::st_transform(4326) |>
+#   sf::st_simplify(
+#     dTolerance = 0.01,
+#     preserveTopology = TRUE
+#   ) |>
+#   sf::st_make_valid()
 # |>
   # sf::st_make_valid() |>
   # dplyr::select(AGS, GEN, geometry) |>
@@ -27,36 +27,52 @@ map_de_bl <- sf::st_read("data/map_data/VG2500_LAN.shp") |>
 #   ) |>
 #   sf::st_make_valid()
 
-map_de_bl_geojson <- map_de_bl |>
-  geojsonsf::sf_geojson() |>
-  jsonlite::fromJSON(simplifyVector = FALSE)
+# map_de_bl_geojson <- map_de_bl |>
+#   geojsonsf::sf_geojson() |>
+#   jsonlite::fromJSON(simplifyVector = FALSE)
 
 
-map_bl_krs <- sf::st_read("data/map_data/VG2500_KRS.shp") |>
-  sf::st_make_valid() |>
-  sf::st_transform(4326) |>
-  rmapshaper::ms_simplify(keep = 0.02, keep_shapes = TRUE)
+# map_bl_krs <- sf::st_read("data/map_data/VG2500_KRS.shp") |>
+#   sf::st_make_valid() |>
+#   sf::st_transform(4326)
+#
+# map_bl_krs <- map_bl_krs |>
+#   dplyr::select(LKZ, AGS, GEN, SN_L, geometry)
+#
+# saveRDS(map_bl_krs, file ="data/germany_choropleth_landkreise.rds")
 
-map_bl_krs <- map_bl_krs |>
-  dplyr::select(AGS, GEN, geometry)
+# map_world <- rnaturalearth::ne_countries(
+#   scale = "medium",
+#   returnclass = "sf"
+# )
+#
+# saveRDS(map_world_geojson, file = "data/world_choropleth.rds")
+#
+# map_europa <- sf::st_read("data/map_data/CNTR_RG_20M_2024_3035.shp") |>
+#     sf::st_make_valid() |>
+#     sf::st_transform(4326)
+#
+# eu_bbox <- sf::st_as_sfc(
+#   sf::st_bbox(
+#     c(
+#       xmin = -25,
+#       xmax = 45,
+#       ymin = 28,
+#       ymax = 72
+#     ),
+#     crs = sf::st_crs(4326)
+#   )
+# )
+#
+# map_europa <- map_europa |>
+#   sf::st_intersection(eu_bbox) |>
+#   sf::st_collection_extract("POLYGON") |>
+#   sf::st_make_valid()
+#
+#
+#   saveRDS(map_europa, file ="data/europe_choropleth.rds")
 
-map_bl_krs_geojson <- map_bl_krs |>
-  geojsonsf::sf_geojson() |>
-  jsonlite::fromJSON(simplifyVector = FALSE)
 
-map_world <- rnaturalearth::ne_countries(
-  scale = "medium",
-  returnclass = "sf"
-)
-map_world_geojson <- map_world |>
-  sf::st_transform(4326) |>
-  geojsonsf::sf_geojson() |>
-  jsonlite::fromJSON(simplifyVector = FALSE)
-
-map_eu_geojson <- jsonlite::fromJSON(
-  paste(readLines("data/map_data/europe.geojson"), collapse = "\n"),
-  simplifyVector = FALSE
-)
 
 # Schlüssel für Mapping vorbereiten
 
@@ -3189,40 +3205,62 @@ balkenbuilder3 <- function(df, titel , x, y, tooltip, format, color, optional, o
 mapbuilder_plotly <- function(
     df,
     value_col,
+    regio_col = "region",
     titel,
     mincolor = "#EFE8E6",
     maxcolor = "#b16fab",
     na_color = "#D9D9D9",
+    map = "germany_choropleth_federal_states.rds",
     quelle = "Quelle"
 ) {
-
+browser()
   # Text vorbereiten
   titel_wrapped <- stringr::str_wrap(titel, width = 60)
   titel_wrapped <- gsub("\n", "<br>", titel_wrapped)
 
-  # Mapping vorbereiten
-  df <- add_bl_key(df)
-
   # Download vorbereiten
+
   df_json <- jsonlite::toJSON(
-    df[, c("region", value_col), drop = FALSE],
+    df[, c(regio_col, value_col), drop = FALSE],
     dataframe = "rows",
     auto_unbox = TRUE,
     na = "null"
   )
 
+
   titel_js  <- jsonlite::toJSON(titel, auto_unbox = TRUE)
   quelle_js <- jsonlite::toJSON(quelle, auto_unbox = TRUE)
 
   # Geodaten mit df verbinden
-  geodata <- readRDS("data/germany_choropleth_federal_states.rds")
-  map_data <-
-    sf::st_as_sf(dplyr::left_join(
-      tibble::tibble(geodata),
-      df,
-      by = c("NAME_1" = "region")
-    )) %>%
-    sf::st_simplify()
+  geodata <- readRDS(paste0("data/", map))
+  if(map == "germany_choropleth_landkreise.rds"){
+    map_data <-
+      sf::st_as_sf(dplyr::left_join(
+        tibble::tibble(geodata),
+        df,
+        by = c("AGS" = "landkreis_nummer")
+      )) %>%
+      dplyr::rename("NAME_1" = "AGS") %>%
+      sf::st_simplify()
+  }else if(map == "europe_choropleth.rds"){
+    map_data <-
+      sf::st_as_sf(dplyr::inner_join(
+        tibble::tibble(geodata),
+        df,
+        by = c("CNTR_ID" = "alpha2")
+      )) %>%
+      dplyr::rename("NAME_1" = "CNTR_ID") %>%
+      sf::st_simplify()
+  }else{
+    map_data <-
+      sf::st_as_sf(dplyr::left_join(
+        tibble::tibble(geodata),
+        df,
+        by = c("NAME_1" = regio_col)
+      )) %>%
+      sf::st_simplify()
+  }
+
 
   map_values <- map_data[!is.na(map_data[[value_col]]), , drop = FALSE]
   # map_na     <- map_data[is.na(map_data[[value_col]]), , drop = FALSE]

@@ -420,18 +420,22 @@ arbeitsmarkt_mint_bulas <- function(r) {
 
     # plot
 
-
-    joinby <- c("name", "bundesland")
-    name <- paste0("MINT")
-    tooltip <- "{point.bundesland} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.wert}"
+    df <- df %>%
+      dplyr::mutate(
+        tooltip = paste0(
+          "<b>", bundesland, "</b><br>",
+          "Anteil: ", display_rel, " %<br>",
+          "Anzahl: ", wert
+        )
+      )
     titel <- paste0("Anteil von ",  title_help, " in MINT an allen ",  title_help, " (", timerange, ")")
-    mincolor <- "#f4f5f6"
-    map_selection <- map_selection_germany
-    maxcolor <- "#b16fab"
     quelle <- "uelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
-    out <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection, quelle = quelle)
-
+    out <- mapbuilder_plotly(df,
+                      value_col = "proportion",
+                      regio_col = "bundesland",
+                      titel = titel,
+                      quelle = quelle)
 
   }
   else if(betrachtung == "Gruppenvergleich - Balkendiagramm" ){
@@ -1618,17 +1622,22 @@ arbeitsmarkt_bula_faecher <- function(r) {
 
     # plot
 
-    df <- df
-    joinby <- c("name", "bundesland")
-    name <- paste0("MINT")
-    tooltip <- "{point.bundesland} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.wert}"
+    df <- df %>%
+      dplyr::mutate(
+        tooltip = paste0(
+          "<b>", bundesland, "</b><br>",
+          "Anteil: ", display_rel, " %<br>",
+          "Anzahl: ", wert
+        )
+      )
     titel <- paste0("Anteil von ",  title_help, " in ", faecher, " an allen ",  title_help, " (", timerange, ")")
-    mincolor <- "#f4f5f6"
-    maxcolor <- "#b16fab"
-    map_selection <- map_selection_germany
-
     quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
-    out <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection, quelle = quelle)
+
+    out <- mapbuilder_plotly(df,
+                      value_col = "proportion",
+                      regio_col = "bundesland",
+                      titel = titel,
+                      quelle = quelle)
 
 
 
@@ -2781,36 +2790,44 @@ arbeitsmarkt_wahl_gender <- function(r) {
 
 
      df <- values_female
-     joinby <- c("name", "bundesland")
-     name <- paste0(faecher)
-     tooltip <-"{point.bundesland} <br> Anteil: {point.prop_disp} % <br> Anzahl: {point.wert_disp}"
+     df <- df %>%
+       dplyr::mutate(
+         tooltip = paste0(
+           "<b>", bundesland, "</b><br>",
+           "Anteil: ", prop_disp, " %<br>",
+           "Anzahl: ", wert_disp
+         )
+       )
      titel <- titel_w
-     mincolor <- "#fcfcfd"
-     maxcolor <- "#b16fab"
-     map_selection <- map_selection_germany
      quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
-     out_1 <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor,prop=TRUE, wert=FALSE, map=map_selection, quelle = quelle)
+     out_1 <- mapbuilder_plotly(df,
+                         titel = titel,
+                         value_col = "prop",
+                         regio_col = "bundesland",
+                         quelle = quelle)
 
 
      df <- values_male
-     joinby <- c("name", "bundesland")
-     name <- paste0(faecher)
-     tooltip <-"{point.bundesland} <br> Anteil: {point.prop_disp} % <br> Anzahl: {point.wert_disp}"
+     df <- df %>%
+       dplyr::mutate(
+         tooltip = paste0(
+           "<b>", bundesland, "</b><br>",
+           "Anteil: ", prop_disp, " %<br>",
+           "Anzahl: ", wert_disp
+         )
+       )
      titel <- titel_m
-     mincolor <- "#fcfcfd"
-     maxcolor <- "#b16fab"
-     map_selection <- map_selection_germany
      quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
-     out_2 <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor,prop=TRUE, wert=FALSE, map=map_selection, quelle = quelle)
+     out_2 <- mapbuilder_plotly(df,
+                         titel = titel,
+                         value_col = "prop",
+                         regio_col = "bundesland",
+                         quelle = quelle)
 
 
 
-     out <- highcharter::hw_grid(
-       out_1, out_2,
-       ncol = 2,
-       browsable = TRUE
-     )
-
+     out <- list(
+       out_1, out_2)
 
 
      }else
@@ -3532,46 +3549,46 @@ arbeitsmarkt_lk_detail_map <- function(r) {
 
 
   # map states for state codes
-  state_codes <- data.frame(
-    state = c(
-      "Baden-Württemberg",
-      "Bayern",
-      "Berlin",
-      "Brandenburg",
-      "Bremen",
-      "Hamburg",
-      "Hessen",
-      "Mecklenburg-Vorpommern",
-      "Niedersachsen",
-      "Nordrhein-Westfalen",
-      "Rheinland-Pfalz",
-      "Saarland",
-      "Sachsen",
-      "Sachsen-Anhalt",
-      "Schleswig-Holstein",
-      "Thüringen"
-    ),
-    short = c(
-      "bw",
-      "by",
-      "be",
-      "bb",
-      "hb",
-      "hh",
-      "he",
-      "mv",
-      "ni",
-      "nw",
-      "rp",
-      "sl",
-      "sn",
-      "st",
-      "sh",
-      "th"
-    )
-  )
-
-  state_code <- state_codes %>% dplyr::filter(state == states) %>% dplyr::pull()
+  # state_codes <- data.frame(
+  #   state = c(
+  #     "Baden-Württemberg",
+  #     "Bayern",
+  #     "Berlin",
+  #     "Brandenburg",
+  #     "Bremen",
+  #     "Hamburg",
+  #     "Hessen",
+  #     "Mecklenburg-Vorpommern",
+  #     "Niedersachsen",
+  #     "Nordrhein-Westfalen",
+  #     "Rheinland-Pfalz",
+  #     "Saarland",
+  #     "Sachsen",
+  #     "Sachsen-Anhalt",
+  #     "Schleswig-Holstein",
+  #     "Thüringen"
+  #   ),
+  #   short = c(
+  #     "bw",
+  #     "by",
+  #     "be",
+  #     "bb",
+  #     "hb",
+  #     "hh",
+  #     "he",
+  #     "mv",
+  #     "ni",
+  #     "nw",
+  #     "rp",
+  #     "sl",
+  #     "sn",
+  #     "st",
+  #     "sh",
+  #     "th"
+  #   )
+  # )
+  #
+  # state_code <- state_codes %>% dplyr::filter(state == states) %>% dplyr::pull()
 
   # calculate comparison map 1
 
@@ -3593,8 +3610,8 @@ arbeitsmarkt_lk_detail_map <- function(r) {
 
 
   # adjust landkreis_nummer for correct mapping
-  df1_map <- df1_map %>% dplyr::mutate(
-    landkreis_nummer = paste0("de-", state_code, "-", landkreis_nummer, "000"))
+  # df1_map <- df1_map %>% dplyr::mutate(
+  #   landkreis_nummer = paste0("de-", state_code, "-", landkreis_nummer, "000"))
 
 
   #Trennpunkte für lange Zahlen ergänzen in Absolute Zahlen für Hover + Text für Hover
@@ -3609,90 +3626,46 @@ arbeitsmarkt_lk_detail_map <- function(r) {
 
 
 
-  state_codes <- data.frame(
-    state = c(
-      "Baden-Württemberg","Bayern","Berlin","Brandenburg","Bremen","Hamburg",
-      "Hessen","Mecklenburg-Vorpommern","Niedersachsen","Nordrhein-Westfalen",
-      "Rheinland-Pfalz","Saarland","Sachsen","Sachsen-Anhalt",
-      "Schleswig-Holstein","Thüringen"
-    ),
-    short = c("bw","by","be","bb","hb","hh","he","mv","ni",
-              "nw","rp","sl","sn","st","sh","th")
-  )
-  state_code <- state_codes %>%
-    dplyr::filter(state == states) %>%
-    dplyr::pull(short)
-
-  # RDS-Datei für das Bundesland laden
-  map_state <- readRDS(paste0("data/map_data/map_de_", state_code, ".rds"))
-
-
+  # state_codes <- data.frame(
+  #   state = c(
+  #     "Baden-Württemberg","Bayern","Berlin","Brandenburg","Bremen","Hamburg",
+  #     "Hessen","Mecklenburg-Vorpommern","Niedersachsen","Nordrhein-Westfalen",
+  #     "Rheinland-Pfalz","Saarland","Sachsen","Sachsen-Anhalt",
+  #     "Schleswig-Holstein","Thüringen"
+  #   ),
+  #   short = c("bw","by","be","bb","hb","hh","he","mv","ni",
+  #             "nw","rp","sl","sn","st","sh","th")
+  # )
+  # state_code <- state_codes %>%
+  #   dplyr::filter(state == states) %>%
+  #   dplyr::pull(short)
+  #
+  # # RDS-Datei für das Bundesland laden
+  # map_state <- readRDS(paste0("data/map_data/map_de_", state_code, ".rds"))
+  #
 
 
   titel <- paste0("Anteil von ", titel_sub1_2, titel_gesamt1, titel_gesamt1_2, " in ", states, " (", timerange, ")")
-  highcharter::highchart(type = "map") %>%
-    highcharter::hc_add_series_map(
-    map = map_state,
-    df = df1_map,
-    value = "prob",
-    joinBy = c("hc-key","landkreis_nummer"),
-    borderColor = "#FAFAFA",
-    name = paste0( domain_1, "<br>", titel_sub1_2),
-    borderWidth = 0.1,
-    nullColor = "#A9A9A9",
-    tooltip = list(
-      valueDecimals = 0,
-      valueSuffix = "%"
-    )
-    #,
-    # download_map_data = FALSE
-  ) %>%
-    highcharter::hc_colorAxis(min=0,labels = list(format = "{text}%")) %>%
-    highcharter::hc_title(
-      text = paste0("Anteil von ", titel_sub1_2, titel_gesamt1, titel_gesamt1_2, " in ", states, " (", timerange, ")"),
-      margin = 10,
-      align = "center",
-      style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
-    ) %>%
-    highcharter::hc_chart(
-      style = list(fontFamily = "SourceSans3-Regular")
-    ) %>% #highcharter::hc_size(600, 550) %>%
-    highcharter::hc_credits(enabled = FALSE) %>%
-    highcharter::hc_legend(layout = "horizontal", floating = FALSE,
-                           verticalAlign = "bottom"
-    ) %>%
-    highcharter::hc_caption(text = "Quelle der Daten: Bundesagentur für Arbeit, 2025 freier Download, eigene Berechnungen durch MINTvernetzt.",
-                            style = list(fontSize = "11px", color = "gray")) %>%
-    highcharter::hc_exporting(enabled = TRUE,
-                              buttons = list(
-                                contextButton = list(
-                                  menuItems = list("downloadPNG", "downloadCSV",
-                                                   list(
-                                                     text = "Daten für GPT",
-                                                     onclick = htmlwidgets::JS(sprintf(
-                                                       "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
 
-
-     var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle:Quelle der Daten: Bundesagentur für Arbeit, 2025 freier Download, eigene Berechnungen durch MINTvernetzt.';
-
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-   }", gsub("'", "\\\\'", titel),gsub("'", "\\\\'", titel)))))
-                                )
-                              )
+  df1_map <- df1_map %>%
+    dplyr::mutate(
+      tooltip = paste0(
+        "<b>", landkreis, "</b><br>",
+        "Anteil: ", prettyNum(round(prob,1), big.mark = ".", decimal.mark = ","), " %<br>",
+        "Anzahl: ", wert
+      )
     )
 
+  map1 <- mapbuilder_plotly(df = df1_map,
+                            value_col = "prob",
+                            regio_col = "landkreis",
+                            mincolor = "#f4f5f6",
+                            maxcolor = "#154194",
+                            titel = titel,
+                            quelle = quelle,
+                            map = "germany_choropleth_landkreise.rds")
+
+  return(map1)
 
 
 }

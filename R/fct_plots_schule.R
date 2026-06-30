@@ -481,7 +481,6 @@ kurse_mint_map <- function(r) {
     titel <- paste0("Anteil von ", help_title, "<br> an allen Grundkursbelegungen ", "(",timerange, ")")
     quelle <- "Quelle: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
     map1 <- mapbuilder_plotly(df = df1,
-                      location_col = "bl_ags",
                       value_col = "prop",
                       titel = titel,
                       quelle = quelle)
@@ -498,7 +497,6 @@ kurse_mint_map <- function(r) {
     titel <- paste0("Anteil von ", help_title, "<br> an allen Leistungskursbelegungen ", "(",timerange, ")")
     quelle <- "Quelle: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
     map2 <- mapbuilder_plotly(df = df2,
-                              location_col = "bl_ags",
                               value_col = "prop",
                               titel = titel,
                               quelle = quelle)
@@ -1061,7 +1059,6 @@ kurse_map <- function(r) {
     maxcolor <- col
     quelle <- "Quelle: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
     map1 <- mapbuilder_plotly(df = df1,
-                              location_col = "bl_ags",
                               value_col = "prop",
                               maxcolor = col,
                               titel = titel,
@@ -1080,7 +1077,6 @@ kurse_map <- function(r) {
     maxcolor <- col
     quelle <- "Quelle: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
     map2 <- mapbuilder_plotly(df = df2,
-                              location_col = "bl_ags",
                               value_col = "prop",
                               maxcolor = col,
                               titel = titel,
@@ -2122,7 +2118,6 @@ kurse_wahl <- function(r,
     maxcolor <- as.character(color_fach[subjects])
     quelle <- "Quelle: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
     out1 <- mapbuilder_plotly(df = df1,
-                              location_col = "bl_ags",
                               value_col = "prop",
                               maxcolor = maxcolor,
                               titel = titel,
@@ -2145,7 +2140,6 @@ kurse_wahl <- function(r,
       maxcolor <- as.character(color_fach[subjects])
       quelle <- "Quelle: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
       out2 <- mapbuilder_plotly(df = df1,
-                                location_col = "bl_ags",
                                 value_col = "prop",
                                 maxcolor = maxcolor,
                                 titel = titel,
