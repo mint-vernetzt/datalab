@@ -330,7 +330,7 @@ mod_international_start_ui <- function(id){
                                     ),
                                     shiny::mainPanel(
                                       width = 9,
-                                      shinycssloaders::withSpinner(htmlOutput(ns("plot_international_studienzahl_map_arb_1")),
+                                      shinycssloaders::withSpinner(plotly::plotlyOutput(ns("plot_international_studienzahl_map_arb_1")),
                                                                    color = "#154194"),
 
                                       shinyBS::bsPopover(id = "h_beruf_international_1", title = "",
@@ -629,11 +629,9 @@ mod_international_start_server <- function(id, r){
 
     # Tab 1
 
-    output$plot_international_studienzahl_map_arb_1 <- renderUI({
-      plot_list <- plot_international_map_arb(r)
+    output$plot_international_studienzahl_map_arb_1 <- plotly::renderPlotly({
+      plot_international_map_arb(r)
 
-
-      plot_list
     })
 
 

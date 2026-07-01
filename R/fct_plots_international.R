@@ -483,8 +483,6 @@ plot_international_map_fem <- function(r){
     #fach_m <- r$map_f_f
     fach_m <- "MINT"
 
-    # Kartenabschnitt für hc definieren
-    map_selection <- map_selection_international
 
     df_query <- glue::glue_sql("
     SELECT *
@@ -619,10 +617,19 @@ plot_international_map_fem <- function(r){
 
     }
 
+    map <- "world_choropleth.rds"
+
     # plot hover vorbereiten
     hoverplot <- "{point.land} <br> Anteil: {point.display_rel}% <br> Anzahl: {point.display_total}"
 
-
+    df_insp1 <- df_insp1 %>%
+      dplyr::mutate(
+        tooltip = paste0(
+          "<b>", land, "</b><br>",
+          "Anteil: ", display_rel, " %<br>",
+          "Anzahl: ", display_total
+        )
+      )
   }
 
 
@@ -1398,9 +1405,6 @@ plot_international_schule_map <- function(r) {
 
   if (is.null(fach_m)) { fach_m <- ""}
 
-
-  map_selection <- map_selection_international
-
   if (label_m == "TIMSS") {
     this_ordnung <- ifelse(
       leistungsindikator_m == "Test-Punktzahl",
@@ -1463,12 +1467,26 @@ plot_international_schule_map <- function(r) {
                                 decimal.mark = ",")
 
   if (leistungsindikator_m == "Test-Punktzahl") {
-    tooltip_prefix <- "Punktzahl"
-    tooltip_scale <- ""
+
+    dfs <- dfs %>%
+      dplyr::mutate(
+        tooltip = paste0(
+          "<b>", land, "</b><br>",
+          "Punktzahl: ", display_wert
+        )
+      )
+
   }
   if (leistungsindikator_m == "Mittlerer Standard erreicht") {
-    tooltip_prefix <- "Anteil"
-    tooltip_scale <- "%"
+
+    dfs <- dfs %>%
+      dplyr::mutate(
+        tooltip = paste0(
+          "<b>", land, "</b><br>",
+          "Anteil: ", display_wert, " %"
+        )
+      )
+
     titel <- paste0("Anteil von Schüler:innen der ", help_l,
                     ", die im ", fach_m, "-Kompetenztest von ",
                     label_m, " den mittleren internationalen Standard erreichen (", timerange, ")")
@@ -1481,82 +1499,91 @@ plot_international_schule_map <- function(r) {
   s_max <- ifelse(label_m == "TIMSS" & leistungsindikator_m == "Mittlerer Standard erreicht", 100, s_max)
 
   data_map_1 <- dfs %>%
-    dplyr::select(land, jahr, fach, wert, display_wert) %>%
+    dplyr::select(land, jahr, fach, wert, display_wert, tooltip) %>%
     dplyr::inner_join(countries_names, by = "land") %>%
     dplyr::mutate(alpha2 = toupper(alpha2))
 
- map_selection <- readRDS("data/map_data/map_selection_international.rds")
- #map_selection <- highcharter::download_map_data(url = "custom/world", showinfo = FALSE)
+  quelle <- paste0("Quelle der Daten: IEA, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.")
+  map <- mapbuilder_plotly(df = data_map_1,
+                            value_col = "wert",
+                           regio_col = "land",
+                           cmin = s_min,
+                           cmax = s_max,
+                            titel = titel,
+                            quelle = quelle,
+                           map = "world_choropleth.rds")
+
+  return(map)
 
  #zu komplex / different
   # plot
-  highcharter::highchart(type = "map") %>%
-    highcharter::hc_add_series_map(
-      map = map_selection,
-      df = data_map_1,
-      value = "wert",
-      joinBy = c("hc-a2", "alpha2"),
-      borderColor = "#FAFAFA",
-      name = paste0(fach_m),
-      borderWidth = 0.1,
-      nullColor = "#A9A9A9",
-      tooltip = list(valueDecimals = 0, valueSuffix = "%")
-    ) %>%
-
-    highcharter::hc_tooltip(
-      pointFormat = paste0("{point.land} <br> ", tooltip_prefix,
-                           ": {point.display_wert} ", tooltip_scale)) %>%
-    highcharter::hc_colorAxis(min=s_min, max=s_max,
-                              minColor= "#f4f5f6",
-                              maxColor="#b16fab",
-                              labels = list(format = paste0("{text}", tooltip_scale))) %>%
-    highcharter::hc_title(
-      text = titel,
-      margin = 10,
-      align = "center",
-      style = list(color = "black",
-                   useHTML = TRUE,
-                   fontFamily = "Calibri Regular",
-                   fontSize = "20px")
-    ) %>%
-    highcharter::hc_chart(
-      style = list(fontFamily = "Calibri Regular")
-    ) %>% highcharter::hc_size(1000, 600) %>%
-    highcharter::hc_credits(enabled = FALSE) %>%
-    highcharter::hc_legend(layout = "horizontal", floating = FALSE,
-                           verticalAlign = "bottom") %>%
-    highcharter::hc_caption(text = "Quelle der Daten: IEA, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.",
-                            style = list(fontSize = "11px", color = "gray")) %>%
-    highcharter::hc_exporting(enabled = TRUE,
-                              buttons = list(
-                                contextButton = list(
-                                  menuItems = list("downloadPNG", "downloadCSV",
-                                                   list(
-                                                     text = "Daten für GPT",
-                                                     onclick = htmlwidgets::JS(sprintf(
-                                                       "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
-
-     var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle der Daten: IEA, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.';
-
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-   }", gsub("'", "\\\\'", titel),gsub("'", "\\\\'", titel)))))
-                                )
-                              )
-
-
-    )
+  # highcharter::highchart(type = "map") %>%
+  #   highcharter::hc_add_series_map(
+  #     map = map_selection,
+  #     df = data_map_1,
+  #     value = "wert",
+  #     joinBy = c("hc-a2", "alpha2"),
+  #     borderColor = "#FAFAFA",
+  #     name = paste0(fach_m),
+  #     borderWidth = 0.1,
+  #     nullColor = "#A9A9A9",
+  #     tooltip = list(valueDecimals = 0, valueSuffix = "%")
+  #   ) %>%
+  #
+  #   highcharter::hc_tooltip(
+  #     pointFormat = paste0("{point.land} <br> ", tooltip_prefix,
+  #                          ": {point.display_wert} ", tooltip_scale)) %>%
+  #   highcharter::hc_colorAxis(min=s_min, max=s_max,
+  #                             minColor= "#f4f5f6",
+  #                             maxColor="#b16fab",
+  #                             labels = list(format = paste0("{text}", tooltip_scale))) %>%
+  #   highcharter::hc_title(
+  #     text = titel,
+  #     margin = 10,
+  #     align = "center",
+  #     style = list(color = "black",
+  #                  useHTML = TRUE,
+  #                  fontFamily = "Calibri Regular",
+  #                  fontSize = "20px")
+  #   ) %>%
+  #   highcharter::hc_chart(
+  #     style = list(fontFamily = "Calibri Regular")
+  #   ) %>% highcharter::hc_size(1000, 600) %>%
+  #   highcharter::hc_credits(enabled = FALSE) %>%
+  #   highcharter::hc_legend(layout = "horizontal", floating = FALSE,
+  #                          verticalAlign = "bottom") %>%
+  #   highcharter::hc_caption(text = "Quelle der Daten: IEA, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.",
+  #                           style = list(fontSize = "11px", color = "gray")) %>%
+  #   highcharter::hc_exporting(enabled = TRUE,
+  #                             buttons = list(
+  #                               contextButton = list(
+  #                                 menuItems = list("downloadPNG", "downloadCSV",
+  #                                                  list(
+  #                                                    text = "Daten für GPT",
+  #                                                    onclick = htmlwidgets::JS(sprintf(
+  #                                                      "function () {
+  #    var date = new Date().toISOString().slice(0,10);
+  #    var chartTitle = '%s'.replace(/\\s+/g, '_');
+  #    var filename = chartTitle + '_' + date + '.txt';
+  #
+  #    var data = 'Titel: %s\\n' + this.getCSV();
+  #    data += '\\nQuelle der Daten: IEA, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.';
+  #
+  #    var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+  #    if (window.navigator.msSaveBlob) {
+  #      window.navigator.msSaveBlob(blob, filename);
+  #    } else {
+  #      var link = document.createElement('a');
+  #      link.href = URL.createObjectURL(blob);
+  #      link.download = filename;
+  #      link.click();
+  #    }
+  #  }", gsub("'", "\\\\'", titel),gsub("'", "\\\\'", titel)))))
+  #                               )
+  #                             )
+  #
+  #
+  #   )
 
 }
 
@@ -2456,7 +2483,7 @@ plot_international_map_arb <- function(r) {
       titel <- paste0("Anteil von ", title_eu, " in Europa")
       map <-  "europe_choropleth.rds"
       quell <- "Quelle: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt."
-      out1 <- mapbuilder_plotly(df,
+      out1 <- mapbuilder_plotly(data_map,
                                 value_col = "wert",
                                 regio_col = "land",
                                 titel = titel,

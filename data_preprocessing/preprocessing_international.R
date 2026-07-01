@@ -1,7 +1,77 @@
 
+# Geodaten vorbereiten ----
+
+# Karten laden
+map_de_bl <- sf::st_read("data/map_data/VG2500_LAN.shp") |>
+  sf::st_make_valid() |>
+  dplyr::select(AGS, GEN, geometry) |>
+  sf::st_transform(4326) |>
+  sf::st_simplify(
+    dTolerance = 0.01,
+    preserveTopology = TRUE
+  ) |>
+  sf::st_make_valid()
+|>
+  sf::st_make_valid() |>
+  dplyr::select(AGS, GEN, geometry) |>
+  sf::st_transform(4326)
+|>
+  rmapshaper::ms_simplify(
+    keep = 0.2,
+    keep_shapes = TRUE
+  ) |>
+  sf::st_make_valid()
+
+map_de_bl_geojson <- map_de_bl |>
+  geojsonsf::sf_geojson() |>
+  jsonlite::fromJSON(simplifyVector = FALSE)
 
 
-## Karten herunterladen zur internationalen page
+map_bl_krs <- sf::st_read("data/map_data/VG2500_KRS.shp") |>
+  sf::st_make_valid() |>
+  sf::st_transform(4326)
+
+map_bl_krs <- map_bl_krs |>
+  dplyr::select(LKZ, AGS, GEN, SN_L, geometry)
+
+saveRDS(map_bl_krs, file ="data/germany_choropleth_landkreise.rds")
+
+map_world <- rnaturalearth::ne_countries(
+  scale = "medium",
+  returnclass = "sf"
+)
+
+map_world <- map_world |>
+  dplyr::filter(type %in% c("Country", "Sovereign country")) |>
+  dplyr::select(name_en, iso_a2_eh, geometry)
+saveRDS(map_world, file = "data/world_choropleth.rds")
+
+map_europa <- sf::st_read("data/map_data/CNTR_RG_20M_2024_3035.shp") |>
+  sf::st_make_valid() |>
+  sf::st_transform(4326)
+
+eu_bbox <- sf::st_as_sfc(
+  sf::st_bbox(
+    c(
+      xmin = -25,
+      xmax = 45,
+      ymin = 28,
+      ymax = 72
+    ),
+    crs = sf::st_crs(4326)
+  )
+)
+
+map_europa <- map_europa |>
+  sf::st_intersection(eu_bbox) |>
+  sf::st_collection_extract("POLYGON") |>
+  sf::st_make_valid()
+
+
+saveRDS(map_europa, file ="data/europe_choropleth.rds")
+
+
+## ALT - Karten herunterladen zur internationalen page
 
 options(download.file.method = "libcurl")
 

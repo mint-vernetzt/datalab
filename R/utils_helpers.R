@@ -1,77 +1,3 @@
-#library(tidyr)
-#library(rlang)
-#library(tidyr)
-
-
-
-# Geodaten vorbereiten ----
-
-# Karten laden
-# map_de_bl <- sf::st_read("data/map_data/VG2500_LAN.shp") |>
-#   sf::st_make_valid() |>
-#   dplyr::select(AGS, GEN, geometry) |>
-#   sf::st_transform(4326) |>
-#   sf::st_simplify(
-#     dTolerance = 0.01,
-#     preserveTopology = TRUE
-#   ) |>
-#   sf::st_make_valid()
-# |>
-  # sf::st_make_valid() |>
-  # dplyr::select(AGS, GEN, geometry) |>
-  # sf::st_transform(4326)
-# |>
-#   rmapshaper::ms_simplify(
-#     keep = 0.2,
-#     keep_shapes = TRUE
-#   ) |>
-#   sf::st_make_valid()
-
-# map_de_bl_geojson <- map_de_bl |>
-#   geojsonsf::sf_geojson() |>
-#   jsonlite::fromJSON(simplifyVector = FALSE)
-
-
-# map_bl_krs <- sf::st_read("data/map_data/VG2500_KRS.shp") |>
-#   sf::st_make_valid() |>
-#   sf::st_transform(4326)
-#
-# map_bl_krs <- map_bl_krs |>
-#   dplyr::select(LKZ, AGS, GEN, SN_L, geometry)
-#
-# saveRDS(map_bl_krs, file ="data/germany_choropleth_landkreise.rds")
-
-# map_world <- rnaturalearth::ne_countries(
-#   scale = "medium",
-#   returnclass = "sf"
-# )
-#
-# saveRDS(map_world_geojson, file = "data/world_choropleth.rds")
-#
-# map_europa <- sf::st_read("data/map_data/CNTR_RG_20M_2024_3035.shp") |>
-#     sf::st_make_valid() |>
-#     sf::st_transform(4326)
-#
-# eu_bbox <- sf::st_as_sfc(
-#   sf::st_bbox(
-#     c(
-#       xmin = -25,
-#       xmax = 45,
-#       ymin = 28,
-#       ymax = 72
-#     ),
-#     crs = sf::st_crs(4326)
-#   )
-# )
-#
-# map_europa <- map_europa |>
-#   sf::st_intersection(eu_bbox) |>
-#   sf::st_collection_extract("POLYGON") |>
-#   sf::st_make_valid()
-#
-#
-#   saveRDS(map_europa, file ="data/europe_choropleth.rds")
-
 
 
 # Schlüssel für Mapping vorbereiten
@@ -3207,13 +3133,15 @@ mapbuilder_plotly <- function(
     value_col,
     regio_col = "region",
     titel,
-    mincolor = "#EFE8E6",
+    mincolor = "#f4f5f6",
     maxcolor = "#b16fab",
-    na_color = "#D9D9D9",
+    na_color = "#b2b6ba",
+    cmin = NULL,
+    cmax = NULL,
     map = "germany_choropleth_federal_states.rds",
     quelle = "Quelle"
 ) {
-browser()
+
   # Text vorbereiten
   titel_wrapped <- stringr::str_wrap(titel, width = 60)
   titel_wrapped <- gsub("\n", "<br>", titel_wrapped)
@@ -3244,14 +3172,23 @@ browser()
       sf::st_simplify()
   }else if(map == "europe_choropleth.rds"){
     map_data <-
-      sf::st_as_sf(dplyr::inner_join(
+      sf::st_as_sf(dplyr::left_join(
         tibble::tibble(geodata),
         df,
         by = c("CNTR_ID" = "alpha2")
       )) %>%
       dplyr::rename("NAME_1" = "CNTR_ID") %>%
       sf::st_simplify()
-  }else{
+  }else  if(map == "world_choropleth.rds"){
+    map_data <-
+      sf::st_as_sf(dplyr::left_join(
+        tibble::tibble(geodata),
+        df,
+        by = c("iso_a2_eh" = "alpha2")
+      )) %>%
+      dplyr::rename("NAME_1" = "iso_a2_eh") %>%
+      sf::st_simplify()
+    }else{
     map_data <-
       sf::st_as_sf(dplyr::left_join(
         tibble::tibble(geodata),
@@ -3263,7 +3200,7 @@ browser()
 
 
   map_values <- map_data[!is.na(map_data[[value_col]]), , drop = FALSE]
-  # map_na     <- map_data[is.na(map_data[[value_col]]), , drop = FALSE]
+  map_na     <- map_data[is.na(map_data[[value_col]]), , drop = FALSE]
 
   # Plot erzeugen
   p <- plotly::plot_ly(
@@ -3279,6 +3216,8 @@ browser()
         split = ~NAME_1,
         color = as.formula(paste0("~`", value_col, "`")),
         colors = c(mincolor, maxcolor),
+        zmin = cmin,
+        zmax = cmax,
         alpha = 1,
         stroke = I("#FAFAFA"),
         text = ~tooltip,
@@ -3289,29 +3228,35 @@ browser()
   }
 
   # NA-Trace grau
-  # if (nrow(map_na) > 0) {
-  #   map_na[[".na_fill"]] <- "Fehlend"
-  #
-  #   p <- p |>
-  #     plotly::add_sf(
-  #       data = map_na,
-  #       split =  ~NAME_1,
-  #       color = ~.na_fill,
-  #       colors = c(na_color),
-  #       alpha = 1,
-  #       stroke = I("#FAFAFA"),
-  #       text = "fehlender Wert",
-  #       hoverinfo = "text",
-  #       hoveron = "fills",
-  #       showlegend = FALSE
-  #     )
-  # }
+  if (nrow(map_na) > 0) {
+    map_na[[".na_value"]] <- 1
 
+    p <- p |>
+      plotly::add_sf(
+        data = map_na,
+        split = ~NAME_1,
+        color = ~.na_value,
+        colors = c(na_color, na_color),
+        zmin = cmin,
+        zmax = cmax,
+        alpha = 1,
+        stroke = I("#FAFAFA"),
+        text = "fehlender Wert",
+        hoverinfo = "text",
+        hoveron = "fills",
+        showlegend = FALSE,
+        showscale = FALSE,
+        inherit = FALSE
+      )
+  }
   p <- p |>
     plotly::style(
       hoverlabel = list(
         bgcolor = "white",
-        font = list(size = 12)
+        font = list(size = 12),
+        zmin = cmin,
+        zmax = cmax,
+        traces = 1
       )
     ) |>
     plotly::layout(
@@ -3382,7 +3327,8 @@ browser()
         "autoScale2d", "resetScale2d", "resetGeo", "hoverClosestGeo",
         "zoomInMapbox", "zoomOutMapbox", "resetViewMapbox",
         "resetViews", "zoom3d", "pan3d", "resetCameraDefault3d",
-        "resetCameraLastSave3d", "zoomin", "zoomout"
+        "resetCameraLastSave3d"
+        #, "zoomin", "zoomout"
       ),
 
       modeBarButtonsToAdd = list(
