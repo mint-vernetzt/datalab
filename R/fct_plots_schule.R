@@ -144,7 +144,7 @@ kurse_einstieg_comparison <- function(r,
       df1$wert <- as.numeric(as.character(df1$wert))
 
       titel <- ist_saarland(
-        gruppe = paste0("MINT-Anteil ", titel_help),
+        gruppe = paste0("MINT-Anteil an ", titel_help),
         regio = regio,
         timerange = timerange
       )
@@ -1508,11 +1508,17 @@ kurse_comparison_gender <- function(r,
         text = ~ifelse(is.na(Leistungskurse), NA, paste0("Leistungskurse: ", Leistungskurse)),
         hoverinfo = "text"
       ) %>%
-      # Layout anpassen
       plotly::layout(
-        title = ifelse(regio == "Saarland",
-                       paste0("Mädchen-Anteil nach Fächern im ",regio, " (", timerange, ")"),
-                       paste0("Mädchen-Anteil nach Fächern in ",regio, " (", timerange, ")")),
+        height = 450,
+        title = list(
+          text = ifelse(
+            regio == "Saarland",
+            paste0("Mädchen-Anteil nach Fächern im ", regio, " (", timerange, ")"),
+            paste0("Mädchen-Anteil nach Fächern in ", regio, " (", timerange, ")")
+          ),
+          font = list(size = 20), family = "Calibri Regular", color = "black"
+        ),
+        font = list(family = "Calibri Regular"),
         xaxis = list(title = ""),
         yaxis = list(title = ""),
         margin = list(l = 100, r = 50, t = 50, b = 50),
@@ -1520,7 +1526,7 @@ kurse_comparison_gender <- function(r,
         legend = list(
           orientation = "h",
           x = 0.5,
-          y = -0.2,
+          y = -0.10,
           xanchor = "center",
           yanchor = "top"
         ),
@@ -1528,10 +1534,10 @@ kurse_comparison_gender <- function(r,
           list(
             text = "Quelle der Daten: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
             xref = "paper", yref = "paper",
-            x = 0, y = -0.3,
-            xanchor = "left", yanchor = "top",
+            x = 0, y = -0.2,
+            xanchor = "right", yanchor = "top",
             showarrow = FALSE,
-            font = list(size = 10, color = "gray", family = "SourceSans3-Regular")
+            font = list(size = 10, color = "gray", family = "Calibri, sans-serif")
           )
         )
       ) %>%
@@ -1884,12 +1890,9 @@ kurse_wahl <- function(r,
   regio <- r$region_kurse_gender
 
   if(betrachtung == "Einzelansicht - Kuchendiagramm"){
-    color_fach <- c(
+
+     color_fach <- c(
       "Informatik" = "#00a87a",
-      "Naturwissenschaften" = "#fcc433",
-      "Biologie" = "#fbbf24",
-      "Chemie" = "#D97706",
-      "Physik" = "#F59E0B",
       "andere naturwiss.-technische Fächer" =  "#fde68a",
       "Mathematik" = "#ee7775",
       "andere Fächer" = "#efe8e6"
@@ -1932,7 +1935,7 @@ kurse_wahl <- function(r,
       dplyr::mutate(proportion = round(wert/props *100,1))
 
     df <- df[with(df, order(proportion, decreasing = FALSE)), ]
-    df <- df %>% dplyr::mutate(col = color_fach[fachbereich])
+    #df <- df %>% dplyr::mutate(col = color_fach[fachbereich])
     df$wert <- prettyNum(df$wert, big.mark=".", decimal.mark = ",")
 
     df <- na.omit(df)
@@ -1944,31 +1947,6 @@ kurse_wahl <- function(r,
     )
 
 
-    if(vergleich == "Ja"){
-
-      if(fokus != "mädchen"){
-        df <- df %>%
-          dplyr::filter(anzeige_geschlecht == "Männer")
-
-        titel <- ifelse(regio == "Saarland",
-                         paste0(titel_help, " von Jungen im ", regio, " (", timerange, ")"),
-                         paste0(titel_help, " von Jungen in ", regio, " (", timerange, ")"))
-
-        subtitel <- paste0("Von allen ", titel_help, " von Jungen fallen ",
-                            100-df$proportion[df$fachbereich=="andere Fächer"],
-                            " % auf ein MINT-Fach.")
-      }else{
-        df <- df %>%
-          dplyr::filter(anzeige_geschlecht == "Frauen")
-
-        titel <- ifelse(regio == "Saarland",
-                         paste0(titel_help, " von Mädchen im ", regio, " (", timerange, ")"),
-                         paste0(titel_help, " von Mädchen in ", regio, " (", timerange, ")"))
-
-        subtitel <- paste0("Von allen ", titel_help, " von Mädchen fallen ",
-                           100-df$proportion[df$fachbereich=="andere Fächer"],
-                           " % auf ein MINT-Fach.")
-      }
 
 
       df <- df %>%
@@ -1980,32 +1958,60 @@ kurse_wahl <- function(r,
           )
         )
 
-      color <- as.character(df$col)
 
       quelle <- "Quelle: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
-      out <- piebuilder_plotly(df, titel, x = "fachbereich", y = "proportion",
-                                  color, quelle = "", subtitel = subtitel) |>
-        plotly::layout(
-          annotations = list(
-            list(
-              text = quelle,
-              x = 1,
-              y = -0.4,
-              xref = "paper",
-              yref = "paper",
-              xanchor = "right",
-              yanchor = "top",
-              showarrow = FALSE,
-              font = list(size = 11, color = "gray", family = "Calibri Regular", align = "right")
-            )
-          )
-        )
 
-      if(fokus != "mädchen"){
-        out <- out |>
-          plotly::layout(height = 400)
-      }
+
+      if (vergleich == "Ja") {
+
+        df_f <- df %>%
+          dplyr::filter(anzeige_geschlecht == "Frauen")
+
+        titel1 <- ifelse(regio == "Saarland",
+                        paste0(titel_help, " von Mädchen im ", regio, " (", timerange, ")"),
+                        paste0(titel_help, " von Mädchen in ", regio, " (", timerange, ")"))
+
+        subtitel1 <- paste0("Von allen ", titel_help, " von Mädchen fallen ",
+                           100-df_f$proportion[df_f$fachbereich=="andere Fächer"],
+                           " % auf ein MINT-Fach.")
+
+
+        df_m <- df %>%
+          dplyr::filter(anzeige_geschlecht == "Männer")
+
+        titel2 <- ifelse(regio == "Saarland",
+                        paste0(titel_help, " von Jungen im ", regio, " (", timerange, ")"),
+                        paste0(titel_help, " von Jungen in ", regio, " (", timerange, ")"))
+
+        subtitel2 <- paste0("Von allen ", titel_help, " von Jungen fallen ",
+                           100-df_m$proportion[df_m$fachbereich=="andere Fächer"],
+                           " % auf ein MINT-Fach.")
+
+
+
+        # Mädchen
+        out1 <- piebuilder_plotly(df_f, titel=titel1,
+                                  x = "fachbereich",y = "proportion",legend_y = -0.05,
+                                  color = color_fach,quelle = quelle,subtitel = subtitel1 )|>
+          plotly::layout(
+            margin = list(t = 135)
+            )
+
+
+        # Jungen
+        out2 <- piebuilder_plotly(df_m, titel=titel2,
+                                  x = "fachbereich",y = "proportion", legend_y = -0.05,
+                                  color = color_fach, quelle = quelle, subtitel = subtitel2)|>
+          plotly::layout(
+            margin = list(t = 135)
+          )
+
+
+
+         out <- list(out1, out2)
+
+
 
 
     }else if(vergleich == "Nein"){
@@ -2028,12 +2034,14 @@ kurse_wahl <- function(r,
           )
         )
 
-      color <- as.character(df$col)
 
       quelle <- "Quelle: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
-      out <- piebuilder_plotly(df, titel, x = "fachbereich", y = "proportion",
-                               color, quelle=quelle, subtitel = subtitel)
+      out1 <- piebuilder_plotly(df, titel, x = "fachbereich", y = "proportion",
+                               color=color_fach, quelle=quelle, subtitel = subtitel)
+
+      out <- list(out1)
+
 
     }
   }else if(betrachtung == "Bundeslandvergleich - Kartendiagramm"){
@@ -2122,13 +2130,13 @@ kurse_wahl <- function(r,
                               maxcolor = maxcolor,
                               titel = titel,
                               quelle = quelle)
-    out <- out1
+    out <- list(out1)
 
     if(vergleich =="Ja"){
 
 
       df2 <- df_m[df_m$indikator == kurs_select,]
-      df1 <- df1 %>%
+      df2 <- df2 %>%
         dplyr::mutate(
           tooltip = paste0(
             "<b>", region, "</b><br>",
@@ -2139,7 +2147,7 @@ kurse_wahl <- function(r,
       titel <- paste0(help_kurs, "belegungen von Jungen in ", help_title," (", timerange, ")")
       maxcolor <- as.character(color_fach[subjects])
       quelle <- "Quelle: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
-      out2 <- mapbuilder_plotly(df = df1,
+      out2 <- mapbuilder_plotly(df = df2,
                                 value_col = "prop",
                                 maxcolor = maxcolor,
                                 titel = titel,
@@ -2150,13 +2158,13 @@ kurse_wahl <- function(r,
         out1, out2
       )
     }
-
   }
+
 
 return(out)
 
-}
 
+}
 
 # IQB ----
 
@@ -2224,10 +2232,10 @@ iqb_standard_zeitverlauf <- function(r){
   }
 
   if (kl_select == "4. Klasse") {
-    fach_titel <- paste0("Anteil der Schüler:innen aus ", title_help,",<br>", "die den Mindeststandard in Mathematik nicht erreichen (", kl_select, ")")
+    fach_titel <- paste0("Anteil der Schüler:innen aus ", title_help, "die den Mindeststandard in Mathematik nicht erreichen (", kl_select, ")")
 
   } else {
-    fach_titel <- paste0("Anteil der Schüler:innen aus ", title_help,",<br>", "die den Mindeststandard in ", fach_select, " nicht erreichen (", kl_select, ")")
+    fach_titel <- paste0("Anteil der Schüler:innen aus ", title_help, "die den Mindeststandard in ", fach_select, " nicht erreichen (", kl_select, ")")
 
   }
 
@@ -2427,7 +2435,7 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
       percent <- FALSE
       color <- c("Mädchen" = "#154194", "Jungen" = "#efe8e6")
       group <- "geschlecht"
-      titel <- paste0("Durchschnittliche Leistung der Schüler:innen im ", fach_select, "-Kompetenztest, <br>", "nach Geschlecht" ,praep,  bl_select, " (", klasse_select, ")")
+      titel <- paste0("Durchschnittliche Leistung der Schüler:innen im ", fach_select, "-Kompetenztest, ", "nach Geschlecht" ,praep,  bl_select, " (", klasse_select, ")")
 
 
     } else if (indikator_select == "nach Zuwanderungsgeschichte") {
@@ -2451,7 +2459,7 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
       percent <- FALSE
       color <- c("#efe8e6", "#66cbaf")
       group <- "indikator"
-      titel <- paste0("Durchschnittliche Leistung der Schüler:innen im ", fach_select, "-Kompetenztest, <br>", "nach Zuwanderungsgeschichte", praep , bl_select, " (", klasse_select, ")")
+      titel <- paste0("Durchschnittliche Leistung der Schüler:innen im ", fach_select, "-Kompetenztest, ", "nach Zuwanderungsgeschichte", praep , bl_select, " (", klasse_select, ")")
 
 
     } else if (indikator_select == "nach sozialem Status") {
@@ -2472,7 +2480,7 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
       percent <- FALSE
       color <- c("#efe8e6", "#66cbaf")
       group <- "indikator"
-      titel <- paste0("Durchschnittliche Leistung der Schüler:innen im ", fach_select, "-Kompetenztest, <br>", "nach sozialem Status", praep , bl_select, " (", klasse_select, ")")
+      titel <- paste0("Durchschnittliche Leistung der Schüler:innen im ", fach_select, "-Kompetenztest, ", "nach sozialem Status", praep , bl_select, " (", klasse_select, ")")
 
     }
 
@@ -2498,7 +2506,7 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
       percent <- TRUE
       color <- c("Mädchen" = "#154194", "Jungen" = "#efe8e6")
       group <- "geschlecht"
-      titel <- paste0("Anteil der Schüler:innen, die den Mindeststandard in Mathematik nicht erreichen,<br>", "nach Geschlecht", praep , bl_select, " (", klasse_select, ")")
+      titel <- paste0("Anteil der Schüler:innen, die den Mindeststandard in Mathematik nicht erreichen, ", "nach Geschlecht", praep , bl_select, " (", klasse_select, ")")
 
 
     } else if (indikator_select == "nach Geschlecht") {
@@ -2523,7 +2531,7 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
       percent <- FALSE
       color <- c("Mädchen" = "#154194", "Jungen" = "#efe8e6")
       group <- "geschlecht"
-      titel <- paste0("Durchschnittliche Leistung der Schüler:innen im Mathematik-Kompetenztest, <br>", "nach Geschlecht in " , bl_select, " (", klasse_select, ")")
+      titel <- paste0("Durchschnittliche Leistung der Schüler:innen im Mathematik-Kompetenztest, ", "nach Geschlecht" , praep, bl_select, " (", klasse_select, ")")
 
 
     } else if (indikator_select == "nach Zuwanderungsgeschichte") {
@@ -2546,7 +2554,7 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
       percent <- FALSE
       color <- c("#efe8e6", "#66cbaf")
       group <- "indikator"
-      titel <- paste0("Durchschnittliche Leistung der Schüler:innen im Mathematik-Kompetenztest <br> ", indikator_select, praep , bl_select, " (", klasse_select, ")")
+      titel <- paste0("Durchschnittliche Leistung der Schüler:innen im Mathematik-Kompetenztest ", indikator_select, praep , bl_select, " (", klasse_select, ")")
 
 
     } else if (indikator_select == "nach Bildungskapital") {
@@ -2568,7 +2576,7 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
       percent <- FALSE
       color <- c("#efe8e6", "#66cbaf")
       group <- "indikator"
-      titel <- paste0("Durchschnittliche Leistung der Schüler:innen im Mathematik-Kompetenztest <br> ", indikator_select, praep , bl_select, " (", klasse_select, ")")
+      titel <- paste0("Durchschnittliche Leistung der Schüler:innen im Mathematik-Kompetenztest ", indikator_select, praep , bl_select, " (", klasse_select, ")")
 
     }
 
@@ -2650,7 +2658,7 @@ iqb_fragebogen <- function(r){
           "Wert: ", formatC(wert, format = "f", digits = 1, decimal.mark = ","))
       )
 
-    titel <- paste0("Selbsteinschätzung des Interesses und der eigenen Fähigkeiten in <br> ", fach_select," von Schüler:innen der 4. Klasse (", jahr_select, ")")
+    titel <- paste0("Selbsteinschätzung des Interesses und der eigenen Fähigkeiten in ", fach_select," von Schüler:innen der 4. Klasse (", jahr_select, ")")
 
 
   }else{
@@ -2713,7 +2721,7 @@ iqb_fragebogen <- function(r){
     }
 
     praep <- ifelse(region_select == "Saarland", " im ", " in ")
-    titel <- paste0("Selbsteinschätzung des Interesses und der eigenen Fähigkeiten in ", fach_select, "<br>",
+    titel <- paste0("Selbsteinschätzung des Interesses und der eigenen Fähigkeiten in ", fach_select,
                     " von Schüler:innen der 9. Klasse", praep, region_select, " (", jahr_select, ")"         )
 
     df <- df %>%

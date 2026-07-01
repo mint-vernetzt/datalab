@@ -126,6 +126,12 @@ plot_cp_orgas <- function(r){
 
     df <- df[with(df, order(prop, decreasing = TRUE)),]
 
+    df <- df %>%
+      dplyr::mutate(
+        indikator_kurz = stringr::str_trunc(indikator, width = 30)
+      )
+
+
     # Titel
     if(regio == "Gesamt"){
       regio_angabe <- ""
@@ -164,6 +170,7 @@ plot_cp_orgas <- function(r){
 
     out <- balkenbuilder_plotly(df=df, x=x, y=y, titel=titel, orientation = "v",percent=TRUE,
                                 group=NULL, color=color, subtitel=subtitel,
+                                tickvals = df$indikator, ticktext = df$indikator_kurz,
                                 order=order, stacking = FALSE, quelle=quelle)
 
 
@@ -178,6 +185,11 @@ plot_cp_orgas <- function(r){
     df <- df %>% dplyr::filter(indikator != "Gesamt")
 
     df <- df[with(df, order(wert, decreasing = TRUE)),]
+
+    df <- df %>%
+      dplyr::mutate(
+        indikator_kurz = stringr::str_trunc(indikator, width = 30)
+      )
 
     # Titel
     if(regio == "Gesamt"){
@@ -217,6 +229,7 @@ plot_cp_orgas <- function(r){
 
     out <- balkenbuilder_plotly(df=df, x=x, y=y, titel=titel, orientation = "v",percent=FALSE,
                                 group=NULL, color=color, subtitel=subtitel,
+                                tickvals = df$indikator, ticktext = df$indikator_kurz,
                                 order=order, stacking = FALSE, quelle=quelle)
 
 
@@ -352,6 +365,11 @@ plot_cp_projekte <- function(r){
 
     df <- df[with(df, order(prop, decreasing = TRUE)),]
 
+    df <- df %>%
+      dplyr::mutate(
+        indikator_kurz = stringr::str_trunc(indikator, width = 30)
+      )
+
     # Titel
     if(regio == "Gesamt" | charas == "Region"){
       regio_angabe <- ""
@@ -373,7 +391,7 @@ plot_cp_projekte <- function(r){
 
 
     quelle <- "Quelle der Daten: MINTvernetzt Community Plattform, Stand 30. Juli 2025."
-    quelle_y <- -0.35
+    quelle_y <- -0.20
 
 
     order <- unique(df$indikator)
@@ -396,6 +414,7 @@ plot_cp_projekte <- function(r){
 
     out <- balkenbuilder_plotly(df=df, x=x, y=y, titel=titel, orientation = "v",percent=FALSE,
                                 group=NULL, color=color, subtitel=subtitel,quelle_y=quelle_y,
+                                tickvals = df$indikator, ticktext = df$indikator_kurz,
                                 order=order, stacking = FALSE, quelle=quelle)
 
 
@@ -411,6 +430,11 @@ plot_cp_projekte <- function(r){
     df <- df %>% dplyr::filter(indikator != "Gesamt")
 
     df <- df[with(df, order(wert, decreasing = TRUE)),]
+
+    df <- df %>%
+      dplyr::mutate(
+        indikator_kurz = stringr::str_trunc(indikator, width = 30)
+      )
 
     # Titel
     if(charas == "Gesamt"| charas == "Region"){
@@ -431,7 +455,7 @@ plot_cp_projekte <- function(r){
 
 
     quelle <- "Quelle der Daten: MINTvernetzt Community Plattform, Stand 30. Juli 2025."
-    quelle_y <- -0.35
+    quelle_y <- -0.20
 
 
     order <- unique(df$indikator)
@@ -454,6 +478,7 @@ plot_cp_projekte <- function(r){
 
     out <- balkenbuilder_plotly(df=df, x=x, y=y, titel=titel, orientation = "v",percent=FALSE,
                                 group=NULL, color=color, subtitel=subtitel,quelle_y=quelle_y,
+                                tickvals = df$indikator, ticktext = df$indikator_kurz,
                                 order=order, stacking = FALSE, quelle=quelle)
 
 
@@ -579,6 +604,11 @@ plot_cp_profile <- function(r){
 
     df <- df[with(df, order(prop, decreasing = TRUE)),]
 
+    df <- df %>%
+      dplyr::mutate(
+        indikator_kurz = stringr::str_trunc(indikator, width = 30)
+      )
+
     if(length(unique(df$typ)) > 1){
 
       # Titel
@@ -593,9 +623,6 @@ plot_cp_profile <- function(r){
                       regio_angabe)
       subtitel <- paste0("Angaben zu ", charas[1], " wurden von <b>", ges[1], "</b> Personen gemacht.
                          Angaben zu ", charas[2], " von <b>", ges[2], "</b>. Mehrfachangaben möglich.")
-
-
-
 
 
 
@@ -622,6 +649,7 @@ plot_cp_profile <- function(r){
 
       out <- balkenbuilder_plotly(df=df, x=x, y=y, titel=titel, orientation = "v",percent=TRUE,
                                   group=group, color=color, subtitel=subtitel,quelle_y=quelle_y,
+                                  tickvals = df$indikator, ticktext = df$indikator_kurz,
                                   order=order, stacking = FALSE, quelle=quelle)
 
 
@@ -675,6 +703,7 @@ plot_cp_profile <- function(r){
 
       out <- balkenbuilder_plotly(df=df, x=x, y=y, titel=titel, orientation = "v",percent=TRUE,
                                   group=NULL, color=color, subtitel=subtitel,quelle_y=quelle_y,
+                                  tickvals = df$indikator, ticktext = df$indikator_kurz,
                                   order=order, stacking = FALSE, quelle=quelle)
 
 
@@ -690,6 +719,11 @@ plot_cp_profile <- function(r){
     df <- df %>% dplyr::filter(indikator != "Gesamt")
 
     df <- df[with(df, order(wert, decreasing = TRUE)),]
+
+    df <- df %>%
+      dplyr::mutate(
+        indikator_kurz = stringr::str_trunc(indikator, width = 30)
+      )
 
     if(length(unique(df$typ)) > 1){
 
@@ -735,6 +769,7 @@ plot_cp_profile <- function(r){
 
       out <- balkenbuilder_plotly(df=df, x=x, y=y, titel=titel, orientation = "v",percent=FALSE,
                                   group=group, color=color, subtitel=subtitel,quelle_y=quelle_y,
+                                  tickvals = df$indikator, ticktext = df$indikator_kurz,
                                   order=order, stacking = FALSE, quelle=quelle)
 
 
@@ -759,7 +794,10 @@ plot_cp_profile <- function(r){
 
 
 
-
+      df <- df %>%
+        dplyr::mutate(
+          indikator_kurz = stringr::str_trunc(indikator, width = 30)
+        )
 
 
 
@@ -790,6 +828,7 @@ plot_cp_profile <- function(r){
 
       out <- balkenbuilder_plotly(df=df, x=x, y=y, titel=titel, orientation = "v",percent=FALSE,
                                   group=NULL, color=color, subtitel=subtitel,quelle_y=quelle_y,
+                                  tickvals = df$indikator, ticktext = df$indikator_kurz,
                                   order=order, stacking = FALSE, quelle=quelle)
 
 
@@ -818,8 +857,6 @@ plot_mv_akteursb <- function(r){
   frage_typ <- ifelse(frage == "Berufshintergrund", "berufshintergrund",
                       ifelse(frage == "Zielgruppen", "zielgruppen", frage_typ))
 
-  # df <-
-  #
 
   df_query <- glue::glue_sql("
     SELECT *
@@ -969,9 +1006,10 @@ plot_mv_stimmung <- function(r){
 
 
 
-
-
-
+    df <- df %>%
+      dplyr::mutate(
+        typ_kurz = stringr::str_trunc(typ, width = 50)
+      )
 
 
 
@@ -1001,6 +1039,7 @@ plot_mv_stimmung <- function(r){
 
     out <- balkenbuilder_plotly(df=df, x=x, y=y, titel=titel, orientation = "h",percent=TRUE,
                                 group=group, color=color, subtitel=subtitel,quelle_y=quelle_y,
+                                tickvals = df$typ, ticktext = df$typ_kurz, legend_size=10,
                                 order=order, stacking = TRUE, quelle=quelle)
 
 
@@ -1035,8 +1074,6 @@ plot_mv_stimmung <- function(r){
 
 
 
-
-
       df <- df %>%
         dplyr::mutate(
           tooltip = paste0(
@@ -1051,8 +1088,10 @@ plot_mv_stimmung <- function(r){
 
 
 
-      out <- piebuilder_plotly(df, titel, x="antwort", y = "wert",
-                               color=color, quelle=quelle)
+      out <- piebuilder_plotly(df, titel, x="antwort", y = "wert", titel_y= 0.96,
+                               legend_y = -0.01, quelle_y = -0.34, height = 450,
+                               color=color, quelle=quelle) %>%
+        plotly::layout(margin= list( t=90))
 
 
 
@@ -1101,7 +1140,7 @@ plot_mv_genderb <- function(){
                               color = c("#b16fab", "#154194", "#66cbaf"),
                               quelle = "Quelle: MINTvernetzt") |>
       plotly::layout(
-        margin = list(t = 110, b = 120, r = 50, l = 50)
+        margin = list(t = 130, b = 120, r = 50, l = 50)
       )
 
   return(plot)
@@ -1169,8 +1208,8 @@ skf_einrichtungen <- function(r){
     dplyr::ungroup()
 
   #Trennpunkte für lange Zahlen ergänzen
-  df$gesamt <- prettyNum(df$gesamt, big.mark = ".", decimal.mark = ",")
-  df$wert <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
+  #df$gesamt <- prettyNum(df$gesamt, big.mark = ".", decimal.mark = ",")
+ # df$wert <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
 
 
   # Hilfe für Überschrift
@@ -1204,8 +1243,8 @@ skf_einrichtungen <- function(r){
       .tooltip = paste0(
         "<b><span style='font-size:15px;'>", jahr, "</span></b><br>",
         "<b><span style='font-size:15px;'>", indikator, "</span></b><br>",
-        "Anzahl: ", wert, "<br>",
-        "aktive Einrichtungen gesamt: ", gesamt
+        "Anzahl: ", (formatC(as.numeric(wert), format = "f", digits = 0, big.mark = ".")), "<br>",
+        "aktive Einrichtungen gesamt: ", (formatC(as.numeric(gesamt), format = "f", digits = 0, big.mark = "."))
       ))
 
 
@@ -1287,8 +1326,6 @@ skf_personal <- function(r){
 
 
 
-
-
   quelle <- "Quelle der Daten: Stiftung Kinder forschen, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
 
@@ -1299,7 +1336,7 @@ skf_personal <- function(r){
       .tooltip = paste0(
         "<b><span style='font-size:15px;'>", jahr, "</span></b><br>",
         "<b><span style='font-size:15px;'>", indikator, "</span></b><br>",
-        "Anzahl: ", wert
+        "Anzahl: ", (formatC(as.numeric(wert), format = "f", digits = 0, big.mark = "."))
       ))
 
 

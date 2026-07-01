@@ -565,13 +565,15 @@ plot_fachkraft_wirkhebel_analyse  <- function(r) {
       hoverinfo = "text"
     ) %>%
     plotly::layout(
+      font = list(family = "Calibri Regular"),
       title = list(
         text = paste0(
           "Wie wirken sich die unten gelisteten Wirkhebel auf die Anzahl der MINT-Fachkräfte aus?"
-        )
+        ),
+        font = list(family = "Calibri Regular", size = 20, color = "black")
       ),
       xaxis = list(
-        title = "Anzahl MINT-Fachkräfte",
+        title = "",
         tickformat = ",",
         range = c(7500000, 9500000)
       ),
@@ -580,26 +582,26 @@ plot_fachkraft_wirkhebel_analyse  <- function(r) {
         categoryorder = "array",
         categoryarray = unique(uebersicht_data$wirkhebel)
       ),
-      margin = list(l = 100, r = 50, t = 80, b = 50),
-      hoverlabel = list(bgcolor = "white"),
+      margin = list(l = 100, r = 50, t = 80, b = 80),
+      hoverlabel = list(bgcolor = "white", font = list(family = "Calibri Regular", size = 12,  color = "black")),
       legend = list(
         orientation = "h",
         x = 0.5,
-        y = -0.5,
+        y = -0.045,
         xanchor = "center",
         yanchor = "top"
       ),
       annotations = list(
         list(
           text = "Vorausberechnung durch IW Köln, 2024, beauftragt durch MINTvernetzt",
-          x = 0,
-          y = -0.35,
+          x = 0.5,
+          y = -0.12,
           xref = "paper",
           yref = "paper",
           showarrow = FALSE,
-          xanchor = "left",
+          xanchor = "right",
           yanchor = "top",
-          font = list(size = 11, color = "gray")
+          font = list(family = "Calibri Regular", size = 11, color = "gray")
         )
       )
     )%>%
@@ -2104,10 +2106,13 @@ plot_fachkraft_detail_item  <- function(r) {
    TRUE ~ "#EE7775"
  )
 
- titel <- paste0(
-   "Engpassindikator für ", beruf,
-   "<br> auf dem ", bf_label, "-Level ", timerange,
-   ": ", plot_solidgauge_data$epa_kat[1]
+ titel <- stringr::str_wrap(
+   paste0(
+     "Engpassindikator für ", beruf,
+     " auf dem ", bf_label, "-Level ", timerange,
+     ": ", plot_solidgauge_data$epa_kat[1]
+   ),
+   width = 40
  )
 
  quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
@@ -2316,9 +2321,9 @@ plot_fachkraft_detail_item  <- function(r) {
 
 
 
-  titel <- paste0("Einzelne Indikatoren der <br> Engpassanalyse  (gesamt ",
+  titel <- paste0("Einzelne Indikatoren der Engpassanalyse  (gesamt ",
                   round(plot_solidgauge_data$wert, 1),
-                  ") für Beruf: <br> ", this_beruf, " <br>(", timerange, ")")
+                  ") für Beruf: ", this_beruf, " (", timerange, ")")
 
 
 
@@ -2352,7 +2357,7 @@ plot_fachkraft_detail_item  <- function(r) {
 
    plot_right <-  balkenbuilder_plotly(df=plot_bar_data, x=x, y=y, titel=titel, orientation = "h", group=NULL, color = color,
                               order = order, stacking = FALSE, percent = FALSE, quelle=quelle, quelle_y=quelle_y,
-                              tickvals = plot_bar_data$indikator,
+                              tickvals = plot_bar_data$indikator, wrap_width = 40,
                               ticktext = plot_bar_data$indikator_short,
                               margin_t=margin_t, titel_y=titel_y)
 
@@ -2445,7 +2450,7 @@ plot_fachkraft_ranking_epa  <- function(r) {
 
     df <- DBI::dbGetQuery(con, df_query)
 
-    titel <- paste0("Die Berufe mit dem höchsten Engpassrisiko unter allen Berufsleveln <br> in allen Berufsgruppen (", timerange, ")" )
+    titel <- paste0("Die Berufe mit dem höchsten Engpassrisiko unter allen Berufsleveln in allen Berufsgruppen (", timerange, ")" )
 
   }
   else{
@@ -2462,7 +2467,7 @@ plot_fachkraft_ranking_epa  <- function(r) {
 
     df <- DBI::dbGetQuery(con, df_query)
 
-    titel <- paste0("Die Berufe mit dem höchsten Engpassrisiko unter <br> ", bf_label ," in allen Berufsgruppen (", timerange, ")" )
+    titel <- paste0("Die Berufe mit dem höchsten Engpassrisiko unter ", bf_label ," in allen Berufsgruppen (", timerange, ")" )
 
   }
   } else if (this_beruf == "MINT-Berufe"){
@@ -2480,7 +2485,7 @@ plot_fachkraft_ranking_epa  <- function(r) {
       LIMIT 30
     ", .con = con)
 
-      titel <- paste0("Die Berufe mit dem höchsten Engpassrisiko unter <br> allen Berufsleveln in MINT-Berufen (", timerange, ")" )
+      titel <- paste0("Die Berufe mit dem höchsten Engpassrisiko unter allen Berufsleveln in MINT-Berufen (", timerange, ")" )
 
       df <- DBI::dbGetQuery(con, df_query)
 
@@ -2498,7 +2503,7 @@ plot_fachkraft_ranking_epa  <- function(r) {
       LIMIT 30
     ", .con = con)
 
-      titel <- paste0("Die Berufe mit dem höchsten Engpassrisiko unter <br> ", bf_label ," in MINT-Berufen (", timerange, ")" )
+      titel <- paste0("Die Berufe mit dem höchsten Engpassrisiko unter ", bf_label ," in MINT-Berufen (", timerange, ")" )
 
       df <- DBI::dbGetQuery(con, df_query)
 

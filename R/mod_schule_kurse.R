@@ -508,25 +508,44 @@ mod_schule_kurse_server <- function(id, r){
 
     ## Balkendiagramm
 
+
+
     output$plot_einstieg_comparison <- renderUI({
 
-      if(r$ansicht_kurse_einstieg_comparison == "Gruppenvergleich - Balkendiagramm"){
-        kurse_einstieg_comparison(r)
-      }else{
-        indikator_selected <- r$indikator_kurse_einstieg_comparison
-        fluidRow(
-          column(
-            width = 6,
-            kurse_einstieg_comparison(r, indikator_selected[1])
-          ),
-          column(
-            width = 6,
-            kurse_einstieg_comparison(r, indikator_selected[1])
-          )
-        )
-      }
+      if(r$ansicht_kurse_einstieg_comparison == "Gruppenvergleich - Balkendiagramm") {
 
+        kurse_einstieg_comparison(r)
+
+      } else {
+
+        indikator_selected <- r$indikator_kurse_einstieg_comparison
+
+        if(length(indikator_selected) == 1){
+
+          fluidRow(
+            column(
+              width = 12,
+              kurse_einstieg_comparison(r, indikator_selected[1])
+            )
+          )
+
+        } else {
+
+          fluidRow(
+            column(
+              width = 6,
+              kurse_einstieg_comparison(r, indikator_selected[1])
+            ),
+            column(
+              width = 6,
+              kurse_einstieg_comparison(r, indikator_selected[2])
+            )
+          )
+
+        }
+      }
     })
+
 
 
     output$plot_einstieg_verlauf <- plotly::renderPlotly({
@@ -536,23 +555,26 @@ mod_schule_kurse_server <- function(id, r){
 
 
     ## Waffle Geschlecht
+
+
     output$plot_wahl <- renderUI({
 
-      if(r$gegenwert_kurse_gender == "Nein"){
-        kurse_wahl(r)
-      }else{
+      plots <- kurse_wahl(r)
+
+      if (length(plots) == 1) {
+
+        plots[[1]]
+
+      } else {
+
         fluidRow(
-          column(
-            width = 6,
-            kurse_wahl(r, "mädchen")
-          ),
-          column(
-            width = 6,
-            kurse_wahl(r, "jungen")
-          )
+          column(6, plots[[1]]),
+          column(6, plots[[2]])
         )
+
       }
     })
+
 
     ## Karte Gender
 

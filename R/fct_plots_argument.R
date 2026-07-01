@@ -794,7 +794,7 @@ argument_verlauf_1 <- function(r){
     quelle <- "Destatis, 2025 und Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
     out <- linebuilder_plotly(df_beschäftigte, titel = titel, x = "jahr", y = "wert", group = "indikator",
-                       format = format, color = color1, quelle = quelle,
+                       format = format, color = color1, quelle = quelle, quelle_y = -0.17,
                        label = TRUE) |>
       plotly::layout(
         margin = list(t = 40, b = 100, r = 50)
@@ -1482,27 +1482,23 @@ argument_fachkraft <- function(r){
 
 
 
-    if (any(regio %in% c("Hamburg", "Schleswig-Holstein"))) {
 
-      hinweis <- "Es liegen nur zusammengefasste Daten <br> für Hamburg und Schleswig-Holstein vor."
+    hinweis <- dplyr::case_when(
+      regio == "Schleswig-Holstein / Hamburg" ~
+        "Es liegen nur zusammengefasste Daten für Hamburg <br> und Schleswig-Holstein vor.",
 
-    } else if (any(regio %in% c("Niedersachsen", "Bremen"))) {
+      regio == "Niedersachsen / Bremen" ~
+        "Es liegen nur zusammengefasste Daten für <br> Niedersachsen und Bremen vor.",
 
-      hinweis <- "Es liegen nur zusammengefasste Daten <br> für Niedersachsen und Bremen vor."
+      regio == "Brandenburg / Berlin" ~
+        "Es liegen nur zusammengefasste Daten für <br> Berlin und Brandenburg vor.",
 
-    } else if (any(regio %in% c("Berlin", "Brandenburg"))) {
+      regio == "Rheinland-Pfalz / Saarland" ~
+        "Es liegen nur zusammengefasste Daten für <br> Rheinland-Pfalz und das Saarland vor.",
 
-      hinweis <- "Es liegen nur zusammengefasste Daten <br> für Berlin und Brandenburg vor."
+      TRUE ~ ""
+    )
 
-    } else if (any(regio %in% c("Rheinland-Pfalz", "Saarland"))) {
-
-      hinweis <- "Es liegen nur zusammengefasste Daten für <br> Rheinland-Pfalz und das Saarland vor."
-
-    } else {
-
-      hinweis <- ""
-
-    }
 
     titel_1 <- stringr::str_wrap(
       paste0( "Engpassrisiko in MINT-Berufen in ", regio," (", timerange, ")."),
@@ -1511,8 +1507,9 @@ argument_fachkraft <- function(r){
 
     titel_2<- stringr::str_wrap(
       paste0( "Engpassrisiko in Nicht-MINT-Berufen in ",regio," (", timerange, ")."),
-      width = 40
+              width = 40
     )
+
 
 
 
@@ -1587,14 +1584,14 @@ argument_fachkraft <- function(r){
           list(
             text = hinweis,
             x = 0.5,
-            y = 0.9,
+            y = 0.98,
             xref = "paper",
             yref = "paper",
             showarrow = FALSE,
             xanchor = "center",
             font = list(
               family = "Calibri, sans-serif",
-              size = 12,
+              size = 8,
               color = "gray"
             )
           ),
@@ -1802,6 +1799,20 @@ argument_fachkraft <- function(r){
           l = 20,r = 20
         ),
         annotations = list(
+          list(
+            text = hinweis,
+            x = 0.5,
+            y = 0.98,
+            xref = "paper",
+            yref = "paper",
+            showarrow = FALSE,
+            xanchor = "center",
+            font = list(
+              family = "Calibri, sans-serif",
+              size = 8,
+              color = "gray"
+              )
+            ),
           list(
             text = "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
             x = 0,y = -0.22,
@@ -2459,33 +2470,24 @@ argument_großer_unterschied <- function(r) {
     title_help <- ifelse(grepl("Jahr", indi), "Auszubildenden mit neuem Lehrvertrag", title_help)
 
     df_f <- df_f[with(df_f, order(prop, decreasing = FALSE)), ]
-    df_f <- df_f %>%
-      dplyr::mutate(color = color_fachbereich[fachbereich])
-
     df_m <- df_m[with(df_m, order(prop, decreasing = FALSE)), ]
-    df_m <- df_m %>%
-      dplyr::mutate(color = color_fachbereich[fachbereich])
-
-
 
 
     titel1 <- paste0("Berufswahl unter Frauen in ", regio, " (", timerange, ")")
     titel2 <- paste0("Berufswahl unter Männern in ", regio, " (", timerange, ")")
     subtitel1 <- paste0("Von allen weiblichen ", title_help, " arbeiten ", round(100-df_f$prop[df_f$fachbereich == "andere Berufsfelder"],1), "% in MINT")
     subtitel2 <-  paste0("Von allen männlichen ", title_help, " arbeiten ", round(100-df_m$prop[df_m$fachbereich == "andere Berufsfelder"],1), "% in MINT")
-    color1 <- as.character(df_f$color)
-    color2 <- as.character(df_m$color)
 
     quelle <- "Quelle: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
-    out_1 <- piebuilder_plotly(df_f, titel1, x="fachbereich", y = "prop",
-                               color1, subtitel = subtitel1, quelle="") |>
+    out_1 <- piebuilder_plotly(df_f, titel1, x="fachbereich", y = "prop", legend_y= 0.06,
+                               color=color_fachbereich, subtitel = subtitel1, quelle="") |>
       plotly::layout(
         annotations = list(
           list(
             text = quelle,
             x = 1,
-            y = -0.33,
+            y = -0.30,
             xref = "paper",
             yref = "paper",
             xanchor = "right",
@@ -2495,14 +2497,14 @@ argument_großer_unterschied <- function(r) {
           )
         )
       )
-    out_2 <- piebuilder_plotly(df_m, titel2, x="fachbereich", y = "prop",
-                               color2, subtitel = subtitel2, quelle="")|>
+    out_2 <- piebuilder_plotly(df_m, titel2, x="fachbereich", y = "prop", legend_y= 0.06,
+                               color=color_fachbereich, subtitel = subtitel2, quelle="")|>
       plotly::layout(
         annotations = list(
           list(
             text = quelle,
             x = 1,
-            y = -0.33,
+            y = -0.30,
             xref = "paper",
             yref = "paper",
             xanchor = "right",

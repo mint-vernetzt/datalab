@@ -1424,13 +1424,14 @@ piebuilder <- function(df, titel, x, y, tooltip, color = c("#b16fab", "#efe8e6")
 
 piebuilder_plotly <- function(
     df,
-    titel,
+    titel, titel_y = 0.95,
     x,
     y,
     height=550,
     color = c("#b16fab", "#efe8e6"),
     quelle = "Quelle",
-    subtitel = NULL
+    subtitel = NULL,
+    legend_y = -0.1, quelle_y = -0.3
 ) {
 
   # Umgang für leere Datensätze
@@ -1440,7 +1441,7 @@ piebuilder_plotly <- function(
       plotly::layout(
         title = list(
           text = titel,
-          x = 0.5,
+          x = 0.5, y= titel_y,
           xanchor = "center",
           font = list(
             family = "Calibri, sans-serif",
@@ -1487,9 +1488,9 @@ piebuilder_plotly <- function(
 
   # Überschriften-Umbruch vorbereiten
 
-  titel_wrapped <- stringr::str_wrap(titel, width = 60)
+  titel_wrapped <- stringr::str_wrap(titel, width = 40)
   titel_wrapped <- gsub("\n", "<br>", titel_wrapped)
-  subtitel_wrapped <- stringr::str_wrap(subtitel, width = 80)
+  subtitel_wrapped <- stringr::str_wrap(subtitel, width = 40)
   subtitel_wrapped <- gsub("\n", "<br>", subtitel_wrapped)
 
   # Plot erstellen
@@ -1515,7 +1516,7 @@ piebuilder_plotly <- function(
       height = height,
       title = list(
         text = titel_wrapped,
-        x = 0.5,
+        x = 0.5, y= titel_y,
         xanchor = "center",
         font = list(
           family = "Calibri, sans-serif",
@@ -1531,16 +1532,17 @@ piebuilder_plotly <- function(
       legend = list(
         orientation = "h",
         x = 0.5,
-        y = -0.1,
+        y = legend_y,
         xanchor = "center",
         yanchor = "top",
-        traceorder = "reversed"
+        traceorder = "reversed",
+        font = list(size = 12, color = "black", family = "Calibri Regular")
       ),
       annotations = list(
         list(
           text = quelle,
           x = 1,
-          y = -0.3,
+          y = quelle_y,
           xref = "paper",
           yref = "paper",
           xanchor = "right",
@@ -1665,6 +1667,9 @@ piebuilder_plotly <- function(
 
     p <- plotly::layout(
       p,
+      margin = list(
+        t = 120
+      ),
       title = list(
         text = paste0(
           titel_wrapped,
@@ -1672,7 +1677,7 @@ piebuilder_plotly <- function(
           "<span style='font-size:14px; color:gray; font-family:Calibri;'>",
           subtitel_wrapped, "</span>"
         ),
-        x = 0.5,
+        x = 0.5, y = 0.96,
         font = list(family = "Calibri Regular", size = 20, color = "black")
       )
     )
@@ -1693,7 +1698,8 @@ linebuilder_plotly <- function(
     quelle = "Quelle",
     subtitel = NULL,
     label = NULL,
-    area = NULL
+    area = NULL,
+    quelle_y = -0.22
 ) {
 
   # Umgang für leere Datensätze
@@ -1743,6 +1749,9 @@ linebuilder_plotly <- function(
   titel_js  <- jsonlite::toJSON(titel, auto_unbox = TRUE)
   subtitel_js  <- jsonlite::toJSON(subtitel, auto_unbox = TRUE)
   quelle_js <- jsonlite::toJSON(quelle, auto_unbox = TRUE)
+
+  titel_wrapped <- stringr::str_wrap(titel, width = 80)
+  titel_wrapped <- gsub("\n", "<br>", titel_wrapped)
 
 
   # Plot erzeugen
@@ -1798,7 +1807,7 @@ linebuilder_plotly <- function(
     plotly::layout(
       height = 550,
       title = list(
-        text = titel,
+        text = titel_wrapped,
         x = 0.5,
         xanchor = "center",
         font = list(
@@ -1845,7 +1854,7 @@ linebuilder_plotly <- function(
         list(
           text = quelle,
           x = 1,
-          y = -0.22,
+          y = quelle_y,
           xref = "paper",
           yref = "paper",
           xanchor = "right",
@@ -1971,7 +1980,7 @@ linebuilder_plotly <- function(
       p,
       title = list(
       text = paste0(
-        titel,
+        titel_wrapped,
         "<br>",
         "<span style='font-size:14px; color:gray; font-family:Calibri;'>",
         subtitel, "</span>"),
@@ -2112,7 +2121,7 @@ linebuilder_plotly <- function(
 balkenbuilder_plotly <- function(df, titel, x, y, yaxis_size = 11, orientation = "h", group = NULL,
                                  ticktext = NULL, tickvals = NULL,order = NULL, color = NULL, wrap_width = 80,
                                  percent = FALSE, reverse_legend = FALSE, yaxis_titel = "", titel_y = 0.96,
-                                 height = 550,
+                                 height = 550, legend_size=12,
                                  stacking = FALSE, subtitel = NULL, subtitel_y = NULL, subtitel_x = NULL,
                                  margin_t= 60, legend_y = -0.09, quelle_y = -0.20, quelle = "Quelle") {
 
@@ -2183,8 +2192,8 @@ balkenbuilder_plotly <- function(df, titel, x, y, yaxis_size = 11, orientation =
                         x = 0.5,
                         xanchor = "center",
                         y = legend_y,
-                        traceorder = if (isTRUE(reverse_legend)) "reversed" else "normal"),
-                        font = list(family = "Calibri, sans-serif", size = 12,color = "black"),
+                        traceorder = if (isTRUE(reverse_legend)) "reversed" else "normal",
+                        font = list(family = "Calibri, sans-serif", size = legend_size,color = "black")),
           bargap = 0.3,
           annotations = list(list(text = quelle, x = 1, y = quelle_y, xref = "paper", yref = "paper", showarrow = FALSE,
                                   xanchor = "right", yanchor = "top",
@@ -2346,7 +2355,8 @@ balkenbuilder_plotly <- function(df, titel, x, y, yaxis_size = 11, orientation =
                     x = 0.5,
                     xanchor = "center",
                     y = legend_y,
-                    traceorder = if (isTRUE(reverse_legend)) "reversed" else "normal"),
+                    traceorder = if (isTRUE(reverse_legend)) "reversed" else "normal",
+                    font = list(family = "Calibri, sans-serif", size = legend_size,color = "black")),
       bargap = 0.3,
       annotations = list(list(text = quelle, x = 1, y = quelle_y, xref = "paper", yref = "paper", showarrow = FALSE,
                               xanchor = "right", yanchor = "top",
@@ -3144,7 +3154,7 @@ mapbuilder_plotly <- function(
 ) {
 
   # Text vorbereiten
-  titel_wrapped <- stringr::str_wrap(titel, width = 60)
+  titel_wrapped <- stringr::str_wrap(titel, width = 40)
   titel_wrapped <- gsub("\n", "<br>", titel_wrapped)
 
   # Download vorbereiten

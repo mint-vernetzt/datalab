@@ -1382,13 +1382,6 @@ plot_mint_faecher <- function(r){
     df <- df %>% dplyr::filter(prop > 2)
   }
 
-  if(ebene == "MINT-Fachbereiche"){
-    df <- df %>%
-      dplyr::mutate(color = color_fachbereich[fach])
-  }else{
-    df <- df %>%
-      dplyr::mutate(color = color_fach_pie[fach])
-  }
 
 
   if(betrachtung == "Einzelansicht - Kuchendiagramm"){
@@ -1419,16 +1412,15 @@ plot_mint_faecher <- function(r){
           "Anzahl: ", wert
         )
       )
-    color = as.character(df$color)
 
     quelle <- "Quelle: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
     if(ebene == "MINT-Fächergruppen"){
       out <- piebuilder_plotly(df, titel, x = "fach", y ="prop",
-                               color, quelle = "")
+                               color=color_fach_pie, quelle = "")
     }else{
       out <- piebuilder_plotly(df, titel, x = "fach", y ="prop",
-                               color, quelle = quelle)
+                               color=color_fachbereich, quelle = quelle)
     }
 
     } else if(length(label_w)==2){
@@ -1445,21 +1437,19 @@ plot_mint_faecher <- function(r){
             "Anzahl: ", wert
           )
         )
-      color1 = as.character(df[df$indikator == label_w[1],]$color)
-      color2 = as.character(df[df$indikator == label_w[2],]$color)
 
       quelle <- "Quelle: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
       p1 <- piebuilder_plotly(df[df$indikator == label_w[1],],
                        titel1, x = "fach", y ="prop",
-                       color1, quelle = quelle)
+                       color=color_fach_pie, quelle = quelle)
       p2 <- piebuilder_plotly(df[df$indikator == label_w[2],], titel2,
-                       x = "fach", y ="prop", color2, quelle = quelle)
+                       x = "fach", y ="prop", color=color_fach_pie, quelle = quelle)
 
       if(ebene == "MINT-Fachbereiche"){
         p1 <- piebuilder_plotly(df[df$indikator == label_w[1],],
-                                titel1, x = "fach", y ="prop",
-                                color1, quelle = "") |>
+                                titel1, x = "fach", y ="prop", legend_y = -0.05, quelle_y=-0.12,
+                                color=color_fachbereich, quelle = "") |>
           plotly::layout(
             annotations = list(
               list(
@@ -1475,8 +1465,8 @@ plot_mint_faecher <- function(r){
               )
             )
           )
-        p2 <- piebuilder_plotly(df[df$indikator == label_w[2],], titel2,
-                                x = "fach", y ="prop", color2, quelle = "") |>
+        p2 <- piebuilder_plotly(df[df$indikator == label_w[2],], titel2, legend_y = -0.05, quelle_y=-0.12,
+                                x = "fach", y ="prop", color=color_fachbereich, quelle = "") |>
           plotly::layout(
             annotations = list(
               list(
@@ -1493,11 +1483,11 @@ plot_mint_faecher <- function(r){
             )
           )
       }else{
-        p1 <- piebuilder_plotly(df[df$indikator == label_w[2],], titel2,
-                                x = "fach", y ="prop", color2, quelle = "")
+        p1 <- piebuilder_plotly(df[df$indikator == label_w[2],], titel2, legend_y = -0.05, quelle_y=-0.12,
+                                x = "fach", y ="prop", color=color_fachbereich, quelle = "")
 
-        p2 <- piebuilder_plotly(df[df$indikator == label_w[2],], titel2,
-                                x = "fach", y ="prop", color2, quelle = "")
+        p2 <- piebuilder_plotly(df[df$indikator == label_w[2],], titel2, legend_y = -0.05, quelle_y=-0.12,
+                                x = "fach", y ="prop", color=color_fachbereich, quelle = "")
       }
 
     out <- list(p1, p2)
@@ -2623,12 +2613,12 @@ studienzahl_einstieg_gender <- function(r) {
               )
             )
 
-          color <- c("#efe8e6", "#154194")
+          color <- c("Männer" ="#efe8e6", "Frauen" = "#154194")
 
           quelle <- "Quelle: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
           out <- piebuilder_plotly(df_p, titel, x = "geschlecht", y ="prop",
-                                   color = color, quelle = quelle)
+                                   color=color, quelle = quelle)
 
            if(gegenwert == "Ja"){
 
@@ -2650,12 +2640,12 @@ studienzahl_einstieg_gender <- function(r) {
                    "Anzahl: ", display_abs
                  )
                )
-             color <- c("#efe8e6", "#154194")
+             color <- c("Männer" ="#efe8e6", "Frauen" = "#154194")
 
              quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
              p1g <- piebuilder_plotly(df_g, titel, x = "geschlecht", y = "prop",
-                                      color, quelle = quelle) |>
+                                      color=color, quelle = quelle) |>
                plotly::layout(height = 400)
 
              out <- list(out, p1g)
@@ -2702,14 +2692,13 @@ studienzahl_einstieg_gender <- function(r) {
                 "Anzahl: ", display_abs
               )
             )
-          color = c("#efe8e6", "#154194")
-
+          color <- c("Männer" ="#efe8e6", "Frauen" = "#154194")
           quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
           p1 <- piebuilder_plotly(df_1_pie, titel1, x = "geschlecht", y = "prop",
-                                  color, quelle = quelle)
+                                  color=color, quelle = quelle)
           p2 <- piebuilder_plotly(df_2_pie, titel2, x = "geschlecht", y = "prop",
-                           color, quelle = quelle)
+                           color=color, quelle = quelle)
 
           out <- list(p1, p2)
 
@@ -2744,10 +2733,9 @@ studienzahl_einstieg_gender <- function(r) {
 
             quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
-            color = c("#efe8e6", "#154194")
-
+            color <- c("Männer" ="#efe8e6", "Frauen" = "#154194")
             p1g <- piebuilder_plotly(df1_g, titel, x = "geschlecht", y = "prop",
-                                     color, quelle = quelle) |>
+                                     color=color, quelle = quelle) |>
               plotly::layout(height = 400)
 
 
@@ -2763,7 +2751,7 @@ studienzahl_einstieg_gender <- function(r) {
                 )
               )
             p2g <- piebuilder_plotly(df2_g, titel2, x = "geschlecht", y = "prop",
-                                     color, quelle = quelle) |>
+                                     color=color, quelle = quelle) |>
               plotly::layout(height = 400)
 
             out <- list(p1, p2, p1g, p2g)
@@ -2773,7 +2761,7 @@ studienzahl_einstieg_gender <- function(r) {
 
   }
   else if(betrachtung == "Gruppenvergleich - Balkendiagramm"){
-    #browser()
+
     sel_bl1 <- r$gen_states_faecher
 
     # Zuweisung von r zu sel_f in abhängigkeit der Bundesländer
@@ -3161,7 +3149,6 @@ studienzahl_choice_gender <- function(r) {
     df$fach[df$fach == "Alle Nicht MINT-Fächer"] <- "andere Fachbereiche"
 
     df <- df[with(df, order(prop, decreasing = FALSE)), ]
-    df <- df %>% dplyr::mutate(col = color_fachbereich[fach])
     df$wert <- prettyNum(df$wert, big.mark=".", decimal.mark = ",")
 
     titel_gruppe <- dplyr::case_when(
@@ -3191,6 +3178,7 @@ studienzahl_choice_gender <- function(r) {
       paste0("Studienfachwahl von ", titel_gruppe_m, " in ", regio, " (", timerange, ")")
     )
 
+    color <- color_fachbereich
 
     if(vergl == "Ja"){
       df <- df %>%
@@ -3209,12 +3197,11 @@ studienzahl_choice_gender <- function(r) {
       subtitelm <- paste0("Von allen ", titel_gruppe_m, " wählen ", 100-df_m$prop[df_m$fach=="andere Fachbereiche"],
                           " % ein MINT-Fach.")
 
-      color <- as.character(df_f$col)
 
       quelle <- "Quelle: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
-      p1 <- piebuilder_plotly(df_f, titel, x="fach", y="prop",
-                       color, subtitel = subtitel, quelle = "") |>
+      p1 <- piebuilder_plotly(df_f, titel, x="fach", y="prop", quelle_y= -0.04, legend_y = -0.04,
+                       color=color_fachbereich, subtitel = subtitel, quelle = "") |>
         plotly::layout(
           annotations = list(
             list(
@@ -3229,11 +3216,11 @@ studienzahl_choice_gender <- function(r) {
               font = list(size = 11, color = "gray", family = "Calibri Regular", align = "right")
             )
           ),
-          margin = list(t = 110, b = 120, r = 50, l = 50)
+          margin = list(t = 140, b = 120, r = 50, l = 50)
         )
 
       p2 <- piebuilder_plotly(df_m, titelm, x="fach", y="prop",
-                              color, subtitel = subtitelm, quelle = "") |>
+                              color=color_fachbereich, subtitel = subtitelm, quelle = "") |>
         plotly::layout(
           annotations = list(
             list(
@@ -3248,7 +3235,7 @@ studienzahl_choice_gender <- function(r) {
               font = list(size = 11, color = "gray", family = "Calibri Regular", align = "right")
             )
           ),
-          margin = list(t = 110, b = 120, r = 50, l = 50),
+          margin = list(t = 135, b = 120, r = 50, l = 50),
           height = 400
         )
 
@@ -3258,7 +3245,7 @@ studienzahl_choice_gender <- function(r) {
 
       subtitel <- paste0("Von allen ", titel_gruppe, " wählen ", 100-df$prop[df$fach=="andere Fachbereiche"],
                          " % ein MINT-Fach.")
-      color <- as.character(df$col)
+
       df <- df %>%
         dplyr::mutate(
           tooltip = paste0(
@@ -3270,7 +3257,7 @@ studienzahl_choice_gender <- function(r) {
       quelle <- "Quelle: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
       out <- piebuilder_plotly(df, titel, x = "fach", y ="prop",
-                               color, subtitel = subtitel, quelle=quelle) |>
+                               color=color_fachbereich, subtitel = subtitel, quelle=quelle) |>
         plotly::layout(
           margin = list(t = 120, b = 120, r = 50, l = 50)
         )
