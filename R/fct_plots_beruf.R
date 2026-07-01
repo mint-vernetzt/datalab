@@ -3987,7 +3987,7 @@ entgelte_vergleich_1 <- function(r) {
 
 
 
-  praep <- ifelse(land == "Saarland", " im ", " in ")
+
 
   df1$wert <- as.numeric(df1$wert)
   df1$berufsgruppe <- as.factor(df1$berufsgruppe)
@@ -3996,7 +3996,7 @@ entgelte_vergleich_1 <- function(r) {
   df1 <-  df1 %>%
     dplyr::filter(!(grepl("technik$", berufsgruppe, ignore.case = TRUE) & berufsgruppe != "Technik"))
 
-
+  praep <- ifelse(land == "Saarland", " im ", " in ")
 
   titel <- paste0("Mittleres Entgelt nach Berufsfeldern", praep, land, " ", datum,
                   " (", berufsleb, ", ", geschlecht, ")" )

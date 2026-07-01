@@ -134,65 +134,41 @@ plot_cp_orgas <- function(r){
     }else{
       regio_angabe <- paste0(" die in ", regio, " tätig sind")
     }
+
     titel <- paste0("Anteile der Organisationen der Community-Plattform von MINTvernetzt nach ",
                     charas, regio_angabe)
     subtitel <- paste0("Angaben wurden von <b>", ges, "</b> Organisationen gemacht. Mehrfachangabe möglich.")
 
 
-    # Plot
-    out <- highcharter::hchart(df, 'column', highcharter::hcaes(y = prop, x = indikator))%>%
-      highcharter::hc_plotOptions(column = list(pointWidth = 50,
-                                                colorByPoint = TRUE,
-                                                colors = c("#b16fab", "#154194", "#66cbaf","#fbbf24", "#ee7775", "#35bd97",
-                                                           "#d0a9cd", "#5f94f0", "#fca5a5", "#fde68a",
-                                                           "#007655", "#dc6262"))
-                                  )%>%
-      highcharter::hc_tooltip(pointFormat = "{point.y} %")%>%
-      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f} %"),
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular"), pointsWidth=100) %>%
-      highcharter::hc_xAxis(title = list(text = "")) %>%
-      highcharter::hc_title(text = titel,
-                            margin = 45,
-                            align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
-      highcharter::hc_subtitle(text = subtitel,
-                               align = "center",
-                               style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "16px")) %>%
-      highcharter::hc_chart(
-        style = list(fontFamily = "Calibri Regular", fontSize = "14px")
-      ) %>%
-      highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
-      highcharter::hc_caption(text = "Quelle der Daten: MINTvernetzt Community Plattform, Stand 30. Juli 2025.",
-                              style = list(fontSize = "11px", color = "gray")) %>%
-      highcharter::hc_exporting(enabled = TRUE,
-                                buttons = list(
-                                  contextButton = list(
-                                    menuItems = list("downloadPNG", "downloadCSV",
-                                                     list(
-                                                       text = "Daten für GPT",
-                                                       onclick = htmlwidgets::JS(sprintf(
-                                                         "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
+    quelle <- "Quelle der Daten: MINTvernetzt Community Plattform, Stand 30. Juli 2025."
 
 
-     var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\n\\nQuelle der Daten: MINTvernetzt Community Plattform, Stand 30. Juli 2025';
 
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-   }", gsub("'", "\\\\'", titel), gsub("'", "\\\\'", titel))  #
-                                                       )))
-                                  ))
-      )
+    order <- unique(df$indikator)
+
+    df <- df %>%
+      dplyr::mutate(
+        .tooltip = paste0(
+          "<b><span style='font-size:15px;'>", indikator, "</span></b><br>",
+          "Anteil: ", prop, " %"
+        ))
+
+
+    x <- "indikator"
+    y <- "prop"
+    color <- c("#b16fab", "#154194", "#66cbaf","#fbbf24", "#ee7775", "#35bd97",
+      "#d0a9cd", "#5f94f0", "#fca5a5", "#fde68a",
+      "#007655", "#dc6262", "#b16fab", "#154194", "#66cbaf","#fbbf24", "#ee7775", "#35bd97",
+      "#d0a9cd", "#5f94f0", "#fca5a5", "#fde68a",
+      "#007655", "#dc6262")
+
+    out <- balkenbuilder_plotly(df=df, x=x, y=y, titel=titel, orientation = "v",percent=TRUE,
+                                group=NULL, color=color, subtitel=subtitel,
+                                order=order, stacking = FALSE, quelle=quelle)
+
+
+
+
   }else{
 
     ges <- df$wert[df$indikator == "Gesamt"]
@@ -216,58 +192,35 @@ plot_cp_orgas <- function(r){
                     charas, regio_angabe)
     subtitel <- paste0("Angaben wurden von <b>", ges, "</b> Organisationen gemacht. Mehrfachangabe möglich.")
 
-    # Plot
-    out <- highcharter::hchart(df, 'column', highcharter::hcaes(y = wert, x = indikator))%>%
-      highcharter::hc_plotOptions(column = list(pointWidth = 50,
-                                                colorByPoint = TRUE,
-                                                colors = c("#b16fab", "#154194", "#66cbaf","#fbbf24", "#ee7775", "#35bd97",
-                                                           "#d0a9cd", "#5f94f0", "#fca5a5", "#fde68a",
-                                                           "#007655", "#dc6262"))
-      )%>%
-      highcharter::hc_tooltip(pointFormat = "{point.y}")%>%
-      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"),
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular"), pointsWidth=100) %>%
-      highcharter::hc_xAxis(title = list(text = "")) %>%highcharter::hc_title(text = titel,
-                            margin = 45,
-                            align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
-      highcharter::hc_subtitle(text = subtitel,
-                               align = "center",
-                               style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "16px")) %>%
-      highcharter::hc_chart(
-        style = list(fontFamily = "Calibri Regular", fontSize = "14px")
-      ) %>%
-      highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
-      highcharter::hc_caption(text = "Quelle der Daten: MINTvernetzt Community Plattform, Stand 30. Juli 2025.",
-                              style = list(fontSize = "11px", color = "gray")) %>%
-      highcharter::hc_exporting(enabled = TRUE,
-                                buttons = list(
-                                  contextButton = list(
-                                    menuItems = list("downloadPNG", "downloadCSV",
-                                                     list(
-                                                       text = "Daten für GPT",
-                                                       onclick = htmlwidgets::JS(sprintf(
-                                                         "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
 
-     var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\n\\nQuelle der Daten: MINTvernetzt Community Plattform, Stand 30. Juli 2025';
+    quelle <- "Quelle der Daten: MINTvernetzt Community Plattform, Stand 30. Juli 2025."
 
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-   }", gsub("'", "\\\\'", titel),gsub("'", "\\\\'", titel))  #
-                                                       )))
-                                  ))
-      )
+
+
+    order <- unique(df$indikator)
+
+    df <- df %>%
+      dplyr::mutate(
+        .tooltip = paste0(
+          "<b><span style='font-size:15px;'>", indikator, "</span></b><br>",
+          "Anzahl: ", wert
+        ))
+
+
+    x <- "indikator"
+    y <- "wert"
+    color <- c("#b16fab", "#154194", "#66cbaf","#fbbf24", "#ee7775", "#35bd97",
+               "#d0a9cd", "#5f94f0", "#fca5a5", "#fde68a",
+               "#007655", "#dc6262", "#b16fab", "#154194", "#66cbaf","#fbbf24", "#ee7775", "#35bd97",
+               "#d0a9cd", "#5f94f0", "#fca5a5", "#fde68a",
+               "#007655", "#dc6262")
+
+    out <- balkenbuilder_plotly(df=df, x=x, y=y, titel=titel, orientation = "v",percent=FALSE,
+                                group=NULL, color=color, subtitel=subtitel,
+                                order=order, stacking = FALSE, quelle=quelle)
+
+
+
 
 
   }
@@ -275,6 +228,8 @@ plot_cp_orgas <- function(r){
 return(out)
 
 }
+
+
 
 #' ausserschulisch cp projekte Plot
 #'
@@ -414,58 +369,39 @@ plot_cp_projekte <- function(r){
     subtitel <- paste0("Angaben wurden von <b>", ges, "</b> Projekten gemacht. Mehrfachangabe möglich.")
 
 
-    # Plot
-    out <- highcharter::hchart(df, 'column', highcharter::hcaes(y = prop, x = indikator))%>%
-      highcharter::hc_plotOptions(column = list( colorByPoint = TRUE,
-                                                colors =  c("#b16fab", "#154194", "#66cbaf","#fbbf24", "#ee7775", "#35bd97",
-                                                            "#d0a9cd", "#5f94f0", "#fca5a5", "#fde68a",
-                                                            "#007655", "#dc6262", "#5d335a", "#112c7f", "#f59e0b", "#bbd1fc"))
-      )%>%
-      highcharter::hc_tooltip(pointFormat = "{point.y} %")%>%
-      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f} %"),
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular"), pointsWidth=100) %>%
-      highcharter::hc_xAxis(title = list(text = "")) %>%
-      highcharter::hc_title(text = titel,
-                            margin = 45,
-                            align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
-      highcharter::hc_subtitle(text = subtitel,
-                               align = "center",
-                               style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "16px")) %>%
-      highcharter::hc_chart(
-        style = list(fontFamily = "Calibri Regular", fontSize = "14px")
-      ) %>%
-      highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
-      highcharter::hc_caption(text = "Quelle der Daten: MINTvernetzt Community Plattform, Stand 30. Juli 2025.",
-                              style = list(fontSize = "11px", color = "gray")) %>%
-      highcharter::hc_exporting(enabled = TRUE,
-                                buttons = list(
-                                  contextButton = list(
-                                    menuItems = list("downloadPNG", "downloadCSV",
-                                                     list(
-                                                       text = "Daten für GPT",
-                                                       onclick = htmlwidgets::JS(sprintf(
-                                                         "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
 
-     var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\n\\nQuelle der Daten: MINTvernetzt Community Plattform, Stand 30. Juli 2025';
 
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-   }", gsub("'", "\\\\'", titel), gsub("'", "\\\\'", titel) )  #
-                                                       )))
-                                  ))
-      )
+
+    quelle <- "Quelle der Daten: MINTvernetzt Community Plattform, Stand 30. Juli 2025."
+    quelle_y <- -0.35
+
+
+    order <- unique(df$indikator)
+
+    df <- df %>%
+      dplyr::mutate(
+        .tooltip = paste0(
+          "<b><span style='font-size:15px;'>", indikator, "</span></b><br>",
+          "Anzahl: ", wert
+        ))
+
+
+    x <- "indikator"
+    y <- "prop"
+    color <- c("#b16fab", "#154194", "#66cbaf","#fbbf24", "#ee7775", "#35bd97",
+               "#d0a9cd", "#5f94f0", "#fca5a5", "#fde68a",
+               "#007655", "#dc6262", "#b16fab", "#154194", "#66cbaf","#fbbf24", "#ee7775", "#35bd97",
+               "#d0a9cd", "#5f94f0", "#fca5a5", "#fde68a",
+               "#007655", "#dc6262")
+
+    out <- balkenbuilder_plotly(df=df, x=x, y=y, titel=titel, orientation = "v",percent=FALSE,
+                                group=NULL, color=color, subtitel=subtitel,quelle_y=quelle_y,
+                                order=order, stacking = FALSE, quelle=quelle)
+
+
+
+
+
   }else{
 
     ges <- df$wert[df$indikator == "Gesamt"]
@@ -492,57 +428,36 @@ plot_cp_projekte <- function(r){
                     charas, regio_angabe)
     subtitel <- paste0("Angaben wurden von <b>", ges, "</b> Projekten gemacht. Mehrfachangabe möglich.")
 
-    # Plot
-    out <- highcharter::hchart(df, 'column', highcharter::hcaes(y = wert, x = indikator))%>%
-      highcharter::hc_plotOptions(column = list(colorByPoint = TRUE,
-                                                colors =  c("#b16fab", "#154194", "#66cbaf","#fbbf24", "#ee7775", "#35bd97",
-                                                            "#d0a9cd", "#5f94f0", "#fca5a5", "#fde68a",
-                                                            "#007655", "#dc6262", "#5d335a", "#112c7f", "#f59e0b", "#bbd1fc"))
-      )%>%
-      highcharter::hc_tooltip(pointFormat = "{point.y}")%>%
-      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"),
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular"), pointsWidth=100) %>%
-      highcharter::hc_xAxis(title = list(text = "")) %>%highcharter::hc_title(text = titel,
-                                                                              margin = 45,
-                                                                              align = "center",
-                                                                              style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
-      highcharter::hc_subtitle(text = subtitel,
-                               align = "center",
-                               style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "16px")) %>%
-      highcharter::hc_chart(
-        style = list(fontFamily = "Calibri Regular", fontSize = "14px")
-      ) %>%
-      highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
-      highcharter::hc_caption(text = "Quelle der Daten: MINTvernetzt Community Plattform, Stand 30. Juli 2025.",
-                              style = list(fontSize = "11px", color = "gray")) %>%
-      highcharter::hc_exporting(enabled = TRUE,
-                                buttons = list(
-                                  contextButton = list(
-                                    menuItems = list("downloadPNG", "downloadCSV",
-                                                     list(
-                                                       text = "Daten für GPT",
-                                                       onclick = htmlwidgets::JS(sprintf(
-                                                         "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
 
-     var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\n\\nQuelle der Daten: MINTvernetzt Community Plattform, Stand 30. Juli 2025';
 
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-   }", gsub("'", "\\\\'", titel), gsub("'", "\\\\'", titel)   )  #
-                                                       )))
-                                  ))
-      )
+    quelle <- "Quelle der Daten: MINTvernetzt Community Plattform, Stand 30. Juli 2025."
+    quelle_y <- -0.35
+
+
+    order <- unique(df$indikator)
+
+    df <- df %>%
+      dplyr::mutate(
+        .tooltip = paste0(
+          "<b><span style='font-size:15px;'>", indikator, "</span></b><br>",
+          "Anzahl: ", wert
+        ))
+
+
+    x <- "indikator"
+    y <- "wert"
+    color <- c("#b16fab", "#154194", "#66cbaf","#fbbf24", "#ee7775", "#35bd97",
+               "#d0a9cd", "#5f94f0", "#fca5a5", "#fde68a",
+               "#007655", "#dc6262", "#b16fab", "#154194", "#66cbaf","#fbbf24", "#ee7775", "#35bd97",
+               "#d0a9cd", "#5f94f0", "#fca5a5", "#fde68a",
+               "#007655", "#dc6262")
+
+    out <- balkenbuilder_plotly(df=df, x=x, y=y, titel=titel, orientation = "v",percent=FALSE,
+                                group=NULL, color=color, subtitel=subtitel,quelle_y=quelle_y,
+                                order=order, stacking = FALSE, quelle=quelle)
+
+
+
 
 
   }
@@ -550,6 +465,7 @@ plot_cp_projekte <- function(r){
   return(out)
 
 }
+
 
 #' ausserschulisch cp profile Plot
 #'
@@ -566,8 +482,6 @@ plot_cp_profile <- function(r){
 
     if(anz == "Nur Gesuche anzeigen") charas <- "Gesucht"
     if(anz == "Nur Angebote anzeigen") charas <- "Angebote"
-
-
 
 
 
@@ -681,54 +595,39 @@ plot_cp_profile <- function(r){
                          Angaben zu ", charas[2], " von <b>", ges[2], "</b>. Mehrfachangaben möglich.")
 
 
-      # Plot
-      out <- highcharter::hchart(df, 'column', highcharter::hcaes(y = prop, x = indikator, group = typ))%>%
-        highcharter::hc_colors(colors =  c( "#154194", "#00a87a")) %>%
-        highcharter::hc_tooltip(pointFormat = "{point.y} %")%>%
-        highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f} %"),
-                              style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular"), pointsWidth=100) %>%
-        highcharter::hc_xAxis(title = list(text = "")) %>%
-        highcharter::hc_title(text = titel,
-                              margin = 45,
-                              align = "center",
-                              style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
-        highcharter::hc_subtitle(text = subtitel,
-                                 align = "center",
-                                 style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "16px")) %>%
-        highcharter::hc_chart(
-          style = list(fontFamily = "Calibri Regular", fontSize = "14px")
-        ) %>%
-        highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
-        highcharter::hc_caption(text = "Quelle der Daten: MINTvernetzt Community Plattform, Stand 30. Juli 2025.",
-                                style = list(fontSize = "11px", color = "gray")) %>%
-        highcharter::hc_exporting(enabled = TRUE,
-                                  buttons = list(
-                                    contextButton = list(
-                                      menuItems = list("downloadPNG", "downloadCSV",
-                                                       list(
-                                                         text = "Daten für GPT",
-                                                         onclick = htmlwidgets::JS(sprintf(
-                                                           "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
 
-     var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\n\\nQuelle der Daten: MINTvernetzt Community Plattform, Stand 30. Juli 2025';
 
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-   }", gsub("'", "\\\\'", titel), gsub("'", "\\\\'", titel))  #
-                                                         )))
-                                    ))
-        )
+
+
+
+      quelle <- "Quelle der Daten: MINTvernetzt Community Plattform, Stand 30. Juli 2025."
+      quelle_y <- -0.35
+
+
+      order <- unique(df$indikator)
+
+      df <- df %>%
+        dplyr::mutate(
+          .tooltip = paste0(
+            "<b><span style='font-size:15px;'>", indikator, "</span></b><br>",
+            "Anzahl: ", prop, " %"
+          ))
+
+
+      x <- "indikator"
+      y <- "prop"
+      group <- "typ"
+      color <- c( "Angebote" = "#154194","Gesuche" = "#00a87a")
+
+
+      out <- balkenbuilder_plotly(df=df, x=x, y=y, titel=titel, orientation = "v",percent=TRUE,
+                                  group=group, color=color, subtitel=subtitel,quelle_y=quelle_y,
+                                  order=order, stacking = FALSE, quelle=quelle)
+
+
+
+
+
 
     }else{
 
@@ -747,60 +646,38 @@ plot_cp_profile <- function(r){
       subtitel <- paste0("Angaben wurden von <b>", ges, "</b> Personen gemacht. Mehrfachangabe möglich.")
 
 
-      # Plot
-      out <- highcharter::hchart(df, 'column', highcharter::hcaes(y = prop, x = indikator))%>%
-        highcharter::hc_plotOptions(column = list(#pointWidth = 50,
-          colorByPoint = TRUE,
-          colors =  c("#b16fab", "#154194", "#66cbaf","#fbbf24", "#ee7775", "#35bd97",
-                      "#d0a9cd", "#5f94f0", "#fca5a5", "#fde68a",
-                      "#007655", "#dc6262", "#5d335a", "#112c7f", "#f59e0b", "#bbd1fc"))
-        )%>%
-        highcharter::hc_tooltip(pointFormat = "{point.y} %")%>%
-        highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f} %"),
-                              style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular"), pointsWidth=100) %>%
-        highcharter::hc_xAxis(title = list(text = "")) %>%
-        highcharter::hc_title(text = titel,
-                              margin = 45,
-                              align = "center",
-                              style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
-        highcharter::hc_subtitle(text = subtitel,
-                                 align = "center",
-                                 style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "16px")) %>%
-        highcharter::hc_chart(
-          style = list(fontFamily = "Calibri Regular", fontSize = "14px")
-        ) %>%
-        highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
-        highcharter::hc_caption(text = "Quelle der Daten: MINTvernetzt Community Plattform, Stand 30. Juli 2025.",
-                                style = list(fontSize = "11px", color = "gray")) %>%
-        highcharter::hc_exporting(enabled = TRUE,
-                                  buttons = list(
-                                    contextButton = list(
-                                      menuItems = list("downloadPNG", "downloadCSV",
-                                                       list(
-                                                         text = "Daten für GPT",
-                                                         onclick = htmlwidgets::JS(sprintf(
-                                                           "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
 
 
-     var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\n\\nQuelle der Daten: MINTvernetzt Community Plattform, Stand 30. Juli 2025';
 
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-   }", gsub("'", "\\\\'", titel), gsub("'", "\\\\'", titel))  #
-                                                         )))
-                                    ))
-        )
+      quelle <- "Quelle der Daten: MINTvernetzt Community Plattform, Stand 30. Juli 2025."
+      quelle_y <- -0.35
+
+
+      order <- unique(df$indikator)
+
+      df <- df %>%
+        dplyr::mutate(
+          .tooltip = paste0(
+            "<b><span style='font-size:15px;'>", indikator, "</span></b><br>",
+            "Anzahl: ", prop, " %"
+          ))
+
+
+      x <- "indikator"
+      y <- "prop"
+
+      color <- c("#b16fab", "#154194", "#66cbaf","#fbbf24", "#ee7775", "#35bd97",
+                 "#d0a9cd", "#5f94f0", "#fca5a5", "#fde68a",
+                 "#007655", "#dc6262", "#5d335a", "#112c7f", "#f59e0b", "#bbd1fc", "#b16fab", "#154194", "#66cbaf","#fbbf24", "#ee7775", "#35bd97",
+                 "#d0a9cd", "#5f94f0", "#fca5a5", "#fde68a",
+                 "#007655", "#dc6262", "#5d335a", "#112c7f", "#f59e0b", "#bbd1fc")
+
+
+      out <- balkenbuilder_plotly(df=df, x=x, y=y, titel=titel, orientation = "v",percent=TRUE,
+                                  group=NULL, color=color, subtitel=subtitel,quelle_y=quelle_y,
+                                  order=order, stacking = FALSE, quelle=quelle)
+
+
     }
 
 
@@ -830,53 +707,40 @@ plot_cp_profile <- function(r){
                          Angaben zu ", charas[2], " von <b>", ges[2], "</b>. Mehrfachangaben möglich.")
 
 
-      # Plot
-      out <- highcharter::hchart(df, 'column', highcharter::hcaes(y = wert, x = indikator, group = typ))%>%
-        highcharter::hc_colors(colors = c( "#154194", "#00a87a")) %>%
-        highcharter::hc_tooltip(pointFormat = "{point.y}")%>%
-        highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"),
-                              style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular"), pointsWidth=100) %>%
-        highcharter::hc_xAxis(title = list(text = "")) %>%highcharter::hc_title(text = titel,
-                                                                                margin = 45,
-                                                                                align = "center",
-                                                                                style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
-        highcharter::hc_subtitle(text = subtitel,
-                                 align = "center",
-                                 style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "16px")) %>%
-        highcharter::hc_chart(
-          style = list(fontFamily = "Calibri Regular", fontSize = "14px")
-        ) %>%
-        highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
-        highcharter::hc_caption(text = "Quelle der Daten: MINTvernetzt Community Plattform, Stand 30. Juli 2025.",
-                                style = list(fontSize = "11px", color = "gray")) %>%
-        highcharter::hc_exporting(enabled = TRUE,
-                                  buttons = list(
-                                    contextButton = list(
-                                      menuItems = list("downloadPNG", "downloadCSV",
-                                                       list(
-                                                         text = "Daten für GPT",
-                                                         onclick = htmlwidgets::JS(sprintf(
-                                                           "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
 
-     var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\n\\nQuelle der Daten: MINTvernetzt Community Plattform, Stand 30. Juli 2025';
 
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-   }", gsub("'", "\\\\'", titel), gsub("'", "\\\\'", titel))  #
-                                                         )))
-                                    ))
-        )
+
+
+
+
+      quelle <- "Quelle der Daten: MINTvernetzt Community Plattform, Stand 30. Juli 2025."
+      quelle_y <- -0.35
+
+
+      order <- unique(df$indikator)
+
+      df <- df %>%
+        dplyr::mutate(
+          .tooltip = paste0(
+            "<b><span style='font-size:15px;'>", indikator, "</span></b><br>",
+            "Anzahl: ", wert
+          ))
+
+
+      x <- "indikator"
+      y <- "wert"
+      group <- "typ"
+      color <- c( "Angebote" = "#154194","Gesuche" = "#00a87a")
+
+
+      out <- balkenbuilder_plotly(df=df, x=x, y=y, titel=titel, orientation = "v",percent=FALSE,
+                                  group=group, color=color, subtitel=subtitel,quelle_y=quelle_y,
+                                  order=order, stacking = FALSE, quelle=quelle)
+
+
+
+
+
     }else{
 
       # Titel
@@ -894,58 +758,42 @@ plot_cp_profile <- function(r){
       subtitel <- paste0("Angaben wurden von <b>", ges, "</b> Personen gemacht. Mehrfachangabe möglich.")
 
 
-      # Plot
-      out <- highcharter::hchart(df, 'column', highcharter::hcaes(y = wert, x = indikator))%>%
-        highcharter::hc_plotOptions(column = list(#pointWidth = 50,
-          colorByPoint = TRUE,
-          colors =  c("#b16fab", "#154194", "#66cbaf","#fbbf24", "#ee7775", "#35bd97",
-                      "#d0a9cd", "#5f94f0", "#fca5a5", "#fde68a",
-                      "#007655", "#dc6262", "#5d335a", "#112c7f", "#f59e0b", "#bbd1fc"))
-        )%>%
-        highcharter::hc_tooltip(pointFormat = "{point.y}")%>%
-        highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"),
-                              style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular"), pointsWidth=100) %>%
-        highcharter::hc_xAxis(title = list(text = "")) %>%highcharter::hc_title(text = titel,
-                                                                                margin = 45,
-                                                                                align = "center",
-                                                                                style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
-        highcharter::hc_subtitle(text = subtitel,
-                                 align = "center",
-                                 style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "16px")) %>%
-        highcharter::hc_chart(
-          style = list(fontFamily = "Calibri Regular", fontSize = "14px")
-        ) %>%
-        highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
-        highcharter::hc_caption(text = "Quelle der Daten: MINTvernetzt Community Plattform, Stand 30. Juli 2025.",
-                                style = list(fontSize = "11px", color = "gray")) %>%
-        highcharter::hc_exporting(enabled = TRUE,
-                                  buttons = list(
-                                    contextButton = list(
-                                      menuItems = list("downloadPNG", "downloadCSV",
-                                                       list(
-                                                         text = "Daten für GPT",
-                                                         onclick = htmlwidgets::JS(sprintf(
-                                                           "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
 
-     var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\n\\nQuelle der Daten: MINTvernetzt Community Plattform, Stand 30. Juli 2025';
 
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-   }", gsub("'", "\\\\'", titel), gsub("'", "\\\\'", titel))  #
-                                                         )))
-                                    ))
-        )
+
+
+
+
+      quelle <- "Quelle der Daten: MINTvernetzt Community Plattform, Stand 30. Juli 2025."
+      quelle_y <- -0.35
+
+
+      order <- unique(df$indikator)
+
+      df <- df %>%
+        dplyr::mutate(
+          .tooltip = paste0(
+            "<b><span style='font-size:15px;'>", indikator, "</span></b><br>",
+            "Anzahl: ", wert
+          ))
+
+
+      x <- "indikator"
+      y <- "wert"
+
+      color <- c("#b16fab", "#154194", "#66cbaf","#fbbf24", "#ee7775", "#35bd97",
+      "#d0a9cd", "#5f94f0", "#fca5a5", "#fde68a",
+      "#007655", "#dc6262", "#5d335a", "#112c7f", "#f59e0b", "#bbd1fc", "#b16fab", "#154194", "#66cbaf","#fbbf24", "#ee7775", "#35bd97",
+      "#d0a9cd", "#5f94f0", "#fca5a5", "#fde68a",
+      "#007655", "#dc6262", "#5d335a", "#112c7f", "#f59e0b", "#bbd1fc")
+
+
+      out <- balkenbuilder_plotly(df=df, x=x, y=y, titel=titel, orientation = "v",percent=FALSE,
+                                  group=NULL, color=color, subtitel=subtitel,quelle_y=quelle_y,
+                                  order=order, stacking = FALSE, quelle=quelle)
+
+
+
     }
 
 
@@ -1114,78 +962,54 @@ plot_mv_stimmung <- function(r){
                             ifelse(gruppe == "außerschulische Akteur:innen", "der außerschulischen Akteur:innen", gruppe)))
 
     titel <- paste0("Antworten ", gruppe, " darauf, wie der Ganztag am besten genutzt werden sollte")
+
     subtitel <- "N = 453"
     subtitel <- ifelse(gruppe == "Schule", "N = 18", ifelse(gruppe == "außerschulische Akteur:innen",
                                                             "N = 24", subtitel))
 
 
-    # quelle <- "Quelle der Daten: MINTvernetzt 2024."
-
-    plot <- df %>%
-      highcharter::hchart(
-        "bar", highcharter::hcaes(group = antwort , y = wert, x = typ)
-      )%>%
-      highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
-      highcharter::hc_tooltip(
-        pointFormat=paste('\"{point.antwort}\" <br> Anteil: {point.wert}%')) %>%
-      highcharter::hc_colors( c("#efe8e6",
-                                "#ee7775", "#fca5a5",
-                                "#66cbaf", "#35bd97" )) %>%
-      highcharter::hc_title(text = titel,
-                            margin = 45,
-                            align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-      highcharter::hc_subtitle(text = subtitel,
-                               align = "center",
-                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "18px")) %>%
-      highcharter::hc_yAxis(title = list(text = "")) %>%
-      highcharter::hc_xAxis(title = list(text = "")) %>%
-    highcharter::hc_chart(
-      style = list(fontFamily = "SourceSans3-Regular", fontSize = "18px")) %>%
-      highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
-      highcharter::hc_caption(text = "Quelle der Daten: MINTvernetzt 2024.",
-                              style = list(fontSize = "11px", color = "gray")) %>%
-      highcharter::hc_exporting(enabled = TRUE,
-                                buttons = list(
-                                  contextButton = list(
-                                    menuItems = list("downloadPNG", "downloadCSV",
-                                                     list(
-                                                       text = "Daten für GPT",
-                                                       onclick = htmlwidgets::JS(sprintf(
-                                                         "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
-
-     var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\n\\nQuelle der Daten: MINTvernetzt 2024';
-
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-   }", gsub("'", "\\\\'", titel), gsub("'", "\\\\'", titel))  #
-                                                       )))
-                                  ))
-      )
-
-  #  group = "antwort"
-  #  y = "wert"
-  #  x = "typ"
 
 
- #   color <-  c("#efe8e6",
- #               "#ee7775", "#fca5a5",
- #               "#66cbaf", "#35bd97" )
- #   tooltip <- paste('\"{point.antwort}\" <br> Anteil: {point.wert}%')
- #
-#
- #   plot <- balkenbuilder(df, titel, x, y, group=group, tooltip, format = "1", color = color, stacking = "percent", subtitel = subtitel, quelle =quelle)
+
+
+
+
+
+    quelle <- "Quelle der Daten: MINTvernetzt, 2024"
+    quelle_y <- -0.20
+
+
+    order <- unique(df$typ)
+
+    df <- df %>%
+      dplyr::mutate(
+        .tooltip = paste0(
+          "<b><span style='font-size:12px;'>", typ, "</span></b><br>",
+          "<b><span style='font-size:15px;'>", antwort, "</span></b><br>",
+          "Anzahl: ", wert, " %"
+        ))
+
+
+
+    x <- "typ"
+    y <- "wert"
+    group <- "antwort"
+    color <- c("#efe8e6",
+               "#ee7775", "#fca5a5",
+               "#66cbaf", "#35bd97" )
+
+
+    out <- balkenbuilder_plotly(df=df, x=x, y=y, titel=titel, orientation = "h",percent=TRUE,
+                                group=group, color=color, subtitel=subtitel,quelle_y=quelle_y,
+                                order=order, stacking = TRUE, quelle=quelle)
+
+
+
+
+
+
+
+
 
 
     }else{
@@ -1211,22 +1035,33 @@ plot_mv_stimmung <- function(r){
 
 
 
-    colors<-  c("#b16fab", "#154194", "#66cbaf","#fbbf24")
-     tooltip <- paste('Anteil: {point.wert}%')
-      x = "antwort"
-      y = "wert"
-      titel <- titel
-      subtitel <- subtitel
 
-     quelle <- "Quelle der Daten: MINTvernetzt 2024."
 
-      plot <- piebuilder(df, titel, x, y, tooltip, colors, format = '{point.wert}%', subtitel, quelle = quelle)
+      df <- df %>%
+        dplyr::mutate(
+          tooltip = paste0(
+            "<b><span style='font-size:12px;'>", antwort, "</span></b><br>",
+            "Anteil: ", wert, " %"
+          )
+        )
+
+      color <- c("#b16fab", "#154194", "#66cbaf","#fbbf24")
+
+      quelle <- "Quelle der Daten: MINTvernetzt 2024."
+
+
+
+      out <- piebuilder_plotly(df, titel, x="antwort", y = "wert",
+                               color=color, quelle=quelle)
+
+
+
 
   }
 
 
 
-    return(plot)
+    return(out)
 }
 
 plot_mv_genderb <- function(){
@@ -1335,10 +1170,7 @@ skf_einrichtungen <- function(r){
 
   #Trennpunkte für lange Zahlen ergänzen
   df$gesamt <- prettyNum(df$gesamt, big.mark = ".", decimal.mark = ",")
-
-  hcoptslang <- getOption("highcharter.lang")
-  hcoptslang$thousandsSep <- "."
-  options(highcharter.lang = hcoptslang)
+  df$wert <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
 
 
   # Hilfe für Überschrift
@@ -1350,54 +1182,44 @@ skf_einrichtungen <- function(r){
 
   titel <- paste0(helper, ", die bei Stiftung Kinder forschen aktiv sind")
 
-  # Plot erstellem
-  out <- highcharter::hchart(df, 'column', highcharter::hcaes(y = wert, x = jahr, group = indikator))%>%
-    highcharter::hc_tooltip(pointFormat = "{point.indikator} <br> Anzahl: {point.y} <br> aktive Einrichtungen gesamt: {point.gesamt}")%>%
-    highcharter::hc_yAxis(title = list(text = "")
-                          , labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular")
-    ) %>%
-    highcharter::hc_xAxis(title = list(text = "")) %>%
-    highcharter::hc_plotOptions(column = list(stacking = "normal")) %>%
-    highcharter::hc_plotOptions(column = list(pointWidth = 50))%>%
-    highcharter::hc_colors(c("#efe8e6", "#66cbaf")) %>%
-    highcharter::hc_title(text = titel,
-                          margin = 45,
-                          align = "center",
-                          style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
-    highcharter::hc_chart(
-      style = list(fontFamily = "Calibri Regular", fontSize = "14px")
-    ) %>%
-    highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
-    highcharter::hc_caption(text = "Quelle der Daten: Stiftung Kinder forschen, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
-                            style = list(fontSize = "11px", color = "gray")) %>%
-    highcharter::hc_exporting(enabled = TRUE,
-                              buttons = list(
-                                contextButton = list(
-                                  menuItems = list("downloadPNG", "downloadCSV",
-                                                   list(
-                                                     text = "Daten für GPT",
-                                                     onclick = htmlwidgets::JS(sprintf(
-                                                       "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
 
-     var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\n\\nQuelle der Daten: Stiftung Kinder forschen, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
 
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-   }", gsub("'", "\\\\'", titel), gsub("'", "\\\\'", titel))  #
-                                                     )))
-                                ))
-    )
+
+
+
+
+  quelle <- "Quelle der Daten: Stiftung Kinder forschen, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+
+
+  order <- unique(df$jahr)
+
+  df <- df %>%
+    dplyr::mutate(
+      indikator = factor(
+      indikator,
+      levels = c(
+        "zertifizierte Einrichtungen",
+        "Einrichtungen mit SKf-Fortbildung")
+    ),
+      .tooltip = paste0(
+        "<b><span style='font-size:15px;'>", jahr, "</span></b><br>",
+        "<b><span style='font-size:15px;'>", indikator, "</span></b><br>",
+        "Anzahl: ", wert, "<br>",
+        "aktive Einrichtungen gesamt: ", gesamt
+      ))
+
+
+
+  x <- "jahr"
+  y <- "wert"
+  group <- "indikator"
+  color <- c("Einrichtungen mit SKf-Fortbildung" = "#efe8e6", "zertifizierte Einrichtungen" = "#66cbaf")
+
+
+  out <- balkenbuilder_plotly(df=df, x=x, y=y, titel=titel, orientation = "v",percent=FALSE,
+                              group=group, color=color,
+                              order=order, stacking = TRUE, quelle=quelle)
+
 
   return(out)
 }
@@ -1462,52 +1284,39 @@ skf_personal <- function(r){
 
   titel <- paste0("Geschätzte Anzahl an Fach- und Lehrkräften, die an einer SKf-Fortbildung teilgenommen haben")
 
-  # Plot
-  out <- highcharter::hchart(df, 'column', highcharter::hcaes(y = wert, x = jahr, group=indikator))%>%
-    highcharter::hc_plotOptions(column = list(pointWidth = 50))%>%
-    highcharter::hc_tooltip(pointFormat = "{point.indikator}: {point.y}")%>%
-    highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"),
-                          style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular"), pointsWidth=100) %>%
-    highcharter::hc_xAxis(title = list(text = "")) %>%
-    highcharter::hc_colors(c("#66cbaf","#8893a7")) %>%
-    highcharter::hc_title(text = titel,
-                          margin = 45,
-                          align = "center",
-                          style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
-    highcharter::hc_chart(
-      style = list(fontFamily = "Calibri Regular", fontSize = "14px")
-    ) %>%
-    highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
-    highcharter::hc_caption(text = "Quelle der Daten: Stiftung Kinder forschen, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
-                            style = list(fontSize = "11px", color = "gray")) %>%
-    highcharter::hc_exporting(enabled = TRUE,
-                              buttons = list(
-                                contextButton = list(
-                                  menuItems = list("downloadPNG", "downloadCSV",
-                                                   list(
-                                                     text = "Daten für GPT",
-                                                     onclick = htmlwidgets::JS(sprintf(
-                                                       "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
 
-     var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\n\\nQuelle der Daten: Stiftung Kinder forschen, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
 
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-   }", gsub("'", "\\\\'", titel), gsub("'", "\\\\'", titel) )  #
-                                                     )))
-                                ))
-    )
+
+
+
+  quelle <- "Quelle der Daten: Stiftung Kinder forschen, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+
+
+  order <- unique(df$jahr)
+
+  df <- df %>%
+    dplyr::mutate(
+      .tooltip = paste0(
+        "<b><span style='font-size:15px;'>", jahr, "</span></b><br>",
+        "<b><span style='font-size:15px;'>", indikator, "</span></b><br>",
+        "Anzahl: ", wert
+      ))
+
+
+
+  x <- "jahr"
+  y <- "wert"
+  group <- "indikator"
+  color <- c("In diesem Jahr fortgebildet" = "#8893a7", "Bis jetzt insgesamt fortgebildet" = "#66cbaf")
+
+
+  out <- balkenbuilder_plotly(df=df, x=x, y=y, titel=titel, orientation = "v",percent=FALSE,
+                              group=group, color=color,
+                              order=order, stacking = FALSE, quelle=quelle)
+
+
+
+
 
   return(out)
 }
