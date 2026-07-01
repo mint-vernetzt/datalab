@@ -436,8 +436,6 @@ kurse_mint_map <- function(r) {
     timerange <- r$date_mint_map
 
 
-
-
     df_query <- glue::glue_sql("
                                SELECT fachbereich, indikator, anzeige_geschlecht, region, jahr,wert
                                FROM kurse
@@ -469,43 +467,42 @@ kurse_mint_map <- function(r) {
     df$prop <- df$proportion
     df$prop <- round(df$prop, 1)
 
-    #Trennpunkte für lange Zahlen ergänzen
-    df$wert <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
-
     # plots
 
-
     df1 <- df[df$indikator == "Grundkurse",]
-    joinby <- c("name", "region")
-    name <- paste0("MINT-Anteil")
-    tooltip <- "{point.region} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}"
+    df1 <- df1 %>%
+      dplyr::mutate(
+        tooltip = paste0(
+          "<b>", region, "</b><br>",
+          "Anteil: ", prettyNum(round(prop,1), big.mark = ".", decimal.mark = ","), " %<br>",
+          "Anzahl: ", prettyNum(round(wert,1), big.mark = ".", decimal.mark = ",")
+        )
+      )
     titel <- paste0("Anteil von ", help_title, "<br> an allen Grundkursbelegungen ", "(",timerange, ")")
-    mincolor <- "#f4f5f6"
-    map_selection <- map_selection_germany
-    maxcolor <- "#b16fab"
-    quelle <- "Quelle der Daten: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
-
-
-
-    map1 <- mapbuilder(df1, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection, quelle = quelle)
+    quelle <- "Quelle: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    map1 <- mapbuilder_plotly(df = df1,
+                      value_col = "prop",
+                      titel = titel,
+                      quelle = quelle)
 
     df2 <- df[df$indikator == "Leistungskurse",]
-    joinby <- c("name", "region")
-    name <- paste0("MINT-Anteil")
-    tooltip <- "{point.region} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}"
+    df2 <- df2 %>%
+      dplyr::mutate(
+        tooltip = paste0(
+          "<b>", region, "</b><br>",
+          "Anteil: ", prettyNum(round(prop,1), big.mark = ".", decimal.mark = ","), " %<br>",
+          "Anzahl: ", prettyNum(round(wert,1), big.mark = ".", decimal.mark = ",")
+        )
+      )
     titel <- paste0("Anteil von ", help_title, "<br> an allen Leistungskursbelegungen ", "(",timerange, ")")
-    mincolor <- "#f4f5f6"
-    map_selection <- map_selection_germany
-    maxcolor <- "#b16fab"
-    quelle <- "Quelle der Daten: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "Quelle: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    map2 <- mapbuilder_plotly(df = df2,
+                              value_col = "prop",
+                              titel = titel,
+                              quelle = quelle)
 
-    map2 <- mapbuilder(df2, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection, quelle = quelle)
+    out <- list(map1,map2)
 
-
-    list <- list(map1,map2)
-    out <- highcharter::hw_grid(
-      list,
-      ncol = 2)
   }
 
   return(out)
@@ -1045,45 +1042,47 @@ kurse_map <- function(r) {
     df$prop <- round(df$prop, 1)
 
     #Trennpunkte für lange Zahlen ergänzen
-    df$wert <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
     col <- as.character(color_fach[unique(df$fachbereich)])
-
 
     # plots
 
-      df1 <- df[df$indikator == "Grundkurse",]
-    joinby <- c("name", "region")
-    name <- paste0(subjects)
-    tooltip <-"{point.region} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}"
+    df1 <- df[df$indikator == "Grundkurse",]
+    df1 <- df1 %>%
+      dplyr::mutate(
+        tooltip = paste0(
+          "<b>", region, "</b><br>",
+          "Anteil: ", prettyNum(round(prop,1), big.mark = ".", decimal.mark = ","), " %<br>",
+          "Anzahl: ", prettyNum(round(wert,1), big.mark = ".", decimal.mark = ",")
+        )
+      )
     titel <- paste0("Anteil von ", help_title, "<br> an allen Grundkursbelegungen ", "(",timerange, ")")
-    mincolor <- "#fcfcfd"
     maxcolor <- col
-    map_selection <- map_selection_germany
-    quelle <- "Quelle der Daten: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
-    map1 <- mapbuilder(df1, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection, quelle = quelle)
+    quelle <- "Quelle: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    map1 <- mapbuilder_plotly(df = df1,
+                              value_col = "prop",
+                              maxcolor = col,
+                              titel = titel,
+                              quelle = quelle)
 
-
-    df$proportion <- as.numeric(as.character(df$proportion))
-    df$wert <- as.numeric(as.character(df$wert))
-
-    # Leistungskurs läuft
     df2 <- df[df$indikator == "Leistungskurse",]
-    joinby <- c("name", "region")
-    name <- paste0(subjects)
-    tooltip <-"{point.region} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}"
+    df2 <- df2 %>%
+      dplyr::mutate(
+        tooltip = paste0(
+          "<b>", region, "</b><br>",
+          "Anteil: ", prettyNum(round(prop,1), big.mark = ".", decimal.mark = ","), " %<br>",
+          "Anzahl: ", prettyNum(round(wert,1), big.mark = ".", decimal.mark = ",")
+        )
+      )
     titel <- paste0("Anteil von ", help_title, "<br> an allen Leistungskursbelegungen ", "(",timerange, ")")
-    mincolor <- "#fcfcfd"
     maxcolor <- col
-    map_selection <- map_selection_germany
-    quelle <- "Quelle der Daten: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
-    map2 <- mapbuilder(df2, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection, quelle = quelle)
+    quelle <- "Quelle: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    map2 <- mapbuilder_plotly(df = df2,
+                              value_col = "prop",
+                              maxcolor = col,
+                              titel = titel,
+                              quelle = quelle)
 
-
-    plot_list <- list(map1,map2)
-
-    out <- highcharter::hw_grid(
-      plot_list,
-      ncol = 2)
+    out <- list(map1,map2)
 
     return(out)
 
@@ -2106,38 +2105,49 @@ kurse_wahl <- function(r,
 
     # Plots
 
-
     df1 <- df_f[df_f$indikator == kurs_select,]
-    joinby <- c("name", "region")
-    name <- paste0(subjects)
-    tooltip <-"{point.region} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}"
+    df1 <- df1 %>%
+      dplyr::mutate(
+        tooltip = paste0(
+          "<b>", region, "</b><br>",
+          "Anteil: ", prettyNum(round(prop,1), big.mark = ".", decimal.mark = ","), " %<br>",
+          "Anzahl: ", wert
+        )
+      )
     titel <- paste0(help_kurs, "belegungen von Mädchen in ", help_title, " (", timerange, ")")
-    mincolor <- "#fcfcfd"
     maxcolor <- as.character(color_fach[subjects])
-    map_selection <- map_selection_germany
-    quelle <- "Quelle der Daten: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
-    out1 <- mapbuilder(df1, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection, quelle = quelle)
-
+    quelle <- "Quelle: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    out1 <- mapbuilder_plotly(df = df1,
+                              value_col = "prop",
+                              maxcolor = maxcolor,
+                              titel = titel,
+                              quelle = quelle)
     out <- out1
 
     if(vergleich =="Ja"){
 
 
       df2 <- df_m[df_m$indikator == kurs_select,]
-      joinby <- c("name", "region")
-      name <- paste0(subjects)
-      tooltip <-"{point.region} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}"
+      df1 <- df1 %>%
+        dplyr::mutate(
+          tooltip = paste0(
+            "<b>", region, "</b><br>",
+            "Anteil: ", prettyNum(round(prop,1), big.mark = ".", decimal.mark = ","), " %<br>",
+            "Anzahl: ", wert
+          )
+        )
       titel <- paste0(help_kurs, "belegungen von Jungen in ", help_title," (", timerange, ")")
-      mincolor <- "#fcfcfd"
       maxcolor <- as.character(color_fach[subjects])
-      map_selection <- map_selection_germany
-      quelle <- "Quelle der Daten: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
-      out2 <- mapbuilder(df2, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection, quelle = quelle)
+      quelle <- "Quelle: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      out2 <- mapbuilder_plotly(df = df1,
+                                value_col = "prop",
+                                maxcolor = maxcolor,
+                                titel = titel,
+                                quelle = quelle)
 
-      out <- highcharter::hw_grid(
-        out1, out2,
-        ncol = 2,
-        browsable = TRUE
+
+      out <- list(
+        out1, out2
       )
     }
 

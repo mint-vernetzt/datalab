@@ -1,23 +1,70 @@
-#library(tidyr)
-#library(rlang)
-#library(tidyr)
+
+
+# Schlüssel für Mapping vorbereiten
+
+add_bl_key <- function(df){
+  if("region" %in% names(df)){
+    df <- df |>
+      dplyr::mutate(
+        bl_ags = dplyr::case_when(
+          region == "Schleswig-Holstein" ~ "01",
+          region == "Hamburg" ~ "02",
+          region == "Niedersachsen" ~ "03",
+          region == "Bremen" ~ "04",
+          region == "Nordrhein-Westfalen" ~ "05",
+          region == "Hessen" ~ "06",
+          region == "Rheinland-Pfalz" ~ "07",
+          region == "Baden-Württemberg" ~ "08",
+          region == "Bayern" ~ "09",
+          region == "Saarland" ~ "10",
+          region == "Berlin" ~ "11",
+          region == "Brandenburg" ~ "12",
+          region == "Mecklenburg-Vorpommern" ~ "13",
+          region == "Sachsen" ~ "14",
+          region == "Sachsen-Anhalt" ~ "15",
+          region == "Thüringen" ~ "16"
+        )
+      )
+  }else{
+    df <- df |>
+      dplyr::mutate(
+        bl_ags = dplyr::case_when(
+          bundesland == "Schleswig-Holstein" ~ "01",
+          bundesland == "Hamburg" ~ "02",
+          bundesland == "Niedersachsen" ~ "03",
+          bundesland == "Bremen" ~ "04",
+          bundesland == "Nordrhein-Westfalen" ~ "05",
+          bundesland == "Hessen" ~ "06",
+          bundesland == "Rheinland-Pfalz" ~ "07",
+          bundesland == "Baden-Württemberg" ~ "08",
+          bundesland == "Bayern" ~ "09",
+          bundesland == "Saarland" ~ "10",
+          bundesland == "Berlin" ~ "11",
+          bundesland == "Brandenburg" ~ "12",
+          bundesland == "Mecklenburg-Vorpommern" ~ "13",
+          bundesland == "Sachsen" ~ "14",
+          bundesland == "Sachsen-Anhalt" ~ "15",
+          bundesland == "Thüringen" ~ "16"
+        )
+      )
+  }
+
+  if("land" %in% names(df)){
+    df$ios3 <- countrycode::countrycode(df$land, origin = 'country.name', destination = 'iso3c')
+  }
+
+  return(df)
+}
+
+
+# map_selection_germany <- readRDS("data/map_data/germany_choropleth_federal_states.rds")
+# #map_selection_germany <- readRDS("data/map_data/map_selection_german.rds")
+# map_selection_europe <- readRDS("data/map_data/map_selection_europa.rds")
+# map_selection_international <- readRDS("data/map_data/map_selection_international.rds")
 
 
 
-
-
-
-map_selection_germany <- readRDS("data/map_data/map_selection_german.rds")
-map_selection_europe <- readRDS("data/map_data/map_selection_europa.rds")
-map_selection_international <- readRDS("data/map_data/map_selection_international.rds")
-
-
-
-
-
-
-
-
+  # Allgemeine Hilfsfunktionen ----
 
 #' helpers
 #'
@@ -3080,6 +3127,294 @@ balkenbuilder3 <- function(df, titel , x, y, tooltip, format, color, optional, o
 
 
 #mapbuilder
+
+
+mapbuilder_plotly <- function(
+    df,
+    value_col,
+    regio_col = "region",
+    titel,
+    mincolor = "#f4f5f6",
+    maxcolor = "#b16fab",
+    na_color = "#b2b6ba",
+    cmin = NULL,
+    cmax = NULL,
+    map = "germany_choropleth_federal_states.rds",
+    quelle = "Quelle"
+) {
+
+  # Text vorbereiten
+  titel_wrapped <- stringr::str_wrap(titel, width = 60)
+  titel_wrapped <- gsub("\n", "<br>", titel_wrapped)
+
+  # Download vorbereiten
+
+  df_json <- jsonlite::toJSON(
+    df[, c(regio_col, value_col), drop = FALSE],
+    dataframe = "rows",
+    auto_unbox = TRUE,
+    na = "null"
+  )
+
+
+  titel_js  <- jsonlite::toJSON(titel, auto_unbox = TRUE)
+  quelle_js <- jsonlite::toJSON(quelle, auto_unbox = TRUE)
+
+  # Geodaten mit df verbinden
+  geodata <- readRDS(paste0("data/", map))
+  if(map == "germany_choropleth_landkreise.rds"){
+    map_data <-
+      sf::st_as_sf(dplyr::left_join(
+        tibble::tibble(geodata),
+        df,
+        by = c("AGS" = "landkreis_nummer")
+      )) %>%
+      dplyr::rename("NAME_1" = "AGS") %>%
+      sf::st_simplify()
+  }else if(map == "europe_choropleth.rds"){
+    map_data <-
+      sf::st_as_sf(dplyr::left_join(
+        tibble::tibble(geodata),
+        df,
+        by = c("CNTR_ID" = "alpha2")
+      )) %>%
+      dplyr::rename("NAME_1" = "CNTR_ID") %>%
+      sf::st_simplify()
+  }else  if(map == "world_choropleth.rds"){
+    map_data <-
+      sf::st_as_sf(dplyr::left_join(
+        tibble::tibble(geodata),
+        df,
+        by = c("iso_a2_eh" = "alpha2")
+      )) %>%
+      dplyr::rename("NAME_1" = "iso_a2_eh") %>%
+      sf::st_simplify()
+    }else{
+    map_data <-
+      sf::st_as_sf(dplyr::left_join(
+        tibble::tibble(geodata),
+        df,
+        by = c("NAME_1" = regio_col)
+      )) %>%
+      sf::st_simplify()
+  }
+
+
+  map_values <- map_data[!is.na(map_data[[value_col]]), , drop = FALSE]
+  map_na     <- map_data[is.na(map_data[[value_col]]), , drop = FALSE]
+
+  # Plot erzeugen
+  p <- plotly::plot_ly(
+    hoverinfo = "text",
+    hoveron = "fills"
+  )
+
+  # Werte-Trace
+  if (nrow(map_values) > 0) {
+    p <- p |>
+      plotly::add_sf(
+        data = map_values,
+        split = ~NAME_1,
+        color = as.formula(paste0("~`", value_col, "`")),
+        colors = c(mincolor, maxcolor),
+        zmin = cmin,
+        zmax = cmax,
+        alpha = 1,
+        stroke = I("#FAFAFA"),
+        text = ~tooltip,
+        hoverinfo = "text",
+        hoveron = "fills",
+        showlegend = FALSE
+      )
+  }
+
+  # NA-Trace grau
+  if (nrow(map_na) > 0) {
+    map_na[[".na_value"]] <- 1
+
+    p <- p |>
+      plotly::add_sf(
+        data = map_na,
+        split = ~NAME_1,
+        color = ~.na_value,
+        colors = c(na_color, na_color),
+        zmin = cmin,
+        zmax = cmax,
+        alpha = 1,
+        stroke = I("#FAFAFA"),
+        text = "fehlender Wert",
+        hoverinfo = "text",
+        hoveron = "fills",
+        showlegend = FALSE,
+        showscale = FALSE,
+        inherit = FALSE
+      )
+  }
+  p <- p |>
+    plotly::style(
+      hoverlabel = list(
+        bgcolor = "white",
+        font = list(size = 12),
+        zmin = cmin,
+        zmax = cmax,
+        traces = 1
+      )
+    ) |>
+    plotly::layout(
+      title = list(
+        text = titel_wrapped,
+        x = 0.5,
+        xanchor = "center",
+        font = list(
+          family = "Calibri, sans-serif",
+          size = 20,
+          color = "black"
+        )
+      ),
+
+      geo = list(
+        projection = list(type = "mercator"),
+        fitbounds = "locations",
+        visible = FALSE,
+        showcountries = FALSE,
+        showcoastlines = FALSE,
+        showland = FALSE,
+        showocean = FALSE,
+        showlakes = FALSE,
+        showrivers = FALSE,
+        showframe = FALSE,
+        bgcolor = "rgba(0,0,0,0)",
+        domain = list(
+          x = c(0, 1),
+          y = c(0.02, 1)
+        )
+      ),
+
+      margin = list(t = 40, b = 80, l = 0, r = 0),
+
+      annotations = list(
+        list(
+          text = quelle,
+          x = 0.02,
+          y = -0.1,
+          xref = "paper",
+          yref = "paper",
+          xanchor = "left",
+          yanchor = "top",
+          showarrow = FALSE,
+          font = list(size = 11, color = "gray", family = "Calibri Regular")
+        )
+      )
+    ) |>
+    plotly::colorbar(
+      title = "",
+      orientation = "h",
+      x = 0.5,
+      xanchor = "center",
+      y = -0.015,
+      yanchor = "top",
+      len = 0.35,
+      thickness = 8,
+      tickfont = list(size = 10),
+      borderwidth = 0,
+      outlinewidth = 0
+    ) |>
+    plotly::config(
+      displaylogo = FALSE,
+      modeBarButtonsToRemove = c(
+        "zoom2d", "pan2d", "select2d", "lasso2d",
+        "hoverClosestCartesian", "hoverCompareCartesian",
+        "toggleSpikelines", "zoomInGeo", "zoomOutGeo",
+        "autoScale2d", "resetScale2d", "resetGeo", "hoverClosestGeo",
+        "zoomInMapbox", "zoomOutMapbox", "resetViewMapbox",
+        "resetViews", "zoom3d", "pan3d", "resetCameraDefault3d",
+        "resetCameraLastSave3d"
+        #, "zoomin", "zoomout"
+      ),
+
+      modeBarButtonsToAdd = list(
+        list(
+          name = "Download CSV",
+          icon = list(
+            path = "M16,2H8C6.9,2,6,2.9,6,4v16c0,1.1,0.9,2,2,2h8c1.1,0,2-0.9,2-2V4C18,2.9,17.1,2,16,2z",
+            width = 24,
+            height = 24
+          ),
+          click = htmlwidgets::JS(
+            paste0("
+              function(gd) {
+                var rows = ", df_json, ";
+                var date = new Date().toISOString().slice(0,10);
+                var filename = 'export_' + date + '.csv';
+
+                if (!rows.length) return;
+
+                var cols = Object.keys(rows[0]);
+                var csv = cols.join(';') + '\\n';
+
+                rows.forEach(function(row) {
+                  var values = cols.map(function(col) {
+                    var value = row[col];
+                    if (value == null) return '';
+                    return String(value);
+                  });
+                  csv += values.join(';') + '\\n';
+                });
+
+                var blob = new Blob([csv], { type: 'text/csv' });
+                var link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = filename;
+                link.click();
+              }
+            ")
+          )
+        ),
+
+        list(
+          name = "Download Daten für KI als txt",
+          icon = list(
+            path = "M14,2H6C4.9,2,4,2.9,4,4v16c0,1.1,0.9,2,2,2h12c1.1,0,2-0.9,2-2V8",
+            width = 24,
+            height = 24
+          ),
+          click = htmlwidgets::JS(
+            paste0("
+              function(gd) {
+                var rows = ", df_json, ";
+                var titel = ", titel_js, ";
+                var quelle = ", quelle_js, ";
+
+                var text = '';
+                text += 'Titel: ' + titel + '\\n';
+                text += 'Quelle: ' + quelle + '\\n\\n';
+
+                if (!rows.length) return;
+
+                var cols = Object.keys(rows[0]);
+                text += cols.join('\\t') + '\\n';
+
+                rows.forEach(function(row) {
+                  var values = cols.map(function(col) {
+                    return row[col] == null ? '' : String(row[col]);
+                  });
+                  text += values.join('\\t') + '\\n';
+                });
+
+                var blob = new Blob([text], { type: 'text/plain' });
+                var link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = 'export.txt';
+                link.click();
+              }
+            ")
+          )
+        )
+      )
+    )
+
+  return(p)
+}
 
 mapbuilder <- function(df, joinby, name, tooltip,titel, mincolor, maxcolor, prop = FALSE, wert = FALSE, map = NULL, landkarten = FALSE, states=NULL,  quelle="Quelle", reg = "Deutschland"){
 

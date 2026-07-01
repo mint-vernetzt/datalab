@@ -153,7 +153,7 @@ mod_schule_kurse_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(plotly::plotlyOutput(ns("plot_mint_map_kurse"), height = "600px"),
+                               shinycssloaders::withSpinner(htmlOutput(ns("plot_mint_map_kurse")),
                                                             color = "#154194"),
                                shinyBS::bsPopover(id="h_schule_fach_1", title = "",
                                                   content = paste0("Der Anteil und die Anzahl von &quotMINT&quot vs. &quotNicht-MINT&quot bezieht sich auf die Belegungszahlen in den Grund- und Leistungskursen der Oberstufe. Die möglichen Belegungen sind dabei Vorgaben der Bundesländer", "<br> <br> In Bayern sind Deutsch & Mathematik vergleichbar mit Leistungskursen, weiter Kurse können, müssen aber nicht demselben Niveau entsprechen.", "<br><br> Mit Grundkursen sind nach der Definition der KMK Fächer mit bis zu 3 Wochenstunden gemeint.<br> Mit Leistungskursen Fächer mit mindestens 4 Wochenstunden."),
@@ -234,7 +234,7 @@ mod_schule_kurse_ui <- function(id){
                                ),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(plotly::plotlyOutput(ns("plot_map_kurse"), height = "600px"),
+                               shinycssloaders::withSpinner(uiOutput(ns("plot_map_kurse")),
                                                             color = "#154194"),
                                shinyBS::bsPopover(id="h_schule_fach_1l", title = "",
                                                   content = paste0("Der Anteil und die Anzahl von &quotMINT&quot vs. &quotNicht-MINT&quot bezieht sich auf die Belegungszahlen in den Grund- und Leistungskursen der Oberstufe.", "<br><br> Mit Grundkursen sind nach der Definition der KMK Fächer mit bis zu 3 Wochenstunden gemeint.<br> Mit Leistungskursen Fächer mit mindestens 4 Wochenstunden."),
@@ -568,8 +568,24 @@ mod_schule_kurse_server <- function(id, r){
     })
 
 
-    output$plot_mint_map_kurse <- plotly::renderPlotly({
-      kurse_mint_map(r)
+    output$plot_mint_map_kurse <- renderUI({
+
+      plots <-  kurse_mint_map(r)
+
+      if(length(plots) >2){
+        plots
+      }else{
+        fluidRow(
+          column(
+            width = 6,
+            plots[1]
+          ),
+          column(
+            width = 6,
+            plots[2]
+          )
+        )
+      }
 
     })
 
@@ -577,8 +593,23 @@ mod_schule_kurse_server <- function(id, r){
 
     # Box 2 -  M-I-N-T ----
 
-    output$plot_map_kurse <- plotly::renderPlotly({
-      kurse_map(r)
+    output$plot_map_kurse <-renderUI({
+      plots <- kurse_map(r)
+
+      if(length(plots) > 4){
+        plots
+      }else{
+        fluidRow(
+          column(
+            width = 6,
+            plots[1]
+          ),
+          column(
+            width = 6,
+            plots[2]
+          )
+        )
+      }
     })
 
     ## Karte Fächer
