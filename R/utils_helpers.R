@@ -3147,6 +3147,7 @@ mapbuilder_plotly <- function(
     mincolor = "#f4f5f6",
     maxcolor = "#b16fab",
     na_color = "#b2b6ba",
+    color_cats = NULL,
     cmin = NULL,
     cmax = NULL,
     map = "germany_choropleth_federal_states.rds",
@@ -3213,53 +3214,78 @@ mapbuilder_plotly <- function(
   map_values <- map_data[!is.na(map_data[[value_col]]), , drop = FALSE]
   map_na     <- map_data[is.na(map_data[[value_col]]), , drop = FALSE]
 
-  # Plot erzeugen
-  p <- plotly::plot_ly(
-    hoverinfo = "text",
-    hoveron = "fills"
-  )
+  # Möglichkeit kategorialer Karte
+  if(!is.null(color_cats)){
 
-  # Werte-Trace
-  if (nrow(map_values) > 0) {
-    p <- p |>
+    plotly::plot_ly(
+      hoverinfo = "text",
+      hoveron = "fills"
+    ) |>
       plotly::add_sf(
-        data = map_values,
-        split = ~NAME_1,
-        color = as.formula(paste0("~`", value_col, "`")),
-        colors = c(mincolor, maxcolor),
-        zmin = cmin,
-        zmax = cmax,
+        data = map_data,
+        split = as.formula(paste0("~`", group_col, "`")),
+        color = as.formula(paste0("~`", group_col, "`")),
+        colors = colors,
         alpha = 1,
         stroke = I("#FAFAFA"),
         text = ~tooltip,
         hoverinfo = "text",
         hoveron = "fills",
-        showlegend = FALSE
+        showlegend = TRUE
       )
+
+  }else{
+
+    # Plot erzeugen
+    p <- plotly::plot_ly(
+      hoverinfo = "text",
+      hoveron = "fills"
+    )
+
+    # Werte-Trace
+    if (nrow(map_values) > 0) {
+      p <- p |>
+        plotly::add_sf(
+          data = map_values,
+          split = ~NAME_1,
+          color = as.formula(paste0("~`", value_col, "`")),
+          colors = c(mincolor, maxcolor),
+          # zmin = cmin,
+          # zmax = cmax,
+          alpha = 1,
+          stroke = I("#FAFAFA"),
+          text = ~tooltip,
+          hoverinfo = "text",
+          hoveron = "fills",
+          showlegend = FALSE
+        )
+    }
+
+    # NA-Trace grau
+    if (nrow(map_na) > 0) {
+      map_na[[".na_value"]] <- 1
+
+      p <- p |>
+        plotly::add_sf(
+          data = map_na,
+          split = ~NAME_1,
+          color = ~.na_value,
+          colors = c(na_color, na_color),
+          # zmin = cmin,
+          # zmax = cmax,
+          alpha = 1,
+          stroke = I("#FAFAFA"),
+          text = "fehlender Wert",
+          hoverinfo = "text",
+          hoveron = "fills",
+          showlegend = FALSE,
+          inherit = FALSE
+        )
+    }
+
   }
 
-  # NA-Trace grau
-  if (nrow(map_na) > 0) {
-    map_na[[".na_value"]] <- 1
 
-    p <- p |>
-      plotly::add_sf(
-        data = map_na,
-        split = ~NAME_1,
-        color = ~.na_value,
-        colors = c(na_color, na_color),
-        zmin = cmin,
-        zmax = cmax,
-        alpha = 1,
-        stroke = I("#FAFAFA"),
-        text = "fehlender Wert",
-        hoverinfo = "text",
-        hoveron = "fills",
-        showlegend = FALSE,
-        showscale = FALSE,
-        inherit = FALSE
-      )
-  }
   p <- p |>
     plotly::style(
       hoverlabel = list(

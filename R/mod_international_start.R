@@ -403,28 +403,30 @@ mod_international_start_ui <- function(id){
                                                            trigger = "hover"),
                                         tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_beruf_international_4")
                                       )
-                           ),tabPanel("MINT-Anfänger:innen und -Absolvent:innen", br(),
-
-
-                                      shiny::sidebarPanel(
-                                        width = 3,
-                                     ####   p("Was was hier nochmal der Titel? "),
-                                        mod_international_arbeitsmarkt_vergleich_ui("international_arbeitsmarkt_vergleich_1"),
-
-                                      ),
-                                      shiny::mainPanel(
-                                        width = 9,
-                                        shinycssloaders::withSpinner(highcharter::highchartOutput("plot_international_arbeitsmarkt_vergleiche_1"),
-                                                                     color = "#154194"),
-
-                                        shinyBS::bsPopover(id = "h_beruf_international_ho", title = "",
-                                                           content = paste0("Aufgrund unterschiedlicher Definitionen von &quotMINT&quot zwischen den datengebenden Organisationen können die Zahlen voneinander abweichen. Näheres dazu unter &quotHinweise und Datenquellen&quot.", "<br><br>In den OECD-Daten ist für die Zuordnung zu &quotMINT&quot ausschließlich eine Ausbildung oder ein Studium in MINT entscheidend. Der tatsächlich ausgeübte Beruf wird nicht betrachtet"),
-                                                           placement = "top",
-                                                           trigger = "hover"),
-                                        tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_beruf_international_ho")
-
-                                      )
-                           )
+                           ),
+      # Die Funktion ist grade nicht mehr da und kann deshalb gar nicht angezeigt werden.
+      # tabPanel("MINT-Anfänger:innen und -Absolvent:innen", br(),
+      #
+      #
+      #                                 shiny::sidebarPanel(
+      #                                   width = 3,
+      #                                ####   p("Was was hier nochmal der Titel? "),
+      #                                   mod_international_arbeitsmarkt_vergleich_ui("international_arbeitsmarkt_vergleich_1"),
+      #
+      #                                 ),
+      #                                 shiny::mainPanel(
+      #                                   width = 9,
+      #                                   shinycssloaders::withSpinner(plotly::plotlyOutput("plot_international_arbeitsmarkt_vergleiche_1"),
+      #                                                                color = "#154194"),
+      #
+      #                                   shinyBS::bsPopover(id = "h_beruf_international_ho", title = "",
+      #                                                      content = paste0("Aufgrund unterschiedlicher Definitionen von &quotMINT&quot zwischen den datengebenden Organisationen können die Zahlen voneinander abweichen. Näheres dazu unter &quotHinweise und Datenquellen&quot.", "<br><br>In den OECD-Daten ist für die Zuordnung zu &quotMINT&quot ausschließlich eine Ausbildung oder ein Studium in MINT entscheidend. Der tatsächlich ausgeübte Beruf wird nicht betrachtet"),
+      #                                                      placement = "top",
+      #                                                      trigger = "hover"),
+      #                                   tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_beruf_international_ho")
+      #
+      #                                 )
+      #                      )
                )
                )
              )
@@ -695,18 +697,12 @@ mod_international_start_server <- function(id, r){
 
     # tab 5
 
-    # output$plot_international_arbeitsmarkt_vergleiche_1 <- highcharter::renderHighchart({
+    # output$plot_international_arbeitsmarkt_vergleiche_1 <- plotly::renderPlotly({
     #
-    #   plot <- plot_international_arbeitsmarkt_vergleiche(r)
+    #  plot_international_arbeitsmarkt_vergleiche(r)
     #
-    #   # r$plot_international_arbeitsmarkt_vergleiche_1 <- plot
-    #   # r$plot_international_arbeitsmarkt_vergleiche_1_title <- get_plot_title(
-    #   #   plot = r$plot_international_arbeitsmarkt_vergleiche_1
-    #   # )
-    #
-    #   plot
     # })
-    #
+
 
 
     # tab 5

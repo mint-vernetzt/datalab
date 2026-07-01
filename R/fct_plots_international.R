@@ -191,8 +191,6 @@ plot_international_map <- function(r) {
 
   } else if (label_m == "OECD") {
 
-    map_selection <- readRDS("data/map_data/map_selection_international.rds")
-    #map_selection <- highcharter::download_map_data(url = "custom/world", showinfo = FALSE)
 
     fach_m <- r$map_f_int_studium_oec_d
     if (is.null(fach_m)) { fach_m <- ""}
@@ -280,13 +278,14 @@ plot_international_map <- function(r) {
 
   if(label_m == "OECD"){
     df_insp1$wert_absolut_display <- prettyNum(df_insp1$wert_absolut, big.mark = ".", decimal.mark = ",")
+    df_insp1$display_wert <- prettyNum(df_insp1$wert, big.mark = ".", decimal.mark = ",")
 
     df_insp1 <- df_insp1 %>%
       dplyr::mutate(
         tooltip = paste0(
           "<b>", land, "</b><br>",
-          "Anteil: ", wert_absolut_display, " %<br>",
-          "Anzahl: ", display_wert
+          "Anteil: ", display_wert, " % <br>",
+          "Anzahl: ", wert_absolut_display
         )
       )
   }else{
@@ -303,7 +302,7 @@ plot_international_map <- function(r) {
 
   if(label_m == "OECD"){
     df7 <- df_insp1 %>%
-      dplyr::select(land, jahr, fach, wert, display_wert, wert_absolut_display) %>%
+      dplyr::select(land, jahr, fach, wert, display_wert, wert_absolut_display, tooltip) %>%
       dplyr::inner_join(countries_names, by = "land") %>%
       dplyr::mutate(alpha2 = toupper(alpha2))
   }else{
@@ -324,11 +323,11 @@ plot_international_map <- function(r) {
   if(label_m == "Weltweit"){
     title_m <- paste0("Anteil von Studienabsolvent:innen in ", fach_help, " an allen Studienabsolvent:innen ",
                       timerange, " weltweit (UNESCO)")
-    map <- "europe_choropleth.rds"
+    map <- "world_choropleth.rds"
   }else{if(label_m == "OECD"){
     title_m <- paste0("Anteil von Studierenden in ", fach_help, " an allen Studierenden ",
                       timerange, " in den OECD-Staaten")
-    map <- "europe_choropleth.rds"
+    map <- "world_choropleth.rds"
   }else{
     title_m <- paste0("Anteil von Studierenden in ", fach_help, " an allen Studierenden ",
                       timerange, " in Europa")
@@ -337,17 +336,12 @@ plot_international_map <- function(r) {
   }
 
 
-  df <- df7
-  titel <- title_m
-
   quelle <- "Quelle: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt."
 
-  out1 <- mapbuilder_plotly(df,
+  out1 <- mapbuilder_plotly(df7,
                             value_col = "wert",
                             regio_col = "land",
-                            titel = titel,
-                            mincolor = "#f4f5f6",
-                            maxcolor = "#154194",
+                            titel = title_m,
                             quelle=quelle,
                             map = map)
 
@@ -620,9 +614,8 @@ plot_international_map_fem <- function(r){
     map <- "world_choropleth.rds"
 
     # plot hover vorbereiten
-    hoverplot <- "{point.land} <br> Anteil: {point.display_rel}% <br> Anzahl: {point.display_total}"
 
-    df_insp1 <- df_insp1 %>%
+    map_data_1 <- map_data_1 %>%
       dplyr::mutate(
         tooltip = paste0(
           "<b>", land, "</b><br>",
@@ -634,16 +627,12 @@ plot_international_map_fem <- function(r){
 
 
     # plot
-##################
 
-
-      df <- map_data_1
-      titel <-title_dyn
       mincolor <- "#f4f5f6"
       maxcolor <- "#154194"
       quelle <- "Quelle der Daten: Eurostat, 2023; OECD, 2023, freier Download, eigene Berechnungen durch MINTvernetzt."
-      out1 <- mapbuilder_plotly(df,
-                         titel = titel,
+      out1 <- mapbuilder_plotly(map_data_1,
+                         titel = title_dyn,
                          value_col = "wert",
                          regio_col = "land",
                          mincolor = mincolor,
@@ -1636,6 +1625,10 @@ plot_international_schule_item <- function(r) {
     group_col = c("#66cbaf", "#D0A9CD", "#EFE8E6")
   )
 
+  group_col = c("#66cbaf" = "Kein signifikater Unterschied zwischen Jungen und Mädchen",
+                "#D0A9CD" = "Jungen schneiden signifikant besser ab als Mädchen",
+                "#EFE8E6" = "Mädchen schneiden signifikant besser ab als Jungen")
+
   # reshape long to wide for later merge
   wert_dt <- df %>%
     dplyr::select(land, indikator, wert) %>%
@@ -1665,87 +1658,105 @@ plot_international_schule_item <- function(r) {
     dplyr::filter(!is.na(count))
 
   # Farbe für Deutschland
-  plot_data$group_col <- ifelse(plot_data$land == "Deutschland" & plot_data$group == "Jungen signifikant besser", "#703D6B", plot_data$group_col )
-  plot_data$group_col <- ifelse(plot_data$land == "Deutschland" & plot_data$group == "Mädchen signifikant besser", "#9D7265", plot_data$group_col )
-  plot_data$group_col <- ifelse(plot_data$land == "Deutschland" & plot_data$group == "kein signifikanter Unterschied", "#008F68", plot_data$group_col )
+  # plot_data$group_col <- ifelse(plot_data$land == "Deutschland" & plot_data$group == "Jungen signifikant besser", "#703D6B", plot_data$group_col )
+  # plot_data$group_col <- ifelse(plot_data$land == "Deutschland" & plot_data$group == "Mädchen signifikant besser", "#9D7265", plot_data$group_col )
+  # plot_data$group_col <- ifelse(plot_data$land == "Deutschland" & plot_data$group == "kein signifikanter Unterschied", "#008F68", plot_data$group_col )
 
 
+  plot_data <- plot_data %>%
+    dplyr::mutate(
+      tooltip = paste0(
+        "<b>", land, "</b><br>",
+        "Test-Punktzahl<br>",
+        " Jungen: {point.wert_Jungen}<br>",
+        " Mädchen: {point.wert_Mädchen}"
+      )
+    )
 
 
   titel <- paste0("Geschlechtsunterschiede der 4.-Klässler:innen im ",
                   fach_m, "-Kompetenztest von ",
                   label_m, " (", timerange, ")")
-  out <- highcharter::hchart(
-    plot_data,
-    "item",
-    highcharter::hcaes(
-      name = group,
-      y = count,
-      label = group,
-      color = group_col),
-    name = "group",
-    showInLegend = FALSE
-  ) %>%
-    highcharter::hc_caption(
-      text = paste0(plot_legend_data$legend_text, collapse = "<br>"),
-      useHTML = TRUE
-    ) %>%
-    highcharter::hc_tooltip(
-      pointFormat = paste0("{point.land} <br>",
-                           "Test-Punktzahl<br>",
-                           " Jungen: {point.wert_Jungen}<br>",
-                           " Mädchen: {point.wert_Mädchen}")) %>%
-    highcharter::hc_title(
-      text = paste0("Geschlechtsunterschiede der 4.-Klässler:innen im ",
-                    fach_m, "-Kompetenztest von ",
-                    label_m, " (", timerange, ")"),
-      margin = 10,
-      align = "center",
-      style = list(color = "black",
-                   useHTML = TRUE,
-                   fontFamily = "Calibri Regular",
-                   fontSize = "20px")
-    ) %>%
-    highcharter::hc_subtitle(
-      text= paste0("Jeder Punkt repräsentiert ein Land.", br(),
-      "Deutschland ist als dunkler hervorgehoben."),
-      align = "left"
-    )%>%
-    highcharter::hc_chart(
-      style = list(fontFamily = "Calibri Regular")
-    ) %>%
-    highcharter::hc_size(580, 450) %>%
-    highcharter::hc_caption(text = "    Quelle der Daten: IEA, 2023; OECD, 2023, freier Download, eigene Berechnungen durch MINTvernetzt.",
-                            style = list(fontSize = "11px", color = "gray")) %>%
-    highcharter::hc_credits(enabled = FALSE) %>%
-    highcharter::hc_exporting(enabled = TRUE,
-                              buttons = list(
-                                contextButton = list(
-                                  menuItems = list("downloadPNG", "downloadCSV",
-                                                   list(
-                                                     text = "Daten für GPT",
-                                                     onclick = htmlwidgets::JS(sprintf(
-                                                       "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
 
-     var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle der Daten: IEA, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.';
+  out <- mapbuilder_plotly(plot_data,
+                            value_col = "group",
+                            regio_col = "land",
+                           color_cats = group_col,
+                            titel = titel,
+                            quelle= "Quelle: IEA, 2023, freier Download, eigene Berechnungen durch MINTvernetzt.",
+                            map = "world_choropleth.rds")
 
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-   }", gsub("'", "\\\\'", titel),gsub("'", "\\\\'", titel)))))
-                                )
-                              )
-    )
+  # out <- highcharter::hchart(
+  #   plot_data,
+  #   "item",
+  #   highcharter::hcaes(
+  #     name = group,
+  #     y = count,
+  #     label = group,
+  #     color = group_col),
+  #   name = "group",
+  #   showInLegend = FALSE
+  # ) %>%
+  #   highcharter::hc_caption(
+  #     text = paste0(plot_legend_data$legend_text, collapse = "<br>"),
+  #     useHTML = TRUE
+  #   ) %>%
+  #   highcharter::hc_tooltip(
+  #     pointFormat = paste0("{point.land} <br>",
+  #                          "Test-Punktzahl<br>",
+  #                          " Jungen: {point.wert_Jungen}<br>",
+  #                          " Mädchen: {point.wert_Mädchen}")) %>%
+  #   highcharter::hc_title(
+  #     text = paste0("Geschlechtsunterschiede der 4.-Klässler:innen im ",
+  #                   fach_m, "-Kompetenztest von ",
+  #                   label_m, " (", timerange, ")"),
+  #     margin = 10,
+  #     align = "center",
+  #     style = list(color = "black",
+  #                  useHTML = TRUE,
+  #                  fontFamily = "Calibri Regular",
+  #                  fontSize = "20px")
+  #   ) %>%
+  #   highcharter::hc_subtitle(
+  #     text= paste0("Jeder Punkt repräsentiert ein Land.", br(),
+  #     "Deutschland ist als dunkler hervorgehoben."),
+  #     align = "left"
+  #   )%>%
+  #   highcharter::hc_chart(
+  #     style = list(fontFamily = "Calibri Regular")
+  #   ) %>%
+  #   highcharter::hc_size(580, 450) %>%
+  #   highcharter::hc_caption(text = "    Quelle der Daten: IEA, 2023; OECD, 2023, freier Download, eigene Berechnungen durch MINTvernetzt.",
+  #                           style = list(fontSize = "11px", color = "gray")) %>%
+  #   highcharter::hc_credits(enabled = FALSE) %>%
+  #   highcharter::hc_exporting(enabled = TRUE,
+  #                             buttons = list(
+  #                               contextButton = list(
+  #                                 menuItems = list("downloadPNG", "downloadCSV",
+  #                                                  list(
+  #                                                    text = "Daten für GPT",
+  #                                                    onclick = htmlwidgets::JS(sprintf(
+  #                                                      "function () {
+  #    var date = new Date().toISOString().slice(0,10);
+  #    var chartTitle = '%s'.replace(/\\s+/g, '_');
+  #    var filename = chartTitle + '_' + date + '.txt';
+  #
+  #    var data = 'Titel: %s\\n' + this.getCSV();
+  #    data += '\\nQuelle der Daten: IEA, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.';
+  #
+  #    var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+  #    if (window.navigator.msSaveBlob) {
+  #      window.navigator.msSaveBlob(blob, filename);
+  #    } else {
+  #      var link = document.createElement('a');
+  #      link.href = URL.createObjectURL(blob);
+  #      link.download = filename;
+  #      link.click();
+  #    }
+  #  }", gsub("'", "\\\\'", titel),gsub("'", "\\\\'", titel)))))
+  #                               )
+  #                             )
+  #   )
 
 
 
