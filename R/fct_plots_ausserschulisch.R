@@ -1297,7 +1297,7 @@ skf_personal <- function(r){
       dplyr::select(-bereich) %>%
       dplyr::group_by(indikator, jahr) %>%
       dplyr::summarise(wert = sum(wert)) %>%
-      dplyr::ungroup() %>%
+      dplyr::ungroup()
 
     df$einrichtung <- "Alle Einrichtungen"
   }else{

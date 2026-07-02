@@ -1625,10 +1625,6 @@ plot_international_schule_item <- function(r) {
     group_col = c("#66cbaf", "#D0A9CD", "#EFE8E6")
   )
 
-  group_col = c("#66cbaf" = "Kein signifikater Unterschied zwischen Jungen und Mädchen",
-                "#D0A9CD" = "Jungen schneiden signifikant besser ab als Mädchen",
-                "#EFE8E6" = "Mädchen schneiden signifikant besser ab als Jungen")
-
   # reshape long to wide for later merge
   wert_dt <- df %>%
     dplyr::select(land, indikator, wert) %>%
@@ -1673,18 +1669,118 @@ plot_international_schule_item <- function(r) {
       )
     )
 
+  plot_data <- plot_data %>%
+  dplyr::inner_join(countries_names, by = "land") %>%
+    dplyr::mutate(alpha2 = toupper(alpha2))
+
 
   titel <- paste0("Geschlechtsunterschiede der 4.-Klässler:innen im ",
                   fach_m, "-Kompetenztest von ",
                   label_m, " (", timerange, ")")
 
-  out <- mapbuilder_plotly(plot_data,
-                            value_col = "group",
-                            regio_col = "land",
-                           color_cats = group_col,
-                            titel = titel,
-                            quelle= "Quelle: IEA, 2023, freier Download, eigene Berechnungen durch MINTvernetzt.",
-                            map = "world_choropleth.rds")
+
+  geodata <- readRDS(paste0("data/", "world_choropleth.rds"))
+
+  plot_data <- sf::st_as_sf(dplyr::inner_join(
+      tibble::tibble(geodata),
+      plot_data,
+      by = c("iso_a2_eh" = "alpha2")
+    )) |>
+      dplyr::rename(NAME_1 = iso_a2_eh) |>
+      sf::st_simplify()
+
+    plot_data$group[is.na(plot_data$group)] <- "Kein Wert"
+
+    cats <- sort(unique(plot_data$group))
+
+    group_col <- c(
+      "kein signifikanter Unterschied" = "#66cbaf",
+      "Jungen signifikant besser" = "#D0A9CD",
+      "Mädchen signifikant besser" = "#EFE8E6",
+      "Kein Wert" = "#b2b6ba"
+    )
+
+    titel_wrapped <- stringr::str_wrap(titel, width = 60)
+    titel_wrapped <- gsub("\n", "<br>", titel_wrapped)
+
+    plotly::plot_ly(
+      hoverinfo = "text",
+      hoveron = "fills"
+    ) |>
+      plotly::add_sf(
+        data = plot_data,
+        split = ~group,
+        color = ~group,
+        colors = group_col,
+        alpha = 1,
+        stroke = I("#FAFAFA"),
+        text = ~tooltip,
+        hoverinfo = "text",
+        hoveron = "fills",
+        showlegend = TRUE
+      ) |>
+      plotly::layout(
+        title = list(
+          text = titel_wrapped,
+          x = 0.5,
+          xanchor = "center",
+          font = list(family = "Calibri, sans-serif", size = 20, color = "black")
+        ),
+        geo = list(
+          projection = list(type = "natural earth"),
+          fitbounds = "locations",
+          visible = FALSE,
+          showcountries = FALSE,
+          showcoastlines = FALSE,
+          showland = FALSE,
+          showocean = FALSE,
+          showlakes = FALSE,
+          showrivers = FALSE,
+          showframe = FALSE,
+          bgcolor = "rgba(0,0,0,0)"
+        ),
+        margin = list(t = 40, b = 80, l = 0, r = 0),
+        legend = list(
+          orientation = "h",
+          x = 0.5,
+          xanchor = "center",
+          y = -0.03,
+          yanchor = "top",
+          font = list(size = 10)
+        ),
+        annotations = list(
+          list(
+            text = "Quelle",
+            x = 0.02,
+            y = -0.1,
+            xref = "paper",
+            yref = "paper",
+            xanchor = "left",
+            yanchor = "top",
+            showarrow = FALSE,
+            font = list(size = 11, color = "gray", family = "Calibri Regular")
+          )
+        )
+      ) |>
+      plotly::config(
+        displaylogo = FALSE,
+        modeBarButtonsToRemove = c(
+          "zoom2d", "pan2d", "select2d", "lasso2d",
+          "hoverClosestCartesian", "hoverCompareCartesian",
+          "toggleSpikelines",
+          "zoomInGeo", "zoomOutGeo", "resetGeo", "hoverClosestGeo",
+          "autoScale2d", "resetScale2d"
+        )
+      )
+
+
+  # out <- mapbuilder_plotly(plot_data,
+  #                           value_col = "group",
+  #                           regio_col = "land",
+  #                          color_cats = group_col,
+  #                           titel = titel,
+  #                           quelle= "Quelle: IEA, 2023, freier Download, eigene Berechnungen durch MINTvernetzt.",
+  #                           map = "world_choropleth.rds")
 
   # out <- highcharter::hchart(
   #   plot_data,

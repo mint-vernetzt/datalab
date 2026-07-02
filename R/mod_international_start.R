@@ -125,30 +125,30 @@ mod_international_start_ui <- function(id){
                            ),
         # tab 2
 
-                           tabPanel("MINT-Kompetenz von Jungen und Mädchen", br(),
-
-
-                                    shiny::sidebarPanel(
-                                      width = 3,
-                                      #p("LOREM"),
-
-                                      mod_international_schule_item_ui("international_schule_item_1"),
-                                      br(),br(),
-
-                                    ),
-                                    shiny::mainPanel(
-                                      width = 9,
-                                      shinycssloaders::withSpinner(htmlOutput(ns("plot_international_schule_item_1")),
-                                                                   color = "#154194"),
-
-
-                                      shinyBS::bsPopover(id="h_international_schule_2", title="",
-                                                         content = paste0("Test-Leistungen der Schüler:innen werden nur dann als unterschiedlich dargestellt, wenn das mittlere Ergebnis der Mädchen im Vergleich zu den Jungen signifikant unterschiedlich ist.", "<br> <br> In den uns vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden."),
-                                                         placement = "top",
-                                                         trigger = "hover"),
-                                      tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_schule_2")
-                                    )
-                           ),
+                           # tabPanel("MINT-Kompetenz von Jungen und Mädchen", br(),
+                           #
+                           #
+                           #          shiny::sidebarPanel(
+                           #            width = 3,
+                           #            #p("LOREM"),
+                           #
+                           #            mod_international_schule_item_ui("international_schule_item_1"),
+                           #            br(),br(),
+                           #
+                           #          ),
+                           #          shiny::mainPanel(
+                           #            width = 9,
+                           #            shinycssloaders::withSpinner(htmlOutput(ns("plot_international_schule_item_1")),
+                           #                                         color = "#154194"),
+                           #
+                           #
+                           #            shinyBS::bsPopover(id="h_international_schule_2", title="",
+                           #                               content = paste0("Test-Leistungen der Schüler:innen werden nur dann als unterschiedlich dargestellt, wenn das mittlere Ergebnis der Mädchen im Vergleich zu den Jungen signifikant unterschiedlich ist.", "<br> <br> In den uns vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden."),
+                           #                               placement = "top",
+                           #                               trigger = "hover"),
+                           #            tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_schule_2")
+                           #          )
+                           # ),
         # tab 3
 
                            tabPanel("MINT-Kompetenz im Gruppenvergleich", br(),

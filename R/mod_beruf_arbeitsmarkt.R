@@ -1003,17 +1003,24 @@ mod_beruf_arbeitsmarkt_server <- function(id, r){
     # tab 3
 
     output$plot_arbeitsmarkt_wahl_gender <- renderUI({
+
       plots <- arbeitsmarkt_wahl_gender(r)
-      fluidRow(
-        column(
-          width = 6,
-          plots[1]
-        ),
-        column(
-          width = 6,
-          plots[2]
+
+      if(length(plots) > 2){
+        plots
+      }else{
+        fluidRow(
+          column(
+            width = 6,
+            plots[1]
+          ),
+          column(
+            width = 6,
+            plots[2]
+          )
         )
-      )
+      }
+
     })
 
 

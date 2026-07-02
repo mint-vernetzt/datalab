@@ -1701,7 +1701,7 @@ linebuilder_plotly <- function(
     area = NULL,
     quelle_y = -0.22
 ) {
-
+browser()
   # Umgang für leere Datensätze
   if (nrow(df) == 0) {
 
@@ -3147,7 +3147,6 @@ mapbuilder_plotly <- function(
     mincolor = "#f4f5f6",
     maxcolor = "#b16fab",
     na_color = "#b2b6ba",
-    color_cats = NULL,
     cmin = NULL,
     cmax = NULL,
     map = "germany_choropleth_federal_states.rds",
@@ -3214,27 +3213,6 @@ mapbuilder_plotly <- function(
   map_values <- map_data[!is.na(map_data[[value_col]]), , drop = FALSE]
   map_na     <- map_data[is.na(map_data[[value_col]]), , drop = FALSE]
 
-  # Möglichkeit kategorialer Karte
-  if(!is.null(color_cats)){
-
-    plotly::plot_ly(
-      hoverinfo = "text",
-      hoveron = "fills"
-    ) |>
-      plotly::add_sf(
-        data = map_data,
-        split = as.formula(paste0("~`", group_col, "`")),
-        color = as.formula(paste0("~`", group_col, "`")),
-        colors = colors,
-        alpha = 1,
-        stroke = I("#FAFAFA"),
-        text = ~tooltip,
-        hoverinfo = "text",
-        hoveron = "fills",
-        showlegend = TRUE
-      )
-
-  }else{
 
     # Plot erzeugen
     p <- plotly::plot_ly(
@@ -3282,9 +3260,6 @@ mapbuilder_plotly <- function(
           inherit = FALSE
         )
     }
-
-  }
-
 
   p <- p |>
     plotly::style(
