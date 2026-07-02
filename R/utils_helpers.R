@@ -1701,7 +1701,7 @@ linebuilder_plotly <- function(
     area = NULL,
     quelle_y = -0.22
 ) {
-browser()
+
   # Umgang für leere Datensätze
   if (nrow(df) == 0) {
 
