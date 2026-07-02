@@ -635,7 +635,7 @@ mod_fachkraft_start_server <- function(id, r){
       plots <- plot_fachkraft_epa_item(r)
 
 
-      if (length(fach) == 2) {
+      if (length(plots) == 2) {
         fluidRow(
           column(width = 6, plots[[1]]),
           column(width = 6, plots[[2]])
@@ -654,7 +654,7 @@ mod_fachkraft_start_server <- function(id, r){
     output$plot_fachkraft_epa_bulas <- renderUI({
       plots <- plot_fachkraft_epa_bulas(r)
 
-      if (length(fach) == 2) {
+      if (length(plots) == 2) {
         fluidRow(
           column(width = 6, plots[[1]]),
           column(width = 6, plots[[2]])

@@ -533,6 +533,30 @@ plot_fachkraft_wirkhebel_analyse  <- function(r) {
 
 
 
+  #Für TXT Download
+
+  titel <- "Wie wirken sich die unten gelisteten Wirkhebel auf die Anzahl der MINT-Fachkräfte aus?"
+  quelle <- "Vorausberechnung durch IW Köln, 2024, beauftragt durch MINTvernetzt"
+  x <- "MINT-Fachkräfte"
+  y <- "Wirkhebel"
+  group <- "Szenarien"
+  gruppen_info <- paste( "basis_wert = Basis-Szenario 2022",
+        paste0("wert = Positives Szenario ", year_filter), "diff = Veränderung gegenüber Basis-Szenario",sep = "\n")
+  titel_js <- gsub("\n", " ", titel)
+  titel_js <- gsub("'", "\\\\'", titel_js)
+  quelle_js <- gsub("'", "\\\\'", quelle)
+  x_js <- gsub("'", "\\\\'", x)
+  y_js <- gsub("'", "\\\\'", y)
+  group_js <- gsub("'", "\\\\'", group)
+  gruppen_info_js <- gsub("'", "\\\\'", gruppen_info)
+  gruppen_info_js <- gsub("\n", "\\\\n", gruppen_info_js)
+
+  download_data <- uebersicht_data %>%
+    dplyr::select(wirkhebel,basis_wert,wert,diff)
+
+  df_json <- jsonlite::toJSON(download_data,dataframe = "rows",auto_unbox = TRUE,na = "null" )
+
+
 
   fig <- plotly::plot_ly(uebersicht_data, color = I("gray80")) %>%
     plotly::add_segments(
@@ -561,7 +585,14 @@ plot_fachkraft_wirkhebel_analyse  <- function(r) {
       color = I("#154194"),
       symbol = I("square"),
       size = I(50),
-      text = ~paste0("Positives Szenario für Wirkhebel ", wirkhebel, ": ", wert_txt, "<br>Zunahme der MINT-Fachkräfte seit 2022: ", diff_txt),
+      text = ~paste0(
+        "<span style='font-family:Calibri; font-size:13px;'>",
+        "Positives Szenario für Wirkhebel ", wirkhebel,
+        ": ", wert_txt,
+        "<br>Zunahme der MINT-Fachkräfte seit 2022: ",
+        diff_txt,
+        "</span>"
+      ),
       hoverinfo = "text"
     ) %>%
     plotly::layout(
@@ -583,7 +614,7 @@ plot_fachkraft_wirkhebel_analyse  <- function(r) {
         categoryarray = unique(uebersicht_data$wirkhebel)
       ),
       margin = list(l = 100, r = 50, t = 80, b = 80),
-      hoverlabel = list(bgcolor = "white", font = list(family = "Calibri Regular", size = 12,  color = "black")),
+      hoverlabel = list(bgcolor = "white", font = list(family = "Calibri Regular", size = 15,  color = "black")),
       legend = list(
         orientation = "h",
         x = 0.5,
@@ -631,9 +662,64 @@ plot_fachkraft_wirkhebel_analyse  <- function(r) {
                 a.click();
               }
             ")
-      )
+    ),
+    # TXT-Download für KI
+    list(
+      name = "Download Daten für KI als txt",
+      icon = list(
+        path = "M14,2H6C4.9,2,4,2.9,4,4v16c0,1.1,0.9,2,2,2h12c1.1,0,2-0.9,2-2V8L14,2z M14,4.5L17.5,8H14V4.5z M18,20H6V4h6v6h6V20z",
+        width = 24,
+        height = 24
+      ),
+      click = htmlwidgets::JS(sprintf("
+            function(gd) {
+              var rows = %s;
+              var date = new Date().toISOString().slice(0,10);
+              var chartTitle = '%s'.replace(/\\s+/g, '_');
+              var filename = chartTitle + '_' + date + '.txt';
+
+              if (!rows.length) return;
+
+              var cols = Object.keys(rows[0]);
+
+              var text = '';
+              text += 'Titel: %s\\n';
+              text += 'X-Achse: %s\\n';
+              text += 'Y-Achse: %s\\n';
+              text += 'Gruppe: %s\\n';
+              text += 'Gruppeninfo:\\n';
+              text += '%s\\n\\n';
+              text += 'Quelle: %s\\n\\n';
+              text += 'Daten:\\n';
+
+              text += cols.join('\\t') + '\\n';
+
+              rows.forEach(function(row) {
+                var values = cols.map(function(col) {
+                  var value = row[col];
+                  if (value === null || value === undefined) return '';
+                  return String(value);
+                });
+                text += values.join('\\t') + '\\n';
+              });
+
+              var blob = new Blob([text], { type: 'text/plain;charset=utf-8;' });
+
+              if (window.navigator.msSaveBlob) {
+                window.navigator.msSaveBlob(blob, filename);
+              } else {
+                var link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = filename;
+                link.click();
+              }
+            }
+          ", df_json, titel_js, titel_js, x_js, y_js, group_js,gruppen_info_js, quelle_js))
     )
-    )
+   )
+)
+
+
 
   hc <- fig
 
@@ -843,19 +929,19 @@ plot_fachkraft_epa_item <- function(r) {
       ),
       legend = list(
         orientation = "v",
-        x = 0.2,y = -0.15,
+        x = 0.2,y = -0.08,
         font = list(
           family = "Calibri, sans-serif",size = 12)
       ),
       margin = list(
-        t = 80,b = 120,
+        t = 80,b = 100,
         l = 20,r = 20
       ),
       annotations = list(
         list(
           text = "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
           x = 0,
-          y = -0.22,
+          y = -0.17,
           xref = "paper",
           yref = "paper",
           showarrow = FALSE,
@@ -1057,18 +1143,18 @@ plot_fachkraft_epa_item <- function(r) {
         ),
         legend = list(
           orientation = "v",
-          x = 0.2, y = -0.15,
+          x = 0.2, y = -0.08,
           font = list(
             family = "Calibri, sans-serif",size = 12)
         ),
         margin = list(
-          t = 80,b = 120,
+          t = 80,b = 100,
           l = 20,r = 20
           ),
         annotations = list(
           list(
             text = "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
-            x = 0,y = -0.22,
+            x = 0,y = -0.17,
             xref = "paper",yref = "paper",
             showarrow = FALSE,xanchor = "left",
             font = list(

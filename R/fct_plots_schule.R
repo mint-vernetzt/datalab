@@ -1477,6 +1477,33 @@ kurse_comparison_gender <- function(r,
         Leistungskurse = round(Leistungskurse, 1)
       )
 
+
+    # für KI TXT Download
+    df_json <- jsonlite::toJSON(
+      df,
+      dataframe = "rows",
+      auto_unbox = TRUE,
+      na = "null"
+    )
+
+    titel_js <- jsonlite::toJSON(
+      ifelse(
+        regio == "Saarland",
+        paste0("Mädchen-Anteil nach Fächern im ", regio, " (", timerange, ")"),
+        paste0("Mädchen-Anteil nach Fächern in ", regio, " (", timerange, ")")
+      ),
+      auto_unbox = TRUE
+    )
+
+    quelle_js <- jsonlite::toJSON(
+      "Quelle der Daten: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+      auto_unbox = TRUE
+    )
+
+
+
+
+
     out <- plotly::plot_ly(data = df, color = I("gray80")) %>%
       plotly::add_segments(
         x = ~Grundkurse,
@@ -1522,7 +1549,8 @@ kurse_comparison_gender <- function(r,
         xaxis = list(title = ""),
         yaxis = list(title = ""),
         margin = list(l = 100, r = 50, t = 50, b = 50),
-        hoverlabel = list(bgcolor = "white"),
+        hoverlabel = list(bgcolor = "white", font = list(family = "Calibri Regular", size = 15,  color = "black")),
+
         legend = list(
           orientation = "h",
           x = 0.5,
@@ -1534,8 +1562,8 @@ kurse_comparison_gender <- function(r,
           list(
             text = "Quelle der Daten: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
             xref = "paper", yref = "paper",
-            x = 0, y = -0.2,
-            xanchor = "right", yanchor = "top",
+            x = 0, y = -0.18,
+            xanchor = "left", yanchor = "top",
             showarrow = FALSE,
             font = list(size = 10, color = "gray", family = "Calibri, sans-serif")
           )
@@ -1567,6 +1595,53 @@ kurse_comparison_gender <- function(r,
                 a.click();
               }
             ")
+        ),
+        list(
+          name = "Download Daten für KI-Chats als txt",
+          icon = list(
+            path = "M14,2H6C4.9,2,4,2.9,4,4v16c0,1.1,0.9,2,2,2h12c1.1,0,2-0.9,2-2V8L14,2z M14,4.5L17.5,8H14V4.5z M18,20H6V4h6v6h6V20z",
+            width = 24,
+            height = 24
+          ),
+          click = htmlwidgets::JS(
+            paste0("
+      function(gd) {
+
+        var rows = ", df_json, ";
+        var titel = ", titel_js, ";
+        var quelle = ", quelle_js, ";
+
+        var date = new Date().toISOString().slice(0,10);
+        var fileName = titel.replace(/\\s+/g,'_') + '_' + date + '.txt';
+
+        var text = '';
+        text += 'Titel: ' + titel + '\\n';
+        text += 'Quelle: ' + quelle + '\\n\\n';
+        text += 'Daten:\\n';
+
+        if(rows.length > 0){
+          var cols = Object.keys(rows[0]);
+          text += cols.join('\\t') + '\\n';
+
+          rows.forEach(function(r){
+            text += cols.map(function(c){
+              return r[c] == null ? '' : r[c];
+            }).join('\\t') + '\\n';
+          });
+        }
+
+        var blob = new Blob(
+          [text],
+          {type:'text/plain;charset=utf-8;'}
+        );
+
+        var a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = fileName;
+        a.click();
+      }
+    ")
+          )
         )
       )
       )

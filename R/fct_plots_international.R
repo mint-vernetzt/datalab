@@ -782,12 +782,10 @@ df <- df %>%
 # Create top 10 plot
 
   titel_top = paste0(
-    t_quelle1, "Länder mit dem größten Anteil an <br>",
-    t_gruppe,"<br>", t_fach, "<br> in ", timerange, t_quelle)
+    t_quelle1, "Länder mit dem größten Anteil an ",t_gruppe," ", t_fach, " in ", timerange, t_quelle)
 
   titel_bottom = paste0(
-    t_quelle1, "Länder mit dem niedrigsten Anteil an <br>",
-    t_gruppe,"<br>", t_fach, "<br> in ", timerange, t_quelle)
+    t_quelle1, "Länder mit dem niedrigsten Anteil an ",t_gruppe," ", t_fach, " in ", timerange, t_quelle)
 
   order_top <- unique(df_top$land)
 
@@ -816,11 +814,11 @@ df <- df %>%
   color <- c("#b16fab")
 
 
-  plot_top <- balkenbuilder_plotly(df=df_top, x=x, y=y, titel=titel_top, orientation = "h",
+  plot_top <- balkenbuilder_plotly(df=df_top, x=x, y=y, titel=titel_top, orientation = "h", wrap_width = 40,
                                    group=NULL, color = color,order = order_top, margin_t=100, titel_y=0.97,
                                    stacking = FALSE, percent = TRUE, quelle=quelle)
 
-  plot_bottom <- balkenbuilder_plotly(df=df_bottom, x=x, y=y, titel=titel_bottom, orientation = "h",
+  plot_bottom <- balkenbuilder_plotly(df=df_bottom, x=x, y=y, titel=titel_bottom, orientation = "h", wrap_width = 40,
                                    group=NULL, color = color,order = order_bottom, margin_t=100, titel_y=0.97,
                                    stacking = FALSE, percent = TRUE, quelle=quelle)
 
@@ -857,10 +855,7 @@ df <- df %>%
              y0 = 0, y1 = 1,
              line = list(color = "#154194",width = 2
              ))))
-
-
      }
-
 
 
   if(length(df$wert) < 16){
@@ -1087,15 +1082,11 @@ plot_international_top10_gender <- function(r) {
   t_fach <- ifelse(t_fach == "Dienstleistungen", "Fächern aus dem Bereich 'Dienstleistungen'", t_fach)
 
   if(art == "meisten Frauen wählen MINT"){
-    titel1 <- paste0(t_quelle1, "Länder, in denen sich der höchste Anteil <br> an Frauen für ein Studium in <br> ",
-                     t_fach, " <br> entscheidet (", timerange, ")")
-    titel2 <- paste0(t_quelle1, "Länder, in denen sich der geringste Anteil <br> an Frauen für ein Studium in <br>  ",
-                     t_fach, " <br> entscheidet (", timerange, ")")
+    titel1 <- paste0(t_quelle1, "Länder, in denen sich der höchste Anteil an Frauen für ein Studium in ", t_fach, " entscheidet (", timerange, ")")
+    titel2 <- paste0(t_quelle1, "Länder, in denen sich der geringste Anteil an Frauen für ein Studium in ",t_fach, " entscheidet (", timerange, ")")
   }else{
-    titel1 <- paste0(t_quelle1, "Länder mit dem größten <br> Frauenanteil unter Studierenden in <br>",
-                     t_fach, " (", timerange, ")")
-    titel2 <- paste0(t_quelle1, "Länder mit dem niedrigsten <br>Frauenanteil unter Studierenden in <br> ",
-                     t_fach, " (", timerange, ")")
+    titel1 <- paste0(t_quelle1, "Länder mit dem größten Frauenanteil unter Studierenden in ",t_fach, " (", timerange, ")")
+    titel2 <- paste0(t_quelle1, "Länder mit dem niedrigsten Frauenanteil unter Studierenden in ", t_fach, " (", timerange, ")")
   }
 
   if (label_m == "EU") {
@@ -1145,11 +1136,11 @@ plot_international_top10_gender <- function(r) {
   color <- c("#154194")
 
 
-  plot_top <- balkenbuilder_plotly(df=df_top, x=x, y=y, titel=titel1, orientation = "h",
+  plot_top <- balkenbuilder_plotly(df=df_top, x=x, y=y, titel=titel1, orientation = "h", wrap_width = 40,
                                    group=NULL, color = color,order = order_top, margin_t=100, titel_y=0.97,
                                    stacking = FALSE, percent = TRUE, quelle=quelle)
 
-  plot_bottom <- balkenbuilder_plotly(df=df_bottom, x=x, y=y, titel=titel2, orientation = "h",
+  plot_bottom <- balkenbuilder_plotly(df=df_bottom, x=x, y=y, titel=titel2, orientation = "h", wrap_width = 40,
                                       group=NULL, color = color,order = order_bottom, margin_t=100, titel_y=0.97,
                                       stacking = FALSE, percent = TRUE, quelle=quelle)
 
@@ -1275,8 +1266,8 @@ df_query <- glue::glue_sql("
 
 
   # titel vorbereiten
-  title_dyn_top <- paste("Länder Europas mit der <br> höchsten Zahl an internationalen Studierenden <br> in MINT im Jahr", inpy)
-  title_dyn_bot <- paste("Länder Europas mit der <br> niedrigsten Zahl an internationalen Studierenden <br> in MINT im Jahr", inpy)
+  title_dyn_top <- paste("Länder Europas mit der höchsten Zahl an internationalen Studierenden in MINT im Jahr", inpy)
+  title_dyn_bot <- paste("Länder Europas mit der niedrigsten Zahl an internationalen Studierenden in MINT im Jahr", inpy)
 
 
 
@@ -1323,11 +1314,11 @@ df_query <- glue::glue_sql("
 
 
 
-  plot_top <- balkenbuilder_plotly(df=df_top, x=x, y=y, titel=title_dyn_top, orientation = "h",
+  plot_top <- balkenbuilder_plotly(df=df_top, x=x, y=y, titel=title_dyn_top, orientation = "h", wrap_width = 40,
                                    group=NULL, color = color_top,order = order_top, margin_t=100, titel_y=0.97,
                                    stacking = FALSE, percent = FALSE, quelle=quelle)
 
-  plot_bottom <- balkenbuilder_plotly(df=df_bottom, x=x, y=y, titel=title_dyn_bot, orientation = "h",
+  plot_bottom <- balkenbuilder_plotly(df=df_bottom, x=x, y=y, titel=title_dyn_bot, orientation = "h", wrap_width = 40,
                                       group=NULL, color = color_bottom,order = order_bottom, margin_t=100, titel_y=0.97,
                                       stacking = FALSE, percent = FALSE, quelle=quelle)%>%
     plotly::layout(
@@ -1340,7 +1331,6 @@ df_query <- glue::glue_sql("
 
     avg <- mean(data1$wert, na.rm = TRUE)
 
-    #max_percent_bottom <- ceiling(min(100, max(c(df_bottom$wert, avg), na.rm = TRUE) * 1.03))
 
     plot_top <- plot_top %>%
       plotly::layout(
@@ -2003,8 +1993,26 @@ plot_international_schule_migration <- function(r) {
       values_from = wert
     )
 
+  #plot_data$land[plot_data$land == "Interantionaler Durchschnitt"] <- "Internationaler Durchschnitt"
+
+
 
     if (label_m == "TIMSS" && leistungsindikator_m == "nach sozialem Status") {
+
+
+      titel <- stringr::str_wrap(
+        paste0( "Mittlere erreichte Punktezahlen im TIMSS-", fach_m,"-Test der 15-jährigen (ca. 9. Klassen) nach sozialem Status (", timerange,")" ),
+        width = 70)
+
+      quelle <- "Quelle der Daten: IEA, 2023, freier Download, eigene Berechnungen durch MINTvernetzt"
+
+      gruppen_info <- paste(
+        "basis_wert = niedriger sozialer Status",
+        "mittel_wert = mittlerer sozialer Status",
+        "wert = hoher sozialer Status"
+      )
+
+
 
       plot_data <- plot_data %>%
         dplyr::rename(
@@ -2080,29 +2088,35 @@ plot_international_schule_migration <- function(r) {
         ) %>%
         # Layout anpassen
         plotly::layout(
-          title = paste0("Mittlere erreichte Punktezahlen im TIMSS-", fach_m, "-Test in den 4. Klassen nach sozialem Status (", timerange, ")"),
+          height = 550,
+          font = list(family = "Calibri Regular"),
+          title = list(
+              text = titel,
+              font = list(
+                family = "Calibri Regular",size = 20, color = "black")
+            ),
           xaxis = list(title = ""),
           yaxis = list(title = ""),
-          margin = list(l = 100, r = 50, t = 50, b = 50),
-          hoverlabel = list(bgcolor = "white"),
+          margin = list(l = 100, r = 50, t = 50, b = 100),
+          hoverlabel = list(bgcolor = "white", font = list(family = "Calibri", size = 15)),
           legend = list(
             orientation = "h",
             x = 0.5,
-            y = -0.2,
+            y = -0.05,
             xanchor = "center",
             yanchor = "top"
           ),
           annotations = list(
             list(
-              text = "Quelle der Daten: IEA, 2023, freier Download, eigene Berechnungen durch MINTvernetzt",
+              text = quelle,
               x = 0,
-              y = -0.35,  # passt die vertikale Position (ggf. justieren!)
+              y = -0.14,  # passt die vertikale Position (ggf. justieren!)
               xref = "paper",
               yref = "paper",
               showarrow = FALSE,
               xanchor = "left",
               yanchor = "top",
-              font = list(size = 11, color = "gray")
+              font = list(size = 11, color = "gray", family = "Calibri Regular")
             )
           )
         )
@@ -2110,7 +2124,21 @@ plot_international_schule_migration <- function(r) {
     }
   else if (label_m == "TIMSS" && leistungsindikator_m == "nach Geschlecht") {
 
-      plot_data <- plot_data %>%
+    titel <- stringr::str_wrap(
+      paste0( "Mittlere erreichte Punktezahlen im TIMSS-", fach_m,"-Test der 15-jährigen (ca. 9. Klassen) nach Geschlecht (", timerange,")" ),
+      width = 70)
+
+    quelle <- "Quelle der Daten: IEA, 2023, freier Download, eigene Berechnungen durch MINTvernetzt"
+
+
+
+    gruppen_info <- paste(
+      "basis_wert = Jungen",
+      "wert = Mädchen"
+    )
+
+
+    plot_data <- plot_data %>%
         dplyr::rename(
           basis_wert = Jungen,
           wert = Mädchen
@@ -2156,29 +2184,35 @@ plot_international_schule_migration <- function(r) {
           hoverinfo = "text"
         ) %>%
         plotly::layout(
-          title = paste0("Mittlere erreichte Punktezahlen im TIMSS-", fach_m, "-Test in den 4. Klassen nach Geschlecht (", timerange, ")"),
+          height = 550,
+          font = list(family = "Calibri Regular"),
+          title = list(
+            text = titel,
+            font = list(
+              family = "Calibri Regular",size = 20, color = "black")
+          ),
           xaxis = list(title = ""),
           yaxis = list(title = ""),
-          margin = list(l = 100, r = 50, t = 50, b = 50),
-          hoverlabel = list(bgcolor = "white"),
+          margin = list(l = 100, r = 50, t = 50, b = 100),
+          hoverlabel = list(bgcolor = "white", font = list(family = "Calibri", size = 15)),
           legend = list(
             orientation = "h",
             x = 0.5,
-            y = -0.2,
+            y = -0.05,
             xanchor = "center",
             yanchor = "top"
           ),
           annotations = list(
             list(
-              text = "Quelle der Daten: IEA, 2023, freier Download, eigene Berechnungen durch MINTvernetzt",
+              text = quelle,
               x = 0,
-              y = -0.7,  # passt die vertikale Position (ggf. justieren!)
+              y = -0.14,  # passt die vertikale Position (ggf. justieren!)
               xref = "paper",
               yref = "paper",
               showarrow = FALSE,
               xanchor = "left",
               yanchor = "top",
-              font = list(size = 11, color = "gray")
+              font = list(size = 11, color = "gray", family = "Calibri Regular")
             )
           )
         )
@@ -2186,7 +2220,21 @@ plot_international_schule_migration <- function(r) {
 
     }
   else if (label_m == "PISA" && leistungsindikator_m == "nach Geschlecht") {
-      plot_data <- plot_data %>%
+
+
+    titel <- stringr::str_wrap(
+      paste0( "Mittlere erreichte Punktezahlen im PISA-", fach_m,"-Test der 15-jährigen (ca. 9. Klassen) nach Geschlecht (", timerange,")" ),
+      width = 70)
+
+    quelle <- "Quelle der Daten: OECD, 2023, freier Download, eigene Berechnungen durch MINTvernetzt"
+
+    gruppen_info <- paste(
+      "basis_wert = Jungen",
+      "wert = Mädchen"
+    )
+
+
+    plot_data <- plot_data %>%
         dplyr::rename(
           basis_wert = Jungen,
           wert = Mädchen
@@ -2233,37 +2281,59 @@ plot_international_schule_migration <- function(r) {
         ) %>%
         # Layout anpassen
         plotly::layout(
-          title = paste0("Mittlere erreichte Punktezahlen im PISA-", fach_m, "-Test unter 15-jährigen (ca. 9. Klasse) nach Geschlecht (", timerange, ")" ),
+          height = 550,
+          font = list(family = "Calibri Regular"),
+          title = list(
+            text = titel,
+            font = list(
+              family = "Calibri Regular",size = 20, color = "black")
+          ),
           xaxis = list(title = ""),
           yaxis = list(title = ""),
-          margin = list(l = 100, r = 50, t = 50, b = 50),
-          hoverlabel = list(bgcolor = "white"),
+          margin = list(l = 100, r = 50, t = 50, b = 100),
+          hoverlabel = list(bgcolor = "white", font = list(family = "Calibri", size = 15)),
           legend = list(
             orientation = "h",
             x = 0.5,
-            y = -0.2,
+            y = -0.05,
             xanchor = "center",
             yanchor = "top"
           ),
           annotations = list(
             list(
-              text = "Quelle der Daten: IEA , 2023; OECD, 2023, freier Download, eigene Berechnungen durch MINTvernetzt",
+              text = quelle,
               x = 0,
-              y = -0.7,  # passt die vertikale Position (ggf. justieren!)
+              y = -0.14,  # passt die vertikale Position (ggf. justieren!)
               xref = "paper",
               yref = "paper",
               showarrow = FALSE,
               xanchor = "left",
               yanchor = "top",
-              font = list(size = 11, color = "gray")
+              font = list(size = 11, color = "gray", family = "Calibri Regular")
             )
           )
         )
 
-
     }
   else if (label_m == "PISA" && leistungsindikator_m == "nach Zuwanderungsgeschichte") {
-      plot_data <- plot_data %>%
+
+
+    titel <- stringr::str_wrap(
+      paste0( "Mittlere erreichte Punktezahlen im PISA-", fach_m,"-Test der 15-jährigen (ca. 9. Klassen) nach Zuwanderungsgeschichte (", timerange,")" ),
+      width = 70)
+
+    quelle <- "Quelle der Daten: OECD, 2023, freier Download, eigene Berechnungen durch MINTvernetzt"
+
+
+   gruppen_info <- paste(
+    "basis_wert = ohne Zuwanderungsgeschichte",
+    "mittel_wert = nur Eltern zugewandert",
+    "wert = Kind selbst zugewandert"
+    )
+
+
+
+    plot_data <- plot_data %>%
         dplyr::rename(
           basis_wert = `ohne Zuwanderungsgeschichte`,
           mittel_wert = `nur Eltern zugewandert`,
@@ -2333,29 +2403,35 @@ plot_international_schule_migration <- function(r) {
         ) %>%
         # Layout anpassen
         plotly::layout(
-          title = paste0("Mittlere erreichte Punktezahlen im PISA-", fach_m, "-Test der 15-jährigen (ca. 9. Klassen) nach Zuwanderungsgeschichte (", timerange, ")") ,
+          height = 550,
+          font = list(family = "Calibri Regular"),
+          title = list(
+            text = titel,
+            font = list(
+              family = "Calibri Regular",size = 20, color = "black")
+          ),
           xaxis = list(title = ""),
           yaxis = list(title = ""),
-          margin = list(l = 100, r = 50, t = 50, b = 50),
-          hoverlabel = list(bgcolor = "white"),
+          margin = list(l = 100, r = 50, t = 50, b = 100),
+          hoverlabel = list(bgcolor = "white", font = list(family = "Calibri", size = 15)),
           legend = list(
             orientation = "h",
             x = 0.5,
-            y = -0.2,
+            y = -0.05,
             xanchor = "center",
             yanchor = "top"
           ),
           annotations = list(
             list(
-              text = "Quelle der Daten: OECD, 2023, freier Download, eigene Berechnungen durch MINTvernetzt",
+              text = quelle,
               x = 0,
-              y = -0.7,  # passt die vertikale Position (ggf. justieren!)
+              y = -0.14,  # passt die vertikale Position (ggf. justieren!)
               xref = "paper",
               yref = "paper",
               showarrow = FALSE,
               xanchor = "left",
               yanchor = "top",
-              font = list(size = 11, color = "gray")
+              font = list(size = 11, color = "gray", family = "Calibri Regular")
             )
           )
         )
@@ -2364,6 +2440,17 @@ plot_international_schule_migration <- function(r) {
     }
   else if (label_m == "PISA" && leistungsindikator_m == "nach Bildungskapital") {
 
+   titel <- stringr::str_wrap(
+      paste0( "Mittlere erreichte Punktezahlen im PISA-", fach_m,"-Test der 15-jährigen (ca. 9. Klassen) nach Bildungskapital (", timerange,")" ),
+      width = 70)
+
+    quelle <- "Quelle der Daten: OECD, 2023, freier Download, eigene Berechnungen durch MINTvernetzt"
+
+    gruppen_info <- paste(
+      "sehr_niedrig = sehr niedriges Bildungskapital (bis zu 10 Bücher zuhause)\n",
+      "niedrig = niedriges Bildungskapital (bis zu 100 Bücher zuhause)\n",
+      "hoch = hohes Bildungskapital (über 500 Bücher zuhause)"
+    )
 
 
      plot_data <- plot_data %>%
@@ -2435,38 +2522,56 @@ plot_international_schule_migration <- function(r) {
         ) %>%
         # Layout anpassen
         plotly::layout(
-          title = paste0("Mittlere erreichte Punktezahlen im PISA-", fach_m, "-Test der 15-jährigen (ca. 9. Klassen) nach Bildungskapital (", timerange, ")"),
+          height = 550,
+          font = list(family = "Calibri Regular"),
+          title = list(
+            text = titel,
+            font = list(
+              family = "Calibri Regular",size = 20, color = "black")
+          ),
           xaxis = list(title = ""),
           yaxis = list(title = ""),
-          margin = list(l = 100, r = 50, t = 50, b = 50),
-          hoverlabel = list(bgcolor = "white"),
+          margin = list(l = 100, r = 50, t = 50, b = 100),
+          hoverlabel = list(bgcolor = "white", font = list(family = "Calibri", size = 15)),
           legend = list(
             orientation = "h",
             x = 0.5,
-            y = -0.2,
+            y = -0.05,
             xanchor = "center",
             yanchor = "top"
           ),
           annotations = list(
             list(
-              text = "Quelle der Daten: OECD, 2023, freier Download, eigene Berechnungen durch MINTvernetzt",
+              text = quelle,
               x = 0,
-              y = -0.7,  # passt die vertikale Position (ggf. justieren!)
+              y = -0.14,  # passt die vertikale Position (ggf. justieren!)
               xref = "paper",
               yref = "paper",
               showarrow = FALSE,
               xanchor = "left",
               yanchor = "top",
-              font = list(size = 11, color = "gray")
+              font = list(size = 11, color = "gray", family = "Calibri Regular")
             )
           )
         )
+
 
     } else {
 
 
     }
 
+  df_json <- jsonlite::toJSON( plot_data, dataframe = "rows",auto_unbox = TRUE, na = "null")
+
+
+  x_js <- gsub( "'",  "\\\\'",paste(names(plot_data)[names(plot_data) != "land"], collapse = "; "))
+  y_js <- gsub("'", "\\\\'", "land")
+  group_js <- gsub(  "'",   "\\\\'",leistungsindikator_m )
+  titel_js <- gsub(  "'","\\\\'",stringr::str_squish(titel) )
+  quelle_js <- gsub("'", "\\\\'", quelle)
+
+  gruppen_info_js <- gsub("'", "\\\\'", gruppen_info)
+  gruppen_info_js <- gsub("\n", "\\\\n", gruppen_info_js)
 
 
 
@@ -2497,9 +2602,64 @@ plot_international_schule_migration <- function(r) {
                 a.click();
               }
             ")
+      ),
+
+      # TXT-Download für KI
+      list(
+        name = "Download Daten für KI als txt",
+        icon = list(
+          path = "M14,2H6C4.9,2,4,2.9,4,4v16c0,1.1,0.9,2,2,2h12c1.1,0,2-0.9,2-2V8L14,2z M14,4.5L17.5,8H14V4.5z M18,20H6V4h6v6h6V20z",
+          width = 24,
+          height = 24
+        ),
+        click = htmlwidgets::JS(sprintf("
+            function(gd) {
+              var rows = %s;
+              var date = new Date().toISOString().slice(0,10);
+              var chartTitle = '%s'.replace(/\\s+/g, '_');
+              var filename = chartTitle + '_' + date + '.txt';
+
+              if (!rows.length) return;
+
+              var cols = Object.keys(rows[0]);
+
+              var text = '';
+              text += 'Titel: %s\\n';
+              text += 'X-Achse: %s\\n';
+              text += 'Y-Achse: %s\\n';
+              text += 'Gruppeninfo: %s\\n';
+              text += '%s\\n\\n';
+              text += 'Quelle: %s\\n\\n';
+              text += 'Daten:\\n';
+
+              text += cols.join('\\t') + '\\n';
+
+              rows.forEach(function(row) {
+                var values = cols.map(function(col) {
+                  var value = row[col];
+                  if (value === null || value === undefined) return '';
+                  return String(value);
+                });
+                text += values.join('\\t') + '\\n';
+              });
+
+              var blob = new Blob([text], { type: 'text/plain;charset=utf-8;' });
+
+              if (window.navigator.msSaveBlob) {
+                window.navigator.msSaveBlob(blob, filename);
+              } else {
+                var link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = filename;
+                link.click();
+              }
+            }
+          ", df_json, titel_js, titel_js, x_js, y_js, group_js, gruppen_info_js, quelle_js))
       )
+     )
     )
-    )
+
+
 
 
   return(p)
@@ -3382,8 +3542,8 @@ plot_international_top10_mint_arb <- function(r) {
 
 
 # Titel vorbereiten
-title_top <- paste0("Länder Europas mit dem höchsten Anteil von <br>", inpp, "n <br> in MINT an allen ", inpp, "n <br>", inpy )
-title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von <br>", inpp, "n <br> in MINT an allen ", inpp, "n <br>",  inpy )
+title_top <- paste0("Länder Europas mit dem höchsten Anteil von ", inpp, "n in MINT an allen ", inpp, "n ", inpy )
+title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von ", inpp, "n in MINT an allen ", inpp, "n ",  inpy )
 
   }
 
@@ -3695,11 +3855,11 @@ title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von <br>", inpp,
   quelle <- paste0("Quelle der Daten: Eurostat, 2023; OECD, 2023, freier Download, eigene Berechnungen durch MINTvernetzt.")
 
 
-  plot_top <- balkenbuilder_plotly(df=df_top, x=x, y=y, titel=title_top, orientation = "h",
+  plot_top <- balkenbuilder_plotly(df=df_top, x=x, y=y, titel=title_top, orientation = "h", wrap_width = 40,
                                    group=NULL, color = color,order = order_top,  margin_t=100, titel_y=0.97,
                                    stacking = FALSE, percent = TRUE, quelle=quelle)
 
-  plot_bottom <- balkenbuilder_plotly(df=df_bottom, x=x, y=y, titel=title_bot, orientation = "h",
+  plot_bottom <- balkenbuilder_plotly(df=df_bottom, x=x, y=y, titel=title_bot, orientation = "h", wrap_width = 40,
                                       group=NULL, color = color,order = order_bottom, margin_t=100, titel_y=0.97,
                                       stacking = FALSE, percent = TRUE, quelle=quelle)
 
@@ -3861,13 +4021,13 @@ plot_international_top10_mint_arb_gender <- function(r) {
 
     if (inpp == "Naturwissenschaftler*innen und Ingenieur*innen"){
 
-      title_top <- paste0("Länder Europas mit dem höchsten Anteil <br> von weiblichen ", inpp, "<br> an allen ", inpp, "<br> in MINT ", inpy )
-      title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil <br> von weiblichen ", inpp, "<br> an allen ", inpp, "<br> in MINT  ",  inpy )
+      title_top <- paste0("Länder Europas mit dem höchsten Anteil von weiblichen ", inpp, " an allen ", inpp, " in MINT ", inpy )
+      title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von weiblichen ", inpp, " an allen ", inpp, " in MINT  ",  inpy )
 
 
     } else {
-      title_top <- paste0("Länder Europas mit dem höchsten Anteil <br> von weiblichen ", inpp, "n <br> an allen ", inpp, "n <br> in MINT ", inpy )
-      title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil <br> von weiblichen ", inpp, "n <br> an allen ", inpp, "n <br> in MINT  ",  inpy )
+      title_top <- paste0("Länder Europas mit dem höchsten Anteil von weiblichen ", inpp, "n an allen ", inpp, "n in MINT ", inpy )
+      title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von weiblichen ", inpp, "n an allen ", inpp, "n in MINT  ",  inpy )
 
     }
 
@@ -4342,11 +4502,11 @@ plot_international_top10_mint_arb_gender <- function(r) {
   color <- c("#154194")
 
 
-  plot_top <- balkenbuilder_plotly(df=df_top, x=x, y=y, titel=title_top, orientation = "h",
+  plot_top <- balkenbuilder_plotly(df=df_top, x=x, y=y, titel=title_top, orientation = "h", wrap_width = 40,
                                    group=NULL, color = color,order = order_top, margin_t=100, titel_y=0.97,
                                    stacking = FALSE, percent = TRUE, quelle=quelle)
 
-  plot_bottom <- balkenbuilder_plotly(df=df_bottom, x=x, y=y, titel=title_bot, orientation = "h",
+  plot_bottom <- balkenbuilder_plotly(df=df_bottom, x=x, y=y, titel=title_bot, orientation = "h", wrap_width = 40,
                                       group=NULL, color = color,order = order_bottom, margin_t=100, titel_y=0.97,
                                       stacking = FALSE, percent = TRUE, quelle=quelle)
 

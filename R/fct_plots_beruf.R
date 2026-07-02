@@ -1173,12 +1173,22 @@ arbeitsmarkt_faecher_anteil <- function(r) {
             "Anzahl: ", wert_disp
           )
         )
-     # color <- as.character(df$color)
+
+      df <- df %>%
+        dplyr::mutate(color = color_fachbereich[fachbereich])
 
       quelle <- "Quelle: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
-      out <- piebuilder_plotly(df, titel, x="fachbereich", y = "prop",
-                        color=color_fachbereich, quelle = quelle)
+
+      out <- piebuilder_plotly(
+        df,
+        titel,
+        x = "fachbereich",
+        y = "prop",
+        color = as.character(df$color),
+        quelle = quelle
+      )
+
 
     } else if(length(indikator_choice) == 2) {
 
@@ -2673,6 +2683,12 @@ arbeitsmarkt_wahl_gender <- function(r) {
 
      df_m <- df_m[with(df_m, order(prop, decreasing = FALSE)), ]
 
+     df_f <- df_f %>%
+       dplyr::mutate(color = color_fachbereich[fachbereich])
+
+     df_m <- df_m %>%
+       dplyr::mutate(color = color_fachbereich[fachbereich])
+
 
      titel1 <- paste0("Berufswahl unter Frauen in ", regio, " (", timerange, ")")
      titel2 <- paste0("Berufswahl unter Männern in ", regio, " (", timerange, ")")
@@ -2682,7 +2698,7 @@ arbeitsmarkt_wahl_gender <- function(r) {
      quelle <- "Quelle: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
      out_1 <- piebuilder_plotly(df_f, titel1, x="fachbereich", y = "prop", legend_y=0.01,
-                                color=color_fachbereich, subtitel = subtitel1, quelle=quelle) |>
+                                color=as.character(df_f$color), subtitel = subtitel1, quelle=quelle) |>
        plotly::layout(
          annotations = list(
            list(
@@ -2699,7 +2715,7 @@ arbeitsmarkt_wahl_gender <- function(r) {
          )
        )
      out_2 <- piebuilder_plotly(df_m, titel2, x="fachbereich", y = "prop", legend_y=0.01,
-                                color=color_fachbereich, subtitel = subtitel2, quelle=quelle)|>
+                                color=as.character(df_m$color), subtitel = subtitel2, quelle=quelle)|>
        plotly::layout(
          annotations = list(
            list(

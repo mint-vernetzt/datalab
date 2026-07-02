@@ -1382,6 +1382,12 @@ plot_mint_faecher <- function(r){
     df <- df %>% dplyr::filter(prop > 2)
   }
 
+  df <- df %>%
+    dplyr::mutate(color1 = color_fach_pie[fach])
+
+  df <- df %>%
+    dplyr::mutate(color2 = color_fachbereich[fach])
+
 
 
   if(betrachtung == "Einzelansicht - Kuchendiagramm"){
@@ -1417,45 +1423,132 @@ plot_mint_faecher <- function(r){
 
     if(ebene == "MINT-Fächergruppen"){
       out <- piebuilder_plotly(df, titel, x = "fach", y ="prop",
-                               color=color_fach_pie, quelle = "")
+                               color=as.character(df$color1), quelle = "")
     }else{
       out <- piebuilder_plotly(df, titel, x = "fach", y ="prop",
-                               color=color_fachbereich, quelle = quelle)
+                               color=as.character(df$color2), quelle = quelle)
     }
 
     } else if(length(label_w)==2){
+
+
+      df1 <- df %>%
+        dplyr::filter(indikator == label_w[1])
+
+      df2 <- df %>%
+        dplyr::filter(indikator == label_w[2])
+
+
+      reihenfolge_faecher <- names(color_fach_pie)
+
+      df1 <- df1 %>%
+        dplyr::mutate(
+          fach = factor(fach, levels = reihenfolge_faecher)
+        ) %>%
+        dplyr::arrange(fach)
+
+      df2 <- df2 %>%
+        dplyr::mutate(
+          fach = factor(fach, levels = reihenfolge_faecher)
+        ) %>%
+        dplyr::arrange(fach)
+
+      df1 <- df1 %>%
+        dplyr::mutate(color1 = color_fach_pie[as.character(fach)])
+
+      df2 <- df2 %>%
+        dplyr::mutate(color1 = color_fach_pie[as.character(fach)])
+
+
       titel_help1 <- ueberschrift_fct(label_w[1])
       titel_help2 <- ueberschrift_fct(label_w[2])
 
       titel1 <- paste0("MINT-Fächeranteile von ", titel_help1 , " ", praep, " ", regio, " (", timerange, ")")
       titel2 <- paste0("MINT-Fächeranteile von ", titel_help2 , " ", praep, " ", regio, " (", timerange, ")")
-      df <- df %>%
+
+      df1 <- df1 %>%
         dplyr::mutate(
           tooltip = paste0(
-            "<b>", fach, "</b><br>",
+            "<span style='font-size:15px'><b>", fach, "</b></span><br>",
             "Anteil: ", prop, " %<br>",
             "Anzahl: ", wert
           )
         )
 
+      df2 <- df2 %>%
+        dplyr::mutate(
+          tooltip = paste0(
+            "<span style='font-size:15px'><b>", fach, "</b></span><br>",
+            "Anteil: ", prop, " %<br>",
+            "Anzahl: ", wert
+          )
+        )
+
+
       quelle <- "Quelle: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
-      p1 <- piebuilder_plotly(df[df$indikator == label_w[1],],
-                       titel1, x = "fach", y ="prop",
-                       color=color_fach_pie, quelle = quelle)
-      p2 <- piebuilder_plotly(df[df$indikator == label_w[2],], titel2,
-                       x = "fach", y ="prop", color=color_fach_pie, quelle = quelle)
+      p1 <- piebuilder_plotly(df=df1,
+                       titel1, x = "fach", y ="prop", legend_y=-0.02, quelle_y= 1,
+                       color=as.character(df1$color1), quelle = quelle)
+
+      p2 <- piebuilder_plotly(df=df2, titel2, legend_y=-0.02, quelle_y= 1,
+                       x = "fach", y ="prop", color=as.character(df2$color1), quelle = quelle)
 
       if(ebene == "MINT-Fachbereiche"){
-        p1 <- piebuilder_plotly(df[df$indikator == label_w[1],],
-                                titel1, x = "fach", y ="prop", legend_y = -0.05, quelle_y=-0.12,
-                                color=color_fachbereich, quelle = "") |>
+
+        df1 <- df %>%
+          dplyr::filter(indikator == label_w[1])
+
+        df2 <- df %>%
+          dplyr::filter(indikator == label_w[2])
+
+
+        reihenfolge <- c(
+          "Alle Nicht MINT-Fächer",
+          "Ingenieurwissenschaften (inkl. Informatik)",
+          "Mathematik, Naturwissenschaften"
+        )
+
+
+        df1 <- df1 %>%
+          dplyr::filter(fach %in% reihenfolge) %>%
+          dplyr::mutate(fach = factor(fach, levels = reihenfolge)) %>%
+          dplyr::arrange(fach)
+
+        df2 <- df2 %>%
+          dplyr::filter(fach %in% reihenfolge) %>%
+          dplyr::mutate(fach = factor(fach, levels = reihenfolge)) %>%
+          dplyr::arrange(fach)
+
+        df1 <- df1 %>%
+          dplyr::mutate(
+            tooltip = paste0(
+              "<span style='font-size:15px'><b>", fach, "</b></span><br>",
+              "Anteil: ", prop, " %<br>",
+              "Anzahl: ", wert
+            )
+          )
+
+        df2 <- df2 %>%
+          dplyr::mutate(
+            tooltip = paste0(
+              "<span style='font-size:15px'><b>", fach, "</b></span><br>",
+              "Anteil: ", prop, " %<br>",
+              "Anzahl: ", wert
+            )
+          )
+
+
+
+        p1 <- piebuilder_plotly(df=df1,
+                                titel1, x = "fach", y ="prop", legend_y = 0.03, quelle_y=-0.08,
+                                color=as.character(df1$color2), quelle = "")|>
           plotly::layout(
             annotations = list(
               list(
                 text = quelle,
                 x = 1,
-                y = -0.4,
+                y = -0.08,
                 xref = "paper",
                 yref = "paper",
                 xanchor = "right",
@@ -1465,14 +1558,14 @@ plot_mint_faecher <- function(r){
               )
             )
           )
-        p2 <- piebuilder_plotly(df[df$indikator == label_w[2],], titel2, legend_y = -0.05, quelle_y=-0.12,
-                                x = "fach", y ="prop", color=color_fachbereich, quelle = "") |>
+        p2 <- piebuilder_plotly(df=df2, titel2, legend_y = 0.03, quelle_y=-0.08,
+                                x = "fach", y ="prop", color=as.character(df2$color2), quelle = "")|>
           plotly::layout(
             annotations = list(
               list(
                 text = quelle,
                 x = 1,
-                y = -0.4,
+                y = -0.08,
                 xref = "paper",
                 yref = "paper",
                 xanchor = "right",
@@ -1483,11 +1576,11 @@ plot_mint_faecher <- function(r){
             )
           )
       }else{
-        p1 <- piebuilder_plotly(df[df$indikator == label_w[2],], titel2, legend_y = -0.05, quelle_y=-0.12,
-                                x = "fach", y ="prop", color=color_fachbereich, quelle = "")
+        p1 <- piebuilder_plotly(df=df1, titel1, legend_y = -0.05, quelle_y=-0.12,
+                                x = "fach", y ="prop", color=as.character(df2$color2), quelle = "")
 
-        p2 <- piebuilder_plotly(df[df$indikator == label_w[2],], titel2, legend_y = -0.05, quelle_y=-0.12,
-                                x = "fach", y ="prop", color=color_fachbereich, quelle = "")
+        p2 <- piebuilder_plotly(df=df2, titel2, legend_y = -0.05, quelle_y=-0.12,
+                                x = "fach", y ="prop", color=as.character(df2$color2), quelle = "")
       }
 
     out <- list(p1, p2)
@@ -3097,11 +3190,8 @@ studienzahl_choice_gender <- function(r) {
     vergl <- r$gegenwert_studi_gen
     regio <- r$region_studi_gen
 
-    color_fachbereich <- c(
-      "Ingenieurwissenschaften (inkl. Informatik)" = "#00a87a",
-      "Mathematik, Naturwissenschaften" = "#fcc433",
-      "andere Fachbereiche" = "#efe8e6"
-    )
+
+    color_fachbereich <- c("#efe8e6", "#00a87a", "#fcc433" )
 
     if(vergl == "Ja"){
       gen <- c("Frauen", "Männer")
@@ -3180,8 +3270,29 @@ studienzahl_choice_gender <- function(r) {
 
     color <- color_fachbereich
 
+
+    df_f <- df %>% dplyr::filter(geschlecht == "Frauen")
+    df_m <- df %>% dplyr::filter(geschlecht == "Männer")
+
+
+    reihenfolge <- c(
+      "andere Fachbereiche",
+      "Ingenieurwissenschaften (inkl. Informatik)",
+      "Mathematik, Naturwissenschaften"
+    )
+
+    df_f <- df_f %>%
+      dplyr::mutate(fach = factor(fach, levels = reihenfolge)) %>%
+      dplyr::arrange(fach)
+
+    df_m <- df_m %>%
+      dplyr::mutate(fach = factor(fach, levels = reihenfolge)) %>%
+      dplyr::arrange(fach)
+
+
     if(vergl == "Ja"){
-      df <- df %>%
+
+      df_m <- df_m %>%
         dplyr::mutate(
           tooltip = paste0(
             "<b>", geschlecht, "</b><br>",
@@ -3189,8 +3300,16 @@ studienzahl_choice_gender <- function(r) {
             "Anzahl: ", wert
           )
         )
-      df_f <- df %>% dplyr::filter(geschlecht == "Frauen")
-      df_m <- df %>% dplyr::filter(geschlecht == "Männer")
+
+      df_f <- df_f %>%
+        dplyr::mutate(
+          tooltip = paste0(
+            "<b>", geschlecht, "</b><br>",
+            "Anteil: ", prop, " %<br>",
+            "Anzahl: ", wert
+          )
+        )
+
 
       subtitel <- paste0("Von allen ", titel_gruppe, " wählen ", 100-df_f$prop[df_f$fach=="andere Fachbereiche"],
                          " % ein MINT-Fach.")
@@ -3207,7 +3326,7 @@ studienzahl_choice_gender <- function(r) {
             list(
               text = quelle,
               x = 1,
-              y = -0.45,
+              y = -0.25,
               xref = "paper",
               yref = "paper",
               xanchor = "right",
@@ -3242,6 +3361,20 @@ studienzahl_choice_gender <- function(r) {
       out <- list(p1, p2)
 
     }else{
+
+      reihenfolge <- c(
+        "andere Fachbereiche",
+        "Ingenieurwissenschaften (inkl. Informatik)",
+        "Mathematik, Naturwissenschaften"
+      )
+
+      df <- df %>%
+        dplyr::mutate(fach = factor(fach, levels = reihenfolge)) %>%
+        dplyr::arrange(fach)
+
+
+
+
 
       subtitel <- paste0("Von allen ", titel_gruppe, " wählen ", 100-df$prop[df$fach=="andere Fachbereiche"],
                          " % ein MINT-Fach.")

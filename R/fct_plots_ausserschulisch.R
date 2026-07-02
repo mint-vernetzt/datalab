@@ -606,7 +606,7 @@ plot_cp_profile <- function(r){
 
     df <- df %>%
       dplyr::mutate(
-        indikator_kurz = stringr::str_trunc(indikator, width = 30)
+        indikator_kurz = stringr::str_trunc(indikator, width = 25)
       )
 
     if(length(unique(df$typ)) > 1){
@@ -621,8 +621,7 @@ plot_cp_profile <- function(r){
       }
       titel <- paste0("Anteil der Profile der Community-Plattform von MINTvernetzt nach Angeboten und Gesuchen",
                       regio_angabe)
-      subtitel <- paste0("Angaben zu ", charas[1], " wurden von <b>", ges[1], "</b> Personen gemacht.
-                         Angaben zu ", charas[2], " von <b>", ges[2], "</b>. Mehrfachangaben möglich.")
+      subtitel <- paste0("Angaben zu ", charas[1], " wurden von <b>", ges[1], "</b> Personen gemacht. Angaben zu ", charas[2], " von <b>", ges[2], "</b>. Mehrfachangaben möglich.")
 
 
 
@@ -678,7 +677,7 @@ plot_cp_profile <- function(r){
 
 
       quelle <- "Quelle der Daten: MINTvernetzt Community Plattform, Stand 30. Juli 2025."
-      quelle_y <- -0.35
+      quelle_y <- -0.22
 
 
       order <- unique(df$indikator)
@@ -722,7 +721,7 @@ plot_cp_profile <- function(r){
 
     df <- df %>%
       dplyr::mutate(
-        indikator_kurz = stringr::str_trunc(indikator, width = 30)
+        indikator_kurz = stringr::str_trunc(indikator, width = 25)
       )
 
     if(length(unique(df$typ)) > 1){
@@ -737,10 +736,7 @@ plot_cp_profile <- function(r){
       }
       titel <- paste0("Profile der Community-Plattform von MINTvernetzt nach Angeboten und Gesuchen",
                       regio_angabe)
-      subtitel <- paste0("Angaben zu ", charas[1], " wurden von <b>", ges[1], "</b> Personen gemacht.
-                         Angaben zu ", charas[2], " von <b>", ges[2], "</b>. Mehrfachangaben möglich.")
-
-
+      subtitel <- paste0("Angaben zu ", charas[1], " wurden von <b>", ges[1], "</b> Personen gemacht. Angaben zu ", charas[2], " von <b>", ges[2], "</b>. Mehrfachangaben möglich.")
 
 
 
@@ -748,7 +744,7 @@ plot_cp_profile <- function(r){
 
 
       quelle <- "Quelle der Daten: MINTvernetzt Community Plattform, Stand 30. Juli 2025."
-      quelle_y <- -0.35
+      quelle_y <- -0.30
 
 
       order <- unique(df$indikator)
@@ -796,14 +792,14 @@ plot_cp_profile <- function(r){
 
       df <- df %>%
         dplyr::mutate(
-          indikator_kurz = stringr::str_trunc(indikator, width = 30)
+          indikator_kurz = stringr::str_trunc(indikator, width = 25)
         )
 
 
 
 
       quelle <- "Quelle der Daten: MINTvernetzt Community Plattform, Stand 30. Juli 2025."
-      quelle_y <- -0.35
+      quelle_y <- -0.22
 
 
       order <- unique(df$indikator)
@@ -991,6 +987,7 @@ plot_mv_stimmung <- function(r){
                                                 "Stimme eher zu",
                                                 "Stimme volll zu"
     ))
+    levels(df$antwort)[levels(df$antwort) == "Stimme volll zu"] <- "Stimme voll zu"
 
     df <- df[with(df, order(typ, antwort)),]
 
@@ -1039,11 +1036,8 @@ plot_mv_stimmung <- function(r){
 
     out <- balkenbuilder_plotly(df=df, x=x, y=y, titel=titel, orientation = "h",percent=TRUE,
                                 group=group, color=color, subtitel=subtitel,quelle_y=quelle_y,
-                                tickvals = df$typ, ticktext = df$typ_kurz, legend_size=10,
+                                tickvals = df$typ, ticktext = df$typ_kurz, legend_size=11,
                                 order=order, stacking = TRUE, quelle=quelle)
-
-
-
 
 
 
@@ -1089,7 +1083,7 @@ plot_mv_stimmung <- function(r){
 
 
       out <- piebuilder_plotly(df, titel, x="antwort", y = "wert", titel_y= 0.96,
-                               legend_y = -0.01, quelle_y = -0.34, height = 450,
+                               legend_y = -0.01, quelle_y = -0.35, height = 450,
                                color=color, quelle=quelle) %>%
         plotly::layout(margin= list( t=90))
 
@@ -1129,7 +1123,7 @@ plot_mv_genderb <- function(){
     df <- df %>%
       dplyr::mutate(
         tooltip = paste0(
-          "<b>", gruppe, "</b><br>",
+          "<b><span style='font-size:15px;'>", gruppe, "</span></b><br>",
           "Anteil: ", wert, " %<br>"
         )
       )
@@ -1207,9 +1201,6 @@ skf_einrichtungen <- function(r){
     dplyr::mutate(gesamt = sum(wert)) %>%
     dplyr::ungroup()
 
-  #Trennpunkte für lange Zahlen ergänzen
-  #df$gesamt <- prettyNum(df$gesamt, big.mark = ".", decimal.mark = ",")
- # df$wert <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
 
 
   # Hilfe für Überschrift
@@ -1220,9 +1211,6 @@ skf_einrichtungen <- function(r){
   helper <- ifelse(helper == "Hort", "Horte", helper)
 
   titel <- paste0(helper, ", die bei Stiftung Kinder forschen aktiv sind")
-
-
-
 
 
 
