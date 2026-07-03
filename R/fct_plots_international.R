@@ -1493,77 +1493,6 @@ plot_international_schule_map <- function(r) {
                            map = "world_choropleth.rds")
 
   return(map)
-
- #zu komplex / different
-  # plot
-  # highcharter::highchart(type = "map") %>%
-  #   highcharter::hc_add_series_map(
-  #     map = map_selection,
-  #     df = data_map_1,
-  #     value = "wert",
-  #     joinBy = c("hc-a2", "alpha2"),
-  #     borderColor = "#FAFAFA",
-  #     name = paste0(fach_m),
-  #     borderWidth = 0.1,
-  #     nullColor = "#A9A9A9",
-  #     tooltip = list(valueDecimals = 0, valueSuffix = "%")
-  #   ) %>%
-  #
-  #   highcharter::hc_tooltip(
-  #     pointFormat = paste0("{point.land} <br> ", tooltip_prefix,
-  #                          ": {point.display_wert} ", tooltip_scale)) %>%
-  #   highcharter::hc_colorAxis(min=s_min, max=s_max,
-  #                             minColor= "#f4f5f6",
-  #                             maxColor="#b16fab",
-  #                             labels = list(format = paste0("{text}", tooltip_scale))) %>%
-  #   highcharter::hc_title(
-  #     text = titel,
-  #     margin = 10,
-  #     align = "center",
-  #     style = list(color = "black",
-  #                  useHTML = TRUE,
-  #                  fontFamily = "Calibri Regular",
-  #                  fontSize = "20px")
-  #   ) %>%
-  #   highcharter::hc_chart(
-  #     style = list(fontFamily = "Calibri Regular")
-  #   ) %>% highcharter::hc_size(1000, 600) %>%
-  #   highcharter::hc_credits(enabled = FALSE) %>%
-  #   highcharter::hc_legend(layout = "horizontal", floating = FALSE,
-  #                          verticalAlign = "bottom") %>%
-  #   highcharter::hc_caption(text = "Quelle der Daten: IEA, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.",
-  #                           style = list(fontSize = "11px", color = "gray")) %>%
-  #   highcharter::hc_exporting(enabled = TRUE,
-  #                             buttons = list(
-  #                               contextButton = list(
-  #                                 menuItems = list("downloadPNG", "downloadCSV",
-  #                                                  list(
-  #                                                    text = "Daten für GPT",
-  #                                                    onclick = htmlwidgets::JS(sprintf(
-  #                                                      "function () {
-  #    var date = new Date().toISOString().slice(0,10);
-  #    var chartTitle = '%s'.replace(/\\s+/g, '_');
-  #    var filename = chartTitle + '_' + date + '.txt';
-  #
-  #    var data = 'Titel: %s\\n' + this.getCSV();
-  #    data += '\\nQuelle der Daten: IEA, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.';
-  #
-  #    var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-  #    if (window.navigator.msSaveBlob) {
-  #      window.navigator.msSaveBlob(blob, filename);
-  #    } else {
-  #      var link = document.createElement('a');
-  #      link.href = URL.createObjectURL(blob);
-  #      link.download = filename;
-  #      link.click();
-  #    }
-  #  }", gsub("'", "\\\\'", titel),gsub("'", "\\\\'", titel)))))
-  #                               )
-  #                             )
-  #
-  #
-  #   )
-
 }
 
 
@@ -1643,19 +1572,14 @@ plot_international_schule_item <- function(r) {
     )) %>%
     dplyr::filter(!is.na(count))
 
-  # Farbe für Deutschland
-  # plot_data$group_col <- ifelse(plot_data$land == "Deutschland" & plot_data$group == "Jungen signifikant besser", "#703D6B", plot_data$group_col )
-  # plot_data$group_col <- ifelse(plot_data$land == "Deutschland" & plot_data$group == "Mädchen signifikant besser", "#9D7265", plot_data$group_col )
-  # plot_data$group_col <- ifelse(plot_data$land == "Deutschland" & plot_data$group == "kein signifikanter Unterschied", "#008F68", plot_data$group_col )
-
-
   plot_data <- plot_data %>%
     dplyr::mutate(
       tooltip = paste0(
         "<b>", land, "</b><br>",
+        group, "<br>",
         "Test-Punktzahl<br>",
-        " Jungen: {point.wert_Jungen}<br>",
-        " Mädchen: {point.wert_Mädchen}"
+        " Jungen: ", wert_Jungen, "<br>",
+        " Mädchen: ", wert_Mädchen
       )
     )
 
@@ -1663,190 +1587,247 @@ plot_international_schule_item <- function(r) {
   dplyr::inner_join(countries_names, by = "land") %>%
     dplyr::mutate(alpha2 = toupper(alpha2))
 
+  plot_data <- plot_data %>%
+    dplyr::mutate(wert = dplyr::case_when(
+      group == "Jungen signifikant besser" ~ 1,
+      group == "Mädchen signifikant besser" ~ 1.5,
+      group == "kein signifikanter Unterschied" ~ 2
+    ))
+
 
   titel <- paste0("Geschlechtsunterschiede der 4.-Klässler:innen im ",
                   fach_m, "-Kompetenztest von ",
                   label_m, " (", timerange, ")")
+  quelle <- "Quelle: IEA, 2023, freier Download, eigene Berechnungen durch MINTvernetzt."
+
+  titel_wrapped <- stringr::str_wrap(titel, width = 40)
+  titel_wrapped <- gsub("\n", "<br>", titel_wrapped)
 
 
+  # Download vorbereiten
+  df_json <- jsonlite::toJSON(
+    plot_data[, c("land", "group"), drop = FALSE],
+    dataframe = "rows",
+    auto_unbox = TRUE,
+    na = "null"
+  )
+
+  titel_js  <- jsonlite::toJSON(titel, auto_unbox = TRUE)
+  quelle_js <- jsonlite::toJSON(quelle, auto_unbox = TRUE)
+
+
+  # Geodaten mit df verbinden
   geodata <- readRDS(paste0("data/", "world_choropleth.rds"))
 
-  plot_data <- sf::st_as_sf(dplyr::inner_join(
-      tibble::tibble(geodata),
-      plot_data,
-      by = c("iso_a2_eh" = "alpha2")
-    )) |>
-      dplyr::rename(NAME_1 = iso_a2_eh) |>
+    map_data <-
+      sf::st_as_sf(dplyr::left_join(
+        tibble::tibble(geodata),
+        plot_data,
+        by = c("iso_a2_eh" = "alpha2")
+      )) %>%
+      dplyr::rename("NAME_1" = "iso_a2_eh") %>%
+      dplyr::mutate(
+        group = dplyr::case_when(
+          is.na(group) ~ "Kein Wert",
+          T ~ group
+        ),
+        group = factor(group,
+                       levels = c("kein signifikanter Unterschied",
+                                  "Jungen signifikant besser",
+                                  "Mädchen signifikant besser",
+                                  "Kein Wert"))
+      ) %>%
       sf::st_simplify()
 
-    plot_data$group[is.na(plot_data$group)] <- "Kein Wert"
+    group_colors <- c(
+          "kein signifikanter Unterschied" = "#66cbaf",
+          "Jungen signifikant besser" = "#D0A9CD",
+          "Mädchen signifikant besser" = "#154194",
+          "Kein Wert" = "#b2b6ba"
+        )
 
-    cats <- sort(unique(plot_data$group))
-
-    group_col <- c(
-      "kein signifikanter Unterschied" = "#66cbaf",
-      "Jungen signifikant besser" = "#D0A9CD",
-      "Mädchen signifikant besser" = "#EFE8E6",
-      "Kein Wert" = "#b2b6ba"
-    )
-
-    titel_wrapped <- stringr::str_wrap(titel, width = 60)
-    titel_wrapped <- gsub("\n", "<br>", titel_wrapped)
-
-    plotly::plot_ly(
+    p <- plotly::plot_ly(
       hoverinfo = "text",
       hoveron = "fills"
-    ) |>
-      plotly::add_sf(
-        data = plot_data,
-        split = ~group,
-        color = ~group,
-        colors = group_col,
-        alpha = 1,
-        stroke = I("#FAFAFA"),
-        text = ~tooltip,
-        hoverinfo = "text",
-        hoveron = "fills",
-        showlegend = TRUE
-      ) |>
-      plotly::layout(
-        title = list(
-          text = titel_wrapped,
-          x = 0.5,
-          xanchor = "center",
-          font = list(family = "Calibri, sans-serif", size = 20, color = "black")
-        ),
-        geo = list(
-          projection = list(type = "natural earth"),
-          fitbounds = "locations",
-          visible = FALSE,
-          showcountries = FALSE,
-          showcoastlines = FALSE,
-          showland = FALSE,
-          showocean = FALSE,
-          showlakes = FALSE,
-          showrivers = FALSE,
-          showframe = FALSE,
-          bgcolor = "rgba(0,0,0,0)"
-        ),
-        margin = list(t = 40, b = 80, l = 0, r = 0),
-        legend = list(
-          orientation = "h",
-          x = 0.5,
-          xanchor = "center",
-          y = -0.03,
-          yanchor = "top",
-          font = list(size = 10)
-        ),
-        annotations = list(
-          list(
-            text = "Quelle",
-            x = 0.02,
-            y = -0.1,
-            xref = "paper",
-            yref = "paper",
-            xanchor = "left",
-            yanchor = "top",
-            showarrow = FALSE,
-            font = list(size = 11, color = "gray", family = "Calibri Regular")
-          )
+    )
+
+    for (g in names(group_colors)) {
+      dat_g <- map_data[map_data$group == g & !is.na(map_data$group), ]
+
+      if (nrow(dat_g) > 0) {
+        first_trace <- TRUE
+
+        for(i in seq_len(nrow(dat_g))) {
+          p <- p |>
+            plotly::add_sf(
+              data = dat_g[i,],
+              split = ~NAME_1,
+              color = I(group_colors[[g]]),
+              alpha = 1,
+              stroke = I("#FAFAFA"),
+              text = ~tooltip,
+              hoverinfo = "text",
+              hoveron = "fills",
+              name = g,
+              showlegend = first_trace
+            )
+          first_trace <- FALSE
+        }
+
+      }
+    }
+
+    p <- p %>%
+      plotly::style(
+        hoverlabel = list(
+          bgcolor = "white",
+          font = list(size = 12),
+          traces = 1
         )
-      ) |>
+      ) %>%
+      plotly::layout(
+      title = list(
+        text = titel,
+        x = 0.5,
+        xanchor = "center",
+        font = list(
+          family = "Calibri, sans-serif",
+          size = 20,
+          color = "black"
+        )
+      ),
+      geo = list(
+        projection = list(type = "natural earth"),
+        fitbounds = "locations",
+        visible = FALSE,
+        showcountries = FALSE,
+        showcoastlines = FALSE,
+        showland = FALSE,
+        showocean = FALSE,
+        showlakes = FALSE,
+        showrivers = FALSE,
+        showframe = FALSE,
+        bgcolor = "rgba(0,0,0,0)"
+      ),
+      margin = list(t = 40, b = 80, l = 0, r = 0),
+      annotations = list(
+        list(
+          text = quelle,
+          x = 0.02,
+          y = -0.1,
+          xref = "paper",
+          yref = "paper",
+          xanchor = "left",
+          yanchor = "top",
+          showarrow = FALSE,
+          font = list(size = 11, color = "gray", family = "Calibri Regular")
+        )
+      ),
+      legend = list(
+        orientation = "h",
+        x = 0.5,
+        xanchor = "center",
+        y = -0.03,
+        yanchor = "top",
+        font = list(size = 10),
+        title = list(text = "")
+      )
+    ) |>
       plotly::config(
         displaylogo = FALSE,
         modeBarButtonsToRemove = c(
           "zoom2d", "pan2d", "select2d", "lasso2d",
           "hoverClosestCartesian", "hoverCompareCartesian",
-          "toggleSpikelines",
-          "zoomInGeo", "zoomOutGeo", "resetGeo", "hoverClosestGeo",
-          "autoScale2d", "resetScale2d"
+          "toggleSpikelines", "zoomInGeo", "zoomOutGeo",
+          "autoScale2d", "resetScale2d", "resetGeo", "hoverClosestGeo",
+          "zoomInMapbox", "zoomOutMapbox", "resetViewMapbox",
+          "resetViews", "zoom3d", "pan3d", "resetCameraDefault3d",
+          "resetCameraLastSave3d"
+          #, "zoomin", "zoomout"
+        ),
+
+        modeBarButtonsToAdd = list(
+          list(
+            name = "Download CSV",
+            icon = list(
+              path = "M16,2H8C6.9,2,6,2.9,6,4v16c0,1.1,0.9,2,2,2h8c1.1,0,2-0.9,2-2V4C18,2.9,17.1,2,16,2z",
+              width = 24,
+              height = 24
+            ),
+            click = htmlwidgets::JS(
+              paste0("
+              function(gd) {
+                var rows = ", df_json, ";
+                var date = new Date().toISOString().slice(0,10);
+                var filename = 'export_' + date + '.csv';
+
+                if (!rows.length) return;
+
+                var cols = Object.keys(rows[0]);
+                var csv = cols.join(';') + '\\n';
+
+                rows.forEach(function(row) {
+                  var values = cols.map(function(col) {
+                    var value = row[col];
+                    if (value == null) return '';
+                    return String(value);
+                  });
+                  csv += values.join(';') + '\\n';
+                });
+
+                var blob = new Blob([csv], { type: 'text/csv' });
+                var link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = filename;
+                link.click();
+              }
+            ")
+            )
+          ),
+
+          list(
+            name = "Download Daten für KI als txt",
+            icon = list(
+              path = "M14,2H6C4.9,2,4,2.9,4,4v16c0,1.1,0.9,2,2,2h12c1.1,0,2-0.9,2-2V8",
+              width = 24,
+              height = 24
+            ),
+            click = htmlwidgets::JS(
+              paste0("
+              function(gd) {
+                var rows = ", df_json, ";
+                var titel = ", titel_js, ";
+                var quelle = ", quelle_js, ";
+
+                var text = '';
+                text += 'Titel: ' + titel + '\\n';
+                text += 'Quelle: ' + quelle + '\\n\\n';
+
+                if (!rows.length) return;
+
+                var cols = Object.keys(rows[0]);
+                text += cols.join('\\t') + '\\n';
+
+                rows.forEach(function(row) {
+                  var values = cols.map(function(col) {
+                    return row[col] == null ? '' : String(row[col]);
+                  });
+                  text += values.join('\\t') + '\\n';
+                });
+
+                var blob = new Blob([text], { type: 'text/plain' });
+                var link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = 'export.txt';
+                link.click();
+              }
+            ")
+            )
+          )
         )
       )
 
-
-  # out <- mapbuilder_plotly(plot_data,
-  #                           value_col = "group",
-  #                           regio_col = "land",
-  #                          color_cats = group_col,
-  #                           titel = titel,
-  #                           quelle= "Quelle: IEA, 2023, freier Download, eigene Berechnungen durch MINTvernetzt.",
-  #                           map = "world_choropleth.rds")
-
-  # out <- highcharter::hchart(
-  #   plot_data,
-  #   "item",
-  #   highcharter::hcaes(
-  #     name = group,
-  #     y = count,
-  #     label = group,
-  #     color = group_col),
-  #   name = "group",
-  #   showInLegend = FALSE
-  # ) %>%
-  #   highcharter::hc_caption(
-  #     text = paste0(plot_legend_data$legend_text, collapse = "<br>"),
-  #     useHTML = TRUE
-  #   ) %>%
-  #   highcharter::hc_tooltip(
-  #     pointFormat = paste0("{point.land} <br>",
-  #                          "Test-Punktzahl<br>",
-  #                          " Jungen: {point.wert_Jungen}<br>",
-  #                          " Mädchen: {point.wert_Mädchen}")) %>%
-  #   highcharter::hc_title(
-  #     text = paste0("Geschlechtsunterschiede der 4.-Klässler:innen im ",
-  #                   fach_m, "-Kompetenztest von ",
-  #                   label_m, " (", timerange, ")"),
-  #     margin = 10,
-  #     align = "center",
-  #     style = list(color = "black",
-  #                  useHTML = TRUE,
-  #                  fontFamily = "Calibri Regular",
-  #                  fontSize = "20px")
-  #   ) %>%
-  #   highcharter::hc_subtitle(
-  #     text= paste0("Jeder Punkt repräsentiert ein Land.", br(),
-  #     "Deutschland ist als dunkler hervorgehoben."),
-  #     align = "left"
-  #   )%>%
-  #   highcharter::hc_chart(
-  #     style = list(fontFamily = "Calibri Regular")
-  #   ) %>%
-  #   highcharter::hc_size(580, 450) %>%
-  #   highcharter::hc_caption(text = "    Quelle der Daten: IEA, 2023; OECD, 2023, freier Download, eigene Berechnungen durch MINTvernetzt.",
-  #                           style = list(fontSize = "11px", color = "gray")) %>%
-  #   highcharter::hc_credits(enabled = FALSE) %>%
-  #   highcharter::hc_exporting(enabled = TRUE,
-  #                             buttons = list(
-  #                               contextButton = list(
-  #                                 menuItems = list("downloadPNG", "downloadCSV",
-  #                                                  list(
-  #                                                    text = "Daten für GPT",
-  #                                                    onclick = htmlwidgets::JS(sprintf(
-  #                                                      "function () {
-  #    var date = new Date().toISOString().slice(0,10);
-  #    var chartTitle = '%s'.replace(/\\s+/g, '_');
-  #    var filename = chartTitle + '_' + date + '.txt';
-  #
-  #    var data = 'Titel: %s\\n' + this.getCSV();
-  #    data += '\\nQuelle der Daten: IEA, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.';
-  #
-  #    var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-  #    if (window.navigator.msSaveBlob) {
-  #      window.navigator.msSaveBlob(blob, filename);
-  #    } else {
-  #      var link = document.createElement('a');
-  #      link.href = URL.createObjectURL(blob);
-  #      link.download = filename;
-  #      link.click();
-  #    }
-  #  }", gsub("'", "\\\\'", titel),gsub("'", "\\\\'", titel)))))
-  #                               )
-  #                             )
-  #   )
-
-
-
-  return(out)
+  return(p)
 }
 
 
