@@ -138,7 +138,7 @@ mod_international_start_ui <- function(id){
                                     ),
                                     shiny::mainPanel(
                                       width = 9,
-                                      shinycssloaders::withSpinner(htmlOutput(ns("plot_international_schule_item_1")),
+                                      shinycssloaders::withSpinner(plotly::plotlyOutput(ns("plot_international_schule_item_1")),
                                                                    color = "#154194"),
 
 
@@ -330,7 +330,7 @@ mod_international_start_ui <- function(id){
                                     ),
                                     shiny::mainPanel(
                                       width = 9,
-                                      shinycssloaders::withSpinner(htmlOutput(ns("plot_international_studienzahl_map_arb_1")),
+                                      shinycssloaders::withSpinner(plotly::plotlyOutput(ns("plot_international_studienzahl_map_arb_1")),
                                                                    color = "#154194"),
 
                                       shinyBS::bsPopover(id = "h_beruf_international_1", title = "",
@@ -403,28 +403,30 @@ mod_international_start_ui <- function(id){
                                                            trigger = "hover"),
                                         tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_beruf_international_4")
                                       )
-                           ),tabPanel("MINT-Anfänger:innen und -Absolvent:innen", br(),
-
-
-                                      shiny::sidebarPanel(
-                                        width = 3,
-                                     ####   p("Was was hier nochmal der Titel? "),
-                                        mod_international_arbeitsmarkt_vergleich_ui("international_arbeitsmarkt_vergleich_1"),
-
-                                      ),
-                                      shiny::mainPanel(
-                                        width = 9,
-                                        shinycssloaders::withSpinner(highcharter::highchartOutput("plot_international_arbeitsmarkt_vergleiche_1"),
-                                                                     color = "#154194"),
-
-                                        shinyBS::bsPopover(id = "h_beruf_international_ho", title = "",
-                                                           content = paste0("Aufgrund unterschiedlicher Definitionen von &quotMINT&quot zwischen den datengebenden Organisationen können die Zahlen voneinander abweichen. Näheres dazu unter &quotHinweise und Datenquellen&quot.", "<br><br>In den OECD-Daten ist für die Zuordnung zu &quotMINT&quot ausschließlich eine Ausbildung oder ein Studium in MINT entscheidend. Der tatsächlich ausgeübte Beruf wird nicht betrachtet"),
-                                                           placement = "top",
-                                                           trigger = "hover"),
-                                        tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_beruf_international_ho")
-
-                                      )
-                           )
+                           ),
+      # Die Funktion ist grade nicht mehr da und kann deshalb gar nicht angezeigt werden.
+      # tabPanel("MINT-Anfänger:innen und -Absolvent:innen", br(),
+      #
+      #
+      #                                 shiny::sidebarPanel(
+      #                                   width = 3,
+      #                                ####   p("Was was hier nochmal der Titel? "),
+      #                                   mod_international_arbeitsmarkt_vergleich_ui("international_arbeitsmarkt_vergleich_1"),
+      #
+      #                                 ),
+      #                                 shiny::mainPanel(
+      #                                   width = 9,
+      #                                   shinycssloaders::withSpinner(plotly::plotlyOutput("plot_international_arbeitsmarkt_vergleiche_1"),
+      #                                                                color = "#154194"),
+      #
+      #                                   shinyBS::bsPopover(id = "h_beruf_international_ho", title = "",
+      #                                                      content = paste0("Aufgrund unterschiedlicher Definitionen von &quotMINT&quot zwischen den datengebenden Organisationen können die Zahlen voneinander abweichen. Näheres dazu unter &quotHinweise und Datenquellen&quot.", "<br><br>In den OECD-Daten ist für die Zuordnung zu &quotMINT&quot ausschließlich eine Ausbildung oder ein Studium in MINT entscheidend. Der tatsächlich ausgeübte Beruf wird nicht betrachtet"),
+      #                                                      placement = "top",
+      #                                                      trigger = "hover"),
+      #                                   tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_beruf_international_ho")
+      #
+      #                                 )
+      #                      )
                )
                )
              )
@@ -505,15 +507,9 @@ mod_international_start_server <- function(id, r){
 
     # tab 2
 
-    output$plot_international_schule_item_1 <- renderUI({
-      plot_list <- plot_international_schule_item(r)
-      r$plot_international_schule_item_1 <- plot_list
+    output$plot_international_schule_item_1 <- plotly::renderPlotly({
+      plot_international_schule_item(r)
 
-      r$plot_international_schule_item_1_title <- get_plot_title(
-        plot = r$plot_international_schule_item_1
-      )
-
-      plot_list
     })
 
 
@@ -558,119 +554,48 @@ mod_international_start_server <- function(id, r){
 
     # tab 3
 
+
     output$plot_international_top10_mint_1 <- renderUI({
-      plot_list <- plot_international_top10(r)
-      r$plot_international_top10_mint_1_left <- plot_list[[1]]
-      r$plot_international_top10_mint_1_right <- plot_list[[2]]
+      plots <- plot_international_top10(r)
 
-      r$plot_international_top10_min_1_left_title <- get_plot_title(
-        plot = r$plot_international_top10_mint_1_left
+      fluidRow(
+        column(
+          width = 6,
+          plots[[1]]
+        ),
+        column(
+          width = 6,
+          plots[[2]]
+        )
       )
-      r$plot_international_top10_mint_1_right_title <- get_plot_title(
-        plot = r$plot_international_top10_mint_1_right
-      )
-
-      # return plots
-      out <- highcharter::hw_grid(
-        plot_list,
-        ncol = 2)
-      out
 
     })
 
-    output$download_btn_plot_international_top10_mint_1_1 <- downloadHandler(
-      contentType = "image/png",
-      filename = function() {r$plot_international_top10_mint_1_left_title},
-      content = function(file) {
-        # creating the file with the screenshot and prepare it to download
 
-        add_caption_and_download(
-          hc = r$plot_international_top10_mint_1_left,
-          filename =  r$plot_international_top10_mint_1_left_title,
-          width = 700,
-          height = 400,
-          with_labels = FALSE)
-
-        file.copy(r$plot_international_top10_mint_1_left_title, file)
-        file.remove(r$plot_international_top10_mint_1_left_title)
-      }
-    )
-
-    output$download_btn_plot_international_top10_mint_1_2 <- downloadHandler(
-      contentType = "image/png",
-      filename = function() {r$plot_international_top10_mint_1_right_title},
-      content = function(file) {
-        # creating the file with the screenshot and prepare it to download
-        add_caption_and_download(
-          hc = r$plot_international_top10_mint_1_right,
-          filename =  r$plot_international_top10_mint_1_right_title,
-          width = 700,
-          height = 400,
-          with_labels = FALSE)
-
-        file.copy(r$plot_international_top10_mint_1_right_title, file)
-        file.remove(r$plot_international_top10_mint_1_right_title)
-      }
-    )
 
 
 
     # tab 4
 
+
+
+
     output$plot_international_top10_mint_gender_1  <- renderUI({
-      plot_list <- plot_international_top10_gender(r)
-      r$plot_international_top10_mint_gender_1_left <- plot_list[[1]]
-      r$plot_international_top10_mint_gender_1_right <- plot_list[[2]]
+      plots <- plot_international_top10_gender(r)
 
-      r$plot_international_top10_mint_gender_1_left_title <- get_plot_title(
-        plot = r$plot_international_top10_mint_gender_1_left
+      fluidRow(
+        column(
+          width = 6,
+          plots[[1]]
+        ),
+        column(
+          width = 6,
+          plots[[2]]
+        )
       )
-      r$plot_international_top10_mint_gender_1_right_title <- get_plot_title(
-        plot = r$plot_international_top10_mint_gender_1_right
-      )
-
-      # return plots
-      out <- highcharter::hw_grid(
-        plot_list,
-        ncol = 2)
-      out
 
     })
 
-    output$download_btn_plot_international_top10_mint_gender_1_1 <- downloadHandler(
-      contentType = "image/png",
-      filename = function() {r$plot_international_top10_mint_gender_1_left_title},
-      content = function(file) {
-        # creating the file with the screenshot and prepare it to download
-
-        add_caption_and_download(
-          hc = r$plot_international_top10_mint_gender_1_left,
-          filename =  r$plot_international_top10_mint_gender_1_left_title,
-          width = 700,
-          height = 400,
-          with_labels = FALSE)
-
-        file.copy(r$plot_international_top10_mint_gender_1_left_title, file)
-        file.remove(r$plot_international_top10_mint_gender_1_left_title)
-      }
-    )
-
-    output$download_btn_plot_international_top10_mint_gender_1_2 <- downloadHandler(
-      contentType = "image/png",
-      filename = function() {r$plot_international_top10_mint_gender_1_right_title},
-      content = function(file) {
-        # creating the file with the screenshot and prepare it to download
-        add_caption_and_download(
-          hc = r$plot_international_top10_mint_gender_1_right,
-          filename =  r$plot_international_top10_mint_gender_1_right_title,
-          width = 700,
-          height = 400,
-          with_labels = FALSE)
-
-        file.copy(r$plot_international_top10_mint_gender_1_right_title, file)
-        file.remove(r$plot_international_top10_mint_gender_1_right_title)
-      }
-    )
 
 
 
@@ -678,59 +603,20 @@ mod_international_start_server <- function(id, r){
     # tab 5
 
     output$plot_international_mint_top_10_1  <- renderUI({
-      plot_list <- plot_international_mint_top_10(r)
-      r$plot_international_mint_top_10_1_left <- plot_list[[1]]
-      r$plot_international_mint_top_10_1_right <- plot_list[[2]]
+      plots <- plot_international_mint_top_10(r)
 
-      r$plot_international_mint_top_10_1_left_title <- get_plot_title(
-        plot = r$plot_international_mint_top_10_1_left
+      fluidRow(
+        column(
+          width = 6,
+          plots[[1]]
+        ),
+        column(
+          width = 6,
+          plots[[2]]
+        )
       )
-      r$plot_international_mint_top_10_1_right_title <- get_plot_title(
-        plot = r$plot_international_mint_top_10_1_right
-      )
-
-      # return plots
-      out <- highcharter::hw_grid(
-        plot_list,
-        ncol = 2)
-      out
 
     })
-
-    output$download_btn_plot_international_mint_top_10_1_1 <- downloadHandler(
-      contentType = "image/png",
-      filename = function() {r$plot_international_mint_top_10_1_left_title},
-      content = function(file) {
-        # creating the file with the screenshot and prepare it to download
-
-        add_caption_and_download(
-          hc = r$plot_international_mint_top_10_1_left,
-          filename =  r$plot_international_mint_top_10_1_left_title,
-          width = 700,
-          height = 400,
-          with_labels = FALSE)
-
-        file.copy(r$plot_international_mint_top_10_1_left_title, file)
-        file.remove(r$plot_international_mint_top_10_1_left_title)
-      }
-    )
-
-    output$download_btn_plot_international_mint_top_10_1_2 <- downloadHandler(
-      contentType = "image/png",
-      filename = function() {r$plot_international_mint_top_10_1_right_title},
-      content = function(file) {
-        # creating the file with the screenshot and prepare it to download
-        add_caption_and_download(
-          hc = r$plot_international_mint_top_10_1_right,
-          filename =  r$plot_international_mint_top_10_1_right_title,
-          width = 700,
-          height = 400,
-          with_labels = FALSE)
-
-        file.copy(r$plot_international_mint_top_10_1_right_title, file)
-        file.remove(r$plot_international_mint_top_10_1_right_title)
-      }
-    )
 
 
 
@@ -739,11 +625,9 @@ mod_international_start_server <- function(id, r){
 
     # Tab 1
 
-    output$plot_international_studienzahl_map_arb_1 <- renderUI({
-      plot_list <- plot_international_map_arb(r)
+    output$plot_international_studienzahl_map_arb_1 <- plotly::renderPlotly({
+      plot_international_map_arb(r)
 
-
-      plot_list
     })
 
 
@@ -762,136 +646,56 @@ mod_international_start_server <- function(id, r){
 
     # tab 3
 
+
     output$plot_international_top10_mint_arb_1  <- renderUI({
-      plot_list <- plot_international_top10_mint_arb(r)
-      r$plot_international_top10_mint_arb_1_left <- plot_list[[1]]
-      r$plot_international_top10_mint_arb_1_right <- plot_list[[2]]
+      plots <- plot_international_top10_mint_arb(r)
 
-      r$plot_international_top10_mint_arb_1_left_title <- get_plot_title(
-        plot = r$plot_international_top10_mint_arb_1_left
+      fluidRow(
+        column(
+          width = 6,
+          plots[[1]]
+        ),
+        column(
+          width = 6,
+          plots[[2]]
+        )
       )
-      r$plot_international_top10_mint_arb_1_right_title <- get_plot_title(
-        plot = r$plot_international_top10_mint_arb_1_right
-      )
-
-      # return plots
-      out <- highcharter::hw_grid(
-        plot_list,
-        ncol = 2)
-      out
 
     })
 
-    output$download_btn_plot_international_top10_mint_arb_1_1 <- downloadHandler(
-      contentType = "image/png",
-      filename = function() {r$plot_international_mint_top_10_1_left_title},
-      content = function(file) {
-        # creating the file with the screenshot and prepare it to download
 
-        add_caption_and_download(
-          hc = r$plot_international_mint_top_10_1_left,
-          filename =  r$plot_international_mint_top_10_1_left_title,
-          width = 700,
-          height = 400,
-          with_labels = FALSE)
 
-        file.copy(r$plot_international_mint_top_10_1_left_title, file)
-        file.remove(r$plot_international_mint_top_10_1_left_title)
-      }
-    )
 
-    output$download_btn_plot_international_top10_mint_arb_1_2 <- downloadHandler(
-      contentType = "image/png",
-      filename = function() {r$plot_international_mint_top_10_1_right_title},
-      content = function(file) {
-        # creating the file with the screenshot and prepare it to download
-        add_caption_and_download(
-          hc = r$plot_international_mint_top_10_1_right,
-          filename =  r$plot_international_mint_top_10_1_right_title,
-          width = 700,
-          height = 400,
-          with_labels = FALSE)
+     # tab 4
 
-        file.copy(r$plot_international_mint_top_10_1_right_title, file)
-        file.remove(r$plot_international_mint_top_10_1_right_title)
-      }
-    )
-
-    # tab 4
 
     output$plot_international_top10_mint_arb_gender_1 <- renderUI({
-      plot_list <- plot_international_top10_mint_arb_gender(r)
-      r$plot_international_top10_mint_arb_gender_left <- plot_list[[1]]
-      r$plot_international_top10_mint_arb_gender_right <- plot_list[[2]]
-
-      r$plot_international_top10_mint_arb_gender_left_title <- get_plot_title(
-        plot = r$plot_international_top10_mint_arb_gender_left
+      plots <- plot_international_top10_mint_arb_gender(r)
+      fluidRow(
+        column(
+          width = 6,
+          plots[[1]]
+        ),
+        column(
+          width = 6,
+          plots[[2]]
+        )
       )
-      r$plot_international_top10_mint_arb_gender_right_title <- get_plot_title(
-        plot = r$plot_international_top10_mint_arb_gender_right
-      )
-
-      # return plots
-      out <- highcharter::hw_grid(
-        plot_list,
-        ncol = 2)
-      out
 
     })
 
-    output$download_btn_plot_international_top10_mint_arb_gender_1_1 <- downloadHandler(
-      contentType = "image/png",
-      filename = function() {r$plot_international_top10_mint_arb_gender_left_title},
-      content = function(file) {
-        # creating the file with the screenshot and prepare it to download
-
-        add_caption_and_download(
-          hc = r$plot_international_top10_mint_arb_gender_left,
-          filename =  r$plot_international_top10_mint_arb_gender_left_title,
-          width = 700,
-          height = 400,
-          with_labels = FALSE)
-
-        file.copy(r$plot_international_top10_mint_arb_gender_left_title, file)
-        file.remove(r$plot_international_top10_mint_arb_gender_left_title)
-      }
-    )
-
-    output$download_btn_plot_international_top10_mint_arb_gender_1_2 <- downloadHandler(
-      contentType = "image/png",
-      filename = function() {r$plot_international_top10_mint_arb_gender_right_title},
-      content = function(file) {
-        # creating the file with the screenshot and prepare it to download
-        add_caption_and_download(
-          hc = r$plot_international_top10_mint_arb_gender_right,
-          filename =  r$plot_international_top10_mint_arb_gender_right_title,
-          width = 700,
-          height = 400,
-          with_labels = FALSE)
-
-        file.copy(r$plot_international_top10_mint_arb_gender_right_title, file)
-        file.remove(r$plot_international_top10_mint_arb_gender_right_title)
-      }
-    )
 
 
-    # output$plot_international_arbeitsmarkt_vergleiche_1 <- highcharter::renderHighchart({
-    #   highcharter::highchart() %>%
-    #     highcharter::hc_title(text = "Testplot läuft")
-    # })
+
+
 
     # tab 5
-    output$plot_international_arbeitsmarkt_vergleiche_1 <- highcharter::renderHighchart({
 
-      plot <- plot_international_arbeitsmarkt_vergleiche(r)
-
-      # r$plot_international_arbeitsmarkt_vergleiche_1 <- plot
-      # r$plot_international_arbeitsmarkt_vergleiche_1_title <- get_plot_title(
-      #   plot = r$plot_international_arbeitsmarkt_vergleiche_1
-      # )
-
-      plot
-    })
+    # output$plot_international_arbeitsmarkt_vergleiche_1 <- plotly::renderPlotly({
+    #
+    #  plot_international_arbeitsmarkt_vergleiche(r)
+    #
+    # })
 
 
 

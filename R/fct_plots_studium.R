@@ -2,16 +2,9 @@
 ### Tab 1 ----
 
 
-
-
-
 map_selection_germany <- readRDS("data/map_data/map_selection_german.rds")
 map_selection_europe <- readRDS("data/map_data/map_selection_europa.rds")
 map_selection_international <- readRDS("data/map_data/map_selection_international.rds")
-
-
-
-
 
 
 #
@@ -35,7 +28,7 @@ studienzahl_mint <- function(r){
     testl1 <- if (betrachtung == "Einzelansicht - Kuchendiagramm") r$studium_anteil_i else r$studium_anteil_i_balken
     darstellung <-  r$abs_zahlen_arbeitsmarkt_einstieg_vergleich123
 
-    praep <- ifelse(regio == "Saarland", "im", "in")
+    praep <- ifelse(regio == "Saarland", " im ", " in ")
 
     df_query <- glue::glue_sql("
     SELECT region, jahr, indikator, fach, wert
@@ -69,8 +62,13 @@ studienzahl_mint <- function(r){
       dplyr::mutate(proportion = round(wert / wert_ges * 100, 1)) %>%
       dplyr::select(-fach.y)
 
-    df$wert <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
-    df$display_rel <- prettyNum(df$proportion, big.mark = ".", decimal.mark = ",")
+    df <- df %>%
+      dplyr::mutate(
+        wert_label = prettyNum(wert, big.mark = ".", decimal.mark = ","),
+        display_rel = prettyNum(proportion, big.mark = ".", decimal.mark = ",")
+      )
+    # df$wert <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
+    # df$display_rel <- prettyNum(df$proportion, big.mark = ".", decimal.mark = ",")
     df <- within(df, fach <- factor(fach, levels = c("Alle Nicht MINT-Fächer", "Alle MINT-Fächer")))
 
     if(betrachtung == "Einzelansicht - Kuchendiagramm"){
@@ -83,20 +81,19 @@ studienzahl_mint <- function(r){
 
           titel <- paste0(testl1[1], " ", praep," ", regio, " (", testy1, ")")
 
-          tooltip <-paste('Anteil: {point.display_rel}% <br> Anzahl: {point.wert}')
-          format <- '{point.display_rel}%'
+          quelle <- "Quelle: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
-          quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+          df_pie <- df_pie %>%
+            dplyr::mutate(
+              tooltip = paste0(
+                "<b>", fach, "</b><br>",
+                "Anteil: ", display_rel, " %<br>",
+                "Anzahl: ", wert
+              )
+            )
 
-
-          highcharter::hw_grid(
-
-
-            out <- piebuilder(df_pie, titel, x = "fach", y = "proportion", tooltip, color =  c("#b16fab", "#efe8e6"), format = format, quelle=quelle),
-
-
-            ncol = 1,
-            browsable = TRUE)
+          out <- piebuilder_plotly(df_pie, titel, x = "fach", y = "proportion",
+                            color =  c("#b16fab", "#efe8e6"), quelle=quelle)
 
 
         } else if(length(testl1) == 2) {
@@ -111,29 +108,38 @@ studienzahl_mint <- function(r){
           titel2 = ifelse(regio == "Saarland",
                          paste0(testl1[2], " im ", regio, " (", testy1, ")"),
                          paste0(testl1[2], " in ", regio, " (", testy1, ")"))
-          tooltip <- paste('Anteil: {point.display_rel}% <br> Anzahl: {point.wert}')
 
+          df_1_pie <- df_1_pie %>%
+            dplyr::mutate(
+              tooltip = paste0(
+                "<b>", fach, "</b><br>",
+                "Anteil: ", display_rel, " %<br>",
+                "Anzahl: ", wert
+              )
+            )
+          df_2_pie <- df_2_pie %>%
+            dplyr::mutate(
+              tooltip = paste0(
+                "<b>", fach, "</b><br>",
+                "Anteil: ", display_rel, " %<br>",
+                "Anzahl: ", wert
+              )
+            )
 
-          ####---
-          quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+          quelle <- "Quelle: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
-           highcharter::hw_grid(
+          p1 <- piebuilder_plotly(df_1_pie, titel,x = "fach", y = "proportion",
+                                  color = c("#efe8e6", "#b16fab"), quelle = quelle)
 
-            out <- piebuilder(df_1_pie, titel,x = "fach", y = "proportion", tooltip, color = c("#efe8e6", "#b16fab"), format = '{point.display_rel}%', quelle = quelle),
-            out <- piebuilder(df_2_pie, titel2,x = "fach", y = "proportion", tooltip, color = c("#efe8e6", "#b16fab"), format = '{point.display_rel}%', quelle = quelle),
+          p2 <- piebuilder_plotly(df_2_pie, titel2,x = "fach", y = "proportion",
+                                  color = c("#efe8e6", "#b16fab"), quelle = quelle)
 
-
-            ncol = 2,
-            browsable = TRUE
-          )
-
+          out <- list(p1, p2)
         }
 
-
     }
-
        else if(betrachtung == "Gruppenvergleich - Balkendiagramm"){
-         # req(r$abs_zahlen_fach_vergleich_balken14)
+
          df <- df %>% dplyr::filter(indikator %in% testl1)
          df <- df[with(df, order(proportion, decreasing = TRUE)), ]
 
@@ -141,116 +147,67 @@ studienzahl_mint <- function(r){
          if(darstellung == "In Prozent"){
 
 
+         titel <-  paste0("MINT-Anteil in verschiedenen Studierenden-Gruppen", praep, regio, " (", testy1, ")")
 
-         titel <-  ifelse(regio == "Saarland",
-                          paste0("MINT-Anteil in verschiedenen Studierenden-Gruppen im ", regio, " (", testy1, ")"),
-                          paste0("MINT-Anteil in verschiedenen Studierenden-Gruppen in ", regio, " (", testy1, ")"))
+         order <- df %>%
+           dplyr::filter(fach == "Alle MINT-Fächer") %>%
+           dplyr::arrange(dplyr::desc(proportion)) %>%
+           dplyr::pull(indikator) %>%
+           rev()
 
-         highcharter::hchart(df, 'bar', highcharter::hcaes(y = proportion, x = indikator, group =forcats::fct_rev(fach)))%>%
-           highcharter::hc_tooltip(pointFormat = "Anteil: {point.display_rel} % <br> Anzahl: {point.wert}") %>%
-           highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"),  reversedStacks =  F) %>%
-           highcharter::hc_xAxis(title = list(text = "")) %>%
-           highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
-           highcharter::hc_colors(c( "#b16fab","#efe8e6")) %>%
-           highcharter::hc_title(text = ifelse(regio == "Saarland",
-                                               paste0("MINT-Anteil in verschiedenen Studierenden-Gruppen im ", regio, " (", testy1, ")"),
-                                               paste0("MINT-Anteil in verschiedenen Studierenden-Gruppen in ", regio, " (", testy1, ")")),
-                                 margin = 45,
-                                 align = "center",
-                                 style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
-           highcharter::hc_chart(
-             style = list(fontFamily = "Calibri Regular", fontSize = "14px")
-           ) %>%
-           highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
-           highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
-                                   style = list(fontSize = "11px", color = "gray")) %>%
-           highcharter::hc_exporting(enabled = TRUE,
-                                     buttons = list(
-                                       contextButton = list(
-                                         menuItems = list("downloadPNG", "downloadCSV",
-                                                          list(
-                                                            text = "Daten für GPT",
-                                                            onclick = htmlwidgets::JS(sprintf(
-                                                              "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
+         df <- df %>%
+           dplyr::mutate(
+             .tooltip = paste0(
+               "<b><span style='font-size:15px;'>", indikator, "</span></b><br>",
+               "<span style='font-size:15px;'>",fach, "</span><br>",
+               "Anteil: ", round(proportion, 1), " %<br>",
+               "Anzahl: ", wert_label
+             ))
 
-     var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle:Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
 
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-   }", gsub("'", "\\\\'", titel),gsub("'", "\\\\'", titel) ))))
-                                       )
-                                     )
-           )
+         x <- "indikator"
+         y <- "proportion"
+         group <- "fach"
+         color <- c("#b16fab", "#efe8e6")
+         quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+         quelle_y <- -0.20
+
+
+         out <- balkenbuilder_plotly(df=df, x=x, y=y, titel=titel, orientation = "h",percent=TRUE, group=group, color=color,
+                                     order=order, stacking = TRUE,quelle_y=quelle_y, quelle=quelle)
+
+
+
          } else {
-           titel <-  ifelse(regio == "Saarland",
-                            paste0("MINT-Anteil in verschiedenen Studierenden-Gruppen im ", regio, " (", testy1, ")"),
-                            paste0("MINT-Anteil in verschiedenen Studierenden-Gruppen in ", regio, " (", testy1, ")"))
+
+
+           titel <-  paste0("MINT-Anteil in verschiedenen Studierenden-Gruppen", praep, regio, " (", testy1, ")")
+
+           order <- rev(unique(df$indikator))
 
            df <- df %>%
-             dplyr::filter(fach != "Alle Nicht MINT-Fächer")
+             dplyr::mutate(
+               .tooltip = paste0(
+                 "<b><span style='font-size:15px;'>", indikator, "</span></b><br>",
+                 "<span style='font-size:15px;'>",fach, "</span><br>",
+                 "Anteil: ", round(proportion, 1), " %<br>",
+                 "Anzahl: ", wert_label
+               ))
 
-           highcharter::hchart(df, 'bar', highcharter::hcaes(y = wert_ges, x = indikator, group =forcats::fct_rev(fach)))%>%
-             highcharter::hc_tooltip(pointFormat = "Anteil: {point.display_rel} % <br> Anzahl: {point.wert}") %>%
-             highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}"),  reversedStacks =  F) %>%
-             highcharter::hc_xAxis(title = list(text = "")) %>%
-             highcharter::hc_plotOptions(bar = list(stacking = "value")) %>%
-             highcharter::hc_colors(c( "#b16fab","#efe8e6")) %>%
-             highcharter::hc_title(text = ifelse(regio == "Saarland",
-                                                 paste0("MINT-Anzahl in verschiedenen Studierenden-Gruppen im ", regio, " (", testy1, ")"),
-                                                 paste0("MINT-Anzahl in verschiedenen Studierenden-Gruppen in ", regio, " (", testy1, ")")),
-                                   margin = 45,
-                                   align = "center",
-                                   style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
-             highcharter::hc_chart(
-               style = list(fontFamily = "Calibri Regular", fontSize = "14px")
-             ) %>%
-             highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
-             highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
-                                     style = list(fontSize = "11px", color = "gray")) %>%
-             highcharter::hc_exporting(enabled = TRUE,
-                                       buttons = list(
-                                         contextButton = list(
-                                           menuItems = list("downloadPNG", "downloadCSV",
-                                                            list(
-                                                              text = "Daten für GPT",
-                                                              onclick = htmlwidgets::JS(sprintf(
-                                                                "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
 
-     var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle:Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
+           x <- "indikator"
+           y <- "wert"
+           group <- "fach"
+           color <- c("#b16fab", "#efe8e6")
+           quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+           quelle_y <- -0.25
 
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-   }", gsub("'", "\\\\'", titel),gsub("'", "\\\\'", titel) ))))
-                                         )
-                                       )
-             )
+
+           out <- balkenbuilder_plotly(df=df, x=x, y=y, titel=titel, orientation = "h",percent=FALSE, group=group, color=color,
+                                       order=order, stacking=FALSE,quelle_y=quelle_y, quelle=quelle)
+
+
          }
-
-
-
-
        }
 }
 
@@ -278,9 +235,6 @@ studienzahl_verlauf_single <- function(r) {
 
   abs_zahlen_selector <- r$abs_zahlen_einstieg_verlauf_indi
 
-
-  #
-
   df_query <- glue::glue_sql("
     SELECT jahr, fach, indikator, wert
     FROM studierende_detailliert
@@ -296,9 +250,6 @@ studienzahl_verlauf_single <- function(r) {
 
 
   if(abs_zahlen_selector == "In Prozent"){
-#
-
-#
 
     df_query <- glue::glue_sql("
     SELECT jahr, fach, indikator, wert as wert_ges
@@ -313,60 +264,55 @@ studienzahl_verlauf_single <- function(r) {
     alle <- DBI::dbGetQuery(con, df_query)
 
 
-
     df <- df %>% dplyr::left_join(alle, by = c( "jahr", "indikator")) %>%
       dplyr::rename(fach = fach.x) %>%
       dplyr::mutate(proportion = round(wert/wert_ges*100,1)) %>%
       dplyr::select(-fach.y)
 
-    hcoptslang <- getOption("highcharter.lang")
-    hcoptslang$thousandsSep <- "."
-    options(highcharter.lang = hcoptslang)
-
 
     df <- df[with(df, order( jahr, decreasing = FALSE)), ]
-
-    #Trennpunkte für lange Zahlen ergänzen
-    df$display_rel <- prettyNum(df$proportion, big.mark = ".", decimal.mark = ",")
-
-
 
     titel <- ifelse(regio == "Saarland",
                     paste0("MINT-Anteil in verschiedenen Studierenden-Gruppen im ", regio),
                     paste0("MINT-Anteil in verschiedenen Studierenden-Gruppen in ", regio))
-    tooltip <- "{point.indikator} <br> Anteil: {point.display_rel}%"
-    format <- "{value}%"
+    df <- df %>%
+      dplyr::mutate(
+        tooltip = paste0(
+          "<b>", indikator, "</b><br>",
+          "Jahr: ", jahr, "<br>",
+          "Anteil: ", prettyNum(proportion, big.mark = ".", decimal.mark = ","), " %"
+        )
+      )
     color <- c("#b16fab", "#154194", "#66cbaf", "#fbbf24", "#AFF3E0", "#2D6BE1", "#008F68", "#8893a7", "#ee7775", "#9d7265", "#35bd97",
-               "#bfc6d3", "#5f94f9", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
+               "#bfc6d3", "#5f94f9", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")[1:length(unique(df$indikator))]
 
     quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
-    out <- linebuilder(df, titel, x = "jahr", y = "proportion", group = "indikator", tooltip, format, color, quelle = quelle)
+    out <- linebuilder_plotly(df, titel, x = "jahr", y = "proportion", group = "indikator", color = color, quelle = quelle)
 
 
 
   }else if (abs_zahlen_selector == "Anzahl"){
 
-    hcoptslang <- getOption("highcharter.lang")
-    hcoptslang$thousandsSep <- "."
-    options(highcharter.lang = hcoptslang)
-
-
     df <- df[with(df, order( jahr, decreasing = FALSE)), ]
-
-    #Trennpunkte für lange Zahlen ergänzen
-
-    df$display_abs <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
 
     titel <- ifelse(regio == "Saarland",
                     paste0("Anzahl an Studierenden in MINT im ", regio),
                     paste0("Anzahl an Studierenden in MINT in ", regio))
-    tooltip <- "{point.indikator} <br> Anzahl: {point.display_abs}"
-    format <- "{value:, f}"
+    df <- df %>%
+      dplyr::mutate(
+        tooltip = paste0(
+          "<b>", indikator, "</b><br>",
+          "Jahr: ", jahr, "<br>",
+          "Anzahl: ", prettyNum(wert, big.mark = ".", decimal.mark = ",")
+        )
+      )
+    format <- ",d"
     quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt"
     color <- c("#b16fab", "#154194", "#66cbaf", "#fbbf24", "#AFF3E0", "#2D6BE1", "#008F68", "#8893a7", "#ee7775", "#9d7265", "#35bd97",
-               "#bfc6d3", "#5f94f9", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
-    out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color, quelle = quelle)
+               "#bfc6d3", "#5f94f9", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")[1:length(unique(df$indikator))]
+
+    out <- linebuilder_plotly(df, titel, x = "jahr", y = "wert", group = "indikator", format = format, color = color, quelle = quelle)
 
 
   }
@@ -412,7 +358,7 @@ studierende_bula_mint <- function(r) {
     df <- DBI::dbGetQuery(con, df_query)
 
 
-
+    #praep <- ifelse(region == "Saarland", " im ", " in ")
 
     df <- df %>%
       dplyr::select(-fachbereich,- mint_select, -typ )%>%
@@ -444,16 +390,18 @@ studierende_bula_mint <- function(r) {
 
     # plot
     df <- df[df$fachbereich == "MINT",]
-    joinby <- c("name", "region")
-    name <- paste0(label_m, " in MINT")
-    tooltip <- "{point.region} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.display_abs}"
+    df <- df %>%
+      dplyr::mutate(
+        tooltip = paste0(
+          "<b>", region, "</b><br>",
+          "Anteil: ", display_rel, " %<br>",
+          "Anzahl: ", display_abs
+        )
+      )
     titel <- paste0("MINT-Anteil von ", label_m, " (", timerange, ")")
-    mincolor <- "#f4f5f6"
-    map_selection <- map_selection_germany
-    maxcolor <- "#b16fab"
     quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
-    out <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection, quelle = quelle)
+    out <- mapbuilder_plotly(df, titel = titel, value_col = "proportion", quelle = quelle)
 
 
   }
@@ -468,7 +416,6 @@ studierende_bula_mint <- function(r) {
     states <- r$bulas_verlauf_regio
 
 
-
     df_query <- glue::glue_sql("
     SELECT jahr, fach, indikator, region, wert
     FROM studierende_detailliert
@@ -480,9 +427,6 @@ studierende_bula_mint <- function(r) {
                                ", .con = con)
 
     df <- DBI::dbGetQuery(con, df_query)
-
-
-
 
 
     # Vorbereitung Überschrift
@@ -516,50 +460,58 @@ studierende_bula_mint <- function(r) {
 
       alle <- DBI::dbGetQuery(con, df_query)
 
-
-
       df <- df %>% dplyr::left_join(alle, by = c( "jahr", "indikator", "region")) %>%
         dplyr::rename(fach = fach.x) %>%
         dplyr::mutate(prop = round(wert/wert_ges*100,1)) %>%
         dplyr::select(-fach.y)
 
+      sorted_indicators <- df %>%
+        dplyr::group_by(region) %>%
+        dplyr::summarize(m_value = mean(round(wert, 1), na.rm = TRUE)) %>%
+        dplyr::arrange(m_value) %>%
+        dplyr::pull(region)
 
+      df$region <- factor(df$region, levels = sorted_indicators)
 
       df <- df[with(df, order(region, jahr, decreasing = FALSE)), ]
-      df$display_rel <- prettyNum(df$prop, big.mark = ".", decimal.mark = ",")
 
       titel <- paste0("Anteil von ", label, " in MINT-Fächern an allen ", help_l)
-      tooltip <- "MINT-Anteil in {point.region} <br> Wert: {point.display_rel} %"
-      format <- "{value}%"
+      df <- df %>%
+        dplyr::mutate(
+          tooltip = paste0(
+            "<b>", region, "</b><br>",
+            "Jahr: ", jahr, "<br>",
+            "Anteil: ", prettyNum(prop, big.mark = ".", decimal.mark = ","), " %"
+          )
+        )
       color <- c("#b16fab", "#154194", "#66cbaf", "#fbbf24", "#AFF3E0", "#2D6BE1", "#008F68", "#8893a7", "#ee7775", "#9d7265", "#35bd97",
-                 "#bfc6d3", "#5f94f9", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
+                 "#bfc6d3", "#5f94f9", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")[1:length(unique(df$region))]
       quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt"
-      out <- linebuilder(df, titel, x = "jahr", y = "prop", group = "region", tooltip, format, color, quelle = quelle)
+      out <- linebuilder_plotly(df, titel, x = "jahr", y = "prop", group = "region", color = color, quelle = quelle)
 
     } else if(absolut_selector=="Anzahl"){
 
-
-      hcoptslang <- getOption("highcharter.lang")
-      hcoptslang$thousandsSep <- "."
-      options(highcharter.lang = hcoptslang)
-
-
       df <- df[with(df, order(region, jahr, decreasing = FALSE)), ]
-      df$display_abs <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
-
 
       titel <- paste0("Anzahl an ", label, " in MINT-Fächern ")
-      tooltip <- "{point.region} <br> Anzahl: {point.display_abs}"
-      format <- "{value:, f}"
+      df <- df %>%
+        dplyr::mutate(
+          tooltip = paste0(
+            "<b>", region, "</b><br>",
+            "Jahr: ", jahr, "<br>",
+            "Anzahl: ", prettyNum(wert, big.mark = ".", decimal.mark = ",")
+          )
+        )
+      format <- ",d"
       color <- c("#b16fab", "#154194", "#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
-                 "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
+                 "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")[1:length(unique(df$region))]
       quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt"
-      out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "region", tooltip, format, color, quelle = quelle)
+      out <- linebuilder_plotly(df, titel, x = "jahr", y = "wert", group = "region", format = format, color = color, quelle = quelle)
     }
 
   }
 
-  else if(betrachtung == "Gruppenvergleich - Balkendiagramm"){##
+  else if(betrachtung == "Gruppenvergleich - Balkendiagramm"){
 
     timerange <- r$bulas_balken_date
     r_lab1 <- r$bulas_balken_l
@@ -576,8 +528,6 @@ studierende_bula_mint <- function(r) {
                                ", .con = con)
 
     df_ges <- DBI::dbGetQuery(con, df_query)
-
-
 
 
     df_query <- glue::glue_sql("
@@ -614,129 +564,135 @@ studierende_bula_mint <- function(r) {
     r_lab1 <- ifelse(r_lab1 == "internationale Studierende", "internationalen Studierenden", r_lab1)
     r_lab1 <- ifelse(r_lab1 == "Studierende (Lehramt)", "Studierenden im Lehramt", r_lab1)
     r_lab1 <- ifelse(r_lab1 == "Absolvent:innen (Lehramt)", "Lehramts-Absolvent:innen", r_lab1)
+    r_lab1 <- ifelse(r_lab1 == "internationale Absolvent:innen", "internationalen Absolvent:innen", r_lab1)
     r_lab1 <- ifelse(r_lab1 == "internationale Studienanfänger:innen (1. Hochschulsemester)",
                     "internationalen Studienanfänger:innen (1. Hochschulsemester)", r_lab1)
 
     help_l <- r_lab1
     help_l <- ifelse(r_lab1 == "internationalen Studienanfänger:innen (1. Hochschulsemester)",
-                     "internationalen Studienanfänger:innen", help_l)
+                    "internationalen Studienanfänger:innen", help_l)
     help_l <- ifelse(r_lab1 == "Studienanfänger:innen (1. Hochschulsemester)", "Studienanfänger:innen", help_l)
+
+
+
+     titel <- if (r_lab1 %in% c(
+      "internationalen Studienanfänger:innen (1. Hochschulsemester)",
+      "Studienanfänger:innen (1. Hochschulsemester)",
+      "internationalen Studierenden",
+      "internationalen Absolvent:innen")) {
+      paste0( "Anteil von ", r_lab1," in MINT-Fächern an allen ", help_l," (", timerange, ")")
+    } else {
+      paste0("Anteil von ", r_lab1," in MINT-Fächern an allen ", help_l," (", timerange, ")")}
 
 
     df <- df[with(df, order(proportion, decreasing = TRUE)),]
 
-  titel <- paste0( "Anteil von ", r_lab1 ," in MINT-Fächern an allen ", help_l,  " (", timerange, ")")
-
 
   if(darstellung == "In Prozent"){
-    # Plot
-    #nicht als funktion, da es 1) zu komplex und 2) besondere feinheiten enthält, die die funktion balkenbuilder überlasten würde
-    out <- highcharter::hchart(df, 'bar', highcharter::hcaes(x= region, y = proportion))%>%
-      highcharter::hc_tooltip(pointFormat = "{point.fach} <br> Anteil: {point.proportion} % <br> Anzahl: {point.wert}") %>% #Inhalt für Hover-Box
-      highcharter::hc_yAxis(title = list(text=""), labels = list(format = "{value}%")) %>% #x-Achse -->Werte in %
-      highcharter::hc_xAxis(title= list(text="")) %>% #Y-Achse - keine Beschriftung
 
-      #Anpassung der Farben
-      highcharter::hc_plotOptions(bar = list(
-        colorByPoint = TRUE,
-        colors = ifelse(df$region == "Deutschland", "#b16fab",
-                        ifelse(df$region == "Ostdeutschland (inkl. Berlin)", "#d3a4d7",
-                               ifelse(df$region == "Westdeutschland (o. Berlin)", "#d3a4d7", "#A9A9A9"))))) %>%
-      highcharter::hc_title(text = paste0( "Anteil von ", r_lab1 ," in MINT-Fächern an allen ", help_l,  " (", timerange, ")"),
-                            margin = 25,
-                            align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
-      highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
-                              style = list(fontSize = "11px", color = "gray")) %>% #Schrift-Formatierung Überschrift
-      highcharter::hc_exporting(enabled = TRUE,
-                                buttons = list(
-                                  contextButton = list(
-                                    menuItems = list("downloadPNG", "downloadCSV",
-                                                     list(
-                                                       text = "Daten für GPT",
-                                                       onclick = htmlwidgets::JS(sprintf(
-                                                         "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
 
-     var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle:Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
+    order <- unique(df$region)
 
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-   }", gsub("'", "\\\\'", titel),gsub("'", "\\\\'", titel)    ))))
-                                  )
-                                )
-      )
+    df <- df %>%
+      dplyr::mutate(
+        .tooltip = paste0(
+          "<b><span style='font-size:15px;'>", region, "</span></b><br>",
+          "<span style='font-size:15px;'>","Alle MINT-Fächer", "</span><br>",
+          "Anteil: ", round(proportion, 1), " %<br>",
+          "Anzahl: ", wert
+        ))
+
+
+    x <- "region"
+    y <- "proportion"
+    color <- c(
+      "Deutschland" = "#b16fab",
+      "Ostdeutschland (inkl. Berlin)" = "#d3a4d7",
+      "Westdeutschland (o. Berlin)" = "#d3a4d7",
+      "Baden-Württemberg" = "#A9A9A9",
+      "Bayern" = "#A9A9A9",
+      "Berlin" = "#A9A9A9",
+      "Brandenburg" = "#A9A9A9",
+      "Bremen" = "#A9A9A9",
+      "Hamburg" = "#A9A9A9",
+      "Hessen" = "#A9A9A9",
+      "Mecklenburg-Vorpommern" = "#A9A9A9",
+      "Niedersachsen" = "#A9A9A9",
+      "Nordrhein-Westfalen" = "#A9A9A9",
+      "Rheinland-Pfalz" = "#A9A9A9",
+      "Saarland" = "#A9A9A9",
+      "Sachsen" = "#A9A9A9",
+      "Sachsen-Anhalt" = "#A9A9A9",
+      "Schleswig-Holstein" = "#A9A9A9",
+      "Thüringen" = "#A9A9A9"
+    )
+
+    quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle_y <- -0.10
+
+
+    out <- balkenbuilder_plotly(df=df, x=x, y=y, titel=titel, orientation = "h",percent=TRUE, color=color,
+                                order=order, stacking=FALSE, quelle_y=quelle_y, quelle=quelle)%>%
+      plotly::layout(
+        yaxis = list(dtick = 1),
+        margin = list(t = 80, b = 100))
+
+
   } else {
 
 
     df$wert <- as.numeric(gsub("\\.", "", df$wert))
     format <- "{value}"
 
-    out <- highcharter::hchart(df, 'bar', highcharter::hcaes(x= region, y = wert))%>%
-      highcharter::hc_tooltip(pointFormat = "{point.fach} <br> Anteil: {point.proportion} % <br> Anzahl: {point.wert}") %>% #Inhalt für Hover-Box
-      highcharter::hc_chart(lang = list(thousandsSep = ".", decimalPoint = ",")) %>%
-      highcharter::hc_yAxis(title = list(text=""), labels = list(format = "{value:,.0f}")) %>%
-      highcharter::hc_xAxis(title= list(text="")) %>% #Y-Achse - keine Beschriftung
+
+    df <- df %>%
+      dplyr::mutate(
+        wert_label = prettyNum(wert, big.mark = ".", decimal.mark = ","),
+        .tooltip = paste0(
+          "<b><span style='font-size:15px;'>", region, "</span></b><br>",
+          "<span style='font-size:15px;'>","Alle MINT-Fächer", "</span><br>",
+          "Anteil: ", round(proportion, 1), " %<br>",
+          "Anzahl: ", wert_label
+        ))
 
 
+    x <- "region"
+    y <- "wert"
 
-      #Anpassung der Farben
-      highcharter::hc_plotOptions(bar = list(
-        colorByPoint = TRUE,
-        colors = ifelse(df$region == "Deutschland", "#b16fab",
-                        ifelse(df$region == "Ostdeutschland (inkl. Berlin)", "#d3a4d7",
-                               ifelse(df$region == "Westdeutschland (o. Berlin)", "#d3a4d7", "#A9A9A9"))))) %>%
-      highcharter::hc_title(text = paste0( "Anteil von ", r_lab1 ," in MINT-Fächern an allen ", help_l,  " (", timerange, ")"),
-                            margin = 25,
-                            align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
-      highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
-                              style = list(fontSize = "11px", color = "gray")) %>% #Schrift-Formatierung Überschrift
-      highcharter::hc_exporting(enabled = TRUE,
-                                buttons = list(
-                                  contextButton = list(
-                                    menuItems = list("downloadPNG", "downloadCSV",
-                                                     list(
-                                                       text = "Daten für GPT",
-                                                       onclick = htmlwidgets::JS(sprintf(
-                                                         "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
+    color <- c(
+      "Deutschland" = "#b16fab",
+      "Ostdeutschland (inkl. Berlin)" = "#d3a4d7",
+      "Westdeutschland (o. Berlin)" = "#d3a4d7",
+      "Baden-Württemberg" = "#A9A9A9",
+      "Bayern" = "#A9A9A9",
+      "Berlin" = "#A9A9A9",
+      "Brandenburg" = "#A9A9A9",
+      "Bremen" = "#A9A9A9",
+      "Hamburg" = "#A9A9A9",
+      "Hessen" = "#A9A9A9",
+      "Mecklenburg-Vorpommern" = "#A9A9A9",
+      "Niedersachsen" = "#A9A9A9",
+      "Nordrhein-Westfalen" = "#A9A9A9",
+      "Rheinland-Pfalz" = "#A9A9A9",
+      "Saarland" = "#A9A9A9",
+      "Sachsen" = "#A9A9A9",
+      "Sachsen-Anhalt" = "#A9A9A9",
+      "Schleswig-Holstein" = "#A9A9A9",
+      "Thüringen" = "#A9A9A9"
+    )
 
-     var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle:Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
-
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-   }", gsub("'", "\\\\'", titel),gsub("'", "\\\\'", titel)    ))))
-                                  )
-                                )
-      )
+    quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle_y <- -0.10
 
 
-
+    out <- balkenbuilder_plotly(df=df, x=x, y=y, titel=titel, orientation = "h",percent=FALSE, color=color,
+                                stacking=FALSE,quelle_y=quelle_y, quelle=quelle)%>%
+      plotly::layout(
+        yaxis = list(dtick = 1),
+        margin = list(t = 80, b = 100))
 
 
   }
-
   }
 
 
@@ -1262,6 +1218,8 @@ plot_mint_faecher <- function(r){
 
     darstellung <- r$abs_zahlen_arbeitsmarkt_einstieg_vergleich_derq
 
+    praep <- ifelse(regio == "Saarland", " im ", " in ")
+
     color_fachbereich <- c(
       "Ingenieurwissenschaften (inkl. Informatik)" = "#00a87a",
       "Mathematik, Naturwissenschaften" = "#fcc433",
@@ -1340,11 +1298,6 @@ plot_mint_faecher <- function(r){
 
     df <- df %>%
       dplyr::select(-region, -geschlecht, - jahr, -bereich, -mint_select, -typ)
-
-
-
-
-
 
 
     df_query <- glue::glue_sql("
@@ -1429,13 +1382,12 @@ plot_mint_faecher <- function(r){
     df <- df %>% dplyr::filter(prop > 2)
   }
 
-  if(ebene == "MINT-Fachbereiche"){
-    df <- df %>%
-      dplyr::mutate(color = color_fachbereich[fach])
-  }else{
-    df <- df %>%
-      dplyr::mutate(color = color_fach_pie[fach])
-  }
+  df <- df %>%
+    dplyr::mutate(color1 = color_fach_pie[fach])
+
+  df <- df %>%
+    dplyr::mutate(color2 = color_fachbereich[fach])
+
 
 
   if(betrachtung == "Einzelansicht - Kuchendiagramm"){
@@ -1458,36 +1410,180 @@ plot_mint_faecher <- function(r){
     titel = ifelse(regio == "Saarland",
                    paste0("MINT-Fächeranteile von ", titel_help , " im ", regio, " (", timerange, ")"),
                    paste0("MINT-Fächeranteile von ", titel_help , " in ", regio, " (", timerange, ")"))
-    tooltip <- paste('Anteil: {point.prop}% <br> Anzahl: {point.wert}')
-    color = as.character(df$color)
+    df <- df %>%
+      dplyr::mutate(
+        tooltip = paste0(
+          "<b>", fach, "</b><br>",
+          "Anteil: ", prop, " %<br>",
+          "Anzahl: ", wert
+        )
+      )
 
-    quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "Quelle: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
-    out <- piebuilder(df, titel, x = "fach", y ="prop", tooltip, color, format='{point.prop}%', quelle = quelle)
-
+    if(ebene == "MINT-Fächergruppen"){
+      out <- piebuilder_plotly(df, titel, x = "fach", y ="prop",
+                               color=as.character(df$color1), quelle = "")
+    }else{
+      out <- piebuilder_plotly(df, titel, x = "fach", y ="prop",
+                               color=as.character(df$color2), quelle = quelle)
+    }
 
     } else if(length(label_w)==2){
+
+
+      df1 <- df %>%
+        dplyr::filter(indikator == label_w[1])
+
+      df2 <- df %>%
+        dplyr::filter(indikator == label_w[2])
+
+
+      reihenfolge_faecher <- names(color_fach_pie)
+
+      df1 <- df1 %>%
+        dplyr::mutate(
+          fach = factor(fach, levels = reihenfolge_faecher)
+        ) %>%
+        dplyr::arrange(fach)
+
+      df2 <- df2 %>%
+        dplyr::mutate(
+          fach = factor(fach, levels = reihenfolge_faecher)
+        ) %>%
+        dplyr::arrange(fach)
+
+      df1 <- df1 %>%
+        dplyr::mutate(color1 = color_fach_pie[as.character(fach)])
+
+      df2 <- df2 %>%
+        dplyr::mutate(color1 = color_fach_pie[as.character(fach)])
+
+
       titel_help1 <- ueberschrift_fct(label_w[1])
       titel_help2 <- ueberschrift_fct(label_w[2])
 
       titel1 <- paste0("MINT-Fächeranteile von ", titel_help1 , " ", praep, " ", regio, " (", timerange, ")")
       titel2 <- paste0("MINT-Fächeranteile von ", titel_help2 , " ", praep, " ", regio, " (", timerange, ")")
-      tooltip <- paste('Anteil: {point.prop}% <br> Anzahl: {point.wert}')
-      color1 = as.character(df[df$indikator == label_w[1],]$color)
-      color2 = as.character(df[df$indikator == label_w[2],]$color)
 
-      quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      df1 <- df1 %>%
+        dplyr::mutate(
+          tooltip = paste0(
+            "<span style='font-size:15px'><b>", fach, "</b></span><br>",
+            "Anteil: ", prop, " %<br>",
+            "Anzahl: ", wert
+          )
+        )
 
-      #noch nutzen?
+      df2 <- df2 %>%
+        dplyr::mutate(
+          tooltip = paste0(
+            "<span style='font-size:15px'><b>", fach, "</b></span><br>",
+            "Anteil: ", prop, " %<br>",
+            "Anzahl: ", wert
+          )
+        )
 
 
-      out <- highcharter::hw_grid(
-        p1 <- piebuilder(df[df$indikator == label_w[1],], titel1, x = "fach", y ="prop", tooltip, color1, format='{point.prop}%', quelle = quelle),
-        p2 <- piebuilder(df[df$indikator == label_w[2],], titel2, x = "fach", y ="prop", tooltip, color2, format='{point.prop}%', quelle = quelle),
-        ncol = 2,
-        browsable = TRUE
-      )
+      quelle <- "Quelle: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
+      p1 <- piebuilder_plotly(df=df1,
+                       titel1, x = "fach", y ="prop", legend_y=-0.02, quelle_y= 1,
+                       color=as.character(df1$color1), quelle = quelle)
+
+      p2 <- piebuilder_plotly(df=df2, titel2, legend_y=-0.02, quelle_y= 1,
+                       x = "fach", y ="prop", color=as.character(df2$color1), quelle = quelle)
+
+      if(ebene == "MINT-Fachbereiche"){
+
+        df1 <- df %>%
+          dplyr::filter(indikator == label_w[1])
+
+        df2 <- df %>%
+          dplyr::filter(indikator == label_w[2])
+
+
+        reihenfolge <- c(
+          "Alle Nicht MINT-Fächer",
+          "Ingenieurwissenschaften (inkl. Informatik)",
+          "Mathematik, Naturwissenschaften"
+        )
+
+
+        df1 <- df1 %>%
+          dplyr::filter(fach %in% reihenfolge) %>%
+          dplyr::mutate(fach = factor(fach, levels = reihenfolge)) %>%
+          dplyr::arrange(fach)
+
+        df2 <- df2 %>%
+          dplyr::filter(fach %in% reihenfolge) %>%
+          dplyr::mutate(fach = factor(fach, levels = reihenfolge)) %>%
+          dplyr::arrange(fach)
+
+        df1 <- df1 %>%
+          dplyr::mutate(
+            tooltip = paste0(
+              "<span style='font-size:15px'><b>", fach, "</b></span><br>",
+              "Anteil: ", prop, " %<br>",
+              "Anzahl: ", wert
+            )
+          )
+
+        df2 <- df2 %>%
+          dplyr::mutate(
+            tooltip = paste0(
+              "<span style='font-size:15px'><b>", fach, "</b></span><br>",
+              "Anteil: ", prop, " %<br>",
+              "Anzahl: ", wert
+            )
+          )
+
+
+
+        p1 <- piebuilder_plotly(df=df1,
+                                titel1, x = "fach", y ="prop", legend_y = 0.03, quelle_y=-0.08,
+                                color=as.character(df1$color2), quelle = "")|>
+          plotly::layout(
+            annotations = list(
+              list(
+                text = quelle,
+                x = 1,
+                y = -0.08,
+                xref = "paper",
+                yref = "paper",
+                xanchor = "right",
+                yanchor = "top",
+                showarrow = FALSE,
+                font = list(size = 11, color = "gray", family = "Calibri Regular", align = "right")
+              )
+            )
+          )
+        p2 <- piebuilder_plotly(df=df2, titel2, legend_y = 0.03, quelle_y=-0.08,
+                                x = "fach", y ="prop", color=as.character(df2$color2), quelle = "")|>
+          plotly::layout(
+            annotations = list(
+              list(
+                text = quelle,
+                x = 1,
+                y = -0.08,
+                xref = "paper",
+                yref = "paper",
+                xanchor = "right",
+                yanchor = "top",
+                showarrow = FALSE,
+                font = list(size = 11, color = "gray", family = "Calibri Regular", align = "right")
+              )
+            )
+          )
+      }else{
+        p1 <- piebuilder_plotly(df=df1, titel1, legend_y = -0.05, quelle_y=-0.12,
+                                x = "fach", y ="prop", color=as.character(df2$color2), quelle = "")
+
+        p2 <- piebuilder_plotly(df=df2, titel2, legend_y = -0.05, quelle_y=-0.12,
+                                x = "fach", y ="prop", color=as.character(df2$color2), quelle = "")
+      }
+
+    out <- list(p1, p2)
 }
   }
   else if(betrachtung == "Gruppenvergleich - Balkendiagramm"){
@@ -1495,121 +1591,83 @@ plot_mint_faecher <- function(r){
     df <- df[with(df, order(prop, decreasing = TRUE)), ]
 
     if(ebene == "MINT-Fachbereiche"){
-      df <- df %>%
-        dplyr::mutate(color = color_fachbereich[fach])
-      col <- df$color
-      titel <- ifelse(regio == "Saarland",
-                      paste0( "Anteil der MINT-Fachbereiche an allen Fächern im ",regio," (", timerange, ")", br(), "Studierendengruppe: ",label_w),
-                      paste0( "Anteil der MINT-Fachbereiche an allen Fächern in ",regio," (", timerange, ")", br(), "Studierendengruppe: ",label_w))
-    }else{
-      df <- df %>%
-        dplyr::mutate(color = color_fach_balken[fach])
-      col <- df$color
-      titel <- ifelse(regio == "Saarland",
-                      paste0( "Anteil der MINT-Fächergruppen an allen MINT-Fächern im ",regio," (", timerange, ")", br(), "Studierendengruppe: ",label_w),
-                      paste0( "Anteil der MINT-Fächergruppen an allen MINT-Fächern in ",regio," (", timerange, ")", br(), "Studierendengruppe: ",label_w))
 
-    }
+      color <- color_fachbereich
+      titel <- paste0( "Anteil der MINT-Fachbereiche an allen Fächern", praep, regio," (", timerange, ")<br>", "Studierendengruppe: ",label_w)
+
+        }else{
+
+      color <- color_fach_balken
+      titel <- paste0( "Anteil der MINT-Fächergruppen an allen MINT-Fächern", praep, regio," (", timerange, ")<br>", "Studierendengruppe: ",label_w)
+           }
 
 
     if(darstellung == "In Prozent"){
 
-    #nicht als funktion, da es 1) zu komplex und 2) besondere feinheiten enthält, die die funktion balkenbuilder überlasten würde
-    out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y=prop, x= fach))%>%
-      highcharter::hc_tooltip(pointFormat = "{point.fach} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}") %>% #Inhalt für Hover-Box
-      highcharter::hc_yAxis(title = list(text=""), labels = list(format = "{value}%")) %>% #x-Achse -->Werte in %
-      highcharter::hc_xAxis(title= list(text="")
-      ) %>%
-      highcharter::hc_plotOptions(bar = list(
-        colorByPoint = TRUE,
-        colors = as.character(df$color)
-        )) %>%
-      highcharter::hc_title(text = titel,
-                            margin = 45,
-                            align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
-      highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
-                              style = list(fontSize = "11px", color = "gray")) %>%
-      highcharter::hc_exporting(enabled = TRUE,
-                                buttons = list(
-                                  contextButton = list(
-                                    menuItems = list("downloadPNG", "downloadCSV",
-                                                     list(
-                                                       text = "Daten für GPT",
-                                                       onclick = htmlwidgets::JS(sprintf(
-                                                         "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
 
-     var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle:Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
+      order <- unique(df$fach)
 
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-   }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel) ))))
-                                  )
-                                )
-      )
+      df <- df %>%
+        dplyr::mutate(
+          .tooltip = paste0(
+            "<b><span style='font-size:15px;'>",fach, "</span></b><br>",
+            "Anteil: ", round(prop, 1), " %<br>",
+            "Anzahl: ", wert
+          ))
+
+
+      x <- "fach"
+      y <- "prop"
+
+      quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      quelle_y <- -0.15
+
+
+      out <- balkenbuilder_plotly(df=df, x=x, y=y, titel=titel, orientation = "h",percent=TRUE, color=color,
+                                  order=order, stacking = FALSE,quelle_y=quelle_y, quelle=quelle)%>%
+        plotly::layout(
+          margin = list(t = 80),
+          title = list(text = titel, x = 0.5, y = 0.95,
+                       font = list(family = "Calibri Regular", size = 20, color = "black")))
+
+
+
     } else {
 
 
       df$wert <- as.numeric(gsub("\\.","", df$wert))
 
 
-      out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y=wert, x= fach))%>%
-        highcharter::hc_tooltip(pointFormat = "{point.fach} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}") %>% #Inhalt für Hover-Box
-        highcharter::hc_chart(lang = list(thousandsSep = ".", decimalPoint = ",")) %>%
-        highcharter::hc_yAxis(title = list(text=""), labels = list(format = "{value:,.0f} ")) %>% #x-Achse -->Werte in %
-        highcharter::hc_xAxis(title= list(text="")
-        ) %>%
-        highcharter::hc_plotOptions(bar = list(
-          colorByPoint = TRUE,
-          colors = as.character(df$color)
-        )) %>%
-        highcharter::hc_title(text = titel,
-                              margin = 45,
-                              align = "center",
-                              style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
-        highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
-                                style = list(fontSize = "11px", color = "gray")) %>%
-        highcharter::hc_exporting(enabled = TRUE,
-                                  buttons = list(
-                                    contextButton = list(
-                                      menuItems = list("downloadPNG", "downloadCSV",
-                                                       list(
-                                                         text = "Daten für GPT",
-                                                         onclick = htmlwidgets::JS(sprintf(
-                                                           "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
+      order <- unique(df$fach)
 
-     var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle:Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
 
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-   }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel) ))))
-                                    )
-                                  )
-        )
+
+      df <- df %>%
+        dplyr::mutate(
+          wert_label = formatC(wert, format = "f", digits = 0,big.mark = ".", decimal.mark = ","),
+          .tooltip = paste0(
+            "<b><span style='font-size:15px;'>",fach, "</span></b><br>",
+            "Anteil: ", round(prop, 1), " %<br>",
+            "Anzahl: ", wert_label
+          ))
+
+
+      x <- "fach"
+      y <- "wert"
+
+      quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      quelle_y <- -0.15
+
+
+      out <- balkenbuilder_plotly(df=df, x=x, y=y, titel=titel, orientation = "h",percent=FALSE, color=color,
+                                  order=order, stacking = FALSE,quelle_y=quelle_y, quelle=quelle)%>%
+        plotly::layout(
+          margin = list(t = 80),
+          title = list(text = titel, x = 0.5, y = 0.95,
+                       font = list(family = "Calibri Regular", size = 20, color = "black")))
+
+
     }
-
   }
 
   return(out)
@@ -1637,13 +1695,14 @@ mint_anteile <- function(r) {
   color_fachbereich <- c(
     "Informatik" = "#2D6BE1",
     "Ingenieurwissenschaften (ohne Informatik)" = "#00a87a",
-    "Mathematik, Naturwissenschaften" = "#fcc433"
+    "Mathematik, Naturwissenschaften" = "#fcc433",
+    "Mathematik" = "#ee7775"
   )
 
   color_fach <- c(
     "Informatik" = "#2D6BE1",
     "Elektrotechnik und Informationstechnik" = "#00a87a",
-    "Maschinenbau/Verfahrenstechnik" = "#DDFFF6",
+    "Maschinenbau/Verfahrenstechnik" = "#004331",
     "Biologie" = "#fbbf24",
     "Mathematik" = "#ee7775",
     "Wirtschaftsingenieurwesen mit ingenieurwissenschaftlichem Schwerpunkt" =
@@ -1678,45 +1737,24 @@ mint_anteile <- function(r) {
     T ~ gruppe
   )
 
-
-
-
-  faecher_select <- r$anteile_faecher_mint
-
-  # Filter-Optionen für MINT-Fachbereiche
-  fachbereiche_filter <- c("Ingenieurwissenschaften (ohne Informatik)", "Mathematik, Naturwissenschaften", "Informatik")
-
-
-
+  if(ordering == "MINT-Fachbereiche"){
+    faecher_select <- c("Ingenieurwissenschaften (ohne Informatik)",
+                        "Mathematik, Naturwissenschaften", "Informatik")
+  }else{
+    faecher_select <- r$anteile_faecher_mint
+  }
 
   df_query <- glue::glue_sql("
-        SELECT *
+        SELECT region, fach, jahr, wert
         FROM studierende_detailliert
         WHERE jahr IN ({t*})
         AND geschlecht = 'Gesamt'
         AND indikator == {indi}
         AND region = {states}
+        AND fach IN ({faecher_select*}, 'Alle Fächer')
                                ", .con = con)
 
   df <- DBI::dbGetQuery(con, df_query)
-
-
-
-  # Gesamtwerte (Alle MINT-Fächer) vorbereiten
-  df_ges <- df %>%
-    dplyr::filter(fach == "Alle MINT-Fächer") %>%
-    tidyr::pivot_wider(names_from = fach, values_from = wert) %>%
-    dplyr::select(indikator, region, jahr, `Alle MINT-Fächer`)
-
-  # Daten anreichern und berechnen
-  df <- df %>%
-    dplyr::left_join(df_ges, by = c("indikator", "region", "jahr")) %>%
-    dplyr::filter(if (ordering == "MINT-Fächergruppen") {
-      fach %in% faecher_select & fach != "Alle MINT-Fächer"
-    } else if (ordering == "MINT-Fachbereiche") {
-      fach %in% fachbereiche_filter
-    }) %>%
-    dplyr::mutate(prop = round(wert / `Alle MINT-Fächer` * 100, 1))
 
   # Farbzuordnung basierend auf der Auswahl
   colors <- if (ordering == "MINT-Fächergruppen") {
@@ -1725,25 +1763,29 @@ mint_anteile <- function(r) {
     as.character(color_fachbereich)
   }
 
-  # Zeitvektor erstellen
-  year_vec <- df %>%
-    dplyr::select(jahr) %>%
-    unique() %>%
-    dplyr::pull()
-
-
-
 
   #plotting
   if(betrachtung == "In Prozent"){
 
+    # Gesamtwerte (Alle MINT-Fächer) vorbereiten
+    df_ges <- df %>%
+      dplyr::filter(fach == "Alle Fächer") %>%
+      dplyr::rename(wert_ges = wert) %>%
+      dplyr::select(jahr, wert_ges)
+
+    df <- df %>%
+      dplyr::left_join(df_ges, by = c("jahr")) %>%
+      dplyr::mutate(prop = round(wert / wert_ges * 100),1) %>%
+      dplyr::filter(fach != "Alle Fächer")
+
     sorted_indicators <- df %>%
       dplyr::group_by(fach) %>%
       dplyr::summarize(m_value = mean(round(prop, 1), na.rm = TRUE)) %>%
-      dplyr::arrange(desc(m_value)) %>%
+      dplyr::arrange(m_value) %>%
       dplyr::pull(fach)
 
     df$fach <- factor(df$fach, levels = sorted_indicators)
+
     if(ordering == "MINT-Fachbereiche"){
       colors <- color_fachbereich[sorted_indicators]
     }else{
@@ -1751,10 +1793,6 @@ mint_anteile <- function(r) {
     }
 
     df <- df[with(df, order(jahr)),]
-
-    df$display_abs <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
-    df$display_rel <- prettyNum(df$prop, big.mark = ".", decimal.mark = ",")
-
 
     titel <- ifelse(ordering == "MINT-Fachbereiche",
                     ifelse(states == "Saarland",
@@ -1764,24 +1802,33 @@ mint_anteile <- function(r) {
                            paste0("Zeitverlauf der MINT-Fächer von ", gruppe, " im ", states),
                            paste0("Zeitverlauf der MINT-Fächer von ", gruppe, " in ", states)))
 
-    tooltip <- "{point.fach} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.display_abs}"
-    format <- "{value} %"
+    df <- df %>%
+      dplyr::mutate(
+        tooltip = paste0(
+          "<b>", fach, "</b><br>",
+          "Jahr: ", jahr, "<br>",
+          "Anteil: ", prettyNum(prop, big.mark = ".", decimal.mark = ","), " % <br>",
+          "Anzahl: ", prettyNum(wert, big.mark = ".", decimal.mark = ",")
+        )
+      )
     color <- as.character(colors)
     que <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
-    out <- linebuilder(df, titel, x = "jahr", y = "prop", group = "fach", tooltip, format, color, quelle=que)
 
-
-
+    out <- linebuilder_plotly(df, titel, x = "jahr", y = "prop", group = "fach", color = color, quelle=que)
 
   } else if (betrachtung == "Anzahl"){
+
+    df <- df %>%
+      dplyr::filter(fach != "Alle Fächer")
 
     sorted_indicators <- df %>%
       dplyr::group_by(fach) %>%
       dplyr::summarize(m_value = mean(round(wert, 1), na.rm = TRUE)) %>%
-      dplyr::arrange(desc(m_value)) %>%
+      dplyr::arrange(m_value) %>%
       dplyr::pull(fach)
 
     df$fach <- factor(df$fach, levels = sorted_indicators)
+
     if(ordering == "MINT-Fachbereiche"){
       colors <- color_fachbereich[sorted_indicators]
     }else{
@@ -1789,10 +1836,6 @@ mint_anteile <- function(r) {
     }
 
     df <- df[with(df, order(jahr)),]
-
-    df$display_abs <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
-    df$display_rel <- prettyNum(df$prop, big.mark = ".", decimal.mark = ",")
-
 
     titel <- ifelse(ordering == "MINT-Fachbereiche",
                     ifelse(states== "Saarland",
@@ -1801,11 +1844,23 @@ mint_anteile <- function(r) {
                     ifelse(states == "Saarland",
                            paste0("Zeitverlauf der MINT-Fächer von ", gruppe, " im ", states),
                            paste0("Zeitverlauf der MINT-Fächer von ", gruppe, " in ", states)))
-    tooltip <- "{point.fach} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.display_abs}"
-    format <- "{value}"
+
+    df <- df %>%
+      dplyr::mutate(
+        tooltip = paste0(
+          "<b>", fach, "</b><br>",
+          "Jahr: ", jahr, "<br>",
+          "Anzahl: ", prettyNum(wert, big.mark = ".", decimal.mark = ","), "<br>"
+          # ,
+          # "Anteil: ", prettyNum(prop, big.mark = ".", decimal.mark = ","), " %"
+
+        )
+      )
+    format <- ",d"
     color <- as.character(colors)
     quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
-    out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "fach", tooltip, format, color, quelle = quelle)
+
+    out <- linebuilder_plotly(df, titel, x = "jahr", y = "wert", group = "fach", format = format, color = color, quelle = quelle)
 
   }
 
@@ -1919,16 +1974,20 @@ plot_studierende_bula_faecher <- function(r){
     #quelle null da kein input
 
     joinby <- c("name", "region")
-    name <- paste0(label_m, " in MINT")
-    tooltip <- "{point.region} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.display_abs}"
-    titel <- titel
-    mincolor <- "#f4f5f6"
-    map_selection <- map_selection_germany
-    maxcolor <- "#b16fab"
+    df <- df %>%
+      dplyr::mutate(
+        tooltip = paste0(
+          "<b>", region, "</b><br>",
+          "Anteil: ", display_rel, " %<br>",
+          "Anzahl: ", display_abs
+        )
+      )
     quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
-    out <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor,prop=TRUE,
-                      wert=FALSE, map=map_selection, quelle = quelle)
+    out <- mapbuilder_plotly(df,
+                             titel = titel,
+                             value_col = "prop",
+                             quelle = quelle)
 
 
 
@@ -1948,7 +2007,6 @@ plot_studierende_bula_faecher <- function(r){
       fach_select <-  r$bl_verlauf_alle_faecher
     }
 
-
     df_query <- glue::glue_sql("
         SELECT *
         FROM studierende_detailliert
@@ -1961,15 +2019,10 @@ plot_studierende_bula_faecher <- function(r){
 
     df <- DBI::dbGetQuery(con, df_query)
 
-
-
-
     df_valid <- df %>%
       dplyr::filter(!is.na(wert) & wert != 0)
 
     valid_regions <- unique(df_valid$region)
-
-
 
     df <- df %>%
       dplyr::select(-c(bereich, geschlecht, fachbereich, mint_select, typ))
@@ -1992,7 +2045,6 @@ plot_studierende_bula_faecher <- function(r){
       alle <- alle %>%
         dplyr::select(-c(bereich, geschlecht, fachbereich, mint_select, typ))
 
-
       df <- df %>%
         dplyr::left_join(alle, dplyr::join_by(region, jahr)) %>%
         dplyr::select(-fach.y, -indikator.y) %>%
@@ -2002,6 +2054,13 @@ plot_studierende_bula_faecher <- function(r){
 
       df <- df[with(df, order(region, jahr, decreasing = FALSE)), ]
 
+      sorted_indicators <- df %>%
+        dplyr::group_by(region) %>%
+        dplyr::summarize(m_value = mean(round(prop, 1), na.rm = TRUE)) %>%
+        dplyr::arrange(m_value) %>%
+        dplyr::pull(region)
+
+      df$region <- factor(df$region, levels = sorted_indicators)
 
       label_m <- ifelse(label_select == "Studierende", paste0(label_select, "n"), label_select)
       label_m <- ifelse(label_m == "internationale Studierende", "internationalen Studierenden", label_m)
@@ -2029,26 +2088,26 @@ plot_studierende_bula_faecher <- function(r){
         titel <- paste0("Anteil von ", label_m, " in ", titel_help, " an allen ", help_l)
       }
 
-
       titel <-  titel
-      tooltip <- "{point.region} <br> Anteil: {point.prop}%"
-      format <- "{value}%"
+      df <- df %>%
+        dplyr::mutate(
+          tooltip = paste0(
+            "<b>", region, "</b><br>",
+            "Jahr: ", jahr, "<br>",
+            "Anteil: ", prettyNum(prop, big.mark = ".", decimal.mark = ","), " %"
+          )
+        )
       color <- c("#b16fab", "#154194", "#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#d0a9cd",
-                 "#bfc6d3", "#5f94f9", "#B45309")
+                 "#bfc6d3", "#5f94f9", "#B45309")[1:length(unique(df$region))]
       quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
-      out <- linebuilder(df, titel, x = "jahr", y = "prop", group = "region", tooltip, format, color, quelle = quelle)
+
+      out <- linebuilder_plotly(df, titel, x = "jahr", y = "prop", group = "region", color = color, quelle = quelle)
 
 
     }
 
 
     else if (absolut_selector == "Anzahl") {
-
-      hcoptslang <- getOption("highcharter.lang")
-      hcoptslang$thousandsSep <- "."
-      options(highcharter.lang = hcoptslang)
-
-      df$display_abs <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
 
       # Überschrift vorbereiten
       label_m <- ifelse(label_select == "Studierende", paste0(label_select, "n"), label_select)
@@ -2076,13 +2135,20 @@ plot_studierende_bula_faecher <- function(r){
       # plot
 
       titel <-  titel
-      tooltip <- "{point.region} <br> Anzahl: {point.display_abs}"
-      format <- "{value:, f}"
+      df <- df %>%
+        dplyr::mutate(
+          tooltip = paste0(
+            "<b>", region, "</b><br>",
+            "Jahr: ", jahr, "<br>",
+            "Anzahl: ", prettyNum(wert, big.mark = ".", decimal.mark = ",")
+          )
+        )
+      format <- ",d"
       color <- c("#b16fab", "#154194", "#66cbaf")
-
-
       quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
-      out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "region", tooltip, format, color, quelle = quelle)
+
+      out <- linebuilder_plotly(df, titel, x = "jahr", y = "wert", group = "region",
+                                format = format, color = color, quelle = quelle)
 
 
     }
@@ -2102,47 +2168,41 @@ plot_studierende_bula_faecher <- function(r){
 
 
     df_query <- glue::glue_sql("
-        SELECT *
+        SELECT region, indikator, fach, jahr, wert
         FROM studierende_detailliert
         WHERE jahr IN ({timerange*})
         AND geschlecht = 'Gesamt'
         AND indikator == {r_lab1}
         AND region IN ({regio*})
+        AND fach = 'Alle Fächer'
                                ", .con = con)
 
-    df_ges <- DBI::dbGetQuery(con, df_query)
+    df_ges <- DBI::dbGetQuery(con, df_query) %>%
+      dplyr::rename(wert_ges = wert)
 
 
     df_query <- glue::glue_sql("
-        SELECT *
+        SELECT region, indikator, fach, jahr, wert
         FROM studierende_detailliert
         WHERE jahr IN ({timerange*})
         AND geschlecht = 'Gesamt'
         AND indikator == {r_lab1}
         AND region IN ({regio*})
+        AND fach = {fach_bl}
                                ", .con = con)
 
     df <- DBI::dbGetQuery(con, df_query)
 
     df <- df %>%
-      dplyr::select(-fachbereich,- mint_select, -typ )%>%
-      dplyr::collect() %>%
-      tidyr::pivot_wider(names_from = fach, values_from = wert)%>%
-      dplyr::mutate(dplyr::across(c(6:ncol(.)), ~round(./`Alle Fächer`*100,1)))%>%
-      tidyr::pivot_longer(c(6:ncol(.)), values_to = "proportion", names_to ="fach")%>%
-      dplyr::right_join(df_ges)
+      dplyr::left_join(df_ges, by = c("region", "jahr", "indikator")) %>%
+      dplyr::mutate(prop = wert/wert_ges * 100) %>%
+      dplyr::select(-fach.y) %>%
+      dplyr::rename(fach = fach.x)
+
 
     #Trennpunkte für lange Zahlen ergänzen
     df$wert <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
 
-    df <- df %>%
-      dplyr::select(indikator, region, jahr, fach, proportion, wert)
-
-    df <- df %>%
-      dplyr::filter(fach==fach_bl)
-
-    # NA aus fach entfernen für BULAs mit weniger Studienfachgruppen
-    df <- stats::na.omit(df)
 
     # Vorbereitung Überschrift
     help_s <- fach_bl
@@ -2167,9 +2227,9 @@ plot_studierende_bula_faecher <- function(r){
 
 
     df$display_abs <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
-    df$display_rel <- prettyNum(df$proportion, big.mark = ".", decimal.mark = ",")
+    df$display_rel <- prettyNum(df$prop, big.mark = ".", decimal.mark = ",")
 
-    df <- df[with(df, order(proportion, decreasing = TRUE)),]
+    df <- df[with(df, order(prop, decreasing = TRUE)),]
 
     if(nrow(df) == 0){
       titel <- "Für diese Kombination aus Fächergruppe und Bundesland bzw. Bundesländer liegen keine Daten vor.
@@ -2183,109 +2243,118 @@ plot_studierende_bula_faecher <- function(r){
 
     }else{
 
-    titel <- paste0( "Anteil von ", r_lab1 ," in ", help_s," an allen ", help,  " (", timerange, ")")
 
-      #nicht als funktion, da es 1) zu komplex und 2) besondere feinheiten enthält, die die funktion balkenbuilder überlasten würde
+    titel <- if (any(fach_bl %in% c(
+      "Wirtschaftsingenieurwesen mit ingenieurwissenschaftlichem Schwerpunkt",
+      "allgemeine naturwissenschaftliche und mathematische Fächer"
+      ))) {
+      paste0( "Anteil von ", r_lab1 ," in ", help_s," an allen ", help,  " (", timerange, ")")
+    } else {
+      paste0( "Anteil von ", r_lab1 ," in ", help_s," an allen ", help,  " (", timerange, ")")}
+
+
 
 
     if(darstellungx == "In Prozent"){
-    out <- highcharter::hchart(df, 'bar', highcharter::hcaes(x= region, y = proportion))%>%
-      highcharter::hc_tooltip(pointFormat = "{point.fach} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.display_abs}") %>% #Inhalt für Hover-Box
-      highcharter::hc_yAxis(title = list(text=""), labels = list(format = "{value}%")) %>% #x-Achse -->Werte in %
-      highcharter::hc_xAxis(title= list(text="")) %>% #Y-Achse - keine Beschriftung
-      highcharter::hc_plotOptions(bar = list(
-        colorByPoint = TRUE,
-        colors = ifelse(df$region == "Deutschland", "#b16fab",
-                        ifelse(df$region == "Ostdeutschland (inkl. Berlin)", "#d3a4d7",
-                               ifelse(df$region == "Westdeutschland (o. Berlin)", "#d3a4d7", "#A9A9A9"))))) %>%
-      highcharter::hc_title(text = paste0( "Anteil von ", r_lab1 ," in ", help_s," an allen ", help,  " (", timerange, ")"),
-                            margin = 25,
-                            align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
-      highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
-                              style = list(fontSize = "11px", color = "gray")) %>%
-      highcharter::hc_exporting(enabled = TRUE,
-                                buttons = list(
-                                  contextButton = list(
-                                    menuItems = list("downloadPNG", "downloadCSV",
-                                                     list(
-                                                       text = "Daten für GPT",
-                                                       onclick = htmlwidgets::JS(sprintf(
-                                                         "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
-     var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle:Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
 
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-   }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel) ))))
-                                  )
-                                )
+
+      order <- unique(df$region)
+
+      df <- df %>%
+        dplyr::mutate(
+          .tooltip = paste0(
+            "<b><span style='font-size:15px;'>", region, "</span></b><br>",
+            "Anteil: ", round(prop, 1), " %<br>",
+            "Anzahl: ", wert
+          ))
+
+
+      x <- "region"
+      y <- "prop"
+      color <- c(
+        "Deutschland" = "#b16fab",
+        "Ostdeutschland (inkl. Berlin)" = "#d3a4d7",
+        "Westdeutschland (o. Berlin)" = "#d3a4d7",
+        "Baden-Württemberg" = "#A9A9A9",
+        "Bayern" = "#A9A9A9",
+        "Berlin" = "#A9A9A9",
+        "Brandenburg" = "#A9A9A9",
+        "Bremen" = "#A9A9A9",
+        "Hamburg" = "#A9A9A9",
+        "Hessen" = "#A9A9A9",
+        "Mecklenburg-Vorpommern" = "#A9A9A9",
+        "Niedersachsen" = "#A9A9A9",
+        "Nordrhein-Westfalen" = "#A9A9A9",
+        "Rheinland-Pfalz" = "#A9A9A9",
+        "Saarland" = "#A9A9A9",
+        "Sachsen" = "#A9A9A9",
+        "Sachsen-Anhalt" = "#A9A9A9",
+        "Schleswig-Holstein" = "#A9A9A9",
+        "Thüringen" = "#A9A9A9"
       )
+
+      quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      quelle_y <- -0.10
+
+
+      out <- balkenbuilder_plotly(df=df, x=x, y=y, titel=titel, orientation = "h",percent=TRUE, color=color,
+                                  order=order, stacking=FALSE, quelle_y=quelle_y, quelle=quelle)%>%
+        plotly::layout(
+          margin = list(t = 80, b = 100))
+
+
     } else {
 
 
-      df$display_abs <- as.numeric(gsub("\\.","", df$display_abs))
+      order <- unique(df$region)
 
-      out <- highcharter::hchart(df, 'bar', highcharter::hcaes(x= region, y = display_abs))%>%
-        highcharter::hc_tooltip(pointFormat = "{point.fach} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.display_abs}") %>% #Inhalt für Hover-Box
-        highcharter::hc_chart(lang = list(thousandsSep = ".", decimalPoint = ",")) %>%
-        highcharter::hc_yAxis(title = list(text=""), labels = list(format = "{value:,.0f}")) %>% #x-Achse -->Werte in %
-        highcharter::hc_xAxis(title= list(text="")) %>% #Y-Achse - keine Beschriftung
-        highcharter::hc_plotOptions(bar = list(
-          colorByPoint = TRUE,
-          colors = ifelse(df$region == "Deutschland", "#b16fab",
-                          ifelse(df$region == "Ostdeutschland (inkl. Berlin)", "#d3a4d7",
-                                 ifelse(df$region == "Westdeutschland (o. Berlin)", "#d3a4d7", "#A9A9A9"))))) %>%
-        highcharter::hc_title(text = paste0( "Anteil von ", r_lab1 ," in ", help_s," an allen ", help,  " (", timerange, ")"),
-                              margin = 25,
-                              align = "center",
-                              style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
-        highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
-                                style = list(fontSize = "11px", color = "gray")) %>%
-        highcharter::hc_exporting(enabled = TRUE,
-                                  buttons = list(
-                                    contextButton = list(
-                                      menuItems = list("downloadPNG", "downloadCSV",
-                                                       list(
-                                                         text = "Daten für GPT",
-                                                         onclick = htmlwidgets::JS(sprintf(
-                                                           "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
-     var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle:Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
-
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-   }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel) ))))
-                                    )
-                                  )
-        )
+      df <- df %>%
+        dplyr::mutate(
+          wert = as.numeric(gsub("\\.", "", wert)),
+          wert_label = formatC(wert, format = "f", digits = 0, big.mark = ".", decimal.mark = ","),
+          .tooltip = paste0(
+            "<b><span style='font-size:15px;'>", region, "</span></b><br>",
+            "Anteil: ", round(prop, 1), " %<br>",
+            "Anzahl: ", wert_label
+          ))
 
 
+      x <- "region"
+      y <- "wert"
+      color <- c(
+        "Deutschland" = "#b16fab",
+        "Ostdeutschland (inkl. Berlin)" = "#d3a4d7",
+        "Westdeutschland (o. Berlin)" = "#d3a4d7",
+        "Baden-Württemberg" = "#A9A9A9",
+        "Bayern" = "#A9A9A9",
+        "Berlin" = "#A9A9A9",
+        "Brandenburg" = "#A9A9A9",
+        "Bremen" = "#A9A9A9",
+        "Hamburg" = "#A9A9A9",
+        "Hessen" = "#A9A9A9",
+        "Mecklenburg-Vorpommern" = "#A9A9A9",
+        "Niedersachsen" = "#A9A9A9",
+        "Nordrhein-Westfalen" = "#A9A9A9",
+        "Rheinland-Pfalz" = "#A9A9A9",
+        "Saarland" = "#A9A9A9",
+        "Sachsen" = "#A9A9A9",
+        "Sachsen-Anhalt" = "#A9A9A9",
+        "Schleswig-Holstein" = "#A9A9A9",
+        "Thüringen" = "#A9A9A9"
+      )
 
-    }
+      quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      quelle_y <- -0.10
+
+
+      out <- balkenbuilder_plotly(df=df, x=x, y=y, titel=titel, orientation = "h",percent=FALSE, color=color,
+                                  order=order, stacking=FALSE, quelle_y=quelle_y, quelle=quelle)%>%
+        plotly::layout(
+          margin = list(t = 80, b = 100))
+
 
     }
-
+  }
   }
 
     return(out)
@@ -2553,9 +2622,12 @@ plot_studierende_bula_faecher <- function(r){
 #' @noRd
 
 studienzahl_einstieg_gender <- function(r) {
+
+
   betrachtung <- r$ansicht_gen_mint #Kuchendia
   timerange <- r$gen_y #Jahr
   genl <- r$gen_l #Studierende, Absolventinnen
+
 
   if(betrachtung == "Einzelansicht - Kuchendiagramm"){
     gegenwert <- r$gen_gegenwert_pie
@@ -2564,9 +2636,6 @@ studienzahl_einstieg_gender <- function(r) {
     gen_f <- r$gen_f
 
         if(gegenwert == "Ja") gen_f <- c(gen_f, "Alle Nicht MINT-Fächer")
-
-
-
 
         df_query <- glue::glue_sql("
         SELECT *
@@ -2584,7 +2653,6 @@ studienzahl_einstieg_gender <- function(r) {
           dplyr::select(-fachbereich, -region, - jahr, -bereich, -mint_select, -typ)
 
 
-
         df_query <- glue::glue_sql("
         SELECT *
         FROM studierende_detailliert
@@ -2599,8 +2667,6 @@ studienzahl_einstieg_gender <- function(r) {
 
         alle <- alle %>%
           dplyr::select(-fachbereich, -region, - jahr, -bereich, -mint_select, -typ)
-
-
 
         df <- df %>%
           dplyr::left_join(alle, dplyr::join_by(fach, indikator)) %>%
@@ -2619,18 +2685,7 @@ studienzahl_einstieg_gender <- function(r) {
                              "allgemeinen naturwissenschaftlichen und mathematischen Fächern", titel_help)
 
 
-        if(nrow(df) == 0){
-          titel <- "Für diese Kombination aus Fächergruppe und Bundesland bzw. Bundesländer liegen keine Daten vor.
-        Bitte wählen Sie eine andere Komination oder Fächergruppe aus."
-          df$jahr <- NA
-
-          out <- linebuilder(df, titel = titel, x = "jahr", y = "wert", group = "geschlecht", tooltip = "Anzahl: {point.display_abs}", format = "{value:, f}")
-
-        }else{
-
         if(length(genl) == 1) {
-
-          #neu
 
           title_n <- genl[1]
           title_n <- ifelse(title_n == "Studierende", "Studierenden", title_n)
@@ -2642,18 +2697,23 @@ studienzahl_einstieg_gender <- function(r) {
                           paste0("Frauenanteil unter ", title_n, " in ", titel_help, " im ", regio, " (", timerange, ")"),
                           paste0("Frauenanteil unter ", title_n, " in ", titel_help, " in ", regio, " (", timerange, ")"))
 
-          tooltip <- paste('Anteil: {point.prop}% <br> Anzahl: {point.display_abs}')
-          color <- c("#efe8e6", "#154194")
+          df_p <- df_p %>%
+            dplyr::mutate(
+              tooltip = paste0(
+                "<b>", geschlecht, "</b><br>",
+                "Anteil: ", prop, " %<br>",
+                "Anzahl: ", display_abs
+              )
+            )
 
-          quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+          color <- c("Männer" ="#efe8e6", "Frauen" = "#154194")
 
-          p1 <- piebuilder(df_p, titel, x = "geschlecht", y ="prop", tooltip, color = color, format = '{point.prop}%', quelle = quelle)
+          quelle <- "Quelle: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
-          out <- p1
-
+          out <- piebuilder_plotly(df_p, titel, x = "geschlecht", y ="prop",
+                                   color=color, quelle = quelle)
 
            if(gegenwert == "Ja"){
-
 
              title_n <- genl[1]
              title_n <- ifelse(title_n == "Studierende", "Studierenden", title_n)
@@ -2665,16 +2725,23 @@ studienzahl_einstieg_gender <- function(r) {
                              paste0("Frauenanteil unter ", title_n, " in Nicht MINT-Fächern im ", regio, " (", timerange, ")"),
                              paste0("Frauenanteil unter ", title_n, " in Nicht MINT-Fächern in ", regio, " (", timerange, ")"))
 
-             tooltip <- paste('Anteil: {point.prop}% <br> Anzahl: {point.display_abs}')
-             color <- c("#efe8e6", "#154194")
-             format <- '{point.prop}%'
+             df_g <- df_g %>%
+               dplyr::mutate(
+                 tooltip = paste0(
+                   "<b>", geschlecht, "</b><br>",
+                   "Anteil: ", prop, " %<br>",
+                   "Anzahl: ", display_abs
+                 )
+               )
+             color <- c("Männer" ="#efe8e6", "Frauen" = "#154194")
 
              quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
+             p1g <- piebuilder_plotly(df_g, titel, x = "geschlecht", y = "prop",
+                                      color=color, quelle = quelle) |>
+               plotly::layout(height = 400)
 
-             p1g <- piebuilder(df_g, titel, x = "geschlecht", y = "prop", tooltip, color, format, quelle = quelle)
-
-             out <- highcharter::hw_grid(p1, p1g, ncol = 2,    browsable = TRUE)
+             out <- list(out, p1g)
 
 
            }
@@ -2689,9 +2756,10 @@ studienzahl_einstieg_gender <- function(r) {
           title_n2 <- ifelse(title_n2 == "Studierende", "Studierenden", title_n2)
           title_n2 <- ifelse(title_n2 == "Studierende (Lehramt)", "Studierenden im Lehramt", title_n2)
 
-          #neu
-          df_1_pie <- df %>% dplyr::filter(indikator == genl[1], fach != "Alle Nicht MINT-Fächer")
-          df_2_pie <- df %>% dplyr::filter(indikator == genl[2], fach != "Alle Nicht MINT-Fächer")
+          df_1_pie <- df %>%
+            dplyr::filter(indikator == genl[1], fach != "Alle Nicht MINT-Fächer")
+          df_2_pie <- df %>%
+            dplyr::filter(indikator == genl[2], fach != "Alle Nicht MINT-Fächer")
 
           titel1 = ifelse(regio == "Saarland",
                           paste0("Frauenanteil unter ", title_n1, " in ", titel_help, " im ", regio, " (", timerange, ")"),
@@ -2701,18 +2769,31 @@ studienzahl_einstieg_gender <- function(r) {
                           paste0("Frauenanteil unter ", title_n2, " in ", titel_help, " im ", regio, " (", timerange, ")"),
                           paste0("Frauenanteil unter ", title_n2, " in ", titel_help, " in ", regio, " (", timerange, ")"))
 
-          tooltip <- paste('Anteil: {point.prop}% <br> Anzahl: {point.display_abs}')
-          format = '{point.prop}%'
-          color = c("#efe8e6", "#154194")
-
+          df_1_pie <- df_1_pie %>%
+            dplyr::mutate(
+              tooltip = paste0(
+                "<b>", geschlecht, "</b><br>",
+                "Anteil: ", prop, " %<br>",
+                "Anzahl: ", display_abs
+              )
+            )
+          df_2_pie <- df_2_pie %>%
+            dplyr::mutate(
+              tooltip = paste0(
+                "<b>", geschlecht, "</b><br>",
+                "Anteil: ", prop, " %<br>",
+                "Anzahl: ", display_abs
+              )
+            )
+          color <- c("Männer" ="#efe8e6", "Frauen" = "#154194")
           quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
-          p1 <- piebuilder(df_1_pie, titel1, x = "geschlecht", y = "prop", tooltip, color, format, quelle = quelle)
-          p2 <- piebuilder(df_2_pie, titel2, x = "geschlecht", y = "prop", tooltip, color, format, quelle = quelle)
+          p1 <- piebuilder_plotly(df_1_pie, titel1, x = "geschlecht", y = "prop",
+                                  color=color, quelle = quelle)
+          p2 <- piebuilder_plotly(df_2_pie, titel2, x = "geschlecht", y = "prop",
+                           color=color, quelle = quelle)
 
-
-
-          out <- highcharter::hw_grid(p1, p2, ncol = 2, browsable = TRUE)
+          out <- list(p1, p2)
 
 
           if(gegenwert == "Ja"){
@@ -2734,76 +2815,46 @@ studienzahl_einstieg_gender <- function(r) {
                             paste0("Frauenanteil unter ", title_n1, " in Nicht-MINT-Fächern im ", regio, " (", timerange, ")"),
                             paste0("Frauenanteil unter ", title_n1, " in Nicht-MINT-Fächern in ", regio, " (", timerange, ")"))
 
-            tooltip <- paste('Anteil: {point.prop}% <br> Anzahl: {point.display_abs}')
-            format <- '{point.prop}%'
+            df1_g <- df1_g %>%
+              dplyr::mutate(
+                tooltip = paste0(
+                  "<b>", geschlecht, "</b><br>",
+                  "Anteil: ", prop, " %<br>",
+                  "Anzahl: ", display_abs
+                )
+              )
 
             quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
-            color = c("#efe8e6", "#154194")
+            color <- c("Männer" ="#efe8e6", "Frauen" = "#154194")
+            p1g <- piebuilder_plotly(df1_g, titel, x = "geschlecht", y = "prop",
+                                     color=color, quelle = quelle) |>
+              plotly::layout(height = 400)
 
-            p1g <- piebuilder(df1_g, titel, x = "geschlecht", y = "prop", tooltip, color, format, quelle = quelle)
 
             titel2 <- ifelse(regio == "Saarland",
                              paste0("Frauenanteil unter ", title_n2, " in Nicht-MINT-Fächern im ", regio, " (", timerange, ")"),
                              paste0("Frauenanteil unter ", title_n2, " in Nicht-MINT-Fächern in ", regio, " (", timerange, ")"))
+            df2_g <- df2_g %>%
+              dplyr::mutate(
+                tooltip = paste0(
+                  "<b>", geschlecht, "</b><br>",
+                  "Anteil: ", prop, " %<br>",
+                  "Anzahl: ", display_abs
+                )
+              )
+            p2g <- piebuilder_plotly(df2_g, titel2, x = "geschlecht", y = "prop",
+                                     color=color, quelle = quelle) |>
+              plotly::layout(height = 400)
 
-            p2g <- piebuilder(df2_g, titel2, x = "geschlecht", y = "prop", tooltip, color, format, quelle = quelle)
-
-            out <- highcharter::hw_grid(p1, p2, p1g, p2g, ncol = 2, browsable = TRUE)
+            out <- list(p1, p2, p1g, p2g)
 
           }
-
-        #dieser teil ist völlig obsolet
-        } else if(length(genl) == 3) {
-
-          df_1_pie <- df %>% dplyr::filter(indikator == genl[1], fach != "Alle Nicht MINT-Fächer")
-          df_2_pie <- df %>% dplyr::filter(indikator == genl[2], fach != "Alle Nicht MINT-Fächer")
-          df_3_pie <- df %>% dplyr::filter(indikator == genl[3], fach != "Alle Nicht MINT-Fächer")
-
-
-          titel1 <- paste0("Frauenanteil unter ",genl[1], " in ",titel_help, " (", timerange, ")")
-          titel2 <- paste0("Frauenanteil unter ",genl[2], " in ",titel_help, " (", timerange, ")")
-          titel3 <- paste0("Frauenanteil unter ",genl[3], " in ",titel_help, " (", timerange, ")")
-
-          tooltip <- paste('Anteil: {point.prop}% <br> Anzahl: {point.display_abs}')
-          color <- c("#efe8e6", "#154194")
-          format <- '{point.prop}%'
-
-          quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
-
-          p1 <- piebuilder(df_1_pie, titel1, x ="geschlecht", y = "prop", tooltip, color, format, quelle = quelle)
-          p2 <- piebuilder(df_2_pie, titel2, x ="geschlecht", y = "prop", tooltip, color, format, quelle=quelle)
-          p3 <- piebuilder(df_3_pie, titel3, x ="geschlecht", y = "prop", tooltip, color, format, quelle=quelle)
-
-
-      out <- highcharter::hw_grid(p1, p2, p3, ncol = 3,browsable = TRUE)
-
-      if(gegenwert == "Ja"){
-        df1_g <- df[df$fach == "Alle Nicht MINT-Fächer" & df$indikator == genl,]
-        df2_g <- df[df$fach == "Alle Nicht MINT-Fächer" & df$indikator == genl,]
-        df3_g <- df[df$fach == "Alle Nicht MINT-Fächer" & df$indikator == genl,]
-
-        titel1 <- paste0("Frauenanteil unter ",genl[1], " in Nicht MINT-Fächern (", timerange, ")")
-        titel2 <- paste0("Frauenanteil unter ",genl[2], " in Nicht MINT-Fächern (", timerange, ")")
-        titel3 <- paste0("Frauenanteil unter ",genl[3], " in Nicht MINT-Fächern (", timerange, ")")
-
-        tooltip <- paste('Anteil: {point.prop}% <br> Anzahl: {point.display_abs}')
-        color <- c("#efe8e6", "#154194")
-
-        quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
-
-        p1g <- piebuilder(df1_g, titel1, x = "geschlecht", y ="prop", tooltip, color, format= '{point.prop}%', quelle= quelle)
-        p2g <- piebuilder(df2_g, titel2, x = "geschlecht", y ="prop", tooltip, color, format= '{point.prop}%', quelle = quelle)
-        p3g <- piebuilder(df3_g, titel3, x = "geschlecht", y ="prop", tooltip, color, format= '{point.prop}%', quelle = quelle)
-
-        out <- highcharter::hw_grid(p1, p2, p3,p1g, p2g, p3g,ncol = 3,browsable = TRUE)
-
-      }
-
         }
-        }
+
   }
   else if(betrachtung == "Gruppenvergleich - Balkendiagramm"){
+
     sel_bl1 <- r$gen_states_faecher
 
     # Zuweisung von r zu sel_f in abhängigkeit der Bundesländer
@@ -2832,8 +2883,19 @@ studienzahl_einstieg_gender <- function(r) {
     }
 
     gegenwert <- r$gen_gegenwert_balken
-    if(gegenwert == "Ja") sel_f1 <- c(sel_f1, "Alle Nicht MINT-Fächer")
+    #if(gegenwert == "Ja") sel_f1 <- c(sel_f1, "Alle Nicht MINT-Fächer")
 
+    # if (gegenwert == "Ja") {
+    #   sel_f1 <- c(sel_f1, "Alle Nicht MINT-Fächer")
+    # }
+
+    gegenwert <- trimws(as.character(r$gen_gegenwert_balken))
+
+    sel_f_query <- sel_f1
+
+    if (isTRUE(gegenwert == "Ja")) {
+      sel_f_query <- unique(c(sel_f_query, "Alle Nicht MINT-Fächer"))
+    }
 
 
     df_query <- glue::glue_sql("
@@ -2841,12 +2903,13 @@ studienzahl_einstieg_gender <- function(r) {
       FROM studierende_detailliert
       WHERE jahr = ({timerange*})
       AND region = {sel_bl1}
-      AND fach IN ({sel_f1*})
+      AND fach IN ({sel_f_query*})
       ", .con = con)
 
     df <- DBI::dbGetQuery(con, df_query)
 
 
+    praep <- ifelse(sel_bl1 == "Saarland", " im ", " in ")
 
 
     if(nrow(df) == 0){
@@ -2870,7 +2933,7 @@ studienzahl_einstieg_gender <- function(r) {
       tidyr::pivot_wider(names_from = geschlecht, values_from = wert) %>%
       dplyr::select(-Gesamt)%>%
       tidyr::pivot_longer(c("Männer", "Frauen"), values_to = "wert", names_to = "geschlecht")%>%
-      dplyr::right_join(df_gen)%>%
+      dplyr::right_join(df_gen, by = c("region", "fach", "jahr", "indikator", "geschlecht"))%>%
       dplyr::filter(!is.nan(proportion))
 
 
@@ -2882,77 +2945,83 @@ studienzahl_einstieg_gender <- function(r) {
     fach_label <- sel_f1
     fach_label <- ifelse(fach_label == "Alle MINT-Fächer", "MINT", fach_label)
     if(gegenwert == "Ja"){
-      titel <- ifelse(sel_bl1 == "Saarland",
-                      paste0("Frauenanteil in der Studienfachgruppe ", fach_label, " und allen Nicht-MINT-Fächern im ", sel_bl1, " (", timerange, ")"),
-                      paste0("Frauenanteil in der Studienfachgruppe ", fach_label, " und allen Nicht-MINT-Fächern in ", sel_bl1, " (", timerange, ")"))
-    }else{
-      titel <- ifelse(sel_bl1 == "Saarland",
-                      paste0("Frauenanteil in der Studienfachgruppe ", fach_label, " im ", sel_bl1, " (", timerange, ")"),
-                      paste0("Frauenanteil in der Studienfachgruppe ", fach_label, " in ", sel_bl1, " (", timerange, ")"))
-
+      titel <- paste0("Frauenanteil in der Fachgruppe ", fach_label, " und allen Nicht-MINT-Fächern", praep, sel_bl1, " (", timerange, ")")
+      }else{
+      titel <- paste0("Frauenanteil in der Fachgruppe ",
+                      ifelse(
+                        fach_label %in% c("Wirtschaftsingenieurwesen mit ingenieurwissenschaftlichem Schwerpunkt",
+                                          "allgemeine naturwissenschaftliche und mathematische Fächer"),
+                        paste0(fach_label), fach_label),
+                      praep, sel_bl1, " (", timerange, ")")
     }
 
-    df$fach_indikator <- paste(df$fach, df$indikator, sep = " - ")
 
-   # df <- df[with(df, order(indikator)), ]
+    df$fach_indikator <- paste(df$indikator, df$fach, sep = "- ")
+
+
+    df <- df %>%
+      dplyr::mutate(
+        fach_indikator_name = dplyr::case_when(
+          stringr::str_length(fach_indikator) > 60 ~
+            paste0(
+              stringr::str_trunc(fach_indikator, 55)
+            ),
+          TRUE ~ fach_indikator
+        ),
+        fach_indikator_name = as.character(fach_indikator_name)
+      )
+
+
+
     df <- df[with(df, order(proportion, decreasing = TRUE)), ]
 
     #da es viele NAs gibt, also Daten, die nicht berechnet wurden und können denke ich, gibt es ein filtering
     df <- df %>%
       dplyr::filter(!is.na(proportion), !is.na(wert))
 
+    order <- df %>%
+      dplyr::filter(geschlecht == "Frauen") %>%
+      dplyr::arrange(dplyr::desc(proportion)) %>%
+      dplyr::pull(fach_indikator) %>%
+      unique()
 
+    if (gegenwert == "Ja") {
+      nicht_mint <- order[grepl("Alle Nicht MINT-Fächer", order)]
+      order <- c(nicht_mint, setdiff(order, nicht_mint))
+    }
 
-
-    #nicht als funktion, da es 1) zu komplex und 2) besondere feinheiten enthält, die die funktion balkenbuilder überlasten würde
-    out <- highcharter::hchart(df, 'bar', highcharter::hcaes(x = fach_indikator, y=proportion, group = geschlecht))%>%
-
-      highcharter::hc_tooltip(pointFormat = "{point.geschlecht}-Anteil: {point.display_rel} % <br> Anzahl: {point.display_abs}")%>%
-
-      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"),  reversedStacks =  FALSE) %>%
-      highcharter::hc_xAxis(title = list(text = "")
+    df <- df %>%
+      dplyr::mutate(
+        geschlecht = factor(geschlecht, levels = c("Frauen", "Männer"))
       ) %>%
-      highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
-      highcharter::hc_colors(c("#154194", "#efe8e6")) %>%
-      highcharter::hc_title(text = titel,
-                            margin = 25,
-                            align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
-      highcharter::hc_chart(
-        style = list(fontFamily = "Calibri Regular", fontSize = "14px")
-      ) %>%
-      highcharter::hc_legend(enabled = TRUE, reversed = FALSE) %>%
-      highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
-                              style = list(fontSize = "11px", color = "gray")) %>%
-      highcharter::hc_exporting(enabled = TRUE,
-                                buttons = list(
-                                  contextButton = list(
-                                    menuItems = list("downloadPNG", "downloadCSV",
-                                                     list(
-                                                       text = "Daten für GPT",
-                                                       onclick = htmlwidgets::JS(sprintf(
-                                                         "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
-
-
-     var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle:Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
-
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-   }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel) ))))
-                                  )
-                                )
+      dplyr::arrange(geschlecht) %>%
+      dplyr::mutate(
+        .tooltip = paste0(
+          "<b><span style='font-size:15px;'>", indikator, "</span></b><br>",
+          "<span style='font-size:15px;'>", fach, "</span><br>",
+          "<span style='font-size:15px;'>", geschlecht, "</span><br>",
+          "Anteil: ", proportion,"%<br>",
+          "Anzahl: ", formatC(as.numeric(wert), format = "f", digits = 0, big.mark = "."))
       )
+
+
+    x <- "fach_indikator"
+    y <- "proportion"
+    group <- "geschlecht"
+    quelle <- "Quelle der Daten: Destatis, 2025,, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle_y <- -0.15
+    legend_y <- -0.06
+
+    color <- c("Frauen" = "#154194", "Männer" = "#efe8e6")
+
+    out <- balkenbuilder_plotly(df=df, x=x, y=y, titel=titel, orientation = "h", group=group, color=color, order=order,
+                                tickvals = df$fach_indikator, ticktext = df$fach_indikator_name,
+                                percent = TRUE,stacking=TRUE, legend_y=legend_y, quelle_y=quelle_y, quelle=quelle)%>%
+      plotly::layout(
+        margin = list(t = 80))
+
+
+
     }
   }
 
@@ -2979,7 +3048,6 @@ studienzahl_verlauf_single_gender <- function(r) {
   regio <- r$gen_z_region
   faecher <- r$gen_z_faecher
 
-
   df_query <- glue::glue_sql("
         SELECT *
         FROM studierende_detailliert
@@ -2991,16 +3059,12 @@ studienzahl_verlauf_single_gender <- function(r) {
 
   df <- DBI::dbGetQuery(con, df_query)
 
-
-
-
-
   if(nrow(df) == 0){
     titel <- "Für diese Kombination aus Fächergruppe und Bundesland bzw. Bundesländer liegen keine Daten vor.
         Bitte wählen Sie eine andere Komination oder Fächergruppe aus."
     df$jahr <- NA
 
-    out <- linebuilder(df, titel = titel, x = "jahr", y = "wert", group = "geschlecht", tooltip = "{point.indikator} <br> Anzahl: {point.display_abs}", format = "{value:, f}")
+    out <- linebuilder_plotly(df, titel = titel, x = "jahr", y = "wert", group = "geschlecht")
 
   }else{
   # calculation props
@@ -3026,154 +3090,79 @@ studienzahl_verlauf_single_gender <- function(r) {
 
     df <- df %>% dplyr::filter(selector=="In Prozent")
 
-    df$display_rel <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
-
     df <- df[with(df, order(region, jahr, decreasing = FALSE)), ]
 
     fach_help <- faecher
     fach_help <- ifelse(fach_help == "Alle MINT-Fächer", "MINT", fach_help)
     fach_help <- ifelse(fach_help == "Alle Nicht MINT-Fächer", "Nicht-MINT", fach_help)
 
+    df <- df %>% dplyr::filter(indikator %in% label_sel)
 
-    if(length(label_sel) == 1) {
+    sorted_indicators <- df %>%
+      dplyr::group_by(indikator) %>%
+      dplyr::summarize(m_value = mean(round(wert, 1), na.rm = TRUE)) %>%
+      dplyr::arrange(m_value) %>%
+      dplyr::pull(indikator)
 
-      df <- df %>% dplyr::filter(indikator== label_sel)
-
-
-      titel <-  ifelse(regio =="Saarland",
-                       paste0("Frauenanteil in der Studienfachgruppe ", fach_help, " im ", regio),
-                       paste0("Frauenanteil in der Studienfachgruppe ", fach_help, " in ", regio))
-      tooltip <- "Frauenanteil {point.indikator} <br> Wert: {point.display_rel} %"
-      format <- "{value}%"
-      color <- c("#b16fab", "#154194", "#66cbaf", "#fcc433")
-
-      quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
-      out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color, quelle = quelle)
-
-    } else if(length(label_sel)==2){
+    df$indikator <- factor(df$indikator, levels = sorted_indicators)
 
 
+    titel <-  ifelse(regio =="Saarland",
+                     paste0("Frauenanteil in der Studienfachgruppe ", fach_help, " im ", regio),
+                     paste0("Frauenanteil in der Studienfachgruppe ", fach_help, " in ", regio))
+    df <- df %>%
+      dplyr::mutate(
+        tooltip = paste0(
+          "<b>", indikator, "</b><br>",
+          "Jahr: ", jahr, "<br>",
+          "Anteil: ", prettyNum(wert, big.mark = ".", decimal.mark = ","), " %"
+        )
+      )
+    color <- c("#b16fab", "#154194", "#66cbaf", "#fcc433")[1:length(unique(df$indikator))]
 
-      df <- df %>% dplyr::filter(indikator == label_sel[1] | indikator == label_sel [2])
+    quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    out <- linebuilder_plotly(df, titel, x = "jahr", y = "wert", group = "indikator", color = color, quelle = quelle)
 
-      titel <- ifelse(regio == "Saarland",
-                      paste0("Frauenanteil in der Studienfachgruppe ", fach_help, " im ", regio),
-                      paste0("Frauenanteil in der Studienfachgruppe ", fach_help, " in ", regio))
-      tooltip <- "Frauenanteil {point.indikator} <br> Wert: {point.display_rel} %"
-      format <- "{value}%"
-      color <- c("#b16fab", "#154194", "#66cbaf", "#fcc433")
-      quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
-      out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color, quelle = quelle)
-
-
-
-
-    } else if(length(label_sel) == 3){
-
-
-      df<- df %>% dplyr::filter(indikator == label_sel[1] | indikator == label_sel [2] | indikator == label_sel [3])
-
-      titel <- ifelse(regio == "Saarland",
-                      paste0("Frauenanteil in der Studienfachgruppe ", fach_help, " im ", regio),
-                      paste0("Frauenanteil in der Studienfachgruppe ", fach_help, " in ", regio))
-      tooltip <- "Frauenanteil {point.indikator} <br> Wert: {point.display_rel} %"
-      format <- "{value}%"
-      color <- c("#b16fab", "#154194", "#66cbaf", "#fcc433")
-      quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
-      out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color, quelle = quelle)
-
-
-    } else if(length(label_sel) == 4){
-
-      df<- df %>% dplyr::filter(indikator == label_sel[1] | indikator == label_sel [2] | indikator == label_sel [3] | indikator == label_sel [4])
-
-      titel <- ifelse(regio == "Saarland",
-                      paste0("Frauenanteil in der Studienfachgruppe ", fach_help, " im ", regio),
-                      paste0("Frauenanteil in der Studienfachgruppe ", fach_help, " in ", regio))
-      tooltip <- "Frauenanteil {point.indikator} <br> Wert: {point.display_rel} %"
-      format <- "{value}%"
-      color <- c("#b16fab", "#154194", "#66cbaf", "#fcc433")
-      quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
-      out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color, quelle = quelle)
-
-
-    } }else if(absolut_selector=="Anzahl"){
+     }else if(absolut_selector=="Anzahl"){
 
 
       fach_help <- faecher
       fach_help <- ifelse(fach_help == "Alle MINT-Fächer", "MINT", fach_help)
       fach_help <- ifelse(fach_help == "Alle Nicht MINT-Fächer", "Nicht-MINT", fach_help)
 
-      hcoptslang <- getOption("highcharter.lang")
-      hcoptslang$thousandsSep <- "."
-      options(highcharter.lang = hcoptslang)
-
       df <- df%>%
         dplyr::filter(selector=="Anzahl")
-      df$display_abs <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
 
       df <- df[with(df, order(region, jahr, decreasing = FALSE)), ]
 
-      if(length(label_sel) == 1) {
+      df <- df %>% dplyr::filter(indikator %in% label_sel)
 
-        df <- df %>% dplyr::filter(indikator== label_sel)
+      sorted_indicators <- df %>%
+        dplyr::group_by(indikator) %>%
+        dplyr::summarize(m_value = mean(round(wert, 1), na.rm = TRUE)) %>%
+        dplyr::arrange(m_value) %>%
+        dplyr::pull(indikator)
 
-        titel <- ifelse(regio == "Saarland",
-                        paste0("Frauenanteil in der Studienfachgruppe ", fach_help, " im ", regio),
-                        paste0("Frauenanteil in der Studienfachgruppe ", fach_help, " in ", regio))
-        tooltip <- "{point.indikator} <br> Anzahl: {point.display_abs}"
-        format <- "{value:, f}"
-        color <- c("#b16fab", "#154194", "#66cbaf", "#fcc433")
-        quell <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
-        out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color, quelle = quell)
+      df$indikator <- factor(df$indikator, levels = sorted_indicators)
 
-      } else if(length(label_sel)==2){
+      titel <- ifelse(regio == "Saarland",
+                      paste0("Frauenanteil in der Studienfachgruppe ", fach_help, " im ", regio),
+                      paste0("Frauenanteil in der Studienfachgruppe ", fach_help, " in ", regio))
 
+      df <- df %>%
+        dplyr::mutate(
+          tooltip = paste0(
+            "<b>", indikator, "</b><br>",
+            "Jahr: ", jahr, "<br>",
+            "Anzahl: ", prettyNum(wert, big.mark = ".", decimal.mark = ",")
+          )
+        )
+      format <- ",d"
+      color <- c("#b16fab", "#154194", "#66cbaf", "#fcc433")[1:length(unique(df$indikator))]
+      quell <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      out <- linebuilder_plotly(df, titel, x = "jahr", y = "wert", group = "indikator", format = format, color = color, quelle = quell)
 
-        df <- df %>% dplyr::filter(indikator == label_sel[1] | indikator == label_sel [2])
-
-        titel <- ifelse(regio == "Saarland",
-                        paste0("Frauenanteil in der Studienfachgruppe ", fach_help, " im ", regio),
-                        paste0("Frauenanteil in der Studienfachgruppe ", fach_help, " in ", regio))
-        tooltip <- "{point.indikator} <br> Anzahl: {point.display_abs}"
-        format <- "{value:, f}"
-        color <- c("#b16fab", "#154194", "#66cbaf", "#fcc433")
-        quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
-        out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color, quelle = quelle)
-
-      } else if(length(label_sel) == 3){
-
-
-        df<- df %>% dplyr::filter(indikator == label_sel[1] | indikator == label_sel [2] | indikator == label_sel [3])
-
-        titel <- ifelse(regio == "Saarland",
-                        paste0("Frauenanteil in der Studienfachgruppe ", fach_help, " im ", regio),
-                        paste0("Frauenanteil in der Studienfachgruppe ", fach_help, " in ", regio))
-        tooltip <- "{point.indikator} <br> Anzahl: {point.display_abs}"
-        format <- "{value:, f}"
-        color <- c("#b16fab", "#154194", "#66cbaf", "#fcc433")
-        out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color)
-
-
-
-
-      } else if (length(label_sel) == 4){
-
-        df<- df %>% dplyr::filter(indikator == label_sel[1] | indikator == label_sel [2] | indikator == label_sel [3] | indikator == label_sel [4])
-
-        titel <- ifelse(regio == "Saarland",
-                        paste0("Frauenanteil in der Studienfachgruppe ", fach_help, " im ", regio),
-                        paste0("Frauenanteil in der Studienfachgruppe ", fach_help, " in ", regio))
-        tooltip <- "{point.indikator} <br> Anzahl: {point.display_abs}"
-        format <- "{value:, f}"
-        color <- c("#b16fab", "#154194", "#66cbaf", "#fcc433")
-        out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color)
-
-      }
     }
-
-
-
 
   return(out)
 }
@@ -3201,19 +3190,14 @@ studienzahl_choice_gender <- function(r) {
     vergl <- r$gegenwert_studi_gen
     regio <- r$region_studi_gen
 
-    color_fachbereich <- c(
-      "Ingenieurwissenschaften (inkl. Informatik)" = "#00a87a",
-      "Mathematik, Naturwissenschaften" = "#fcc433",
-      "andere Fachbereiche" = "#efe8e6"
-    )
+
+    color_fachbereich <- c("#efe8e6", "#00a87a", "#fcc433" )
 
     if(vergl == "Ja"){
       gen <- c("Frauen", "Männer")
     } else{
       gen <- "Frauen"
     }
-
-
 
     df_query <- glue::glue_sql("
         SELECT *
@@ -3255,7 +3239,6 @@ studienzahl_choice_gender <- function(r) {
     df$fach[df$fach == "Alle Nicht MINT-Fächer"] <- "andere Fachbereiche"
 
     df <- df[with(df, order(prop, decreasing = FALSE)), ]
-    df <- df %>% dplyr::mutate(col = color_fachbereich[fach])
     df$wert <- prettyNum(df$wert, big.mark=".", decimal.mark = ",")
 
     titel_gruppe <- dplyr::case_when(
@@ -3285,38 +3268,132 @@ studienzahl_choice_gender <- function(r) {
       paste0("Studienfachwahl von ", titel_gruppe_m, " in ", regio, " (", timerange, ")")
     )
 
+    color <- color_fachbereich
+
+
+    df_f <- df %>% dplyr::filter(geschlecht == "Frauen")
+    df_m <- df %>% dplyr::filter(geschlecht == "Männer")
+
+
+    reihenfolge <- c(
+      "andere Fachbereiche",
+      "Ingenieurwissenschaften (inkl. Informatik)",
+      "Mathematik, Naturwissenschaften"
+    )
+
+    df_f <- df_f %>%
+      dplyr::mutate(fach = factor(fach, levels = reihenfolge)) %>%
+      dplyr::arrange(fach)
+
+    df_m <- df_m %>%
+      dplyr::mutate(fach = factor(fach, levels = reihenfolge)) %>%
+      dplyr::arrange(fach)
+
 
     if(vergl == "Ja"){
-      df_f <- df %>% dplyr::filter(geschlecht == "Frauen")
-      df_m <- df %>% dplyr::filter(geschlecht == "Männer")
+
+      df_m <- df_m %>%
+        dplyr::mutate(
+          tooltip = paste0(
+            "<b>", geschlecht, "</b><br>",
+            "Anteil: ", prop, " %<br>",
+            "Anzahl: ", wert
+          )
+        )
+
+      df_f <- df_f %>%
+        dplyr::mutate(
+          tooltip = paste0(
+            "<b>", geschlecht, "</b><br>",
+            "Anteil: ", prop, " %<br>",
+            "Anzahl: ", wert
+          )
+        )
+
 
       subtitel <- paste0("Von allen ", titel_gruppe, " wählen ", 100-df_f$prop[df_f$fach=="andere Fachbereiche"],
                          " % ein MINT-Fach.")
       subtitelm <- paste0("Von allen ", titel_gruppe_m, " wählen ", 100-df_m$prop[df_m$fach=="andere Fachbereiche"],
                           " % ein MINT-Fach.")
 
-      tooltip <- paste('Anteil: {point.prop}% <br> Anzahl: {point.wert}')
 
-      color = as.character(df_f$col)
+      quelle <- "Quelle: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
-      format <- '{point.prop}%'
+      p1 <- piebuilder_plotly(df_f, titel, x="fach", y="prop", quelle_y= -0.04, legend_y = -0.04,
+                       color=color_fachbereich, subtitel = subtitel, quelle = "") |>
+        plotly::layout(
+          annotations = list(
+            list(
+              text = quelle,
+              x = 1,
+              y = -0.25,
+              xref = "paper",
+              yref = "paper",
+              xanchor = "right",
+              yanchor = "top",
+              showarrow = FALSE,
+              font = list(size = 11, color = "gray", family = "Calibri Regular", align = "right")
+            )
+          ),
+          margin = list(t = 140, b = 120, r = 50, l = 50)
+        )
 
-      quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      p2 <- piebuilder_plotly(df_m, titelm, x="fach", y="prop",
+                              color=color_fachbereich, subtitel = subtitelm, quelle = "") |>
+        plotly::layout(
+          annotations = list(
+            list(
+              text = quelle,
+              x = 1,
+              y = -0.6,
+              xref = "paper",
+              yref = "paper",
+              xanchor = "right",
+              yanchor = "top",
+              showarrow = FALSE,
+              font = list(size = 11, color = "gray", family = "Calibri Regular", align = "right")
+            )
+          ),
+          margin = list(t = 135, b = 120, r = 50, l = 50),
+          height = 400
+        )
 
-      p1 <- piebuilder(df_f, titel, x="fach", y="prop", tooltip, color, format, subtitel, quelle = quelle)
-      p2 <- piebuilder(df_m, titelm, x="fach", y="prop", tooltip, color, format, subtitelm, quelle = quelle)
+      out <- list(p1, p2)
 
-
-      out <- highcharter::hw_grid(p1, p2, ncol = 2, browsable = TRUE)
     }else{
 
-      color <- as.character(df$col)
-      format <- '{point.prop}%'
-      tooltip <- paste('Anteil: {point.prop}% <br> Anzahl: {point.wert}')
+      reihenfolge <- c(
+        "andere Fachbereiche",
+        "Ingenieurwissenschaften (inkl. Informatik)",
+        "Mathematik, Naturwissenschaften"
+      )
 
-      quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      df <- df %>%
+        dplyr::mutate(fach = factor(fach, levels = reihenfolge)) %>%
+        dplyr::arrange(fach)
 
-      out <- piebuilder(df, titel, x = "fach", y ="prop", tooltip, color, format, quelle=quelle)
+
+
+
+
+      subtitel <- paste0("Von allen ", titel_gruppe, " wählen ", 100-df$prop[df$fach=="andere Fachbereiche"],
+                         " % ein MINT-Fach.")
+
+      df <- df %>%
+        dplyr::mutate(
+          tooltip = paste0(
+            "<b>", geschlecht, "</b><br>",
+            "Anteil: ", prop, " %<br>",
+            "Anzahl: ", wert
+          )
+        )
+      quelle <- "Quelle: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+
+      out <- piebuilder_plotly(df, titel, x = "fach", y ="prop",
+                               color=color_fachbereich, subtitel = subtitel, quelle=quelle) |>
+        plotly::layout(
+          margin = list(t = 120, b = 120, r = 50, l = 50)
+        )
 
     }
 
@@ -3329,7 +3406,6 @@ studienzahl_choice_gender <- function(r) {
     absolut_selector <- r$abs_zahlen_l_v
     subjects_select <- r$choice_v_f
     states <- r$choice_states
-
 
 
     df_query <- glue::glue_sql("
@@ -3345,13 +3421,11 @@ studienzahl_choice_gender <- function(r) {
     df <- DBI::dbGetQuery(con, df_query)
 
 
-
     titel <- ifelse(states == "Saarland",
                     paste0("Weibliche ",  paste(v_lab, collapse = " & "), " im ", states, " nach Fach"),
                     paste0("Weibliche ",  paste(v_lab, collapse = " & "), " in ", states, " nach Fach"))
 
     if (absolut_selector=="In Prozent"){
-
 
       df_query <- glue::glue_sql("
         SELECT region, fach, jahr, indikator, geschlecht, wert AS wert_ges
@@ -3365,59 +3439,86 @@ studienzahl_choice_gender <- function(r) {
 
       df_alle <- DBI::dbGetQuery(con, df_query)
 
-
-
-
       df <- df %>%
         dplyr::left_join(df_alle, by = c("jahr", "indikator", "geschlecht", "region")) %>%
         dplyr::select(-fach.y) %>%
         dplyr::rename(fach = fach.x) %>%
         dplyr::mutate(prop = round(wert/wert_ges * 100,1))
 
+
       df <- df[with(df, order( jahr, decreasing = FALSE)), ]
 
+      sorted_indicators <- df %>%
+        dplyr::group_by(indikator) %>%
+        dplyr::summarize(m_value = mean(round(prop, 1), na.rm = TRUE)) %>%
+        dplyr::arrange(m_value) %>%
+        dplyr::pull(indikator)
+
+      df$indikator <- factor(df$indikator, levels = sorted_indicators)
+
       #Trennpunkte für lange Zahlen ergänzen
-      #browser()
+
       df$display_rel <- prettyNum(df$prop, big.mark = ".", decimal.mark = ",")
       df$display_wert <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
       max_c <- max(df$prop) + 3
       min_c <- min(df$prop) - 3
 
       subtitel <- paste0("Von allen weiblichen Studierenden bzw. Absolvent:innen hat ein so großer Anteil ein MINT-Fach belegt.")
-
       titel <- titel
-      tooltip <- "{point.indikator}<br> Anteil: {point.display_rel} %"
-      format <- "{value} %"
+      df <- df %>%
+        dplyr::mutate(
+          tooltip = paste0(
+            "<b>", indikator, "</b><br>",
+            "Jahr: ", jahr, "<br>",
+            "Anteil: ", display_rel, " %"
+          )
+        )
+
       color <- c("#b16fab", "#154194", "#66cbaf", "#fbbf24",
                  "#AFF3E0","#2D6BE1","#008F68","#8893a7", "#ee7775", "#9d7265", "#35bd97",
                  "#bfc6d3", "#5f94f9",  "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
       quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
-      out <- linebuilder(df, titel, x = "jahr", y = "prop", group = "indikator", tooltip, format, color, quelle = quelle)
 
-
+      out <- linebuilder_plotly(df, titel, x = "jahr", y = "prop", group = "indikator",
+                                color = color, quelle = quelle, subtitel = subtitel)
 
 
     }else if(absolut_selector=="Anzahl"){
 
-      hcoptslang <- getOption("highcharter.lang")
-      hcoptslang$thousandsSep <- "."
-      options(highcharter.lang = hcoptslang)
-
       df <- df[with(df, order( jahr, decreasing = FALSE)), ]
+
+      sorted_indicators <- df %>%
+        dplyr::group_by(indikator) %>%
+        dplyr::summarize(m_value = mean(round(wert, 1), na.rm = TRUE)) %>%
+        dplyr::arrange(m_value) %>%
+        dplyr::pull(indikator)
+
+      df$indikator <- factor(df$indikator, levels = sorted_indicators)
+
 
       df$display_abs <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
 
       subtitel <- paste0("Von allen weiblichen Studierenden bzw. Absolvent:innen hat eine so große Anzahl ein MINT-Fach belegt.")
 
-
-
       titel <- titel
-      tooltip <- "{point.indikator}<br> Anzahl: {point.display_abs}"
-      format <- "{value:, f}"
+
+      df <- df %>%
+        dplyr::mutate(
+          tooltip = paste0(
+            "<b>", indikator, "</b><br>",
+            "Jahr: ", jahr, "<br>",
+            "Anzahl: ", display_abs
+          )
+        )
+
+      format <- ",d"
       color <- c("#b16fab", "#154194", "#66cbaf", "#fbbf24","#AFF3E0","#2D6BE1","#008F68","#8893a7", "#ee7775", "#9d7265", "#35bd97",
                  "#bfc6d3", "#5f94f9",  "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
       quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
-      out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color, quelle = quelle)
+
+      out <- linebuilder_plotly(df, titel, x = "jahr", y = "wert", group = "indikator",
+                                format = format, color = color, quelle = quelle,
+                                subtitel = subtitel)
 
 
     }
@@ -3488,8 +3589,6 @@ plot_ranking_top_faecher <- function(r) {
       dplyr::filter(region == states)
 
 
-
-
   }else {
 
     df <- df %>% dplyr::filter(typ == "Aggregat"& fach != "Alle Fächer")%>%
@@ -3497,136 +3596,106 @@ plot_ranking_top_faecher <- function(r) {
 
   }
 
-  # Split dataframe by gender and create plots
+
+
+  df <- df %>%
+    dplyr::mutate(
+      fach_short = stringr::str_trunc(
+        as.character(fach),
+        width = 30
+      )
+    )
+
+
+
+# Split dataframe by gender and create plots
+
   if(abs_rel == "In Prozent"){
 
     df$display_abs <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
     df$display_rel <- prettyNum(df$prop, big.mark = ".", decimal.mark = ",")
 
 
-    #nicht als funktion, da es 1) zu komplex und 2) besondere feinheiten enthält, die die funktion balkenbuilder überlasten würde
     # female
     studierende_faecher_frauen <- df %>%
       dplyr::filter(geschlecht == "Frauen")%>%
       dplyr::arrange(desc(prop))%>%
       dplyr::slice(1:10)
 
-    #nicht als funktion, da es 1) zu komplex und 2) besondere feinheiten enthält, die die funktion balkenbuilder überlasten würde
     # male
     studierende_faecher_maenner <- df %>%
       dplyr::filter(geschlecht == "Männer") %>%
       dplyr::arrange(desc(prop)) %>%
       dplyr::slice(1:10)
 
-    # Create female plot
+
+
+# Create female plot
 
     titel <- paste0("Fächer mit dem höchsten Frauenanteil ", praep," ", states , " (", timerange, ")")
 
 
-    hc_frau <- highcharter::hchart(studierende_faecher_frauen, 'bar', highcharter::hcaes(y = prop, x = fach)) %>%
-      highcharter::hc_plotOptions(
-        series = list(
-          boderWidth = 0,
-          dataLabels = list(enabled = TRUE, format = "{point.display_rel} %",
-                            style = list(textOutline = "none"))
-        )) %>%
-      highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.fachbereich} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.display_abs}") %>%
-      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"), min = 0, max = 100, tickInterval = 5) %>%
-      highcharter::hc_xAxis(title = list(text = "")) %>%
-      highcharter::hc_colors(c("#154194")) %>%
-      highcharter::hc_title(text = titel,
-                            margin = 45,
-                            align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
-      highcharter::hc_chart(
-        style = list(fontFamily = "Calibri Regular", fontSize = "14px")
-      ) %>%
-      highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
-      highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
-                              style = list(fontSize = "11px", color = "gray")) %>%
-      highcharter::hc_exporting(enabled = TRUE,
-                                buttons = list(
-                                  contextButton = list(
-                                    menuItems = list("downloadPNG", "downloadCSV",
-                                                     list(
-                                                       text = "Daten für GPT",
-                                                       onclick = htmlwidgets::JS(sprintf(
-                                                         "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
 
-     var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle:Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
+    order <- unique(studierende_faecher_frauen$fach)
 
 
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-   }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel) ))))
-                                  )
-                                )
+    studierende_faecher_frauen <- studierende_faecher_frauen %>%
+      dplyr::mutate(
+        .tooltip = paste0(
+          "<b><span style='font-size:15px;'>", fach, "</span></b><br>",
+          "Anzahl: ", formatC(as.numeric(wert), format = "f", digits = 0, big.mark = "."), "<br>",
+          "Anteil: ", prop, " %"
+        )
       )
 
 
+    x <- "fach"
+    y <- "prop"
 
-    # Create male plot
+    color <- c("#154194")
+    quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle_y <- -0.20
+
+    plot_female <- balkenbuilder_plotly(df=studierende_faecher_frauen, x=x, y=y, titel=titel, orientation = "h", group=NULL, color = color,
+                                tickvals = df$fach, ticktext = df$fach_short, wrap_width = 40,
+                                order = order, stacking = FALSE, percent = TRUE, quelle=quelle, quelle_y=quelle_y)
+
+
+
+
+# Create male plot
+
     titel <- paste0("Fächer mit dem höchsten Männeranteil ", praep, " ", states, " (", timerange, ")")
-    hc_mann <- highcharter::hchart(studierende_faecher_maenner, 'bar', highcharter::hcaes(y = prop, x = fach)) %>%
-      highcharter::hc_plotOptions(
-        series = list(
-          boderWidth = 0,
-          dataLabels = list(enabled = TRUE, format = "{point.display_rel} %",
-                            style = list(textOutline = "none"))
-        )) %>%
-      highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.fachbereich} <br> Anteil: {point.y} % <br> Anzahl: {point.wert}") %>%
-      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"), min = 0, max = 100, tickInterval = 5) %>%
-      highcharter::hc_xAxis(title = list(text = "")) %>%
-      highcharter::hc_colors(c("#66cbaf")) %>%
-      highcharter::hc_title(text = titel,
-                            margin = 45,
-                            align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
-      highcharter::hc_chart(
-        style = list(fontFamily = "Calibri Regular", fontSize = "14px")
-      ) %>%
-      highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
-      highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
-                              style = list(fontSize = "11px", color = "gray")) %>%
-      highcharter::hc_exporting(enabled = TRUE,
-                                buttons = list(
-                                  contextButton = list(
-                                    menuItems = list("downloadPNG", "downloadCSV",
-                                                     list(
-                                                       text = "Daten für GPT",
-                                                       onclick = htmlwidgets::JS(sprintf(
-                                                         "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
 
-     var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle:Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
 
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-   }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel) ))))
-                                  )
-                                )
+    order <- unique(studierende_faecher_maenner$fach)
+
+
+    studierende_faecher_maenner <- studierende_faecher_maenner %>%
+      dplyr::mutate(
+        .tooltip = paste0(
+          "<b><span style='font-size:15px;'>", fach, "</span></b><br>",
+          "Anzahl: ", formatC(as.numeric(wert), format = "f", digits = 0, big.mark = "."), "<br>",
+          "Anteil: ", prop, " %"
+        )
       )
+
+
+    x <- "fach"
+    y <- "prop"
+
+    color <- c("#66cbaf")
+    quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle_y <- -0.20
+
+    plot_male <- balkenbuilder_plotly(df=studierende_faecher_maenner, x=x, y=y, titel=titel, orientation = "h", group=NULL, color = color,
+                                      tickvals = df$fach, ticktext = df$fach_short, wrap_width = 40,
+                                      order = order, stacking = FALSE, percent = TRUE, quelle=quelle, quelle_y=quelle_y)
+
+
+
+
+
 
 
   } else if(abs_rel == "Anzahl"){
@@ -3634,16 +3703,12 @@ plot_ranking_top_faecher <- function(r) {
     df$display_abs <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
     df$display_rel <- prettyNum(df$prop, big.mark = ".", decimal.mark = ",")
 
-    #nicht als funktion, da es 1) zu komplex und 2) besondere feinheiten enthält, die die funktion balkenbuilder überlasten würde
-    # female
     studierende_faecher_frauen <- df %>%
       dplyr::filter(geschlecht == "Frauen") %>%
       dplyr::arrange(desc(wert)) %>%
       dplyr::slice(1:10)
 
-    # male
-    #nicht als funktion, da es 1) zu komplex und 2) besondere feinheiten enthält, die die funktion balkenbuilder überlasten würde
-    studierende_faecher_maenner <- df %>%
+   studierende_faecher_maenner <- df %>%
       dplyr::filter(geschlecht == "Männer") %>%
       dplyr::arrange(desc(wert)) %>%
       dplyr::slice(1:10)
@@ -3651,121 +3716,76 @@ plot_ranking_top_faecher <- function(r) {
 
     # Create female plot
     titel <- paste0("Am häufigsten gewählte Fächer von Frauen ", praep, " ", states, " (", timerange, ")")
-    hc_frau <- highcharter::hchart(studierende_faecher_frauen, 'bar', highcharter::hcaes(y = wert, x = fach)) %>%
-      highcharter::hc_plotOptions(
-        series = list(
-          boderWidth = 0,
-          dataLabels = list(enabled = TRUE, format = "{point.display_abs}",
-                            style = list(textOutline = "none"))
-        )) %>%
 
-      highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.fachbereich} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.display_abs}") %>%
-      highcharter::hc_chart(lang = list(thousandsSep = ".", decimalPoint = ",")) %>%
-      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:,.0f}"), min = 0, max = plyr::round_any(max(studierende_faecher_frauen$wert), 1000, f = ceiling), tickInterval = 1000) %>%
-      highcharter::hc_xAxis(title = list(text = "")) %>%
-      highcharter::hc_colors(c("#154194")) %>%
-      highcharter::hc_title(text = titel,
-                            margin = 45,
-                            align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
-      highcharter::hc_chart(
-        style = list(fontFamily = "Calibri Regular", fontSize = "14px")
-      ) %>%
-      highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
-      highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
-                              style = list(fontSize = "11px", color = "gray")) %>%
-      highcharter::hc_exporting(enabled = TRUE,
-                                buttons = list(
-                                  contextButton = list(
-                                    menuItems = list("downloadPNG", "downloadCSV",
-                                                     list(
-                                                       text = "Daten für GPT",
-                                                       onclick = htmlwidgets::JS(sprintf(
-                                                         "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
 
-     var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle:Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
 
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-   }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel) ))))
-                                  )
-                                )
+
+    order <- unique(studierende_faecher_frauen$fach)
+
+
+    studierende_faecher_frauen <- studierende_faecher_frauen %>%
+      dplyr::mutate(
+        .tooltip = paste0(
+          "<b><span style='font-size:15px;'>", fach, "</span></b><br>",
+          "Anzahl: ", formatC(as.numeric(wert), format = "f", digits = 0, big.mark = "."), "<br>",
+          "Anteil: ", prop, " %"
+        )
       )
 
 
+    x <- "fach"
+    y <- "wert"
 
-    # Create male plot
+    color <- c("#154194")
+    quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle_y <- -0.20
+
+    plot_female <- balkenbuilder_plotly(df=studierende_faecher_frauen, x=x, y=y, titel=titel, orientation = "h", group=NULL, color = color,
+                                        tickvals = df$fach, ticktext = df$fach_short, wrap_width = 40,
+                                        order = order, stacking = FALSE, percent = FALSE, quelle=quelle, quelle_y=quelle_y)
+
+
+
+
+
+
+
+
+       # Create male plot
     titel <- paste0("Am häufigsten gewählte Fächer von Männern ",praep, " ", states, " (", timerange, ")")
-    hc_mann <- highcharter::hchart(studierende_faecher_maenner, 'bar', highcharter::hcaes(y = wert, x = fach)) %>%
-      highcharter::hc_plotOptions(
-        series = list(
-          boderWidth = 0,
-          dataLabels = list(enabled = TRUE, format = "{point.display_abs}",
-                            style = list(textOutline = "none"))
-        )) %>%
-      highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.fachbereich} <br> Anteil: {point.prop} % <br> Absolut: {point.wert}") %>%
-      highcharter::hc_chart(lang = list(thousandsSep = ".", decimalPoint = ",")) %>%
-      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:,.0f}"), min = 0, max = plyr::round_any(max(studierende_faecher_maenner$wert), 1000, f = ceiling), tickInterval = 1000) %>%
-      highcharter::hc_xAxis(title = list(text = "")) %>%
-      highcharter::hc_colors(c("#66cbaf")) %>%
-      highcharter::hc_title(text = titel,
-                            margin = 45,
-                            align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
-      highcharter::hc_chart(
-        style = list(fontFamily = "Calibri Regular", fontSize = "14px")
-      ) %>%
-      highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
-      highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
-                              style = list(fontSize = "11px", color = "gray")) %>%
-      highcharter::hc_exporting(enabled = TRUE,
-                                buttons = list(
-                                  contextButton = list(
-                                    menuItems = list("downloadPNG", "downloadCSV",
-                                                     list(
-                                                       text = "Daten für GPT",
-                                                       onclick = htmlwidgets::JS(sprintf(
-                                                         "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
 
 
-     var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle:Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
+    order <- unique(studierende_faecher_maenner$fach)
 
 
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-   }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel) ))))
-                                  )
-                                )
+    studierende_faecher_maenner <- studierende_faecher_maenner %>%
+      dplyr::mutate(
+        .tooltip = paste0(
+          "<b><span style='font-size:15px;'>", fach, "</span></b><br>",
+          "Anzahl: ", formatC(as.numeric(wert), format = "f", digits = 0, big.mark = "."), "<br>",
+          "Anteil: ", prop, " %"
+        )
       )
+
+
+    x <- "fach"
+    y <- "wert"
+
+    color <- c("#66cbaf")
+    quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle_y <- -0.20
+
+    plot_male <- balkenbuilder_plotly(df=studierende_faecher_maenner, x=x, y=y, titel=titel, orientation = "h", group=NULL, color = color,
+                                      tickvals = df$fach, ticktext = df$fach_short, wrap_width = 40,
+                                      order = order, stacking = FALSE, percent = FALSE, quelle=quelle, quelle_y=quelle_y)
+
 
 
   }
 
 
 
-  out <- list(hc_frau, hc_mann)
+  out <- list(plot_female, plot_male)
 
   return(out)
 
@@ -3864,13 +3884,14 @@ plot_mint_faecher_frauen <- function(r){
     "Alle Nicht MINT-Fächer" = "#efe8e6"
   )
 
+  praep <- ifelse(regio == "Saarland", " im ", " in ")
+
   # filter dataset based on UI inputs
   if(ebene == "MINT-Fächergruppen"){
 
     if (length(label_w) == 0) {
       stop("Fehler: label_w ist leer und verursacht eine ungültige SQL-Abfrage.")
     }
-
 
     df_query <- glue::glue_sql("
         SELECT *
@@ -3885,11 +3906,6 @@ plot_mint_faecher_frauen <- function(r){
 
     df <- DBI::dbGetQuery(con, df_query)
 
-    # df <- df %>%
-    #   dplyr::select(-region, -geschlecht, - jahr, -bereich, -mint_select, -typ)
-    #
-
-
 
     df_query <- glue::glue_sql("
         SELECT *
@@ -3903,12 +3919,6 @@ plot_mint_faecher_frauen <- function(r){
                                ", .con = con)
 
     alle <- DBI::dbGetQuery(con, df_query)
-#
-#     alle <- alle %>%
-#       dplyr::select(-region, -geschlecht, - jahr, -bereich, -mint_select, -typ, -fach)
-#
-#
-
 
   }
   else{
@@ -3929,9 +3939,6 @@ plot_mint_faecher_frauen <- function(r){
 
     df <- DBI::dbGetQuery(con, df_query)
 
-    # df <- df %>%
-    #   dplyr::select(-region, -geschlecht, - jahr, -bereich, -mint_select, -typ)
-
 
     df_query <- glue::glue_sql("
         SELECT *
@@ -3945,17 +3952,7 @@ plot_mint_faecher_frauen <- function(r){
 
     alle <- DBI::dbGetQuery(con, df_query)
 
-    # alle <- alle %>%
-    #   dplyr::select(-region, -geschlecht, - jahr, -bereich, -mint_select, -typ, -fach)
-    # browser()
-
-  # alle <- alle %>%
-  #   dplyr::select(-region, -geschlecht, - jahr, -bereich, -mint_select, -typ, -fach)
-
-
   }
-
-
 
 
   if(ebene == "MINT-Fächergruppen"){
@@ -3974,8 +3971,6 @@ plot_mint_faecher_frauen <- function(r){
 
   else {
 
-
-
     df <- df %>%
       dplyr::left_join(alle,
                        by = c("region", "jahr", "bereich", "indikator", "fach", "fachbereich",
@@ -3986,20 +3981,7 @@ plot_mint_faecher_frauen <- function(r){
       ) %>%
       dplyr::select(-geschlecht.x, -geschlecht.y) %>%
       dplyr::mutate(prop = round(wert / wert_ges * 100, 1))
-
   }
-
-
-  #Anteil Berechnen
-  # df_t <- df %>%
-  #   dplyr::left_join(alle, dplyr::join_by("fach")) %>%
-  #   dplyr::select(-fachbereich.y) %>%
-  #   dplyr::rename(wert = wert.x,
-  #                 wert_ges = wert.y,
-  #                 fachbereich = fachbereich.x) %>%
-  #   dplyr::mutate(prop = round(wert/wert_ges * 100, 1))
-
-
 
 
   #df vorbeiten für Plot-Darstellung
@@ -4018,148 +4000,52 @@ plot_mint_faecher_frauen <- function(r){
 
     df <- df[with(df, order(prop, decreasing = TRUE)), ]
 
+    label_titel <- gsub("Studierende", "Studierenden", label_w)
+
     if(ebene == "MINT-Fachbereiche"){
-      df <- df %>%
-        dplyr::mutate(color = color_fachbereich[fach])
-      col <- df$color
-      titel <- paste0( "Anteil der weiblichen ", label_titel, " nach Fachbereich ", praep, " ", regio," (", timerange, ")")
 
-    }else{
-      df <- df %>%
-        dplyr::mutate(color = color_fach_balken[fach])
-      col <- df$color
-      titel <- paste0( "Anteil der weiblichen ", label_titel, " in allen MINT-Fächergruppen ", praep, " ", regio," (", timerange, ")")
+      color <- color_fachbereich
+      titel <- paste0("Anteil der weiblichen ", label_titel,
+                      if (label_w == "Studienanfänger:innen (1. Hochschulsemester)") " nach Fachbereich" else " nach Fachbereich",
+                      praep, regio, " (", timerange, ")")
+      }else{
 
+      color = color_fach_balken
+      titel <- paste0("Anteil der weiblichen ", label_titel,
+               if (label_w == "Studienanfänger:innen (1. Hochschulsemester)") " in allen MINT-Fächergruppen" else " in allen MINT-Fächergruppen",
+              praep, regio, " (", timerange, ")")
+      }
 
-    }
-
-
-    if (ebene == "MINT-Fächergruppen"){
-    out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y=prop, x= fach))%>%
-      highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}") %>% #Inhalt für Hover-Box
-      highcharter::hc_yAxis(title = list(text=""), labels = list(format = "{value}%")) %>% #x-Achse -->Werte in %
-      highcharter::hc_xAxis(title= list(text="")
-      ) %>%
-      highcharter::hc_plotOptions(bar = list(
-        colorByPoint = TRUE,
-        colors = as.character(df$color)
-      )) %>%
-      highcharter::hc_title(text = titel,
-                            margin = 45,
-                            align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-      highcharter::hc_exporting(enabled = TRUE,
-                                buttons = list(
-                                  contextButton = list(
-                                    menuItems = list("downloadPNG", "downloadCSV",
-                                                     list(
-                                                       text = "Daten für GPT",
-                                                       onclick = htmlwidgets::JS(sprintf(
-                                                         "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
-
-     var data = 'Titel: %s\\n' + this.getCSV();
-
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-   }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel) ))))
-                                  )
-                                )
-      )
-
-    } else {
-      out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y=prop, x= fach))%>%
-        highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}") %>% #Inhalt für Hover-Box
-        highcharter::hc_yAxis(title = list(text=""), labels = list(format = "{value}%")) %>% #x-Achse -->Werte in %
-        highcharter::hc_xAxis(title= list(text="")
-        ) %>%
-        highcharter::hc_plotOptions(bar = list(
-          colorByPoint = TRUE,
-          colors = as.character(df$color)
-        )) %>%
-        highcharter::hc_title(text = titel,
-                              margin = 45,
-                              align = "center",
-                              style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-        highcharter::hc_exporting(enabled = TRUE,
-                                  buttons = list(
-                                    contextButton = list(
-                                      menuItems = list("downloadPNG", "downloadCSV",
-                                                       list(
-                                                         text = "Daten für GPT",
-                                                         onclick = htmlwidgets::JS(sprintf(
-                                                           "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
-
-     var data = 'Titel: %s\\n' + this.getCSV();
-
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-   }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel) ))))
-                                    )
-                                  )
-        )
+# plot
 
 
-}
+     order <- unique(df$fach)
+
+     df <- df %>%
+       dplyr::mutate(
+         .tooltip = paste0(
+           "<span style='font-size:15px;'><b>",fach, "</span></b><br>",
+           "Anteil: ", round(prop, 1), " %<br>",
+           "Anzahl: ", wert
+         ))
+
+
+     x <- "fach"
+     y <- "prop"
+
+     quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+     quelle_y <- -0.15
+
+
+     out <- balkenbuilder_plotly(df=df, x=x, y=y, titel=titel, orientation = "h",percent=TRUE, color=color,
+                                 order=order, stacking = FALSE,quelle_y=quelle_y, quelle=quelle)%>%
+       plotly::layout(
+         margin = list(t = 80))
+
+
 
   return(out)
-
-
-
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -4193,62 +4079,75 @@ plot_auslaender_mint <- function(r){
 
   betr_ebene <- r$ebene_ausl
 
-  #
 
-
+  indikator_in <- c(
+    "internationale Studienanfänger:innen (1. Hochschulsemester)",
+    "internationale Studierende",
+    "Studienanfänger:innen (1. Hochschulsemester)",
+    "Studierende",
+    "Absolvent:innen",
+    "internationale Absolvent:innen"
+  )
 
   df_query <- glue::glue_sql("
-        SELECT *
-        FROM studierende_detailliert
-        WHERE jahr = {year_select}
-        AND geschlecht = 'Gesamt'
-        AND region = {bl_select}
-        AND indikator IN ('internationale Studienanfänger:innen (1. Hochschulsemester)','internationale Studierende','Studienanfänger:innen (1. Hochschulsemester)','Studierende','Absolvent:innen','internationale Absolvent:innen')
+    SELECT region, fachbereich, fach, jahr, indikator, wert
+    FROM studierende_detailliert
+    WHERE jahr = {year_select}
+      AND region = {bl_select}
+      AND geschlecht = 'Gesamt'
+      AND indikator IN ({indikator_in*})
+  ", .con = con)
 
-                                                    ", .con = con)
 
   df <- DBI::dbGetQuery(con, df_query)
 
-  df <- df %>%
-    dplyr::select(-mint_select,- fachbereich)%>%
-    dplyr::collect() %>%
-    tidyr::pivot_wider(names_from=indikator, values_from = wert)%>%
-    dplyr::mutate("deutsche Studierende" =`Studierende` - `internationale Studierende`,
-                  "deutsche Studienanfänger:innen (1. Hochschulsemester)"=`Studienanfänger:innen (1. Hochschulsemester)`-
-                    `internationale Studienanfänger:innen (1. Hochschulsemester)`)%>%
-    dplyr::mutate("deutsche Studierende_p" =`deutsche Studierende`/`Studierende`,
-                  "internationale Studierende_p"= `internationale Studierende`/`Studierende`,
-                  "deutsche Studienanfänger:innen (1. Hochschulsemester)_p" =`deutsche Studienanfänger:innen (1. Hochschulsemester)`/`Studienanfänger:innen (1. Hochschulsemester)`,
-                  "internationale Studienanfänger:innen (1. Hochschulsemester)_p"=`internationale Studienanfänger:innen (1. Hochschulsemester)`/`Studienanfänger:innen (1. Hochschulsemester)`)%>%
-    dplyr::mutate("deutsche Absolvent:innen" =`Absolvent:innen`-`internationale Absolvent:innen`,
-                  "internationale Absolvent:innen"=`Absolvent:innen`-`deutsche Absolvent:innen`)%>%
-    dplyr::mutate("deutsche Absolvent:innen_p" =`deutsche Absolvent:innen`/`Absolvent:innen`,
-                  "internationale Absolvent:innen_p"= `internationale Absolvent:innen`/`Absolvent:innen`) %>%
-    dplyr::select(-c(Studierende, `Studienanfänger:innen (1. Hochschulsemester)` ))%>%
-    tidyr::pivot_longer(c(7:ncol(.)), names_to="indikator", values_to="wert")%>%
-    dplyr::mutate(selector=dplyr::case_when(stringr::str_ends(.$indikator, "_p")~"Relativ",
-                                            T~"Asolut"))%>%
-    dplyr::mutate(selector=dplyr::case_when(stringr::str_ends(.$indikator, "_p") ~ "In Prozent",
-                                            T ~ "Anzahl"))%>%
-    dplyr::mutate(ausl_detect=dplyr::case_when(stringr::str_detect(.$indikator, "international")~"International",
-                                               T~ "Deutsch"))%>%
-    dplyr::filter(!fach %in% c("Weitere ingenieurwissenschaftliche Fächer",
-                               "Weitere naturwissenschaftliche und mathematische Fächer",
-                               "Außerhalb der Studienbereichsgliederung/Sonstige Fächer"))
+
+  df_plot <- df %>%
+    tidyr::pivot_wider(
+      names_from = indikator,
+      values_from = wert
+    ) %>%
+    dplyr::mutate(
+      `deutsche Studierende` =
+        `Studierende` - `internationale Studierende`,
+
+      `deutsche Studienanfänger:innen (1. Hochschulsemester)` =
+        `Studienanfänger:innen (1. Hochschulsemester)` -
+        `internationale Studienanfänger:innen (1. Hochschulsemester)`,
+
+      `deutsche Absolvent:innen` =
+        `Absolvent:innen` - `internationale Absolvent:innen`
+    ) %>%
+    dplyr::select(
+      region, fachbereich, fach, jahr,
+      dplyr::matches("^(deutsche|internationale)")
+    ) %>%
+    tidyr::pivot_longer(
+      cols = dplyr::matches("^(deutsche|internationale)"),
+      names_to = "indikator_raw",
+      values_to = "wert_abs"
+    ) %>%
+    dplyr::mutate(
+      ausl_detect = dplyr::case_when(
+        stringr::str_detect(indikator_raw, "^internationale") ~ "International",
+        TRUE ~ "Deutsch"
+      ),
+      indikator = indikator_raw %>%
+        stringr::str_remove("^deutsche ") %>%
+        stringr::str_remove("^internationale ")
+    ) %>%
+    dplyr::group_by(region, fach, jahr, indikator) %>%
+    dplyr::mutate(
+      wert_prozent = wert_abs / sum(wert_abs, na.rm = TRUE) * 100,
+      wert_plot = if (absolut_selector == "In Prozent") wert_prozent else wert_abs
+      ) %>%
+    dplyr::ungroup() %>%
+    dplyr::filter(indikator == status_select)
 
 
 
 
-  df$indikator <- gsub("_p", "", df$indikator)
-  df$indikator <- gsub("deutsche ", "", df$indikator)
-  df$indikator <- gsub("internationale ", "", df$indikator)
-  df$ausl_detect  <- factor(df$ausl_detect, levels=c("Deutsch", "International"))
-
-    df <- df %>%
-      dplyr::filter(indikator==status_select)
-  # }
-
-  df_fachbereich <- df %>%
+  df_fachbereich <- df_plot %>%
     dplyr::filter(fach %in% c("Geisteswissenschaften",
                               "Mathematik, Naturwissenschaften",
                               "Rechts-, Wirtschafts- und Sozialwissenschaften",
@@ -4262,7 +4161,7 @@ plot_auslaender_mint <- function(r){
                               "Ingenieurwissenschaften (inkl. Informatik)"))
 
 
-  df_faecher <- df %>%
+  df_faecher <- df_plot %>%
     dplyr::filter(!fach %in% c("Geisteswissenschaften",
                                "Rechts-, Wirtschafts- und Sozialwissenschaften",
                                "Humanmedizin/Gesundheitswissenschaften",
@@ -4275,21 +4174,18 @@ plot_auslaender_mint <- function(r){
                                "Alle Fächer",
                                "Mathematik, Naturwissenschaften",
                                "Ingenieurwissenschaften (inkl. Informatik)"))
-  df_faecher$fach <- as.factor(df_faecher$fach)
 
-  #Faktor für Höhe des Grafens berechnen
-  ebene <- c("Fachbereiche", "MINT-Fächer")
-  höhe <- c(8, 11)
-  plt.add <- data.frame(ebene, höhe)
 
-  # NA aus fach entfernen für BULAs mit weniger Studienfachgruppen
-  df_fachbereich <- stats::na.omit(df_fachbereich)
-  df_fachbereich <- df_fachbereich %>%
-    dplyr::arrange(wert)
-  df_faecher <- stats::na.omit(df_faecher)
-  df_faecher <- df_faecher %>%
-    dplyr::arrange(wert)
+  df_plot <- if (betr_ebene == "Fachbereiche") {
+    df_fachbereich
+  } else {
+    df_faecher
+  }
 
+
+
+
+  praep <- ifelse(bl_select == "Saarland", " im ", " in ")
 
   # Vorbereitung Überschrift
   help <- "Studierender"
@@ -4299,550 +4195,65 @@ plot_auslaender_mint <- function(r){
   help2 <- ifelse(grepl("anfänger", status_select), "Studienanfänger:innen", help2)
 
 
-  if(betr_ebene=="Fachbereiche"){
+
+
+       titel <- paste0("Anteil internationaler ", help, " an allen ", help2, praep, bl_select,  " (",year_select, ")" )
 
 
 
-    if(absolut_selector=="In Prozent"){
 
-
-      df_fachbereich <- df_fachbereich %>%
-        dplyr::filter(selector == "In Prozent")%>%
-        dplyr::mutate(wert = round(wert*100, 1))
-
-      df_fachbereich$display_rel <- prettyNum(df_fachbereich$wert, big.mark = ".", decimal.mark = ",")
-
-
-
-      if (status_select == "Absolvent:innen"){
-
-        titel <- paste0("Anteil internationaler Absolvent:innen an allen Absolvent:innen in ", bl_select,  " (",year_select, ")" )
-
-        #nicht als funktion, da es 1) zu komplex und 2) besondere feinheiten enthält, die die funktion balkenbuilder überlasten würde
-
-        out <- highcharter::hchart(df_fachbereich, 'bar', highcharter::hcaes(y = wert, x = fach, group = ausl_detect))%>%
-          highcharter::hc_tooltip(pointFormat = "{point.ausl_detect} <br> Anteil: {point.display_rel} %")%>%
-          highcharter::hc_size(height = 60*plt.add$höhe[plt.add$ebene == betr_ebene])%>%
-          highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
-          highcharter::hc_xAxis(title = list(text = ""), categories = c("Alle Fächer",
-                                                                        "Alle MINT-Fächer",
-                                                                        "Alle Nicht MINT-Fächer",
-                                                                        "",
-                                                                        "Ingenieurwissenschaften (inkl. Informatik)",
-                                                                        "Kunst, Kunstwissenschaft",
-                                                                        "Mathematik, Naturwissenschaften",
-                                                                        "Geisteswissenschaften",
-                                                                        "Rechts-, Wirtschafts- und Sozialwissenschaften",
-                                                                        "Agrar-, Forst- und Ernährungswissenschaften, Veterinärmedizin",
-                                                                        "Humanmedizin/Gesundheitswissenschaften",
-                                                                        "Sport")) %>%
-          highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
-          highcharter::hc_colors(c("#efe8e6", "#66cbaf")) %>%
-          highcharter::hc_title(text = paste0("Anteil internationaler Absolvent:innen an allen Absolvent:innen in ", bl_select,  " (",year_select, ")" ),
-                                margin = 45,
-                                align = "center",
-                                style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
-          highcharter::hc_chart(
-            style = list(fontFamily = "Calibri Regular", fontSize = "14px")
-          ) %>%
-          highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
-          highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
-                                  style = list(fontSize = "11px", color = "gray")) %>%
-          highcharter::hc_exporting(enabled = TRUE,
-                                    buttons = list(
-                                      contextButton = list(
-                                        menuItems = list("downloadPNG", "downloadCSV",
-                                                         list(
-                                                           text = "Daten für GPT",
-                                                           onclick = htmlwidgets::JS(sprintf(
-                                                             "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
-
-     var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle:Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
-
-
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-   }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel) ))))
-                                      )
-                                    )
-          )
-
-      } else {
-
-
-        titel <- paste0("Anteil internationaler ", help, " an allen ", help2, " in ", bl_select,  " (",year_select, ")" )
-
-        #nicht als funktion, da es 1) zu komplex und 2) besondere feinheiten enthält, die die funktion balkenbuilder überlasten würde
-
-        out <- highcharter::hchart(df_fachbereich, 'bar', highcharter::hcaes(y = wert, x = fach, group = ausl_detect))%>%
-          highcharter::hc_tooltip(pointFormat = "{point.ausl_detect} <br> Anteil: {point.display_rel} %")%>%
-          highcharter::hc_size(height = 60*plt.add$höhe[plt.add$ebene == betr_ebene])%>%
-          highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
-          highcharter::hc_xAxis(title = list(text = ""), categories = c("Alle Fächer",
-                                                                        "Alle MINT-Fächer",
-                                                                        "Alle Nicht MINT-Fächer",
-                                                                        "",
-                                                                        "Ingenieurwissenschaften (inkl. Informatik)",
-                                                                        "Kunst, Kunstwissenschaft",
-                                                                        "Mathematik, Naturwissenschaften",
-                                                                        "Geisteswissenschaften",
-                                                                        "Rechts-, Wirtschafts- und Sozialwissenschaften",
-                                                                        "Agrar-, Forst- und Ernährungswissenschaften, Veterinärmedizin",
-                                                                        "Humanmedizin/Gesundheitswissenschaften",
-                                                                        "Sport")) %>%
-          highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
-          highcharter::hc_colors(c("#efe8e6", "#66cbaf")) %>%
-          highcharter::hc_title(text = paste0("Anteil internationaler ", help, " an allen ", help2, " in ", bl_select,  " (",year_select, ")" ),
-                                margin = 45,
-                                align = "center",
-                                style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
-          highcharter::hc_chart(
-            style = list(fontFamily = "Calibri Regular", fontSize = "14px")
-          ) %>%
-          highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
-          highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
-                                  style = list(fontSize = "11px", color = "gray")) %>%
-          highcharter::hc_exporting(enabled = TRUE,
-                                    buttons = list(
-                                      contextButton = list(
-                                        menuItems = list("downloadPNG", "downloadCSV",
-                                                         list(
-                                                           text = "Daten für GPT",
-                                                           onclick = htmlwidgets::JS(sprintf(
-                                                             "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
-
-     var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle:Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
-
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-   }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel) ))))
-                                      )
-                                    )
-          )
-
-      }
-
-
-    } else if(absolut_selector =="Anzahl"){
-
-      hcoptslang <- getOption("highcharter.lang")
-      hcoptslang$thousandsSep <- "."
-      options(highcharter.lang = hcoptslang)
-
-      df_fachbereich$display_abs <- prettyNum(df_fachbereich$wert, big.mark = ".", decimal.mark = ",")
-
-      df_fachbereich <- df_fachbereich %>%
-        dplyr::filter(selector == "Anzahl")
-
-
-      if (status_select == "Absolvent:innen"){
-        titel <- paste0("Anzahl internationaler Absolvent:innen in ", bl_select,  " (",year_select, ")" )
-
-
-        #nicht als funktion, da es 1) zu komplex und 2) besondere feinheiten enthält, die die funktion balkenbuilder überlasten würde
-        out <- highcharter::hchart(df_fachbereich, 'bar', highcharter::hcaes(y = wert, x = fach, group = ausl_detect))%>%
-          highcharter::hc_tooltip(pointFormat = "{point.ausl_detect} <br> Anzahl: {point.display_abs}")%>%
-          highcharter::hc_size(height = 60*plt.add$höhe[plt.add$ebene == betr_ebene])%>%
-          highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}")) %>%
-          highcharter::hc_xAxis(title = list(text = ""), categories = c("Alle Fächer",
-                                                                        "Alle MINT-Fächer",
-                                                                        "Alle Nicht MINT-Fächer",
-                                                                        "",
-                                                                        "Ingenieurwissenschaften (inkl. Informatik)",
-                                                                        "Rechts-, Wirtschafts- und Sozialwissenschaften",
-                                                                        "Mathematik, Naturwissenschaften",
-                                                                        "Geisteswissenschaften",
-                                                                        "Kunst, Kunstwissenschaft",
-                                                                        "Humanmedizin/Gesundheitswissenschaften",
-                                                                        "Agrar-, Forst- und Ernährungswissenschaften, Veterinärmedizin",
-                                                                        "Sport")) %>%
-          highcharter::hc_colors(c("#efe8e6", "#66cbaf")) %>%
-          highcharter::hc_title(text = paste0("Anzahl internationaler Absolvent:innen in ", bl_select,  " (",year_select, ")" ),
-                                margin = 45,
-                                align = "center",
-                                style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
-          highcharter::hc_chart(
-            style = list(fontFamily = "Calibri Regular", fontSize = "14px")
-          ) %>%
-          highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
-          highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
-                                  style = list(fontSize = "11px", color = "gray")) %>%
-          highcharter::hc_exporting(enabled = TRUE,
-                                    buttons = list(
-                                      contextButton = list(
-                                        menuItems = list("downloadPNG", "downloadCSV",
-                                                         list(
-                                                           text = "Daten für GPT",
-                                                           onclick = htmlwidgets::JS(sprintf(
-                                                             "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
-
-     var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle:Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
-
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-   }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel) ))))
-                                      )
-                                    )
-          )
-
-      }else{
-
-        titel <- paste0("Anzahl internationaler ", help, " in ", bl_select,  " (",year_select, ")" )
-
-        #nicht als funktion, da es 1) zu komplex und 2) besondere feinheiten enthält, die die funktion balkenbuilder überlasten würde
-
-        out <- highcharter::hchart(df_fachbereich, 'bar', highcharter::hcaes(y = wert, x = fach, group = ausl_detect))%>%
-          highcharter::hc_tooltip(pointFormat = "{point.ausl_detect} <br> Anzahl: {point.display_abs}")%>%
-          highcharter::hc_size(height = 60*plt.add$höhe[plt.add$ebene == betr_ebene])%>%
-          highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}")) %>%
-          highcharter::hc_xAxis(title = list(text = ""), categories = c("Alle Fächer",
-                                                                        "Alle MINT-Fächer",
-                                                                        "Alle Nicht MINT-Fächer",
-                                                                        "",
-                                                                        "Ingenieurwissenschaften (inkl. Informatik)",
-                                                                        "Rechts-, Wirtschafts- und Sozialwissenschaften",
-                                                                        "Mathematik, Naturwissenschaften",
-                                                                        "Geisteswissenschaften",
-                                                                        "Kunst, Kunstwissenschaft",
-                                                                        "Humanmedizin/Gesundheitswissenschaften",
-                                                                        "Agrar-, Forst- und Ernährungswissenschaften, Veterinärmedizin",
-                                                                        "Sport")) %>%
-          highcharter::hc_colors(c("#efe8e6", "#66cbaf")) %>%
-          highcharter::hc_title(text = paste0("Anzahl internationaler ", help, " in ", bl_select,  " (",year_select, ")" ),
-                                margin = 45,
-                                align = "center",
-                                style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
-          highcharter::hc_chart(
-            style = list(fontFamily = "Calibri Regular", fontSize = "14px")
-          ) %>%
-          highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
-          highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
-                                  style = list(fontSize = "11px", color = "gray")) %>%
-          highcharter::hc_exporting(enabled = TRUE,
-                                    buttons = list(
-                                      contextButton = list(
-                                        menuItems = list("downloadPNG", "downloadCSV",
-                                                         list(
-                                                           text = "Daten für GPT",
-                                                           onclick = htmlwidgets::JS(sprintf(
-                                                             "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
-
-     var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle:Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
-
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-   }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel) ))))
-                                      )
-                                    )
-          )
-
-      }
-
-
-
-    }} else if(betr_ebene == "MINT-Fächer"){
-
-      if(absolut_selector=="In Prozent"){
-
-
-        df_faecher <- df_faecher %>%
-          dplyr::filter(selector == "In Prozent")%>%
-          dplyr::mutate(wert = round(wert*100, 1)) %>%
-          dplyr::arrange(wert)
-
-        df_faecher$display_rel <- prettyNum(df_faecher$wert, big.mark = ".", decimal.mark = ",")
-
-       if (status_select == "Absolvent:innen"){
-
-         titel <- paste0("Anteil internationaler Absolvent:innen an allen Absolvent:innen in ", bl_select,  " (",year_select, ")" )
-
-         #nicht als funktion, da es 1) zu komplex und 2) besondere feinheiten enthält, die die funktion balkenbuilder überlasten würde
-
-         out <- highcharter::hchart(df_faecher, 'bar', highcharter::hcaes(y = wert, x = fach, group = ausl_detect))%>%
-           highcharter::hc_tooltip(pointFormat = "{point.ausl_detect} <br> Anteil: {point.display_rel} %")%>%
-           highcharter::hc_size(height = 60*plt.add$höhe[plt.add$ebene == betr_ebene])%>%
-           highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
-           highcharter::hc_xAxis(title = list(text = "")
-           ) %>%
-           highcharter::hc_plotOptions(bar = list(stacking = "percent"))%>%
-           highcharter::hc_colors(c("#efe8e6", "#66cbaf")) %>%
-
-           highcharter::hc_title(text = paste0("Anteil internationaler Absolvent:innen an allen Absolvent:innen in ", bl_select,  " (",year_select, ")" ),
-                                 margin = 45,
-                                 align = "center",
-                                 style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
-           highcharter::hc_chart(
-             style = list(fontFamily = "Calibri Regular", fontSize = "14px")
-           ) %>%
-           highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
-           highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
-                                   style = list(fontSize = "11px", color = "gray")) %>%
-           highcharter::hc_exporting(enabled = TRUE,
-                                     buttons = list(
-                                       contextButton = list(
-                                         menuItems = list("downloadPNG", "downloadCSV",
-                                                          list(
-                                                            text = "Daten für GPT",
-                                                            onclick = htmlwidgets::JS(sprintf(
-                                                              "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
-
-
-     var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle:Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
-
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-   }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel) ))))
-                                       )
-                                     )
+       df_plot <- df_plot %>%
+         dplyr::filter(!is.na(fach), !is.na(wert_plot)) %>%
+         dplyr::mutate(
+           ausl_detect = factor(ausl_detect, levels = c("International", "Deutsch")),
+           .tooltip = paste0(
+             "<b><span style='font-size:15px;'>", fach, "</span></b><br>",
+             "<span style='font-size:15px;'>", ausl_detect,"e ",indikator, "</span><br>",
+             "Anteil: ", round(wert_prozent, 1), " %<br>",
+             "Anzahl: ", formatC(as.numeric(wert_abs), format = "f", digits = 0, big.mark = "."))
            )
 
-       } else {
-
-
-         titel <- paste0("Anteil internationaler ", help, " an allen ", help2, " in ", bl_select,  " (",year_select, ")" )
-
-
-         #nicht als funktion, da es 1) zu komplex und 2) besondere feinheiten enthält, die die funktion balkenbuilder überlasten würde
-
-         out <- highcharter::hchart(df_faecher, 'bar', highcharter::hcaes(y = wert, x = fach, group = ausl_detect))%>%
-           highcharter::hc_tooltip(pointFormat = "{point.ausl_detect} <br> Anteil: {point.display_rel} %")%>%
-           highcharter::hc_size(height = 60*plt.add$höhe[plt.add$ebene == betr_ebene])%>%
-           highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
-           highcharter::hc_xAxis(title = list(text = "")
-
-           ) %>%
-           highcharter::hc_plotOptions(bar = list(stacking = "percent"))%>%
-           highcharter::hc_colors(c("#efe8e6", "#66cbaf")) %>%
-
-           highcharter::hc_title(text = paste0("Anteil internationaler ", help, " an allen ", help2, " in ", bl_select,  " (",year_select, ")" ),
-                                 margin = 45,
-                                 align = "center",
-                                 style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
-           highcharter::hc_chart(
-             style = list(fontFamily = "Calibri Regular", fontSize = "14px")
-           ) %>%
-           highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
-           highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
-                                   style = list(fontSize = "11px", color = "gray")) %>%
-           highcharter::hc_exporting(enabled = TRUE,
-                                     buttons = list(
-                                       contextButton = list(
-                                         menuItems = list("downloadPNG", "downloadCSV",
-                                                          list(
-                                                            text = "Daten für GPT",
-                                                            onclick = htmlwidgets::JS(sprintf(
-                                                              "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
-
-
-     var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle:Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
-
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-   }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel) ))))
-                                       )
-                                     )
-           )
-       }
+       order <- df_plot %>%
+         dplyr::filter(ausl_detect == "International") %>%
+         dplyr::arrange(
+           dplyr::case_when(
+             betr_ebene == "Fachbereiche" & fach == "Alle Fächer" ~ 1,
+             betr_ebene == "Fachbereiche" & fach == "Alle MINT-Fächer" ~ 2,
+             betr_ebene == "Fachbereiche" & fach == "Alle Nicht MINT-Fächer" ~ 3,
+             TRUE ~ 4
+           ),
+           dplyr::desc(wert_plot)) %>%
+         dplyr::pull(fach)
 
 
 
+       x <- "fach"
 
 
-      } else if(absolut_selector =="Anzahl"){
+       y <- "wert_plot"
+       group <- "ausl_detect"
+       color <- c("Deutsch" = "#efe8e6", "International" = "#66cbaf")
 
-        hcoptslang <- getOption("highcharter.lang")
-        hcoptslang$thousandsSep <- "."
-        options(highcharter.lang = hcoptslang)
+       quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+       quelle_y <- -0.15
+       legend_y <- -0.07
 
-        df_faecher <- df_faecher %>%
-          dplyr::filter(selector == "Anzahl") %>%
-          dplyr::arrange(wert)
-
-        df_faecher$display_abs <- prettyNum(df_faecher$wert, big.mark = ".", decimal.mark = ",")
-
-        df_faecher <- df_faecher[order(-df_faecher$wert),]
-
-        if(status_select == "Absolvent:innen"){
-          #
-          #nicht als funktion, da es 1) zu komplex und 2) besondere feinheiten enthält, die die funktion balkenbuilder überlasten würde
-          #
-
-          titel <-  paste0("Anzahl internationaler Absolvent:innen in ", bl_select,  " (",year_select, ")" )
-
-          out <- highcharter::hchart(df_faecher, 'bar', highcharter::hcaes(y = wert, x = fach, group = ausl_detect))%>%
-            highcharter::hc_tooltip(pointFormat = "{point.ausl_detect} <br> Anzahl: {point.display_abs}")%>%
-            highcharter::hc_size(height = 60*plt.add$höhe[plt.add$ebene == betr_ebene])%>%
-            highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}")) %>%
-            highcharter::hc_xAxis(title = list(text = "")) %>%
-            highcharter::hc_colors(c("#efe8e6", "#66cbaf")) %>%
-            highcharter::hc_title(text = paste0("Anzahl internationaler Absolvent:innen in ", bl_select,  " (",year_select, ")" ),
-                                  margin = 45,
-                                  align = "center",
-                                  style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
-            highcharter::hc_chart(
-              style = list(fontFamily = "Calibri Regular", fontSize = "14px")
-            ) %>%
-            highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
-            highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
-                                    style = list(fontSize = "11px", color = "gray")) %>%
-            highcharter::hc_exporting(enabled = TRUE,
-                                      buttons = list(
-                                        contextButton = list(
-                                          menuItems = list("downloadPNG", "downloadCSV",
-                                                           list(
-                                                             text = "Daten für GPT",
-                                                             onclick = htmlwidgets::JS(sprintf(
-                                                               "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
+       percent  <- if (absolut_selector == "In Prozent") TRUE else FALSE
+       stacking <- if (absolut_selector == "In Prozent") TRUE else FALSE
 
 
-     var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle:Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
-
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-   }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel) ))))
-                                        )
-                                      )
-            )
-
-        } else {
-
-          titel <- paste0("Anzahl internationaler ", help, " in ", bl_select,  " (",year_select, ")" )
-
-          out <- highcharter::hchart(df_faecher, 'bar', highcharter::hcaes(y = wert, x = fach, group = ausl_detect))%>%
-            highcharter::hc_tooltip(pointFormat = "{point.ausl_detect} <br> Anzahl: {point.display_abs}")%>%
-            highcharter::hc_size(height = 60*plt.add$höhe[plt.add$ebene == betr_ebene])%>%
-            highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}")) %>%
-            highcharter::hc_xAxis(title = list(text = "")) %>%
-            highcharter::hc_colors(c("#efe8e6", "#66cbaf")) %>%
-            highcharter::hc_title(text = paste0("Anzahl internationaler ", help, " in ", bl_select,  " (",year_select, ")" ),
-                                  margin = 45,
-                                  align = "center",
-                                  style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
-            highcharter::hc_chart(
-              style = list(fontFamily = "Calibri Regular", fontSize = "14px")
-            ) %>%
-            highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
-            highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
-                                    style = list(fontSize = "11px", color = "gray")) %>%
-            highcharter::hc_exporting(enabled = TRUE,
-                                      buttons = list(
-                                        contextButton = list(
-                                          menuItems = list("downloadPNG", "downloadCSV",
-                                                           list(
-                                                             text = "Daten für GPT",
-                                                             onclick = htmlwidgets::JS(sprintf(
-                                                               "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
-
-     var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle:Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
-
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-   }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel) ))))
-                                        )
-                                      )
-            )
-        }
+       out <- balkenbuilder_plotly(df=df_plot, x=x, y=y, titel=titel, orientation = "h",percent=percent, group=group, color=color,
+                                   order=order, stacking = stacking,quelle_y=quelle_y,legend_y=legend_y, quelle=quelle)
 
 
-
-
-
-
-      }}
 
 
 return(out)
-
-
 }
+
+
+
+
 
 ### Tab 2 ----
 
@@ -4926,15 +4337,10 @@ plot_auslaender_mint_zeit <- function(r){
                                                T~ "deutsch")) %>%
     dplyr::filter(indikator !="Absolvent:innen")
 
-
-
-
   df$indikator <- gsub("_p", "", df$indikator)
   df$indikator <- gsub("deutsche ", "", df$indikator)
   df$indikator <- gsub("internationale ", "", df$indikator)
-  df$ausl_detect  <- factor(df$ausl_detect, levels=c("deutsch", "international"))
-
-
+  df$ausl_detect  <- factor(df$ausl_detect, levels=c("international", "deutsch"))
 
     df <- df %>%
       dplyr::filter(indikator==status_select)
@@ -4950,6 +4356,9 @@ plot_auslaender_mint_zeit <- function(r){
   fach_help <- fach_select
   fach_help <- ifelse(fach_help == "Alle MINT-Fächer", "MINT", fach_help)
 
+
+  praep <- ifelse(bl_select == "Saarland", " im ", " in ")
+
   # Plot
   if(absolut_selector=="In Prozent"){
 
@@ -4962,22 +4371,59 @@ plot_auslaender_mint_zeit <- function(r){
     if(betrachtung == "Zeitverlauf - Liniendiagramm"){
       if(status_select == "Absolvent:innen"){
 
+        sorted_indicators <- df %>%
+          dplyr::group_by(ausl_detect) %>%
+          dplyr::summarize(m_value = mean(round(wert, 1), na.rm = TRUE)) %>%
+          dplyr::arrange(m_value) %>%
+          dplyr::pull(ausl_detect)
+
+        df$ausl_detect <- factor(df$ausl_detect, levels = sorted_indicators)
+
+        # order years for plot
+        df <- df[with(df, order(jahr, decreasing = FALSE)), ]
+
+
         titel <-  paste0("Anteil internationaler Absolvent:innen an allen Absolvent:innen in ", fach_help , " in ", bl_select )
-        tooltip <- "{point.ausl_detect} <br> Anteil: {point.display_rel} %"
-        format <- "{value} %"
+
+        df <- df %>%
+          dplyr::mutate(
+            tooltip = paste0(
+              "<b>", ausl_detect, "</b><br>",
+              "Jahr: ", jahr, "<br>",
+              "Anteil: ", display_rel, " %"
+            )
+          )
         color <- c("#154194", "#66cbaf")
         quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt"
-        out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "ausl_detect", tooltip, format, color, quelle = quelle)
+        out <- linebuilder_plotly(df, titel, x = "jahr", y = "wert", group = "ausl_detect", color = color, quelle = quelle)
 
 
       } else {
 
-        titel <-  paste0("Anteil internationaler ", help, " an allen ", help2, " in ", fach_help , " in ", bl_select )
-        tooltip <- "{point.ausl_detect} <br> Anteil: {point.display_rel} %"
-        format <- "{value} %"
+        sorted_indicators <- df %>%
+          dplyr::group_by(ausl_detect) %>%
+          dplyr::summarize(m_value = mean(round(wert, 1), na.rm = TRUE)) %>%
+          dplyr::arrange(m_value) %>%
+          dplyr::pull(ausl_detect)
+
+        df$ausl_detect <- factor(df$ausl_detect, levels = sorted_indicators)
+
+        titel <-  paste0("Anteil internationaler ", help, " an allen ", help2, " in ", fach_help ,
+                         " in ", bl_select )
+
+        df <- df %>%
+          dplyr::mutate(
+            tooltip = paste0(
+              "<b>", ausl_detect, "</b><br>",
+              "Jahr: ", jahr, "<br>",
+              "Anteil: ", display_rel, " %"
+            )
+          )
+
         quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt"
         color <- c("#154194", "#66cbaf")
-        out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "ausl_detect", tooltip, format, color, quelle = quelle)
+        out <- linebuilder_plotly(df, titel, x = "jahr", y = "wert", group = "ausl_detect",
+                                  color = color, quelle = quelle)
       }
 
     }else if(betrachtung == "Gruppenvergleich - Balkendiagramm"){
@@ -4986,55 +4432,32 @@ plot_auslaender_mint_zeit <- function(r){
 
         df <- df[with(df, order(wert, decreasing = TRUE)), ]
 
-        titel <- paste0("Anteil internationaler Absolvent:innen an allen Absolvent:innen in ", fach_help , " in ", bl_select )
+        titel <- paste0("Anteil internationaler Absolvent:innen an allen Absolvent:innen in ", fach_help , praep, bl_select )
 
 
-        highcharter::hchart(df, 'column', highcharter::hcaes(y = wert, x = jahr, group = ausl_detect))%>%
-          highcharter::hc_tooltip(pointFormat = "{point.ausl_detect} <br> Anteil: {point.display_rel} %")%>%
-          highcharter::hc_yAxis(title = list(text = "")
-                                , labels = list(format = "{value} %")
-          ) %>%
-          highcharter::hc_xAxis(title = list(text = "")) %>%
-          highcharter::hc_plotOptions(column = list(stacking = "percent")) %>%
-          highcharter::hc_plotOptions(column = list(pointWidth = 70))%>%
-          highcharter::hc_colors(c("#efe8e6", "#66cbaf")) %>%
-          highcharter::hc_yAxis(max = 40)%>%
-          highcharter::hc_title(text = paste0("Anteil internationaler Absolvent:innen an allen Absolvent:innen in ", fach_help , " in ", bl_select ),
-                                align = "center",
-                                style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
-          highcharter::hc_chart(
-            style = list(fontFamily = "Calibri Regular", fontSize = "14px")
-          ) %>%
-          highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
-          highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
-                                  style = list(fontSize = "11px", color = "gray")) %>%
-          highcharter::hc_exporting(enabled = TRUE,
-                                    buttons = list(
-                                      contextButton = list(
-                                        menuItems = list("downloadPNG", "downloadCSV",
-                                                         list(
-                                                           text = "Daten für GPT",
-                                                           onclick = htmlwidgets::JS(sprintf(
-                                                             "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
 
-     var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle:Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
+        quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-   }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel) ))))
-                                      )
-                                    ))
+        order <- unique(df$jahr)
+
+        df <- df %>%
+          dplyr::mutate(
+            .tooltip = paste0(
+              "<b><span style='font-size:15px;'>", jahr, "</span></b><br>",
+              ausl_detect, "<br>",
+              "Anteil: ", wert, " %"
+            ))
+
+
+        x <- "jahr"
+        y <- "wert"
+        group <- "ausl_detect"
+        color <- c("deutsch" = "#efe8e6","international" = "#66cbaf")
+
+        out <- balkenbuilder_plotly(df=df, x=x, y=y, titel=titel, orientation = "v",percent=TRUE,
+                                    group=group, color=color,
+                                    order=order, stacking = TRUE, quelle=quelle)
+
 
 
       } else {
@@ -5043,54 +4466,30 @@ plot_auslaender_mint_zeit <- function(r){
 
         titel <- paste0("Anteil internationaler ", help, " an allen ", help2, " in ", fach_help , " in ", bl_select )
 
-        highcharter::hchart(df, 'column', highcharter::hcaes(y = wert, x = jahr, group = ausl_detect))%>%
-          highcharter::hc_tooltip(pointFormat = "{point.ausl_detect} <br> Anteil: {point.display_rel} %")%>%
-          highcharter::hc_yAxis(title = list(text = "")
-                                , labels = list(format = "{value} %")
-          ) %>%
-          highcharter::hc_xAxis(title = list(text = "")) %>%
-          highcharter::hc_plotOptions(column = list(stacking = "percent")) %>%
-          highcharter::hc_plotOptions(column = list(pointWidth = 70))%>%
-          highcharter::hc_colors(c("#efe8e6", "#66cbaf")) %>%
-          highcharter::hc_yAxis(max = 40)%>%
-          highcharter::hc_title(text = paste0("Anteil internationaler ", help, " an allen ", help2, " in ", fach_help , " in ", bl_select ),
-                                align = "center",
-                                style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
-          highcharter::hc_chart(
-            style = list(fontFamily = "Calibri Regular", fontSize = "14px")
-          ) %>%
-          highcharter::hc_legend(enabled = TRUE, reversed = T)%>%
-          highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
-                                  style = list(fontSize = "11px", color = "gray")) %>%
-          highcharter::hc_exporting(enabled = TRUE,
-                                    buttons = list(
-                                      contextButton = list(
-                                        menuItems = list("downloadPNG", "downloadCSV",
-                                                         list(
-                                                           text = "Daten für GPT",
-                                                           onclick = htmlwidgets::JS(sprintf(
-                                                             "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
+        quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
-     var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle:Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
+        order <- unique(df$jahr)
+
+        df <- df %>%
+          dplyr::mutate(
+            .tooltip = paste0(
+              "<b><span style='font-size:15px;'>", jahr, "</span></b><br>",
+              ausl_detect, "<br>",
+              "Anteil: ", wert, " %"
+            ))
 
 
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
+        x <- "jahr"
+        y <- "wert"
+        group <- "ausl_detect"
+        color <- c("deutsch" = "#efe8e6","international" = "#66cbaf")
+
+        out <- balkenbuilder_plotly(df=df, x=x, y=y, titel=titel, orientation = "v",percent=TRUE,
+                                    group=group, color=color,
+                                    order=order, stacking = TRUE, quelle=quelle)
+
+
      }
-   }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel) ))))
-                                      )
-                                    ))
-      }
 
     }
 
@@ -5099,32 +4498,52 @@ plot_auslaender_mint_zeit <- function(r){
     df <- df %>%
       dplyr::filter(selector == absolut_selector)
 
-    hcoptslang <- getOption("highcharter.lang")
-    hcoptslang$thousandsSep <- "."
-    options(highcharter.lang = hcoptslang)
-
     df$display_abs <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
 
     if(betrachtung == "Zeitverlauf - Liniendiagramm"){
 
+      sorted_indicators <- df %>%
+        dplyr::group_by(ausl_detect) %>%
+        dplyr::summarize(m_value = mean(round(wert, 1), na.rm = TRUE)) %>%
+        dplyr::arrange(m_value) %>%
+        dplyr::pull(ausl_detect)
+
+      df$ausl_detect <- factor(df$ausl_detect, levels = sorted_indicators)
+
       if (status_select == "Absolvent:innen"){
 
-        titel <-    paste0("Anzahl internationaler Absolvent:innen in ", fach_help, " in ", bl_select)
-        tooltip <- "{point.ausl_detect} <br> Anzahl: {point.display_abs}"
-        format <- "{value:, f}"
+        titel <-    paste0("Anzahl internationaler Absolvent:innen in ", fach_help, praep, bl_select)
+        df <- df %>%
+          dplyr::mutate(
+            tooltip = paste0(
+              "<b>", ausl_detect, "</b><br>",
+              "Jahr: ", jahr, "<br>",
+              "Anteil: ", display_abs
+            )
+          )
+        format <- ",d"
         color <- c("#154194", "#66cbaf")
         quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt"
-        out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "ausl_detect", tooltip, format, color, quelle = quelle)
+        out <- linebuilder_plotly(df, titel, x = "jahr", y = "wert", group = "ausl_detect",
+                                  format = format, color = color, quelle = quelle)
 
       } else {
 
-        titel <-  paste0("Anzahl internationaler ", help, " in ", fach_help, " in ", bl_select)
+        titel <-  paste0("Anzahl internationaler ", help, " in ", fach_help, praep, bl_select)
+        df <- df %>%
+          dplyr::mutate(
+            tooltip = paste0(
+              "<b>", ausl_detect, "</b><br>",
+              "Jahr: ", jahr, "<br>",
+              "Anteil: ", display_abs
+            )
+          )
         tooltip <- "{point.ausl_detect} <br> Anzahl: {point.display_abs}"
-        format <- "{value:, f}"
+        format <- ",d"
         color <- c("#154194", "#66cbaf")
         quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt"
-        out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "ausl_detect", tooltip, format, color, quelle = quelle)
-      }
+        out <- linebuilder_plotly(df, titel, x = "jahr", y = "wert", group = "ausl_detect",
+                                  format = format, color = color, quelle = quelle)      }
 
     }else if(betrachtung == "Gruppenvergleich - Balkendiagramm"){
 
@@ -5132,108 +4551,69 @@ plot_auslaender_mint_zeit <- function(r){
 
         df <- df[with(df, order(wert, decreasing = TRUE)), ]
 
-        titel <- paste0("Anzahl internationaler Absolvent:innen in ", fach_help, " in ", bl_select)
+
+        titel <- paste0("Anzahl internationaler Absolvent:innen in ", fach_help, praep, bl_select)
 
 
-        highcharter::hchart(df, 'column', highcharter::hcaes(y = wert, x = jahr, group = ausl_detect))%>%
-          highcharter::hc_tooltip(pointFormat = "{point.ausl_detect} <br> Anzahl: {point.display_abs}")%>%
-          # highcharter::hc_size(height = 1000)%>%
-          highcharter::hc_yAxis(title = list(text = "")
-                                , labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular")
-          ) %>%
-          highcharter::hc_xAxis(title = list(text = "")) %>%
-          #highcharter::hc_plotOptions(column = list(stacking = "percent")) %>%
-          highcharter::hc_colors(c("#efe8e6", "#66cbaf")) %>%
-          highcharter::hc_title(text =  paste0("Anzahl internationaler Absolvent:innen in ", fach_help, " in ", bl_select),
-                                margin = 45,
-                                align = "center",
-                                style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
-          highcharter::hc_chart(
-            style = list(fontFamily = "Calibri Regular", fontSize = "14px")
-          ) %>%
-          highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
-          highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
-                                  style = list(fontSize = "11px", color = "gray")) %>%
-          highcharter::hc_exporting(enabled = TRUE,
-                                    buttons = list(
-                                      contextButton = list(
-                                        menuItems = list("downloadPNG", "downloadCSV",
-                                                         list(
-                                                           text = "Daten für GPT",
-                                                           onclick = htmlwidgets::JS(sprintf(
-                                                             "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
+        quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
-     var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle:Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
+        order <- unique(df$jahr)
 
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-   }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel) ))))
-                                      )
-                                    ))
+        df <- df %>%
+          dplyr::mutate(
+            .tooltip = paste0(
+              "<b><span style='font-size:15px;'>", jahr, "</span></b><br>",
+              ausl_detect, "<br>",
+              "Anzahl: ",(formatC(as.numeric(wert), format = "f", digits = 0, big.mark = "."))
+            ))
+
+
+        x <- "jahr"
+        y <- "wert"
+        group <- "ausl_detect"
+        color <- c("deutsch" = "#efe8e6","international" = "#66cbaf")
+
+        out <- balkenbuilder_plotly(df=df, x=x, y=y, titel=titel, orientation = "v",percent=FALSE,
+                                    group=group, color=color,
+                                    order=order, stacking = FALSE, quelle=quelle)
+
+
+
 
       } else {
 
         df <- df[with(df, order(wert, decreasing = TRUE)), ]
 
-        titel <- paste0("Anzahl internationaler ", help, " in ", fach_help, " in ", bl_select)
+        titel <- paste0("Anzahl internationaler ", help, " in ", fach_help, praep, bl_select)
 
-        highcharter::hchart(df, 'column', highcharter::hcaes(y = wert, x = jahr, group = ausl_detect))%>%
-          highcharter::hc_tooltip(pointFormat = "{point.ausl_detect} <br> Anzahl: {point.display_abs}")%>%
-          highcharter::hc_yAxis(title = list(text = "")
-                                , labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular")
-          ) %>%
-          highcharter::hc_xAxis(title = list(text = "")) %>%
-          highcharter::hc_colors(c("#efe8e6", "#66cbaf")) %>%
-          highcharter::hc_title(text =  paste0("Anzahl internationaler ", help, " in ", fach_help, " in ", bl_select),
-                                margin = 45,
-                                align = "center",
-                                style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
-          highcharter::hc_chart(
-            style = list(fontFamily = "Calibri Regular", fontSize = "14px")
-          ) %>%
-          highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
-          highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
-                                  style = list(fontSize = "11px", color = "gray")) %>%
-          highcharter::hc_exporting(enabled = TRUE,
-                                    buttons = list(
-                                      contextButton = list(
-                                        menuItems = list("downloadPNG", "downloadCSV",
-                                                         list(
-                                                           text = "Daten für GPT",
-                                                           onclick = htmlwidgets::JS(sprintf(
-                                                             "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
 
-     var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle:Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
 
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
+        quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+
+        order <- unique(df$jahr)
+
+        df <- df %>%
+          dplyr::mutate(
+            .tooltip = paste0(
+              "<b><span style='font-size:15px;'>", jahr, "</span></b><br>",
+              ausl_detect, "<br>",
+              "Anzahl: ",(formatC(as.numeric(wert), format = "f", digits = 0, big.mark = "."))
+            ))
+
+
+        x <- "jahr"
+        y <- "wert"
+        group <- "ausl_detect"
+        color <- c("deutsch" = "#efe8e6","international" = "#66cbaf")
+
+        out <- balkenbuilder_plotly(df=df, x=x, y=y, titel=titel, orientation = "v",percent=FALSE,
+                                    group=group, color=color,
+                                    order=order, stacking = FALSE, quelle=quelle)
+
+
+
      }
-   }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel) ))))
-                                      )
-                                    ))
 
-      }
     }
 
   }
@@ -5241,15 +4621,6 @@ plot_auslaender_mint_zeit <- function(r){
 
 
 }
-
-
-
-
-
-
-
-
-
 
 
 
@@ -5320,17 +4691,22 @@ studierende_international_bula_mint <- function(r) {
 
 
     df <- df[df$fachbereich == "MINT",]
-    joinby <- c("name", "region")
-    name <- paste0(label_m, " in MINT")
-    tooltip <- "{point.region} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.display_abs}"
+    df <- df %>%
+      dplyr::mutate(
+        tooltip = paste0(
+          "<b>", region, "</b><br>",
+          "Anteil: ", display_rel, " %<br>",
+          "Anzahl: ", display_abs
+        )
+      )
     titel <- paste0("MINT-Anteil von ", label_m, " (", timerange, ")")
-    mincolor <- "#f4f5f6"
-    map_selection <- map_selection_germany
-    maxcolor <- "#b16fab"
 
     quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
-    out <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection, quelle=quelle)
+    out <- mapbuilder_plotly(df,
+                             titel = titel,
+                             value_col = "proportion",
+                             quelle=quelle)
 
 
   }
@@ -5393,8 +4769,6 @@ studierende_international_bula_mint <- function(r) {
         dplyr::rename(fach = fach.x) %>%
         dplyr::mutate(prop = round(wert/wert_ges*100,1)) %>%
         dplyr::select(-fach.y)
-      #
-
 
       df_start <- df %>%
         dplyr::filter(jahr == timerange[1]) %>%
@@ -5409,30 +4783,42 @@ studierende_international_bula_mint <- function(r) {
         dplyr::left_join(df_ende, by = c("region")) %>%
         dplyr::mutate(diff = round(((prop_neu - prop_alt)/prop_alt)*100,1))
 
+      sorted_indicators <- df %>%
+        dplyr::group_by(region) %>%
+        dplyr::summarize(m_value = mean(round(prop, 1), na.rm = TRUE)) %>%
+        dplyr::arrange(m_value) %>%
+        dplyr::pull(region)
+
+      df$region <- factor(df$region, levels = sorted_indicators)
 
       df <- df[with(df, order(region, jahr, decreasing = FALSE)), ]
+
       df$display_rel <- prettyNum(df$prop, big.mark = ".", decimal.mark = ",")
       df$display_diff <- prettyNum(df$diff, big.mark = ".", decimal.mark = ",")
       df$display_diff <- ifelse(df$diff < 0, paste0("-", df$display_diff), paste0("+", df$display_diff))
 
 
       titel <-  paste0("MINT-Anteil von ", label, " im Zeitverlauf")
-      tooltip <- paste0("{point.region} <br> Wert: {point.display_rel} % <br>Veränderung zwischen ", timerange[1],
-                        " und ", timerange[2], ": {point.display_diff} %")
-      format <- "{value}%"
+      df <- df %>%
+        dplyr::mutate(
+          tooltip = paste0(
+            "<b>", region, "</b><br>",
+            "Jahr: ", jahr, "<br>",
+            "Wert: ", display_rel, " % <br>",
+            "Veränderung zwischen ", timerange[1], " und ", timerange[2],
+            ": ", display_diff, " %"
+          )
+        )
       quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt"
       color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
                  "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
-      out <- linebuilder(df, titel, x = "jahr", y = "prop", group = "region", tooltip, format, color, quelle = quelle)
+
+      out <- linebuilder_plotly(df, titel, x = "jahr", y = "prop", group = "region",
+                               color = color, quelle = quelle)
 
 
 
     } else if(absolut_selector=="Anzahl"){
-
-
-      hcoptslang <- getOption("highcharter.lang")
-      hcoptslang$thousandsSep <- "."
-      options(highcharter.lang = hcoptslang)
 
       df_start <- df %>%
         dplyr::filter(jahr == timerange[1]) %>%
@@ -5452,29 +4838,35 @@ studierende_international_bula_mint <- function(r) {
       df$display_diff <- prettyNum(df$diff, big.mark = ".", decimal.mark = ",")
       df$display_diff <- ifelse(df$diff < 0, paste0("-", df$display_diff), paste0("+", df$display_diff))
 
-
-
       titel <-paste0("Anzahl der ", label, " in MINT im Zeitverlauf")
-      tooltip <- paste0("{point.region} <br> Wert: {point.display_abs} <br>Veränderung zwischen ", timerange[1],
-                        " und ", timerange[2], ": {point.display_diff} %")
-      format <-  "{value:, f}"
+
+      df <- df %>%
+        dplyr::mutate(
+          tooltip = paste0(
+            "<b>", region, "</b><br>",
+            "Jahr: ", jahr, "<br>",
+            "Wert: ", display_abs, " <br>",
+            "Veränderung zwischen ", timerange[1], " und ", timerange[2],
+            ": ", display_diff, " %"
+          )
+        )
+      format <-  ",d"
       color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
                  "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
       quel123 <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt"
-      out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "region", tooltip, format, color, quelle = quel123)
 
+      out <- linebuilder_plotly(df, titel, x = "jahr", y = "wert", group = "region", format = format,
+                         color = color, quelle = quel123)
 
 
     }
 
   }
 
-  else if(betrachtung == "Gruppenvergleich - Balkendiagramm"){##
+  else if(betrachtung == "Gruppenvergleich - Balkendiagramm"){
 
     timerange <- r$international_bulas_balken_date
     r_lab1 <- r$international_bulas_balken_l
-
-
 
 
     df_query <- glue::glue_sql("
@@ -5531,6 +4923,8 @@ studierende_international_bula_mint <- function(r) {
     r_lab1 <- ifelse(grepl("Lehram", r_lab1), "Studierenden (Lehramt)", r_lab1)
     r_lab1 <- ifelse(r_lab1 == "internationale Studienanfänger:innen (1. Hochschulsemester)",
                      "internationalen Studienanfänger:innen (1. Hochschulsemester)", r_lab1)
+    r_lab1 <- ifelse(r_lab1 == "internationale Absolvent:innen",
+                     "internationalen Absolvent:innen", r_lab1)
 
     help_l <- r_lab1
     help_l <- ifelse(r_lab1 == "internationalen Studienanfänger:innen (1. Hochschulsemester)",
@@ -5542,51 +4936,55 @@ studierende_international_bula_mint <- function(r) {
 
 
     titel <- paste0( "MINT-Anteil unter den ", r_lab1 , " (", timerange, ")")
-    out <- highcharter::hchart(df, 'bar', highcharter::hcaes(x= region, y = proportion))%>%
-      highcharter::hc_tooltip(pointFormat = "{point.fach} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.display_abs}") %>% #Inhalt für Hover-Box
-      highcharter::hc_yAxis(title = list(text=""), labels = list(format = "{value}%")) %>% #x-Achse -->Werte in %
-      highcharter::hc_xAxis(title= list(text="")) %>% #Y-Achse - keine Beschriftung
-      #Anpassung der Farben
-      highcharter::hc_plotOptions(bar = list(
-        colorByPoint = TRUE,
-        colors = ifelse(df$region == "Deutschland", "#b16fab",
-                        ifelse(df$region == "Ostdeutschland (inkl. Berlin)", "#d3a4d7",
-                               ifelse(df$region == "Westdeutschland (o. Berlin)", "#d3a4d7", "#A9A9A9"))))) %>%
-      highcharter::hc_title(text = paste0( "MINT-Anteil unter den ", r_lab1 , " (", timerange, ")"),
-                            margin = 25,
-                            align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px"))   %>%
-      highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
-                              style = list(fontSize = "11px", color = "gray")) %>%
-      highcharter::hc_exporting(enabled = TRUE,
-                                buttons = list(
-                                  contextButton = list(
-                                    menuItems = list("downloadPNG", "downloadCSV",
-                                                     list(
-                                                       text = "Daten für GPT",
-                                                       onclick = htmlwidgets::JS(sprintf(
-                                                         "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
 
 
-     var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle:Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.';
+    order <- unique(df$region)
 
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-   }", gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", titel) ))))
-                                  )
-                                )
-      )
+    df <- df %>%
+      dplyr::mutate(
+        .tooltip = paste0(
+          "<span style='font-size:15px;'><b>",region, "</span></b><br>",
+          "<span style='font-size:15px;'> Alle MINT-Fächer </span><br>",
+          "Anteil: ", round(proportion, 1), " %<br>",
+          "Anzahl: ", wert
+        ))
+
+
+    x <- "region"
+    y <- "proportion"
+    color <- c(
+      "Deutschland" = "#b16fab",
+      "Ostdeutschland (inkl. Berlin)" = "#d3a4d7",
+      "Westdeutschland (o. Berlin)" = "#d3a4d7",
+      "Baden-Württemberg" = "#A9A9A9",
+      "Bayern" = "#A9A9A9",
+      "Berlin" = "#A9A9A9",
+      "Brandenburg" = "#A9A9A9",
+      "Bremen" = "#A9A9A9",
+      "Hamburg" = "#A9A9A9",
+      "Hessen" = "#A9A9A9",
+      "Mecklenburg-Vorpommern" = "#A9A9A9",
+      "Niedersachsen" = "#A9A9A9",
+      "Nordrhein-Westfalen" = "#A9A9A9",
+      "Rheinland-Pfalz" = "#A9A9A9",
+      "Saarland" = "#A9A9A9",
+      "Sachsen" = "#A9A9A9",
+      "Sachsen-Anhalt" = "#A9A9A9",
+      "Schleswig-Holstein" = "#A9A9A9",
+      "Thüringen" = "#A9A9A9"
+    )
+
+    quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle_y <- -0.10
+
+
+    out <- balkenbuilder_plotly(df=df, x=x, y=y, titel=titel, orientation = "h",percent=TRUE, color=color,
+                                order=order, stacking=FALSE, quelle_y=quelle_y, quelle=quelle)%>%
+      plotly::layout(
+        yaxis = list(dtick = 1),
+        margin = list(t = 80, b = 100))
+
+
 
   }
 

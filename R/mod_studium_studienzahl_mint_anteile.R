@@ -55,7 +55,7 @@ mod_studium_studienzahl_mint_anteile_ui <- function(id){
       choices = c("MINT-Fächergruppen",
                   "MINT-Fachbereiche"),
       multiple = FALSE,
-      selected = "MINT-Fachbereiche"
+      selected = "MINT-Fächergruppen"
     ),
 
     conditionalPanel(condition = "input.anteile_order == 'MINT-Fächergruppen'",

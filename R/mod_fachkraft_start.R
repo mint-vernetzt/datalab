@@ -244,10 +244,11 @@ mod_fachkraft_start_ui <- function(id){
             ),
             shiny::mainPanel(
               width = 9,
-              shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_fachkraft_prog_item_1"),
-                                                                        height = "600px"),
+              shinycssloaders::withSpinner(plotly::plotlyOutput(ns("plot_fachkraft_prog_item_1"),
+                                                                height = "500px"),
                                                     color = "#154194"),
-
+              p("Vorausberechnung durch das IW Köln, 2025, beauftragt durch MINTvernetzt",
+                style = "font-size: 12px;"),
               p(),
               tags$a(href = "www/MINTvernetzt_Methodenbericht_MINT-Fachkräfteszenarien.pdf", target = "_blank", "Methodenbericht des IW Köln als PDF")
             )
@@ -264,10 +265,11 @@ mod_fachkraft_start_ui <- function(id){
       ),
       shiny::mainPanel(
         width = 9,
-        shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_fachkraft_prog_alle_1"),
-                                                                  height = "600px"),
+        shinycssloaders::withSpinner(plotly::plotlyOutput(ns("plot_fachkraft_prog_alle_1"),
+                                                          height = "500px"),
                                      color = "#154194"),
-
+        p("Vorausberechnung durch das IW Köln, 2025, beauftragt durch MINTvernetzt",
+          style = "font-size: 12px;"),
         p(),
         tags$a(href = "www/MINTvernetzt_Methodenbericht_MINT-Fachkräfteszenarien.pdf", target = "_blank", "Methodenbericht des IW Köln als PDF")
       )
@@ -284,10 +286,11 @@ mod_fachkraft_start_ui <- function(id){
             ),
             shiny::mainPanel(
               width = 9,
-              shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_fachkraft_prog_detail_item_1"),
-                                                                        height = "600px"),
+              shinycssloaders::withSpinner(plotly::plotlyOutput(ns("plot_fachkraft_prog_detail_item_1"),
+                                                                        height = "500px"),
                                             color = "#154194"),
-
+              p("Vorausberechnung durch das IW Köln, 2025, beauftragt durch MINTvernetzt",
+                style = "font-size: 12px;"),
               p(),
               tags$a(href = "www/MINTvernetzt_Methodenbericht_MINT-Fachkräfteszenarien.pdf", target = "_blank", "Methodenbericht des IW Köln als PDF")
             )
@@ -420,7 +423,7 @@ mod_fachkraft_start_ui <- function(id){
               ),
               shiny::mainPanel(
                 width = 9,
-                shinycssloaders::withSpinner(highcharter::highchartOutput(ns("fachkraft_bar_vakanz_1_plot")),
+                shinycssloaders::withSpinner(plotly::plotlyOutput(ns("fachkraft_bar_vakanz_1_plot")),
                                              color = "#154194"),
 
 
@@ -521,7 +524,7 @@ div(class = "content-box",
            ),
            shiny::mainPanel(
              width = 9,
-             shinycssloaders::withSpinner(htmlOutput(ns("plot_fachkraft_ranking_engpass")),
+             shinycssloaders::withSpinner(plotly::plotlyOutput(ns("plot_fachkraft_ranking_engpass")),
                                           color = "#154194"),
              shinyBS::bsPopover(
                id="fachkraft_engpaesse_ranks", title="",
@@ -589,36 +592,18 @@ mod_fachkraft_start_server <- function(id, r){
     # )
 
     #ohne download
-    output$plot_fachkraft_prog_item_1 <- highcharter::renderHighchart({
+    output$plot_fachkraft_prog_item_1 <- plotly::renderPlotly({
       plot_fachkraft_prognose(r)
     })
 
 
-    # # Download erstellen
-    # output$download_btn_plot_fachkraft_prog_item_1 <- downloadHandler(
-    #   contentType = "image/png",
-    #   filename = function() {r$plot_fachkraft_prog_item_1_title},
-    #   content = function(file) {
-    #     # creating the file with the screenshot and prepare it to download
-    #
-    #     add_caption_and_download(
-    #       hc = r$plot_fachkraft_prog_item_1,
-    #       filename =  r$plot_fachkraft_prog_item_1_title,
-    #       width = 700,
-    #       height = 400)
-    #
-    #     file.copy(r$plot_fachkraft_prog_item_1_title, file)
-    #     file.remove(r$plot_fachkraft_prog_item_1_title)
-    #   }
-    # )
-
     #ohne download
-    output$plot_fachkraft_prog_alle_1 <- highcharter::renderHighchart({
+    output$plot_fachkraft_prog_alle_1 <- plotly::renderPlotly({
       plot_fachkraft_prognose_alle(r)
     })
 
     # ohne download
-    output$plot_fachkraft_prog_detail_item_1 <- highcharter::renderHighchart({
+    output$plot_fachkraft_prog_detail_item_1 <- plotly::renderPlotly({
       plot_fachkraft_prognose_detail(r)
       })
 
@@ -648,21 +633,18 @@ mod_fachkraft_start_server <- function(id, r){
     output$plot_fachkraft_epa_item_1 <- renderUI({
 
       plots <- plot_fachkraft_epa_item(r)
-      if(length(plots)==2){
-        div(
-          style = "width: 1000px;",
-          out <- highcharter::hw_grid(
-            plots,
-            ncol = 2
-          )
+
+
+      if (length(plots) == 2) {
+        fluidRow(
+          column(width = 6, plots[[1]]),
+          column(width = 6, plots[[2]])
         )
-      }else{
-        div(
-          style = "width: 500px;",
-          plots
+      } else {
+        fluidRow(
+          column(width = 6, plots[[1]])
         )
       }
-
 
     })
 
@@ -670,48 +652,55 @@ mod_fachkraft_start_server <- function(id, r){
 
     ## Fachkräfteegpass Bulas
     output$plot_fachkraft_epa_bulas <- renderUI({
-      plot_fachkraft_epa_bulas(r)
-    })
+      plots <- plot_fachkraft_epa_bulas(r)
 
+      if (length(plots) == 2) {
+        fluidRow(
+          column(width = 6, plots[[1]]),
+          column(width = 6, plots[[2]])
+        )
+      } else {
+        fluidRow(
+          column(width = 6, plots[[1]])
+        )
+      }
+
+    })
     ## Bar Vakanz
 
     # Download für JT kurz raus
 
-    output$fachkraft_bar_vakanz_1_plot <- highcharter::renderHighchart({
+    output$fachkraft_bar_vakanz_1_plot <- plotly::renderPlotly({
       plot_fachkraft_bar_vakanz(r)
     })
 
 
 
 
-    # Download für JT kurz raus
-    output$plot_fachkraft_bar_vakanz_1 <- renderUI({
-      plot_list <- plot_fachkraft_bar_vakanz(r)
-      plot_list
-    })
 
 
-    ## Detail Berufe
+    ## Detail Berufe Engpassanalyse für MINT-Berufsgattungen
 
     output$plot_fachkraft_detail_item_1 <- renderUI({
-      plot_list <- plot_fachkraft_detail_item(r)
-      r$plot_fachkraft_detail_item_1_left <- plot_list[[1]]
-      r$plot_fachkraft_detail_item_1_right <- plot_list[[2]]
 
-      r$plot_fachkraft_detail_item_1_left_title <- get_plot_title(
-        plot = r$plot_fachkraft_detail_item_1_left
-      )
-      r$plot_fachkraft_detail_item_1_right_title <- get_plot_title(
-        plot = r$plot_fachkraft_detail_item_1_right
+      plots <- plot_fachkraft_detail_item(r)
+
+      fluidRow(
+        column(
+          width = 6,
+          plots[[1]]
+        ),
+        column(
+          width = 6,
+          plots[[2]]
+        )
       )
 
-      highcharter::hw_grid(
-        plot_list,
-        ncol = 2)
     })
 
 
-    output$plot_fachkraft_ranking_engpass <- renderUI({
+
+    output$plot_fachkraft_ranking_engpass <- plotly::renderPlotly({
       plot_list <- plot_fachkraft_ranking_epa(r)
     })
 

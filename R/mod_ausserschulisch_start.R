@@ -131,7 +131,7 @@ mod_ausserschulisch_start_ui <- function(id){
                                  shiny::mainPanel(
                                    width = 9,
                                    shinycssloaders::withSpinner(
-                                     highcharter::highchartOutput(ns("plot_cp_orgas"), height = "500px"),
+                                     plotly::plotlyOutput(ns("plot_cp_orgas")),
                                                                 color = "#154194"),
 
                                  )
@@ -148,7 +148,7 @@ mod_ausserschulisch_start_ui <- function(id){
                                        shiny::mainPanel(
                                          width = 9,
                                          shinycssloaders::withSpinner(
-                                           highcharter::highchartOutput(ns("plot_cp_projekte"), height = "500px"),
+                                           plotly::plotlyOutput(ns("plot_cp_projekte")), #, height = "500px"
                                                                       color = "#154194"),
     )
                               ),
@@ -164,7 +164,7 @@ mod_ausserschulisch_start_ui <- function(id){
                                        shiny::mainPanel(
                                          width = 9,
                                          shinycssloaders::withSpinner(
-                                           highcharter::highchartOutput(ns("plot_cp_profile"), height = "500px"),
+                                           plotly::plotlyOutput(ns("plot_cp_profile")),
                                                                       color = "#154194"),
 
                                        )
@@ -271,7 +271,7 @@ mod_ausserschulisch_start_ui <- function(id){
                                        shiny::mainPanel(
                                          width = 9,
                                          shinycssloaders::withSpinner(
-                                           highcharter::highchartOutput(ns("plot_mv_stimmung"), height = "500px"),
+                                           plotly::plotlyOutput(ns("plot_mv_stimmung")),
                                            color = "#154194"),
 
                                          p(style = "font-size:16px; font-weight: 600;",
@@ -294,9 +294,16 @@ mod_ausserschulisch_start_ui <- function(id){
                                        column(
                                          width = 9,
                                          shinycssloaders::withSpinner(
-                                           highcharter::highchartOutput(ns("plot_mv_gender"), height = "600px"),
+                                           plotly::plotlyOutput(ns("plot_mv_gender")),
                                            color = "#154194"),
 
+                                         p(style= "font-size:16px",
+                                           "Die Gruppe der bislang moderat aktiven MINT-Bildungsanbieter:innen zeichnet
+                              sich durch einen großen Vernetzungswunsch und eine hohe Motivation aus,
+                              sich aktiv in Netzwerke zum Thema MINT-Förderung für Mädchen einzubringen,
+                              was auf ein großes Aktivierungspotenzial hinweist.
+                              Die Gruppe der hoch Aktiven ist bereits sehr motiviert und engagiert in ihrem Netzwerk.
+                                           Die kleinste Gruppe der Befragten nimmt lieber passiv an Netzwerkaktivitäten teil."),
 
                                          p(style = "font-size:16px; font-weight: 600;",
                                            br(),
@@ -434,7 +441,7 @@ mod_ausserschulisch_start_ui <- function(id){
                                       ),
                                       shiny::mainPanel(
                                         width = 9,
-                                        shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_skf_einrichtungen"), height = "500px"),
+                                        shinycssloaders::withSpinner(plotly::plotlyOutput(ns("plot_skf_einrichtungen")),
                                                                      color = "#154194"),
 
 
@@ -457,7 +464,7 @@ mod_ausserschulisch_start_ui <- function(id){
                                       ),
                                       shiny::mainPanel(
                                         width = 9,
-                                        shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_skf_personal"), height = "500px"),
+                                        shinycssloaders::withSpinner(plotly::plotlyOutput(ns("plot_skf_personal")),
                                                                      color = "#154194"),
 
 
@@ -489,15 +496,15 @@ mod_ausserschulisch_start_server <- function(id, r){
 
     # Community Plattform ----
 
-    output$plot_cp_orgas <- highcharter::renderHighchart({
+    output$plot_cp_orgas <- plotly::renderPlotly({
       plot_cp_orgas(r)
     })
 
-    output$plot_cp_projekte <- highcharter::renderHighchart({
+    output$plot_cp_projekte <- plotly::renderPlotly({
       plot_cp_projekte(r)
     })
 
-    output$plot_cp_profile <- highcharter::renderHighchart({
+    output$plot_cp_profile <- plotly::renderPlotly({
       plot_cp_profile(r)
     })
     # MV-Befragungen ----
@@ -506,18 +513,18 @@ mod_ausserschulisch_start_server <- function(id, r){
     #   plot_mv_akteursb(r)
     # )
 
-    output$plot_mv_stimmung <- highcharter::renderHighchart(
+    output$plot_mv_stimmung <- plotly::renderPlotly(
       plot_mv_stimmung(r)
     )
 
-    output$plot_mv_gender <- highcharter::renderHighchart(
+    output$plot_mv_gender <- plotly::renderPlotly(
       plot_mv_genderb()
     )
 
     # SKf ----
 
     # Tab 1
-    output$plot_skf_einrichtungen <- highcharter::renderHighchart({
+    output$plot_skf_einrichtungen <- plotly::renderPlotly({
       skf_einrichtungen(r)
     })
 
@@ -525,7 +532,7 @@ mod_ausserschulisch_start_server <- function(id, r){
     #
     # Tab 2
 
-    output$plot_skf_personal <- highcharter::renderHighchart({
+    output$plot_skf_personal <- plotly::renderPlotly({
       skf_personal(r)
     })
     #
