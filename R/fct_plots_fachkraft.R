@@ -596,6 +596,7 @@ plot_fachkraft_wirkhebel_analyse  <- function(r) {
       hoverinfo = "text"
     ) %>%
     plotly::layout(
+      height = 500,
       font = list(family = "Calibri Regular"),
       title = list(
         text = paste0(
@@ -907,6 +908,10 @@ plot_fachkraft_epa_item <- function(r) {
       line = list(
         width = 0))
   ) %>%
+      plotly::style(
+        hoverlabel = list(bgcolor = "white",
+                          font = list(size = 12))
+      ) %>%
     plotly::layout(
       title = list(
         text = titel_1,
@@ -1125,6 +1130,10 @@ plot_fachkraft_epa_item <- function(r) {
         line = list(
            width = 0))
     ) %>%
+      plotly::style(
+        hoverlabel = list(bgcolor = "white",
+                          font = list(size = 12))
+      ) %>%
       plotly::layout(
         title = list(
           text = titel_2,
@@ -1461,6 +1470,10 @@ plot_fachkraft_epa_bulas <- function(r) {
       line = list(
         width = 0))
   ) %>%
+    plotly::style(
+      hoverlabel = list(bgcolor = "white",
+                        font = list(size = 12))
+    ) %>%
     plotly::layout(
       title = list(
         text = titel_1,
@@ -1679,6 +1692,10 @@ plot_fachkraft_epa_bulas <- function(r) {
         line = list(
           width = 0))
     ) %>%
+      plotly::style(
+        hoverlabel = list(bgcolor = "white",
+                          font = list(size = 12))
+      ) %>%
       plotly::layout(
         title = list(
           text = titel_2,

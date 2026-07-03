@@ -1008,6 +1008,10 @@ argument_fachkraft <- function(r){
         line = list(
           width = 0))
     ) %>%
+      plotly::style(
+        hoverlabel = list(bgcolor = "white",
+                          font = list(size = 12))
+      ) %>%
       plotly::layout(
         title = list(
           text = titel_1,
@@ -1218,6 +1222,10 @@ argument_fachkraft <- function(r){
         size = 30,
         line = list(
           width = 0))
+    ) %>%
+      plotly::style(
+      hoverlabel = list(bgcolor = "white",
+                        font = list(size = 12))
     ) %>%
       plotly::layout(
         title = list(

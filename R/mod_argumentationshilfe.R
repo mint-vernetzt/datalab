@@ -22,7 +22,7 @@ mod_argumentation_ui <- function(id){
       tags$style(HTML("
     /* optional: sorge für weißen Hintergrund in Charts */
     .dl-chart { background:#fff; padding:8px; }
-    .dl-chart .highcharts-container { background:#fff; }
+    .dl-chart .plotly-container { background:#fff; }
   "))
     ),
 
@@ -73,7 +73,7 @@ mod_argumentation_ui <- function(id){
                       class = "linked-image",
                       style = "flex: 0 0 20%;",
                       tags$a(
-                        href = "https://chatgpt.com/g/g-695cd1fa74f881918a54b0517af8163e-mint-datalab-gpt",
+                        href = "https://chatgpt.com/g/g-67e4f41fd91881919a753f4309194bf7-mint-datalab-gpt",
                         target = "_blank",
                         tags$img(
                           src = "www/Bild_MINT-DataLab-GPT.png",
@@ -84,7 +84,7 @@ mod_argumentation_ui <- function(id){
                       )
                     ),
             tags$a(
-              href = "https://chatgpt.com/g/g-695cd1fa74f881918a54b0517af8163e-mint-datalab-gpt",
+              href = "https://chatgpt.com/g/g-67e4f41fd91881919a753f4309194bf7-mint-datalab-gpt",
               target = "_blank",
               p("Link MINT-DataLab-GPT", style = "text-decoration: underline; color: #b16fab;
                 margin-left: 60px;")
@@ -347,7 +347,7 @@ mod_argumentation_ui <- function(id){
                 width = 5,
                 div(style = "margin-left: 30px;",
                     actionButton(label = tagList(icon("arrow-up-right-from-square"), "    Zum MINT-DataLab-GPT"), inputId = "GPT_link",
-                                 onclick = 'window.open("https://chatgpt.com/g/g-695cd1fa74f881918a54b0517af8163e-mint-datalab-gpt", "_blank");')
+                                 onclick = 'window.open("https://chatgpt.com/g/g-67e4f41fd91881919a753f4309194bf7-mint-datalab-gpt", "_blank");')
                 )
               )
             )
@@ -393,108 +393,113 @@ mod_argumentation_ui <- function(id){
                     )
                 )
               ),
-
-
               tags$script(HTML(sprintf("
 (function() {
   function dateStr(){ return new Date().toISOString().slice(0,10); }
-  function blobFromCanvas(canvas, type, quality){
-    return new Promise(function(resolve){ canvas.toBlob(function(b){ resolve(b); }, type || 'image/png', quality || 1.0); });
+
+  function sanitize(name){
+    return String(name)
+      .replace(/[\\\\/:*?'<>|]+/g, '_')
+      .replace(/_+/g, '_')
+      .replace(/^_+|_+$/g, '');
   }
 
-    function sanitize(name){
-  return name
-    .replace(/[\\/:*?'<>|]+/g, '_')   // : und andere unzulässige Zeichen
-                         .replace(/_+/g, '_')
-                         .replace(/^_+|_+$/g, '');
-  }
-
-  function filenameFromChart(chart, idx){
-    var t = chart && chart.title && chart.title.textStr ? chart.title.textStr : null;
-    var base = t ? sanitize(t) : ('chart' + (idx+1));
-    return base + '.png';
-  }
-
-  function filenameFromWrapper(chart, idx){
+  function filenameFromPlotly(el, idx){
     try {
-      var wrap = chart.renderTo && chart.renderTo.closest ? chart.renderTo.closest('.dl-chart') : null;
+      var wrap = el.closest ? el.closest('.dl-chart') : null;
       var fn = wrap && wrap.getAttribute ? wrap.getAttribute('data-filename') : null;
-      if (fn && fn.trim()) return fn;
-    } catch(e){}
-    return null;
+
+      if (fn && fn.trim()) {
+        fn = sanitize(fn.trim());
+        return fn.toLowerCase().endsWith('.png') ? fn : fn + '.png';
+      }
+
+      var title = null;
+      if (el.layout && el.layout.title) {
+        title = typeof el.layout.title === 'string'
+          ? el.layout.title
+          : el.layout.title.text;
+      }
+
+      var base = title ? sanitize(title) : ('plot' + (idx + 1));
+      return base + '.png';
+    } catch(e){
+      return 'plot' + (idx + 1) + '.png';
+    }
   }
 
-  async function chartToPNGBlob(chart, scale){
-    // Chartgröße lesen
-  var w = Math.max(chart.chartWidth || 0, 800);
-  var h = Math.round(w * 9 / 16);
-  var s = 1; // für scharfes Ergebnis
+  async function plotlyToPNGBlob(el){
+    var w = Math.max(el.offsetWidth || 0, 800);
+    var h = Math.round(w * 9 / 16);
 
-
-    // Highcharts-SVG mit export-Optionen holen
-    var svgStr = chart.getSVG({
-      exporting: { sourceWidth: w * s, sourceHeight: h * s }
+    var dataUrl = await Plotly.toImage(el, {
+      format: 'png',
+      width: w,
+      height: h,
+      scale: 2
     });
 
-    // Canvas vorbereiten
-    var canvas = document.createElement('canvas');
-    canvas.width  = w * s;
-    canvas.height = h * s;
-
-    var ctx = canvas.getContext('2d');
-    // canvg rendert die SVG in das Canvas
-    var v = await canvg.Canvg.fromString(ctx, svgStr, { ignoreMouse: true, ignoreAnimation: true });
-    await v.render();
-
-    return await blobFromCanvas(canvas, 'image/png', 1.0);
+    var res = await fetch(dataUrl);
+    return await res.blob();
   }
 
   document.addEventListener('click', async function(ev){
     var btn = ev.target.closest('#%s');
     if (!btn) return;
 
-    // Alle Highcharts-Instanzen einsammeln
-   var charts = (window.Highcharts && Highcharts.charts ? Highcharts.charts : [])
-  .filter(function(c){
-    return c && c.renderTo && c.renderTo.offsetParent; // sichtbar im DOM
-  });
+    if (!window.Plotly || !Plotly.toImage) {
+      alert('Plotly wurde nicht gefunden.');
+      return;
+    }
 
-    // gegen Doppelte absichern
+    var plots = Array.from(document.querySelectorAll('.js-plotly-plot'))
+      .filter(function(el){
+        return el && el.offsetParent !== null;
+      });
+
     var seen = new Set();
-    charts = charts.filter(function(c){
-      var key = c.renderTo;
-      if (seen.has(key)) return false;
-      seen.add(key);
+    plots = plots.filter(function(el){
+      if (seen.has(el)) return false;
+      seen.add(el);
       return true;
     });
 
-    if (!charts.length){ alert('Keine Highcharts-Instanzen gefunden.'); return; }
+    if (!plots.length){
+      alert('Keine Plotly-Instanzen gefunden.');
+      return;
+    }
 
-
-    // Hinweis: Charts müssen sichtbar gerendert sein (kein versteckter Tab)
-    var old = btn.innerText; btn.disabled = true; btn.innerText = 'Erzeuge ZIP...';
+    var old = btn.innerText;
+    btn.disabled = true;
+    btn.innerText = 'Erzeuge ZIP...';
 
     try {
       var zip = new JSZip();
 
-      for (var i=0; i<charts.length; i++){
-        var chart = charts[i];
-        var name = filenameFromWrapper(chart, i) || filenameFromChart(chart, i);
+      for (var i = 0; i < plots.length; i++){
+        var plot = plots[i];
+        var name = filenameFromPlotly(plot, i);
+
         try {
-          var blob = await chartToPNGBlob(chart, 2); // scale=2
+          var blob = await plotlyToPNGBlob(plot);
           zip.file(name, blob);
         } catch(e) {
           console.error('Fehler beim Rendern von', name, e);
         }
       }
 
-      var content = await zip.generateAsync({ type: 'blob', compression: 'STORE' });
+      var content = await zip.generateAsync({
+        type: 'blob',
+        compression: 'STORE'
+      });
+
       saveAs(content, 'alle_grafiken_' + dateStr() + '.zip');
     } catch(e){
       console.error(e);
       alert('Fehler beim Erzeugen des ZIP.');
     } finally {
-      btn.disabled = false; btn.innerText = old;
+      btn.disabled = false;
+      btn.innerText = old;
     }
   }, false);
 })();

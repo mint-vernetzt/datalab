@@ -1219,7 +1219,7 @@ arbeitsmarkt_faecher_anteil <- function(r) {
       quelle <- "Quelle: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
       out_1 <- piebuilder_plotly(df_1, titel1, x="fachbereich", y = "prop", color = color1, legend_y=0.01,
-                          quelle= quelle)|>
+                          quelle= "")|>
         plotly::layout(
           annotations = list(
             list(
@@ -1238,7 +1238,7 @@ arbeitsmarkt_faecher_anteil <- function(r) {
         )
 
       out_2 <- piebuilder_plotly(df_2, titel2, x="fachbereich", y = "prop", legend_y=0.01,
-                          color = color2, quelle = quelle)|>
+                          color = color2, quelle = "")|>
         plotly::layout(
           annotations = list(
             list(
@@ -2698,7 +2698,7 @@ arbeitsmarkt_wahl_gender <- function(r) {
      quelle <- "Quelle: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
      out_1 <- piebuilder_plotly(df_f, titel1, x="fachbereich", y = "prop", legend_y=0.01,
-                                color=as.character(df_f$color), subtitel = subtitel1, quelle=quelle) |>
+                                color=as.character(df_f$color), subtitel = subtitel1, quelle="") |>
        plotly::layout(
          annotations = list(
            list(
@@ -2715,7 +2715,7 @@ arbeitsmarkt_wahl_gender <- function(r) {
          )
        )
      out_2 <- piebuilder_plotly(df_m, titel2, x="fachbereich", y = "prop", legend_y=0.01,
-                                color=as.character(df_m$color), subtitel = subtitel2, quelle=quelle)|>
+                                color=as.character(df_m$color), subtitel = subtitel2, quelle="")|>
        plotly::layout(
          annotations = list(
            list(
@@ -3101,7 +3101,7 @@ arbeitsmarkt_top10 <- function( r){
     quelle_y <- -0.16
 
     plot_female <- balkenbuilder_plotly(df=berufe_frauen, x=x, y=y, titel=titel, orientation = "h", group=NULL, color = color,
-                                        tickvals = df$beruf, ticktext = df$beruf_short, wrap_width=40,
+                                        tickvals = df$beruf, ticktext = df$beruf_short, wrap_width=50,
                                         order = order, stacking = FALSE, percent = TRUE, quelle=quelle, quelle_y=quelle_y) %>%
       plotly::layout(margin = list(t=100))
 
@@ -3134,7 +3134,7 @@ arbeitsmarkt_top10 <- function( r){
     quelle_y <- -0.16
 
     plot_male <- balkenbuilder_plotly(df=berufe_maenner, x=x, y=y, titel=titel, orientation = "h", group=NULL, color = color,
-                                      tickvals = df$beruf, ticktext = df$beruf_short, wrap_width=40,
+                                      tickvals = df$beruf, ticktext = df$beruf_short, wrap_width=50,
                                       order = order, stacking = FALSE, percent = TRUE, quelle=quelle, quelle_y=quelle_y) %>%
       plotly::layout(margin = list(t=100))
 
@@ -3189,7 +3189,7 @@ arbeitsmarkt_top10 <- function( r){
     quelle_y <- -0.16
 
     plot_female <- balkenbuilder_plotly(df=berufe_frauen, x=x, y=y, titel=titel, orientation = "h", group=NULL, color = color,
-                                        tickvals = df$beruf, ticktext = df$beruf_short,wrap_width=40,
+                                        tickvals = df$beruf, ticktext = df$beruf_short,wrap_width=50,
                                         order = order, stacking = FALSE, percent = FALSE, quelle=quelle, quelle_y=quelle_y)
 
 
@@ -3225,7 +3225,7 @@ arbeitsmarkt_top10 <- function( r){
     quelle_y <- -0.16
 
     plot_male <- balkenbuilder_plotly(df=berufe_maenner, x=x, y=y, titel=titel, orientation = "h", group=NULL, color = color,
-                                      tickvals = df$beruf, ticktext = df$beruf_short, wrap_width=40,
+                                      tickvals = df$beruf, ticktext = df$beruf_short, wrap_width=50,
                                       order = order, stacking = FALSE, percent = FALSE, quelle=quelle, quelle_y=quelle_y)
 
 
@@ -3550,55 +3550,13 @@ arbeitsmarkt_lk_detail_map <- function(r) {
   SELECT *
   FROM arbeitsmarkt_detail
   where jahr = {timerange}
+  AND bundesland = {states}
                                ", .con = con)
 
   df <- DBI::dbGetQuery(con, df_query)
 
   df <- df %>%
     dplyr::select(-bereich)
-
-
-  # map states for state codes
-  # state_codes <- data.frame(
-  #   state = c(
-  #     "Baden-Württemberg",
-  #     "Bayern",
-  #     "Berlin",
-  #     "Brandenburg",
-  #     "Bremen",
-  #     "Hamburg",
-  #     "Hessen",
-  #     "Mecklenburg-Vorpommern",
-  #     "Niedersachsen",
-  #     "Nordrhein-Westfalen",
-  #     "Rheinland-Pfalz",
-  #     "Saarland",
-  #     "Sachsen",
-  #     "Sachsen-Anhalt",
-  #     "Schleswig-Holstein",
-  #     "Thüringen"
-  #   ),
-  #   short = c(
-  #     "bw",
-  #     "by",
-  #     "be",
-  #     "bb",
-  #     "hb",
-  #     "hh",
-  #     "he",
-  #     "mv",
-  #     "ni",
-  #     "nw",
-  #     "rp",
-  #     "sl",
-  #     "sn",
-  #     "st",
-  #     "sh",
-  #     "th"
-  #   )
-  # )
-  #
-  # state_code <- state_codes %>% dplyr::filter(state == states) %>% dplyr::pull()
 
   # calculate comparison map 1
 
@@ -3618,12 +3576,6 @@ arbeitsmarkt_lk_detail_map <- function(r) {
     adjketiv_1 <- indikator_azubi_1
   }
 
-
-  # adjust landkreis_nummer for correct mapping
-  # df1_map <- df1_map %>% dplyr::mutate(
-  #   landkreis_nummer = paste0("de-", state_code, "-", landkreis_nummer, "000"))
-
-
   #Trennpunkte für lange Zahlen ergänzen in Absolute Zahlen für Hover + Text für Hover
   df1_map$wert <- prettyNum(df1_map$wert, big.mark = ".", decimal.mark = ",")
   domain_1 <- ifelse(domain_1 == "Alle", "alle Berufsbereiche", domain_1)
@@ -3631,29 +3583,6 @@ arbeitsmarkt_lk_detail_map <- function(r) {
   quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
   # create plots
-
-
-
-
-
-  # state_codes <- data.frame(
-  #   state = c(
-  #     "Baden-Württemberg","Bayern","Berlin","Brandenburg","Bremen","Hamburg",
-  #     "Hessen","Mecklenburg-Vorpommern","Niedersachsen","Nordrhein-Westfalen",
-  #     "Rheinland-Pfalz","Saarland","Sachsen","Sachsen-Anhalt",
-  #     "Schleswig-Holstein","Thüringen"
-  #   ),
-  #   short = c("bw","by","be","bb","hb","hh","he","mv","ni",
-  #             "nw","rp","sl","sn","st","sh","th")
-  # )
-  # state_code <- state_codes %>%
-  #   dplyr::filter(state == states) %>%
-  #   dplyr::pull(short)
-  #
-  # # RDS-Datei für das Bundesland laden
-  # map_state <- readRDS(paste0("data/map_data/map_de_", state_code, ".rds"))
-  #
-
 
   titel <- paste0("Anteil von ", titel_sub1_2, titel_gesamt1, titel_gesamt1_2, " in ", states, " (", timerange, ")")
 

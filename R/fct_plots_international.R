@@ -87,81 +87,81 @@ map_selection_europe <- readRDS("data/map_data/map_selection_europa.rds")
 #   return(out)
 # }
 
-get_top10_hc_plot_options_int <- function(hc,
-                                      hc_title = "",
-                                      hc_tooltip = "",
-                                      max_percent_used = 100,
-                                      col = "#B16FAB",
-                                      marker = "IEA") {
-  if(marker=="IEA"){
-    its <- "Quelle der Daten: IEA, 2023; OECD, 2023, freier Download, eigene Berechnungen durch MINTvernetzt."
-  } else if (marker=="OECD"){
-    its <- "Quelle der Daten: Eurostat, 2023; OECD, 2023; UNESCO, 2023; freier Download, eigene Berechnungen durch MINTvernetzt."
+# get_top10_hc_plot_options_int <- function(hc,
+#                                       hc_title = "",
+#                                       hc_tooltip = "",
+#                                       max_percent_used = 100,
+#                                       col = "#B16FAB",
+#                                       marker = "IEA") {
+#   if(marker=="IEA"){
+#     its <- "Quelle der Daten: IEA, 2023; OECD, 2023, freier Download, eigene Berechnungen durch MINTvernetzt."
+#   } else if (marker=="OECD"){
+#     its <- "Quelle der Daten: Eurostat, 2023; OECD, 2023; UNESCO, 2023; freier Download, eigene Berechnungen durch MINTvernetzt."
+#
+#   }
+#
+#
+#   out <- hc %>%
+#     highcharter::hc_plotOptions(
+#       series = list(
+#         borderWidth = 0,
+#         dataLabels = list(enabled = TRUE, format = "{point.wert} %",
+#                           style = list(textOutline = "none"))
+#       )) %>%
+#     highcharter::hc_tooltip(pointFormat = hc_tooltip) %>%
+#     highcharter::hc_yAxis(title = list(text = ""),
+#                           labels = list(format = "{value} %"),
+#                           min = 0,
+#                           max = max_percent_used,
+#                           tickInterval = 10) %>%
+#     highcharter::hc_xAxis(title = list(text = "")) %>%
+#     highcharter::hc_colors(c(col)) %>%
+#     highcharter::hc_title(text = hc_title,
+#                           margin = 45,
+#                           align = "center",
+#                           style = list(color = "black",
+#                                        useHTML = TRUE,
+#                                        fontFamily = "Calibri Regular",
+#                                        fontSize = "20px")) %>%
+#     highcharter::hc_chart(
+#       style = list(fontFamily = "Calibri Regular", fontSize = "14px")
+#     ) %>%
+#     highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+#     highcharter::hc_caption(text = its,
+#                             style = list(fontSize = "11px", color = "gray")) %>%
+#     highcharter::hc_exporting(enabled = TRUE,
+#                               buttons = list(
+#                                 contextButton = list(
+#                                   menuItems = list("downloadPNG", "downloadCSV")
+#                                 )
+#                               )
+#     )
+#
+#   return(out)
+# }
 
-  }
-
-
-  out <- hc %>%
-    highcharter::hc_plotOptions(
-      series = list(
-        borderWidth = 0,
-        dataLabels = list(enabled = TRUE, format = "{point.wert} %",
-                          style = list(textOutline = "none"))
-      )) %>%
-    highcharter::hc_tooltip(pointFormat = hc_tooltip) %>%
-    highcharter::hc_yAxis(title = list(text = ""),
-                          labels = list(format = "{value} %"),
-                          min = 0,
-                          max = max_percent_used,
-                          tickInterval = 10) %>%
-    highcharter::hc_xAxis(title = list(text = "")) %>%
-    highcharter::hc_colors(c(col)) %>%
-    highcharter::hc_title(text = hc_title,
-                          margin = 45,
-                          align = "center",
-                          style = list(color = "black",
-                                       useHTML = TRUE,
-                                       fontFamily = "Calibri Regular",
-                                       fontSize = "20px")) %>%
-    highcharter::hc_chart(
-      style = list(fontFamily = "Calibri Regular", fontSize = "14px")
-    ) %>%
-    highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
-    highcharter::hc_caption(text = its,
-                            style = list(fontSize = "11px", color = "gray")) %>%
-    highcharter::hc_exporting(enabled = TRUE,
-                              buttons = list(
-                                contextButton = list(
-                                  menuItems = list("downloadPNG", "downloadCSV")
-                                )
-                              )
-    )
-
-  return(out)
-}
-
-add_avg_to_hc <- function(hc, hc_mean, type) {
-
-  if(type == "MINT"){
-    col <- "#154194"
-  }else if(type == "Frauen"){
-    col <- "#B16FAB"
-  }
-
-  out <- hc %>%
-    highcharter::hc_yAxis(
-      plotLines = list(
-        list(
-          value = hc_mean,
-          color = col,
-          width = 3,
-          zIndex = 4
-        )
-      )
-    )
-
-  return(out)
-}
+# add_avg_to_hc <- function(hc, hc_mean, type) {
+#
+#   if(type == "MINT"){
+#     col <- "#154194"
+#   }else if(type == "Frauen"){
+#     col <- "#B16FAB"
+#   }
+#
+#   out <- hc %>%
+#     highcharter::hc_yAxis(
+#       plotLines = list(
+#         list(
+#           value = hc_mean,
+#           color = col,
+#           width = 3,
+#           zIndex = 4
+#         )
+#       )
+#     )
+#
+#   return(out)
+# }
 
 
 ## studium ----

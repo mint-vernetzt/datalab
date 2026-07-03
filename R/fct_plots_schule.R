@@ -239,10 +239,6 @@ kurse_verlauf_single <- function(r) {
 
   } else if (absolut_selector=="Anzahl") {
 
-    hcoptslang <- getOption("highcharter.lang")
-    hcoptslang$thousandsSep <- "."
-    options(highcharter.lang = hcoptslang)
-
     # order years for plot
     df <- df[with(df, order(jahr, decreasing = FALSE)), ]
 
@@ -383,10 +379,6 @@ kurse_mint_map <- function(r) {
       out <- linebuilder_plotly(df, titel, x = "jahr", y = "wert", group = "region", color = color, quelle = quelle)
 
     } else if(absolut_selector =="Anzahl"){
-
-      hcoptslang <- getOption("highcharter.lang")
-      hcoptslang$thousandsSep <- "."
-      options(highcharter.lang = hcoptslang)
 
       df <- df %>%
         dplyr::filter(selector=="Anzahl")
@@ -1968,7 +1960,7 @@ kurse_wahl <- function(r,
 
      color_fach <- c(
       "Informatik" = "#00a87a",
-      "andere naturwiss.-technische Fächer" =  "#fde68a",
+      "andere naturwiss.-technische Fächer" =  "#fcc433",
       "Mathematik" = "#ee7775",
       "andere Fächer" = "#efe8e6"
     )

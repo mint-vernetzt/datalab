@@ -885,22 +885,22 @@ fachkraft_ui_scenario <- function(wirkhebel) {
 
 
 # function to extract a plot title from a highcharter object
-get_plot_title <- function(plot, path = ".") {
-
-  shiny::req(highcharter::is.highchart(plot))
-
-  out <- file.path(
-    path,
-    paste0(
-      ifelse(
-        is.null(plot$x$hc_opts$title$text),
-        "MINTvernetzt_PLOT",
-        plot$x$hc_opts$title$text),
-      "_", format(Sys.time(), "%Y%M%d_%H%M"),
-      ".png")
-  )
-  return(out)
-}
+# get_plot_title <- function(plot, path = ".") {
+#
+#   shiny::req(highcharter::is.highchart(plot))
+#
+#   out <- file.path(
+#     path,
+#     paste0(
+#       ifelse(
+#         is.null(plot$x$hc_opts$title$text),
+#         "MINTvernetzt_PLOT",
+#         plot$x$hc_opts$title$text),
+#       "_", format(Sys.time(), "%Y%M%d_%H%M"),
+#       ".png")
+#   )
+#   return(out)
+# }
 
 # Funktion zur Jahreswahl bei Arbeit-Fachkraft Daten
 arbeit_fachkraft_ui_years <- function() {
@@ -965,115 +965,115 @@ arbeit_fachkraft_ui_region <- function() {
 }
 
 # function to download plots with added cption and logo
-add_caption_and_download <- function(
-    hc,
-    filename = "plot.png",
-    labelformat = '{point.y}',
-    with_labels = TRUE
-    ,
-    width = 450,
-    height = 300
-    ) {
-
-  require(highcharter)
-  require(webshot2)
-  require(htmlwidgets)
-
-
-  ## roll back webshot2
-
-  # remove.packages("webshot2")
-  # packageurl <- "https://cran.r-project.org/src/contrib/Archive/webshot2/webshot2_0.1.0.tar.gz"
-  # install.packages(packageurl, repos=NULL, type="source")
-  #
-  # packageVersion("webshot2")
-
-
-  # set chromote, determine chromium variant
-  # Sys.setenv(
-  #   CHROMOTE_CHROME = "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe"
-  # )
-
-  # force the use of pagedown to install chrome on shinyapps.io (this is a workaround)
-  require(pagedown)
-  # force the use of curl because chromote needs it (see https://github.com/rstudio/chromote/issues/37)
-  require(curl)
-
-  # hc <- plot
-  shiny::req(highcharter::is.highchart(hc))
-
-  shiny::showNotification(ui = "Plot wird gespeichert...",
-                          type = "message",
-                          duration = NULL,
-                          id = "download_notification")
-#browser()
-  hc_out <- hc %>%
-    # Add the caption to the plot
-    highcharter::hc_size(width = width, height = height) %>%
-    highcharter::hc_caption(text = paste0(
-      '<div style="width: ',width - 10, 'px;',
-      ' display: flex; justify-content: space-between;">',
-      '<span>',
-      # '<span style="font-size: 10px;">', # max-width: ', width - 50, 'px;
-      'Quellen: Statistisches Bundesamt, 2022; Bundesagentur für Arbeit, 2022;',
-      ' KMK, 2022, alle auf Anfrage,<br>',
-      ' Eigene Berechnungen durch MINTvernetzt</span>',
-      '<span>',
-      '<span style="padding-right: 10px;">',
-      #'<img src="https://mint-vernetzt.de/static/e99e5a7a75c99c8651863585408242bb/mintvernetzt_og-img.png"',
-      '<img src="https://raw.githubusercontent.com/mint-vernetzt/datalab/main/inst/app/www/MINTvernetztLogo_klein.png"',
-      #'<img src="www/MINTvernetztLogo_klein.png"',
-      'alt="MINT vernetzt Logo" width="30" height="30">',
-      '</span>',
-      '</div>'
-    ),
-    useHTML = TRUE,
-    align = "right") %>%
-    # TODO add correct font
-    highcharter::hc_title(
-      # only overwrite needed values
-      style = list(fontFamily = "Calibri")
-    ) %>%
-    highcharter::hc_chart(
-      style = list(fontFamily = "Calibri")
-    )
-
-  if (with_labels) {
-    hc_out <- hc_out %>%
-      highcharter::hc_plotOptions(
-        series = list(
-          # Add value labels
-          dataLabels = list(
-            enabled = TRUE,
-            format = paste(labelformat)
-          )
-        )
-      )
-  }
-
-  #browser()
-  #print(hc_out)
-  # Save the plot as a standalone HTML file
-  html_file <- tempfile(fileext = ".html")
-  htmlwidgets::saveWidget(hc_out, file = html_file, selfcontained = TRUE)
-  print(html_file)
-  # # Capture the HTML as a PNG image
-  webshot2::webshot(url = html_file,
-                    file = filename
-                    ,
-                    delay = 2,
-                    zoom = 2,
-                    vwidth = width,
-                    vheight = height
-                    )
-
-  shiny::showNotification(
-    ui = paste0("Gespeichert als '", filename, "'"),
-    type = "message",
-    id = "download_notification")
-
-  return(NULL)
-}
+#' add_caption_and_download <- function(
+#'     hc,
+#'     filename = "plot.png",
+#'     labelformat = '{point.y}',
+#'     with_labels = TRUE
+#'     ,
+#'     width = 450,
+#'     height = 300
+#'     ) {
+#'
+#'   require(highcharter)
+#'   require(webshot2)
+#'   require(htmlwidgets)
+#'
+#'
+#'   ## roll back webshot2
+#'
+#'   # remove.packages("webshot2")
+#'   # packageurl <- "https://cran.r-project.org/src/contrib/Archive/webshot2/webshot2_0.1.0.tar.gz"
+#'   # install.packages(packageurl, repos=NULL, type="source")
+#'   #
+#'   # packageVersion("webshot2")
+#'
+#'
+#'   # set chromote, determine chromium variant
+#'   # Sys.setenv(
+#'   #   CHROMOTE_CHROME = "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe"
+#'   # )
+#'
+#'   # force the use of pagedown to install chrome on shinyapps.io (this is a workaround)
+#'   require(pagedown)
+#'   # force the use of curl because chromote needs it (see https://github.com/rstudio/chromote/issues/37)
+#'   require(curl)
+#'
+#'   # hc <- plot
+#'   shiny::req(highcharter::is.highchart(hc))
+#'
+#'   shiny::showNotification(ui = "Plot wird gespeichert...",
+#'                           type = "message",
+#'                           duration = NULL,
+#'                           id = "download_notification")
+#' #browser()
+#'   hc_out <- hc %>%
+#'     # Add the caption to the plot
+#'     highcharter::hc_size(width = width, height = height) %>%
+#'     highcharter::hc_caption(text = paste0(
+#'       '<div style="width: ',width - 10, 'px;',
+#'       ' display: flex; justify-content: space-between;">',
+#'       '<span>',
+#'       # '<span style="font-size: 10px;">', # max-width: ', width - 50, 'px;
+#'       'Quellen: Statistisches Bundesamt, 2022; Bundesagentur für Arbeit, 2022;',
+#'       ' KMK, 2022, alle auf Anfrage,<br>',
+#'       ' Eigene Berechnungen durch MINTvernetzt</span>',
+#'       '<span>',
+#'       '<span style="padding-right: 10px;">',
+#'       #'<img src="https://mint-vernetzt.de/static/e99e5a7a75c99c8651863585408242bb/mintvernetzt_og-img.png"',
+#'       '<img src="https://raw.githubusercontent.com/mint-vernetzt/datalab/main/inst/app/www/MINTvernetztLogo_klein.png"',
+#'       #'<img src="www/MINTvernetztLogo_klein.png"',
+#'       'alt="MINT vernetzt Logo" width="30" height="30">',
+#'       '</span>',
+#'       '</div>'
+#'     ),
+#'     useHTML = TRUE,
+#'     align = "right") %>%
+#'     # TODO add correct font
+#'     highcharter::hc_title(
+#'       # only overwrite needed values
+#'       style = list(fontFamily = "Calibri")
+#'     ) %>%
+#'     highcharter::hc_chart(
+#'       style = list(fontFamily = "Calibri")
+#'     )
+#'
+#'   if (with_labels) {
+#'     hc_out <- hc_out %>%
+#'       highcharter::hc_plotOptions(
+#'         series = list(
+#'           # Add value labels
+#'           dataLabels = list(
+#'             enabled = TRUE,
+#'             format = paste(labelformat)
+#'           )
+#'         )
+#'       )
+#'   }
+#'
+#'   #browser()
+#'   #print(hc_out)
+#'   # Save the plot as a standalone HTML file
+#'   html_file <- tempfile(fileext = ".html")
+#'   htmlwidgets::saveWidget(hc_out, file = html_file, selfcontained = TRUE)
+#'   print(html_file)
+#'   # # Capture the HTML as a PNG image
+#'   webshot2::webshot(url = html_file,
+#'                     file = filename
+#'                     ,
+#'                     delay = 2,
+#'                     zoom = 2,
+#'                     vwidth = width,
+#'                     vheight = height
+#'                     )
+#'
+#'   shiny::showNotification(
+#'     ui = paste0("Gespeichert als '", filename, "'"),
+#'     type = "message",
+#'     id = "download_notification")
+#'
+#'   return(NULL)
+#' }
 
 
 
@@ -1427,7 +1427,7 @@ piebuilder_plotly <- function(
     titel, titel_y = 0.95,
     x,
     y,
-    height=550,
+    height = 450,
     color = c("#b16fab", "#efe8e6"),
     quelle = "Quelle",
     subtitel = NULL,
@@ -1513,7 +1513,6 @@ piebuilder_plotly <- function(
   # Layout
   p <- p |>
     plotly::layout(
-      height = height,
       title = list(
         text = titel_wrapped,
         x = 0.5, y= titel_y,
@@ -1551,7 +1550,7 @@ piebuilder_plotly <- function(
           font = list(size = 11, color = "gray", family = "Calibri Regular", align = "right")
         )
       ),
-      height= 450,
+      height= height,
       margin = list(t = 90, b = 120, r = 50, l = 50)
     ) |>
     plotly::config(
@@ -3180,7 +3179,7 @@ mapbuilder_plotly <- function(
   geodata <- readRDS(paste0("data/", map))
   if(map == "germany_choropleth_landkreise.rds"){
     map_data <-
-      sf::st_as_sf(dplyr::left_join(
+      sf::st_as_sf(dplyr::inner_join(
         tibble::tibble(geodata),
         df,
         by = c("AGS" = "landkreis_nummer")
@@ -3821,7 +3820,7 @@ mapbuilder_plotly <- function(
 # }
 #
 #   return(out)
-}
+# }
 
 
 

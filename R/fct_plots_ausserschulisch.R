@@ -845,122 +845,122 @@ plot_cp_profile <- function(r){
 #'
 #' @noRd
 
-plot_mv_akteursb <- function(r){
-  frage <- r$chara_mvb_akteur
-
-  frage_typ <- ifelse(frage == "Arbeitsverhältnis", "arbeitsverhältnis",
-                      ifelse(frage == "Kategorie", "kategorie", "sektoren"))
-  frage_typ <- ifelse(frage == "Berufshintergrund", "berufshintergrund",
-                      ifelse(frage == "Zielgruppen", "zielgruppen", frage_typ))
-
-
-  df_query <- glue::glue_sql("
-    SELECT *
-    FROM ausserschulisch_akteursbefragung
-    WHERE typ = {frage_typ}
-                               ", .con = con)
-  df <- DBI::dbGetQuery(con, df_query)
-
-
-  df_ges <- df %>%
-    dplyr::filter(indikator == "Gesamt") %>%
-    dplyr::rename(wert_ges = wert) %>%
-    dplyr::select(-indikator)
-  df <- df %>% dplyr::filter(indikator != "Gesamt") %>%
-    dplyr::left_join(df_ges, by = c("typ")) %>%
-    dplyr::mutate(prop = round(wert/wert_ges*100, 1)) %>%
-    dplyr::filter(prop > 1)
-
-  df <- df[with(df, order(wert, decreasing = TRUE)),]
-  titel <- paste0("Teilnehmende der Akteursbefragung 2024 nach ", frage)
-  subtitel <- paste0("N = ", unique(df$wert_ges))
-
-
-  if(frage %in% c("Arbeitsverhältnis", "Kategorie", "Sektor")){
-
-
-    # plot <- df %>%
-    color <-  c("#b16fab", "#154194", "#66cbaf","#fbbf24", "#ee7775", "#35bd97",
-                "#d0a9cd", "#5f94f0", "#fca5a5", "#fde68a",
-                "#007655", "#dc6262", "#5d335a", "#112c7f", "#f59e0b", "#bbd1fc")
-    format <- '{point.prop} %'
-
-    quelle <- "Quelle der Daten: MINTvernetzt 2024."
-
-    plot <- piebuilder(df, titel, x="indikator", y="wert", tooltip = paste('Anteil: {point.prop}%'), color, format, quelle = quelle)
-
-
-  }else{
-
-    abs_rel <- r$abs_rel_mvb_akteur
-
-    if(abs_rel == "Anzahl"){
-      df$prop <- df$wert
-      tooltip <- "{point.y}"
-      label <- "{value:, f}"
-    }else{
-      tooltip <- "{point.y} %"
-      label <- "{value:, f} %"
-    }
-
-    subtitel <- paste0(subtitel, ", Mehrfachangabe möglich.")
-
-    plot <- highcharter::hchart(df, 'column', highcharter::hcaes(y = prop, x = indikator))%>%
-      highcharter::hc_plotOptions(column = list(#pointWidth = 50,
-        colorByPoint = TRUE,
-        colors = c("#b16fab", "#154194", "#66cbaf","#fbbf24", "#ee7775", "#35bd97",
-                   "#d0a9cd", "#5f94f0", "#fca5a5", "#fde68a",
-                   "#007655", "#dc6262", "#5d335a", "#112c7f", "#f59e0b", "#bbd1fc"))
-      )%>%
-      highcharter::hc_tooltip(pointFormat = tooltip)%>%
-      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = label),
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular"), pointsWidth=100) %>%
-      highcharter::hc_xAxis(title = list(text = "")) %>%
-      highcharter::hc_title(text = titel,
-                            margin = 45,
-                            align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
-      highcharter::hc_subtitle(text = subtitel,
-                               align = "center",
-                               style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "16px")) %>%
-      highcharter::hc_chart(
-        style = list(fontFamily = "Calibri Regular", fontSize = "14px")
-      ) %>%
-      highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
-      highcharter::hc_caption(text = "Quelle der Daten: MINTvernetzt 2024.",
-                              style = list(fontSize = "11px", color = "gray")) %>%
-      highcharter::hc_exporting(enabled = TRUE,
-                                buttons = list(
-                                  contextButton = list(
-                                    menuItems = list("downloadPNG", "downloadCSV",
-                                                     list(
-                                                       text = "Daten für GPT",
-                                                       onclick = htmlwidgets::JS(sprintf(
-                                                         "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
-
-     var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\n\\nQuelle der Daten: MINTvernetzt 2024';
-
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-   }", gsub("'", "\\\\'", titel), gsub("'", "\\\\'", titel) )  #
-                                                       )))
-                                  ))
-      )
-
-  }
-  return(plot)
-}
+# plot_mv_akteursb <- function(r){
+#   frage <- r$chara_mvb_akteur
+#
+#   frage_typ <- ifelse(frage == "Arbeitsverhältnis", "arbeitsverhältnis",
+#                       ifelse(frage == "Kategorie", "kategorie", "sektoren"))
+#   frage_typ <- ifelse(frage == "Berufshintergrund", "berufshintergrund",
+#                       ifelse(frage == "Zielgruppen", "zielgruppen", frage_typ))
+#
+#
+#   df_query <- glue::glue_sql("
+#     SELECT *
+#     FROM ausserschulisch_akteursbefragung
+#     WHERE typ = {frage_typ}
+#                                ", .con = con)
+#   df <- DBI::dbGetQuery(con, df_query)
+#
+#
+#   df_ges <- df %>%
+#     dplyr::filter(indikator == "Gesamt") %>%
+#     dplyr::rename(wert_ges = wert) %>%
+#     dplyr::select(-indikator)
+#   df <- df %>% dplyr::filter(indikator != "Gesamt") %>%
+#     dplyr::left_join(df_ges, by = c("typ")) %>%
+#     dplyr::mutate(prop = round(wert/wert_ges*100, 1)) %>%
+#     dplyr::filter(prop > 1)
+#
+#   df <- df[with(df, order(wert, decreasing = TRUE)),]
+#   titel <- paste0("Teilnehmende der Akteursbefragung 2024 nach ", frage)
+#   subtitel <- paste0("N = ", unique(df$wert_ges))
+#
+#
+#   if(frage %in% c("Arbeitsverhältnis", "Kategorie", "Sektor")){
+#
+#
+#     # plot <- df %>%
+#     color <-  c("#b16fab", "#154194", "#66cbaf","#fbbf24", "#ee7775", "#35bd97",
+#                 "#d0a9cd", "#5f94f0", "#fca5a5", "#fde68a",
+#                 "#007655", "#dc6262", "#5d335a", "#112c7f", "#f59e0b", "#bbd1fc")
+#     format <- '{point.prop} %'
+#
+#     quelle <- "Quelle der Daten: MINTvernetzt 2024."
+#
+#     plot <- piebuilder(df, titel, x="indikator", y="wert", tooltip = paste('Anteil: {point.prop}%'), color, format, quelle = quelle)
+#
+#
+#   }else{
+#
+#     abs_rel <- r$abs_rel_mvb_akteur
+#
+#     if(abs_rel == "Anzahl"){
+#       df$prop <- df$wert
+#       tooltip <- "{point.y}"
+#       label <- "{value:, f}"
+#     }else{
+#       tooltip <- "{point.y} %"
+#       label <- "{value:, f} %"
+#     }
+#
+#     subtitel <- paste0(subtitel, ", Mehrfachangabe möglich.")
+#
+#     plot <- highcharter::hchart(df, 'column', highcharter::hcaes(y = prop, x = indikator))%>%
+#       highcharter::hc_plotOptions(column = list(#pointWidth = 50,
+#         colorByPoint = TRUE,
+#         colors = c("#b16fab", "#154194", "#66cbaf","#fbbf24", "#ee7775", "#35bd97",
+#                    "#d0a9cd", "#5f94f0", "#fca5a5", "#fde68a",
+#                    "#007655", "#dc6262", "#5d335a", "#112c7f", "#f59e0b", "#bbd1fc"))
+#       )%>%
+#       highcharter::hc_tooltip(pointFormat = tooltip)%>%
+#       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = label),
+#                             style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular"), pointsWidth=100) %>%
+#       highcharter::hc_xAxis(title = list(text = "")) %>%
+#       highcharter::hc_title(text = titel,
+#                             margin = 45,
+#                             align = "center",
+#                             style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
+#       highcharter::hc_subtitle(text = subtitel,
+#                                align = "center",
+#                                style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "16px")) %>%
+#       highcharter::hc_chart(
+#         style = list(fontFamily = "Calibri Regular", fontSize = "14px")
+#       ) %>%
+#       highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
+#       highcharter::hc_caption(text = "Quelle der Daten: MINTvernetzt 2024.",
+#                               style = list(fontSize = "11px", color = "gray")) %>%
+#       highcharter::hc_exporting(enabled = TRUE,
+#                                 buttons = list(
+#                                   contextButton = list(
+#                                     menuItems = list("downloadPNG", "downloadCSV",
+#                                                      list(
+#                                                        text = "Daten für GPT",
+#                                                        onclick = htmlwidgets::JS(sprintf(
+#                                                          "function () {
+#      var date = new Date().toISOString().slice(0,10);
+#      var chartTitle = '%s'.replace(/\\s+/g, '_');
+#      var filename = chartTitle + '_' + date + '.txt';
+#
+#      var data = 'Titel: %s\\n' + this.getCSV();
+#      data += '\\n\\nQuelle der Daten: MINTvernetzt 2024';
+#
+#      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+#      if (window.navigator.msSaveBlob) {
+#        window.navigator.msSaveBlob(blob, filename);
+#      } else {
+#        var link = document.createElement('a');
+#        link.href = URL.createObjectURL(blob);
+#        link.download = filename;
+#        link.click();
+#      }
+#    }", gsub("'", "\\\\'", titel), gsub("'", "\\\\'", titel) )  #
+#                                                        )))
+#                                   ))
+#       )
+#
+#   }
+#   return(plot)
+# }
 
 plot_mv_stimmung <- function(r){
   frage <- r$frage_mvb_stimmung

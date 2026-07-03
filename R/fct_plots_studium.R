@@ -3485,10 +3485,6 @@ studienzahl_choice_gender <- function(r) {
 
     }else if(absolut_selector=="Anzahl"){
 
-      hcoptslang <- getOption("highcharter.lang")
-      hcoptslang$thousandsSep <- "."
-      options(highcharter.lang = hcoptslang)
-
       df <- df[with(df, order( jahr, decreasing = FALSE)), ]
 
       sorted_indicators <- df %>%
@@ -4824,11 +4820,6 @@ studierende_international_bula_mint <- function(r) {
 
     } else if(absolut_selector=="Anzahl"){
 
-
-      hcoptslang <- getOption("highcharter.lang")
-      hcoptslang$thousandsSep <- "."
-      options(highcharter.lang = hcoptslang)
-
       df_start <- df %>%
         dplyr::filter(jahr == timerange[1]) %>%
         dplyr::select(region, wert) %>%
@@ -4846,8 +4837,6 @@ studierende_international_bula_mint <- function(r) {
       df$display_abs <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
       df$display_diff <- prettyNum(df$diff, big.mark = ".", decimal.mark = ",")
       df$display_diff <- ifelse(df$diff < 0, paste0("-", df$display_diff), paste0("+", df$display_diff))
-
-
 
       titel <-paste0("Anzahl der ", label, " in MINT im Zeitverlauf")
 
