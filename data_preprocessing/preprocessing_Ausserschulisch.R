@@ -10,7 +10,6 @@ library(dplyr)
 
 # kbr
 pfad <- "C:/Users/kbr/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten"
-pfad <- "C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/"
 
 # Community Plattform Daten -----------------------------------------------
 ## Organisationen ----
@@ -19,6 +18,7 @@ orgas <- read.csv(paste0(pfad, "/CP001_Organisationen.csv"))
 orgas <- subset(orgas, select=-c(X) )
 
 # Datenaufbereitung
+# Infos zu total_N und any_value_N nutzen für Canva-Bild zu Ausfüllstatus https://www.canva.com/design/DAGXrS2Cf3o/9q8LE4RC3Tknx-ITzOy2jw/edit
 total_N <- length(unique(orgas$name))
 orgas <- subset(orgas, !(is.na(orgas$area)) | !(is.na(orgas$organizationType)) |
                   !is.na(orgas$focus))
@@ -138,14 +138,13 @@ cp_orgas <- rbind(cp_orgas, alle, ges, ges_area, ges_focus, ges_typ,
 #Speichern
 ausserschulisch_cp_organisationen <- cp_orgas
 
-  setwd("C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/02_data/data/")
-  setwd("C:/Users/kbr/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/02_data/data/")
-
-
+setwd("C:/Users/kbr/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/02_data/data/")
 save(ausserschulisch_cp_organisationen, file = "ausserschulisch_cp_organisationen.rda")
-
-#y?
 setwd("~/datalab2")
+setwd("~/datalab2")
+con <- DBI::dbConnect(duckdb::duckdb(), "data/mint_db.duckdb")
+DBI::dbWriteTable(con, 'ausserschulisch_cp_organisationen', ausserschulisch_cp_organisationen, overwrite = TRUE, append = FALSE)
+DBI::dbDisconnect(con)
 
 ## Envir. aufräumen
 all <- ls()
@@ -160,6 +159,8 @@ pros <- read.csv(paste0(pfad, "/CP002_Projekte.csv"))
 pros <- subset(pros, select=-c(X) )
 
 # Datenaufbereitung
+# Infos zu total_N und any_value_N nutzen für Canva-Bild zu Ausfüllstatus https://www.canva.com/design/DAGXrS2Cf3o/9q8LE4RC3Tknx-ITzOy2jw/edit
+
 total_N <- length(unique(pros$name))
 pros <- subset(pros, !(is.na(pros$area)) | !(is.na(pros$discipline)) |
                   is.na(pros$additionalDiscipline) | is.na(pros$projectTargetGroup) |
@@ -340,13 +341,15 @@ cp_pros <- rbind(cp_pros, alle, ges, ges_area, ges_discipline,
 #Speichern
 ausserschulisch_cp_projekte <- cp_pros
 
-setwd("C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/02_data/data/")
-#setwd("C:/Users/kbr/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/02_data/data/")
-
+setwd("C:/Users/kbr/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/02_data/data/")
 save(ausserschulisch_cp_projekte, file = "ausserschulisch_cp_projekte.rda")
-
+setwd("~/datalab2")
+con <- DBI::dbConnect(duckdb::duckdb(), "data/mint_db.duckdb")
+DBI::dbWriteTable(con, 'ausserschulisch_cp_projekte', ausserschulisch_cp_projekte, overwrite = TRUE, append = FALSE)
+DBI::dbDisconnect(con)
 
 ## Envir. aufräumen
+
 all <- ls()
 keep <- c("pfad")
 delete <- setdiff(all, keep)
@@ -358,6 +361,7 @@ profs <- read.csv(paste0(pfad, "/CP003_Profile.csv"))
 profs <- subset(profs, select=-c(X) )
 
 # Datenaufbereitung
+# Infos zu total_N und any_value_N nutzen für Canva-Bild zu Ausfüllstatus https://www.canva.com/design/DAGXrS2Cf3o/9q8LE4RC3Tknx-ITzOy2jw/edit
 total_N <- length(unique(profs$id))
 profs <- subset(profs, !(is.na(profs$area)) | !(is.na(profs$offer)) |
                   !is.na(profs$seekingsseeking_offer))
@@ -480,10 +484,13 @@ cp_profile <- rbind(cp_profile, alle, ges, ges_area, ges_offer, ges_seeking,
 #Speichern
 ausserschulisch_cp_profile <- cp_profile
 
-setwd("C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/02_data/data/")
-#setwd("C:/Users/kbr/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/02_data/data/")
+setwd("C:/Users/kbr/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/02_data/data/")
 save(ausserschulisch_cp_profile, file = "ausserschulisch_cp_profile.rda")
 setwd("~/datalab2")
+con <- DBI::dbConnect(duckdb::duckdb(), "data/mint_db.duckdb")
+DBI::dbWriteTable(con, 'ausserschulisch_cp_profile', ausserschulisch_cp_profile, overwrite = TRUE, append = FALSE)
+DBI::dbDisconnect(con)
+
 
 ## Envir. aufräumen
 all <- ls()
