@@ -220,6 +220,37 @@ background-color:#FCFCFD;
     margin: 10px 0px 10px 0px;
 }
 
+/* rosa button für KI Analysen Seite */
+.btn.rosa-button {
+    background-color: #b16fab50 !important;
+    color: black!important;
+    box-shadow: none !important;
+    border: 1px solid #b16fab;
+    border-radius: 10px;!important;
+    margin-bottom: 15px;
+    margin-right: 5px;
+    padding: 12px 24px !important;
+    min-width: 220px;
+    font-size: 16px;
+
+}
+
+/* greift nicht wegen ID... rosa dropdown für KI Analysen Seite */
+#region_argumentationshilfe + .bootstrap-select .dropdown-toggle {
+    background-color:  #b16fab50 !important;
+    border: 1px solid #B16FAB !important;
+    border-radius: 10px !important;
+    min-height: 45px;
+}
+#frauen_fokus + .bootstrap-select .dropdown-toggle {
+    background-color:  #b16fab50 !important;
+    border: 1px solid #B16FAB !important;
+    border-radius: 10px !important;
+    min-height: 45px;
+}
+
+
+
 /* Slider */
 .slick-slide{
   background-color: #FCFCFD;;
