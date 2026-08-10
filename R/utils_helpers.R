@@ -783,8 +783,8 @@ fachkraft_ui_berufslevel <- function() {
   selection <- c(
     "Gesamt",
     "Fachkräfte",
-    "Spezialist*innen",
-    "Expert*innen"
+    "Spezialist:innen",
+    "Expert:innen"
   )
 
 
@@ -792,7 +792,6 @@ fachkraft_ui_berufslevel <- function() {
 }
 
 fachkraft_ui_berufe <- function(level = "Fachkräfte", zeitpunkt = 2023) {
-
 
   selection <- NULL
 

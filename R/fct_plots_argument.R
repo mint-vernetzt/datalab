@@ -42,7 +42,7 @@ daten_download <- function(r){
   df_alle <- rbind(df_beschäftigte, df_andere)
 
   ### Daten Fachkräfte ----
-  timerange <- 2024
+  timerange <- 2025
   fach <- c("MINT gesamt", "Nicht MINT")
   bf <- fachkraft_ui_berufslevel()
 
@@ -369,7 +369,7 @@ daten_download <- function(r){
     # 2. Engpassindikator
     plot_data_clean <- plot_data %>%
       dplyr::mutate(Bereich = "Engpassindikator",
-             Quelle = "Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt",
+             Quelle = "Berichtsjahr 2025, Bundesagentur für Arbeit, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt",
              Region = save_regio)
 
     # 3. Demografie MINT
@@ -868,7 +868,7 @@ argument_verlauf_2 <- function(r){
 
 argument_fachkraft <- function(r){
 
-  timerange <- 2024
+  timerange <- 2025
   fach <- c("MINT gesamt", "Nicht MINT")
   bf <- fachkraft_ui_berufslevel()
   regio <- r$region_argumentationshilfe
@@ -981,7 +981,7 @@ argument_fachkraft <- function(r){
     #df_json <- subset(plot_data, select = c(x, y, group))
     df_json <- jsonlite::toJSON(plot_data,dataframe = "rows",auto_unbox = TRUE, na = "null")
     titel_js <- jsonlite::toJSON(titel_1, auto_unbox = TRUE)
-    quelle_js <- jsonlite::toJSON("Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",auto_unbox = TRUE)
+    quelle_js <- jsonlite::toJSON("Quelle der Daten: Bundesagentur für Arbeit, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",auto_unbox = TRUE)
     x_js      <- "XX"
     y_js      <- "YY"
     group_js  <- "epa_kat"
@@ -1044,7 +1044,7 @@ argument_fachkraft <- function(r){
         ),
         annotations = list(
           list(
-            text = "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+            text = "Quelle der Daten: Bundesagentur für Arbeit, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
             x = 0,
             y = -0.22,
             xref = "paper",
@@ -1401,36 +1401,11 @@ argument_fachkraft <- function(r){
                                ", .con = con)
    plot_data_raw <- DBI::dbGetQuery(con, df_query)
 
-   # Aggregate rausfiltern
-   plot_data_raw <- subset(plot_data_raw, !(plot_data_raw$beruf %in%
-                                              c("Gesamt",
-                                                "MINT gesamt",
-                                                "Informatik",
-                                                "Landtechnik",
-                                                "Produktionstechnik",
-                                                "Bau- und Gebäudetechnik",
-                                                "Mathematik, Naturwissenschaften",
-                                                "Verkehrs-, Sicherheits- und Veranstaltungstechnik",
-                                                "Gesundheitstechnik",
-                                                "Nicht MINT"
-                                              ))
-   )
 
    if ("MINT gesamt" %in% fach) {
      plot_data_raw <- plot_data_raw %>%
        dplyr::filter(!mint_zuordnung %in% c("Nicht MINT", "Gesamt")) %>%
        dplyr::mutate(mint_zuordnung = "MINT gesamt") %>%
-       rbind(plot_data_raw)
-   }
-
-   if ("Technik gesamt" %in% fach) {
-     plot_data_raw <- plot_data_raw %>%
-       dplyr::filter(mint_zuordnung %in% c("Landtechnik",
-                                           "Produktionstechnik",
-                                           "Bau- und Gebäudetechnik",
-                                           "Verkehrs-, Sicherheits- und Veranstaltungstechnik",
-                                           "Gesundheitstechnik")) %>%
-       dplyr::mutate(mint_zuordnung = "Technik gesamt") %>%
        rbind(plot_data_raw)
    }
 
