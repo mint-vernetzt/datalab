@@ -93,27 +93,38 @@ mod_argumentation_ui <- function(id){
     #         )
     #       ),
 
-        # Datenanalyse mit KI ----
+    # Regionalberichte ----
 
-        column(
-          width = 12,
-          h2("Datenanalyse mit KI: Einfach und individuell eigene Analysen erstellen", #Schnellstart: So analysieren Sie Daten mit dem MINT-DataLab-GPT, Catchy-Intro
-            style = "margin-top: 30px;"),
-         # hr(style = "border-top: 2px solid #ee7775; margin-top: 15px; margin-bottom: 15px;")
-        ),
+  fluidRow(
+    div(class = "clean-box",
+        style = "margin-bottom:0px;
+              border-top: 2px solid #154194;
+              padding-top: 10px;
+              ",
+    column(
+      width = 12,
+      h2("Regionalberichte und Beispielanalysen zum runterladen",
+      style = "margin-top: 30px;"),
 
-        ### Einleitung/GPT ----
-        fluidRow(
+    ))),
+
+     # Datenanalyse mit KI/GPT ----
+
+       fluidRow(
           div(class = "clean-box",
               style = "margin-bottom:0px;
               border-top: 2px solid #154194;
               border-bottom: 2px solid #154194;
-              padding-top: 30px;
-              padding-bottom: 300px;
+              padding-top: 10px;
+              padding-bottom: 400px;
               ",
-
               column(
-                width = 2,
+                width = 12,
+                h2("Datenanalyse mit KI: Einfach und individuell eigene Analysen erstellen", #Schnellstart: So analysieren Sie Daten mit dem MINT-DataLab-GPT, Catchy-Intro
+                   style = "margin-top: 30px;"),
+              ),
+              column(
+                width = 4,
                 tags$div(
                   style = "display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-start;",
                   tags$strong(
@@ -140,7 +151,7 @@ mod_argumentation_ui <- function(id){
                 margin-left: 60px;")
                 )),
                 column(
-                  width = 8,
+                  width = 7,
                   style = "margin-top: 40px",
 
                   p("Du willst mit DataLab-Daten argumentieren?"),
@@ -227,7 +238,7 @@ mod_argumentation_ui <- function(id){
 
     ## 1. Region-Filter ----
 
-
+fluidRow(
       h2("In Fünf Schritten zur individuellen Datenanalyse",
          style = "margin-top: 30px;"),
 
@@ -284,7 +295,7 @@ mod_argumentation_ui <- function(id){
           multiple = FALSE
         )
       )
-    ),
+    )),
 
 
 
@@ -294,62 +305,85 @@ mod_argumentation_ui <- function(id){
 
   ##  2. Fokus-Switch ----
 
-    column(
-      width = 8,
+
+fluidRow(
+
+  div(
+    style = "display:flex; align-items:flex-start; margin-top:40px;",
+
+    # Bild
+    div(
+      style = "margin: 0px 25px 20px 10px;",
+      img(
+        src = "www/gpt_schritt_2.1.png",
+        class = "img-responsive",
+        style = "
+          display:block;
+          margin-top:10px;
+          border:2px solid #B16FAB;
+          border-radius:15px;
+          max-width:100px;
+        "
+      )
+    ),
+    div(
       id = ns("ziel_col"),
       style = "margin-top: 40px;",
+    ),
 
+    # Inhalt rechts
+    div(
+      id = "fokus-auswahl",
 
+      p(strong("2. Legen Sie hier Ihren inhaltlichen Schwerpunkt fest."),
+        style = "margin-top: 20px; "),
 
       div(
-        id = "fokus-auswahl",
+        width = 8,
+        style = "display:flex; gap:20px; align-items:center; width:100%;
+        margin-bottom: 40px; margin-top: 20px;",
+        p(style="margin:0; flex:1; text-align:right;",
+          "MINT-Nachwuchsförderung allgemein"),
 
-        p(
-          strong("2. Legen Sie hier Ihren inhaltlichen Schwerpunkt fest."),
-          style = "margin-top: 20px; margin-left: 60px"
+        div(
+          style= "align-content: center; width: 60px;",
+          shinyWidgets::materialSwitch(
+            inputId = ns("frauen_fokus"),
+            value = FALSE
+          )
         ),
 
-        shinyWidgets::pickerInput(
-          inputId = ns("frauen_fokus"),
-          label = NULL,
-          choices = c(
-            "MINT-Nachwuchsförderung allgemein" = FALSE,
-            "Mädchen- und Frauenförderung in MINT" = TRUE
-          ),
-          selected = "FALSE"
-        ))),
+        p(style="margin:0; flex:1; text-align:left; margin-right: 10px;",
+          "Mädchen- und Frauenförderung in MINT")
+      )
+    )
+  )
+),
 
 
-
-      #  div(
+      # div(
       #   id = "fokus-auswahl",
       #
-      #   p(strong("2. Legen Sie hier Ihren inhaltlichen Schwerpunkt fest."),
-      #     style = "margin-top: 20px; margin-left: 60px"),
+      #   p(
+      #     strong("2. Legen Sie hier Ihren inhaltlichen Schwerpunkt fest."),
+      #     style = "margin-top: 20px; margin-left: 60px"
+      #   ),
       #
-      #   div(
-      #     style = "display:flex; gap:20px; align-items:center; width:100%;
-      #   margin-bottom: 40px; margin-top: 20px;",
-      #     p(style="margin:0; flex:1; text-align:right;",
-      #       "MINT-Nachwuchsförderung allgemein"),
-      #
-      #     div(
-      #       style= "align-content: center; width: 60px;",
-      #       shinyWidgets::materialSwitch(
-      #         inputId = ns("frauen_fokus"),
-      #         value = FALSE
-      #       )
+      #   shinyWidgets::pickerInput(
+      #     inputId = ns("frauen_fokus"),
+      #     label = NULL,
+      #     choices = c(
+      #       "MINT-Nachwuchsförderung allgemein" = FALSE,
+      #       "Mädchen- und Frauenförderung in MINT" = TRUE
       #     ),
-      #
-      #     p(style="margin:0; flex:1; text-align:left; margin-right: 10px;",
-      #       "Mädchen- und Frauenförderung in MINT")
-      #   )
-      # )),
-      #
+      #     selected = "FALSE"
+      #   )))),
+
 
 
       ## 3. Daten-Download ----
 
+  fluidRow(
       column(
         width = 12,
         style = "display: flex; align-items: center; margin-bottom: 15px;",
@@ -365,7 +399,7 @@ mod_argumentation_ui <- function(id){
         div(id = "download_section",
             style = "flex: 1; margin-bottom: 15px;",
 
-            fluidRow(
+
               p(strong(style = "text-align: left; font-size: 18px; margin-left: 15px; margin-top: 20px",
                        "3. Laden Sie die Datengrundlage herunter.")),
               column(
@@ -387,9 +421,9 @@ mod_argumentation_ui <- function(id){
                 p("Das heruntergeladene txt.-Dokument Kopieren Sie in den Chat des MINT-DataLab-GPT oder
               hängen die Datei an.")
 
-            )),
+            ),
 
-            fluidRow(
+
               column(
                 width = 4,
                 div(style = "margin-left: 30px;",
@@ -402,7 +436,7 @@ mod_argumentation_ui <- function(id){
             ))),
 
       ## 4. MINT-DataLab-GPT ----
-
+fluidRow(
       column(
         width = 12,
         style = "display: flex; align-items: center; ",
@@ -423,22 +457,25 @@ mod_argumentation_ui <- function(id){
               column(
                 width = 3,
                 div(style = "margin-left: 30px;",
-                    actionButton(label = tagList(icon("arrow-up-right-from-square"), "    Zum MINT-DataLab-GPT"), inputId = "GPT_link",
-                                 onclick = 'window.open("https://chatgpt.com/g/g-695cd1fa74f881918a54b0517af8163e-mint-datalab-gpt", "_blank");')
+                    actionButton(label = tagList(icon("arrow-up-right-from-square"), "    Zum MINT-DataLab-GPT"),
+                                 inputId = "GPT_link",
+                                 onclick = 'window.open("https://chatgpt.com/g/g-695cd1fa74f881918a54b0517af8163e-mint-datalab-gpt", "_blank");',
+                                 class = "rosa-button")
                 )
               ),
               column(
                 width = 5,  # Text in der linken Spalte
 
-                p(
-                  "Sobald Sie auf den Link zum MINT-DataLab-GPT klicken, öffnet sich ein Chatfenster in ChatGPT.
-                 Wählen Sie aus, ob sie eine Argumentation oder eine Bericht wollen,
-                 der MINT-DataLab-GPT führt Sie durch die Erstellung der Analyse.")
+                p( "Sobald Sie auf den Link zum MINT-DataLab-GPT klicken,
+                   öffnet sich ein Chatfenster in ChatGPT."),
+
+                 p("Wählen Sie aus, ob sie eine Argumentation oder eine Bericht wollen,
+                   der MINT-DataLab-GPT führt Sie durch die Erstellung der Analyse."),
               )
 
             )
-        )
-      ),
+        ))
+      ,
 
 
 
@@ -451,29 +488,30 @@ mod_argumentation_ui <- function(id){
           actionButton(
             style = "
               cursor:pointer;
-              font-weight:600;
-              padding:10px 15px;
-              background-color:#F7EFF6;
-              border:2px solid #B16FAB;
+              font-weight:500;
+              padding:10px 14px;
+              background-color:#B16FAB30;
+              border:1px solid #B16FAB70;
               border-radius:8px;
               display:inline-block;
               list-style:none;
+              margin-bottom: 20px;
               ",
             ns("funktionsprompt"),
             label = " Funktionsprompt für andere KIs",
            ),
 
-          br(),
 
           tags$details(
 
             tags$summary(
               style = "
               cursor:pointer;
-              font-weight:600;
-              padding:10px 15px;
-              background-color:#F7EFF6;
-              border:2px solid #B16FAB;
+              font-weight:500;
+              font-size:14px;
+              padding:10px 14px;
+              background-color:#B16FAB30;
+              border:1px solid #B16FAB70;
               border-radius:8px;
               display:inline-block;
               list-style:none;
@@ -515,11 +553,12 @@ mod_argumentation_ui <- function(id){
             )
           )
         )
-      )),
+      ))),
 
 
 
       ## 5. Grafiken ----
+fluidRow(
       column(
         width = 12,
         style = "display: flex; align-items: center; margin-bottom: 20px;",
@@ -539,7 +578,7 @@ mod_argumentation_ui <- function(id){
                        "5. Ergänzen Sie den KI-Bericht zur Veranschaulichung mit Grafiken.")),
               column(
                 width = 3,
-                div(style = "margin-left: 30px; margin-top: 10px;",
+                div(style = "display: flex; margin-right:10px; margin-top: 10px; width: 100%",
                     actionButton(
                       ns("download_all_png_client"),
                       label = tagList(icon("download"), "Alle Grafiken herunterladen (ZIP)",),
@@ -664,7 +703,7 @@ mod_argumentation_ui <- function(id){
 ", ns("download_all_png_client"))))
 
             )
-        ),
+        )),
 
 # Beispiel Bericht und Cheatsheet ----
 
@@ -1833,6 +1872,10 @@ mod_argumentation_server <- function(id){
       showModal(
         modalDialog(
           title = "Funktionsprompt",
+          p("Kopieren Sie diesen Prompt und fügen Sie ihn in beliebige KI-Chats (OpenAI/Copilot/Claude/...) ein.",
+            style = "font-size: 15px;"),
+            p("So verhält sich das KI-Modell ähnlich wie der individuell konfigurierte MINT-DataLab-GPT. ",
+              style = "font-size: 15px;"),
 
           textAreaInput(
             ns("funktionsprompt"),
@@ -1891,6 +1934,9 @@ Vertiefe deine erste Antwort danach iterativ mit der Nutzer:in. Frage dafür:
 ",
             width = "100%",
             height = "600px"
+          ),
+          footer = tagList(
+            modalButton("Schließen")
           ),
 
           easyClose = TRUE,
