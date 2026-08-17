@@ -958,113 +958,114 @@ plot_fachkraft_epa_item <- function(r) {
           )
         )
       )
-    ) %>%
-      plotly::config(
-        displaylogo = FALSE,
-        modeBarButtonsToRemove = c(
-          "sendDataToCloud", "autoScale2d", "resetScale2d", "toggleSpikelines",
-          "hoverClosestCartesian", "hoverCompareCartesian",
-          "zoom2d", "pan2d", "select2d", "lasso2d", "zoomIn2d", "zoomOut2d"
-        ),
-        modeBarButtonsToAdd = list(
-
-          # CSV-Download
-          list(
-            name = "Download CSV",
-            icon = list(
-              path = "M16,2H8C6.9,2,6,2.9,6,4v16c0,1.1,0.9,2,2,2h8c1.1,0,2-0.9,2-2V4C18,2.9,17.1,2,16,2z M16,20H8V4h8V20z M14.5,14h-2v3h-1v-3h-2l2.5-3.5L14.5,14z",
-              width = 24,
-              height = 24
-            ),
-
-            click = htmlwidgets::JS(
-              paste0("
-              function(gd) {
-                var rows = ", df_json, ";
-
-                var date = new Date().toISOString().slice(0,10);
-                var filename = 'export_' + date + '.csv';
-
-                if (!rows.length) return;
-
-                var cols = Object.keys(rows[0]);
-                var csv = cols.join(';') + '\\n';
-
-                rows.forEach(function(row) {
-                  var values = cols.map(function(col) {
-                    var value = row[col];
-                    if (value == null) return '';
-                    value = String(value).replace(/\"/g, '\"\"');
-                    if (value.search(/[\";\\n]/) >= 0) {
-                      value = '\"' + value + '\"';
-                    }
-                    return value;
-                  });
-                  csv += values.join(';') + '\\n';
-                });
-
-                var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-
-                var link = document.createElement('a');
-                link.href = URL.createObjectURL(blob);
-                link.download = filename;
-                link.click();
-              }
-            ")
-            )
-          ),
-
-          # TXT-Download für KI
-          list(
-            name = "Download Daten für KI-Chats als txt",
-            icon = list(
-              path = "M14,2H6C4.9,2,4,2.9,4,4v16c0,1.1,0.9,2,2,2h12c1.1,0,2-0.9,2-2V8L14,2z M14,4.5L17.5,8H14V4.5z M18,20H6V4h6v6h6V20z",
-              width = 24,
-              height = 24
-            ),
-            click = htmlwidgets::JS(
-              paste0("
-              function(gd) {
-                var rows = ", df_json, ";
-                var titel = ", titel_js, ";
-                var quelle = ", quelle_js, ";
-
-                var date = new Date().toISOString().slice(0,10);
-                var chartTitle = titel.replace(/\\s+/g, '_');
-                var filename = chartTitle + '_' + date + '.txt';
-
-                if (!rows.length) return;
-
-                var cols = Object.keys(rows[0]);
-
-                var text = '';
-                text += 'Titel: ' + titel + '\\n';
-                text += 'Quelle: ' + quelle + '\\n\\n';
-                text += 'Daten:\\n';
-
-                text += cols.join('\\t') + '\\n';
-
-                rows.forEach(function(row) {
-                  var values = cols.map(function(col) {
-                    var value = row[col];
-                    if (value === null || value === undefined) return '';
-                    return String(value);
-                  });
-                  text += values.join('\\t') + '\\n';
-                });
-
-                var blob = new Blob([text], { type: 'text/plain;charset=utf-8;' });
-
-                var link = document.createElement('a');
-                link.href = URL.createObjectURL(blob);
-                link.download = filename;
-                link.click();
-              }
-            ")
-            )
-          )
-        )
-      )
+    )
+    # %>%
+    #   plotly::config(
+    #     displaylogo = FALSE,
+    #     modeBarButtonsToRemove = c(
+    #       "sendDataToCloud", "autoScale2d", "resetScale2d", "toggleSpikelines",
+    #       "hoverClosestCartesian", "hoverCompareCartesian",
+    #       "zoom2d", "pan2d", "select2d", "lasso2d", "zoomIn2d", "zoomOut2d"
+    #     ),
+    #     modeBarButtonsToAdd = list(
+    #
+    #       # CSV-Download
+    #       list(
+    #         name = "Download CSV",
+    #         icon = list(
+    #           path = "M16,2H8C6.9,2,6,2.9,6,4v16c0,1.1,0.9,2,2,2h8c1.1,0,2-0.9,2-2V4C18,2.9,17.1,2,16,2z M16,20H8V4h8V20z M14.5,14h-2v3h-1v-3h-2l2.5-3.5L14.5,14z",
+    #           width = 24,
+    #           height = 24
+    #         ),
+    #
+    #         click = htmlwidgets::JS(
+    #           paste0("
+    #           function(gd) {
+    #             var rows = ", df_json, ";
+    #
+    #             var date = new Date().toISOString().slice(0,10);
+    #             var filename = 'export_' + date + '.csv';
+    #
+    #             if (!rows.length) return;
+    #
+    #             var cols = Object.keys(rows[0]);
+    #             var csv = cols.join(';') + '\\n';
+    #
+    #             rows.forEach(function(row) {
+    #               var values = cols.map(function(col) {
+    #                 var value = row[col];
+    #                 if (value == null) return '';
+    #                 value = String(value).replace(/\"/g, '\"\"');
+    #                 if (value.search(/[\";\\n]/) >= 0) {
+    #                   value = '\"' + value + '\"';
+    #                 }
+    #                 return value;
+    #               });
+    #               csv += values.join(';') + '\\n';
+    #             });
+    #
+    #             var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    #
+    #             var link = document.createElement('a');
+    #             link.href = URL.createObjectURL(blob);
+    #             link.download = filename;
+    #             link.click();
+    #           }
+    #         ")
+    #         )
+    #       ),
+    #
+    #       # TXT-Download für KI
+    #       list(
+    #         name = "Download Daten für KI-Chats als txt",
+    #         icon = list(
+    #           path = "M14,2H6C4.9,2,4,2.9,4,4v16c0,1.1,0.9,2,2,2h12c1.1,0,2-0.9,2-2V8L14,2z M14,4.5L17.5,8H14V4.5z M18,20H6V4h6v6h6V20z",
+    #           width = 24,
+    #           height = 24
+    #         ),
+    #         click = htmlwidgets::JS(
+    #           paste0("
+    #           function(gd) {
+    #             var rows = ", df_json, ";
+    #             var titel = ", titel_js, ";
+    #             var quelle = ", quelle_js, ";
+    #
+    #             var date = new Date().toISOString().slice(0,10);
+    #             var chartTitle = titel.replace(/\\s+/g, '_');
+    #             var filename = chartTitle + '_' + date + '.txt';
+    #
+    #             if (!rows.length) return;
+    #
+    #             var cols = Object.keys(rows[0]);
+    #
+    #             var text = '';
+    #             text += 'Titel: ' + titel + '\\n';
+    #             text += 'Quelle: ' + quelle + '\\n\\n';
+    #             text += 'Daten:\\n';
+    #
+    #             text += cols.join('\\t') + '\\n';
+    #
+    #             rows.forEach(function(row) {
+    #               var values = cols.map(function(col) {
+    #                 var value = row[col];
+    #                 if (value === null || value === undefined) return '';
+    #                 return String(value);
+    #               });
+    #               text += values.join('\\t') + '\\n';
+    #             });
+    #
+    #             var blob = new Blob([text], { type: 'text/plain;charset=utf-8;' });
+    #
+    #             var link = document.createElement('a');
+    #             link.href = URL.createObjectURL(blob);
+    #             link.download = filename;
+    #             link.click();
+    #           }
+    #         ")
+    #         )
+    #       )
+    #     )
+    #   )
 
 
 
@@ -1168,113 +1169,114 @@ plot_fachkraft_epa_item <- function(r) {
             showarrow = FALSE,xanchor = "left",
             font = list(
               family = "Calibri, sans-serif",size = 11,color = "gray"
-            )))) %>%
-      plotly::config(
-        displaylogo = FALSE,
-        modeBarButtonsToRemove = c(
-          "sendDataToCloud", "autoScale2d", "resetScale2d", "toggleSpikelines",
-          "hoverClosestCartesian", "hoverCompareCartesian",
-          "zoom2d", "pan2d", "select2d", "lasso2d", "zoomIn2d", "zoomOut2d"
-        ),
-        modeBarButtonsToAdd = list(
-
-          # CSV-Download
-          list(
-            name = "Download CSV",
-            icon = list(
-              path = "M16,2H8C6.9,2,6,2.9,6,4v16c0,1.1,0.9,2,2,2h8c1.1,0,2-0.9,2-2V4C18,2.9,17.1,2,16,2z M16,20H8V4h8V20z M14.5,14h-2v3h-1v-3h-2l2.5-3.5L14.5,14z",
-              width = 24,
-              height = 24
-            ),
-
-            click = htmlwidgets::JS(
-              paste0("
-              function(gd) {
-                var rows = ", df_json, ";
-
-                var date = new Date().toISOString().slice(0,10);
-                var filename = 'export_' + date + '.csv';
-
-                if (!rows.length) return;
-
-                var cols = Object.keys(rows[0]);
-                var csv = cols.join(';') + '\\n';
-
-                rows.forEach(function(row) {
-                  var values = cols.map(function(col) {
-                    var value = row[col];
-                    if (value == null) return '';
-                    value = String(value).replace(/\"/g, '\"\"');
-                    if (value.search(/[\";\\n]/) >= 0) {
-                      value = '\"' + value + '\"';
-                    }
-                    return value;
-                  });
-                  csv += values.join(';') + '\\n';
-                });
-
-                var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-
-                var link = document.createElement('a');
-                link.href = URL.createObjectURL(blob);
-                link.download = filename;
-                link.click();
-              }
-            ")
-            )
-          ),
-
-          # TXT-Download für KI
-          list(
-            name = "Download Daten für KI-Chats als txt",
-            icon = list(
-              path = "M14,2H6C4.9,2,4,2.9,4,4v16c0,1.1,0.9,2,2,2h12c1.1,0,2-0.9,2-2V8L14,2z M14,4.5L17.5,8H14V4.5z M18,20H6V4h6v6h6V20z",
-              width = 24,
-              height = 24
-            ),
-            click = htmlwidgets::JS(
-              paste0("
-              function(gd) {
-                var rows = ", df_json, ";
-                var titel = ", titel_js, ";
-                var quelle = ", quelle_js, ";
-
-                var date = new Date().toISOString().slice(0,10);
-                var chartTitle = titel.replace(/\\s+/g, '_');
-                var filename = chartTitle + '_' + date + '.txt';
-
-                if (!rows.length) return;
-
-                var cols = Object.keys(rows[0]);
-
-                var text = '';
-                text += 'Titel: ' + titel + '\\n';
-                text += 'Quelle: ' + quelle + '\\n\\n';
-                text += 'Daten:\\n';
-
-                text += cols.join('\\t') + '\\n';
-
-                rows.forEach(function(row) {
-                  var values = cols.map(function(col) {
-                    var value = row[col];
-                    if (value === null || value === undefined) return '';
-                    return String(value);
-                  });
-                  text += values.join('\\t') + '\\n';
-                });
-
-                var blob = new Blob([text], { type: 'text/plain;charset=utf-8;' });
-
-                var link = document.createElement('a');
-                link.href = URL.createObjectURL(blob);
-                link.download = filename;
-                link.click();
-              }
-            ")
-            )
-          )
-        )
-      )
+            ))))
+    # %>%
+    #   plotly::config(
+    #     displaylogo = FALSE,
+    #     modeBarButtonsToRemove = c(
+    #       "sendDataToCloud", "autoScale2d", "resetScale2d", "toggleSpikelines",
+    #       "hoverClosestCartesian", "hoverCompareCartesian",
+    #       "zoom2d", "pan2d", "select2d", "lasso2d", "zoomIn2d", "zoomOut2d"
+    #     ),
+    #     modeBarButtonsToAdd = list(
+    #
+    #       # CSV-Download
+    #       list(
+    #         name = "Download CSV",
+    #         icon = list(
+    #           path = "M16,2H8C6.9,2,6,2.9,6,4v16c0,1.1,0.9,2,2,2h8c1.1,0,2-0.9,2-2V4C18,2.9,17.1,2,16,2z M16,20H8V4h8V20z M14.5,14h-2v3h-1v-3h-2l2.5-3.5L14.5,14z",
+    #           width = 24,
+    #           height = 24
+    #         ),
+    #
+    #         click = htmlwidgets::JS(
+    #           paste0("
+    #           function(gd) {
+    #             var rows = ", df_json, ";
+    #
+    #             var date = new Date().toISOString().slice(0,10);
+    #             var filename = 'export_' + date + '.csv';
+    #
+    #             if (!rows.length) return;
+    #
+    #             var cols = Object.keys(rows[0]);
+    #             var csv = cols.join(';') + '\\n';
+    #
+    #             rows.forEach(function(row) {
+    #               var values = cols.map(function(col) {
+    #                 var value = row[col];
+    #                 if (value == null) return '';
+    #                 value = String(value).replace(/\"/g, '\"\"');
+    #                 if (value.search(/[\";\\n]/) >= 0) {
+    #                   value = '\"' + value + '\"';
+    #                 }
+    #                 return value;
+    #               });
+    #               csv += values.join(';') + '\\n';
+    #             });
+    #
+    #             var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    #
+    #             var link = document.createElement('a');
+    #             link.href = URL.createObjectURL(blob);
+    #             link.download = filename;
+    #             link.click();
+    #           }
+    #         ")
+    #         )
+    #       ),
+    #
+    #       # TXT-Download für KI
+    #       list(
+    #         name = "Download Daten für KI-Chats als txt",
+    #         icon = list(
+    #           path = "M14,2H6C4.9,2,4,2.9,4,4v16c0,1.1,0.9,2,2,2h12c1.1,0,2-0.9,2-2V8L14,2z M14,4.5L17.5,8H14V4.5z M18,20H6V4h6v6h6V20z",
+    #           width = 24,
+    #           height = 24
+    #         ),
+    #         click = htmlwidgets::JS(
+    #           paste0("
+    #           function(gd) {
+    #             var rows = ", df_json, ";
+    #             var titel = ", titel_js, ";
+    #             var quelle = ", quelle_js, ";
+    #
+    #             var date = new Date().toISOString().slice(0,10);
+    #             var chartTitle = titel.replace(/\\s+/g, '_');
+    #             var filename = chartTitle + '_' + date + '.txt';
+    #
+    #             if (!rows.length) return;
+    #
+    #             var cols = Object.keys(rows[0]);
+    #
+    #             var text = '';
+    #             text += 'Titel: ' + titel + '\\n';
+    #             text += 'Quelle: ' + quelle + '\\n\\n';
+    #             text += 'Daten:\\n';
+    #
+    #             text += cols.join('\\t') + '\\n';
+    #
+    #             rows.forEach(function(row) {
+    #               var values = cols.map(function(col) {
+    #                 var value = row[col];
+    #                 if (value === null || value === undefined) return '';
+    #                 return String(value);
+    #               });
+    #               text += values.join('\\t') + '\\n';
+    #             });
+    #
+    #             var blob = new Blob([text], { type: 'text/plain;charset=utf-8;' });
+    #
+    #             var link = document.createElement('a');
+    #             link.href = URL.createObjectURL(blob);
+    #             link.download = filename;
+    #             link.click();
+    #           }
+    #         ")
+    #         )
+    #       )
+    #     )
+    #   )
 
 
     return(list(plot_left, plot_right))

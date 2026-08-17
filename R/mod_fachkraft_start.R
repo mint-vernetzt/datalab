@@ -645,10 +645,28 @@ mod_fachkraft_start_server <- function(id, r){
           column(width = 6, plots[[1]])
         )
       }
+      # browser()
+      # fluidRow(
+      #   column(
+      #     width = 6,
+      #     plotly::plotlyOutput(ns("test_plot1"))
+      #   ),
+      #   column(
+      #     width = 6,
+      #     plotly::plotlyOutput(ns("test_plot2"))
+      #   )
+      # )
 
     })
 
-
+# output$test_plot1 <- plotly::renderPlotly({
+#
+#   plot_fachkraft_epa_item(r)[1]
+# })
+# output$test_plot2 <- plotly::renderPlotly({
+#
+#   plot_fachkraft_epa_item(r)[2]
+# })
 
     ## Fachkräfteegpass Bulas
     output$plot_fachkraft_epa_bulas <- renderUI({
@@ -666,6 +684,8 @@ mod_fachkraft_start_server <- function(id, r){
       }
 
     })
+
+
     ## Bar Vakanz
 
     # Download für JT kurz raus

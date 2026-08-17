@@ -1049,7 +1049,7 @@ data_a22 <- readxl::read_excel(paste0(pfad, "/BA019_230823_EA_SvB_Azub_MINT.xlsx
 data_a23 <- readxl::read_excel(paste0(pfad, "/BA022_240731_EA_357830_SvB_Azub_MINT_Dauer.xlsx"),
                                sheet = "Auswertung", col_names = F, range = "A12:L4201")
 
-# 20 24
+# 2024
 data_a24 <- readxl::read_excel(paste0(pfad, "/BA048_250820_EA_394801_SvB_Azub_MINT_Dauer.xlsx"),
                                sheet = "Auswertung", col_names = F, range = "A12:L4201")
 
