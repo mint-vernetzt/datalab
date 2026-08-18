@@ -15,7 +15,7 @@ pfad <- "C:/Users/mis/OneDrive - Stifterverband/Dateiablage - MINTvernetzt (SV)/
 
 # arbeitsmarkt_detail -----------------------------------------------------
 
-# Daten Beschäftigte ####
+## Daten Beschäftigte ####
 
 #### 1. Einlesen und Cleaning ####
 
@@ -253,7 +253,7 @@ data_geschlecht <- data %>% dplyr::filter(!indikator %in% c("Beschäftigte u25",
 data <- rbind(data, data_geschlecht, data_alter, data_ausl_alter)
 
 
-# Daten Auszubildende ####
+## Daten Auszubildende ####
 
 
 #### 1. Einlesen und Cleaning ####
@@ -437,6 +437,25 @@ data_a$name[data_a$name == "männliche Auszubildende im 1. Lehrjahr"]<-"Männer"
                       "jahr", "anforderung", "wert"  )]
 
 
+#### Zusammenfügen arbeitsmarkt_detail -----
+
+data <- rbind(data, data_a)
+
+
+## Datensatz aktualisieren und in Datenbank spielen
+
+  library(DBI)
+  con <- DBI::dbConnect(duckdb::duckdb(), "data/mint_db.duckdb")
+
+  arbeitsmarkt_detail <- dbGetQuery(con, "SELECT * FROM arbeitsmarkt_detail")
+
+  arbeitsmarkt_detail <- rbind(arbeitsmarkt_detail, data)
+
+  save(arbeitsmarkt_detail, file = "arbeitsmarkt_detail.rda")
+
+  dbWriteTable(con, "arbeitsmarkt_detail", arbeitsmarkt_detail, append = FALSE, overwrite = TRUE)
+
+  dbDisconnect(con, shutdown= TRUE)
 
 
 
@@ -448,10 +467,7 @@ data_a$name[data_a$name == "männliche Auszubildende im 1. Lehrjahr"]<-"Männer"
 
 
 
-
-
-
-#  epa / epa_detail -------------------------------------------------------
+# epa / epa_detail -------------------------------------------------------
 
 akro <- "kbr"
 pfad <- paste0("C:/Users/", akro,
@@ -698,4 +714,188 @@ save(arbeitsmarkt_epa, file = "arbeitsmarkt_epa.rda")
 dbWriteTable(con, "arbeitsmarkt_epa", arbeitsmarkt_epa, append = FALSE, overwrite = TRUE)
 
 dbDisconnect(con, shutdown= TRUE)
+
+
+
+
+
+
+
+# Arbeitslosten-Stellen-Relation + Vakanzzeit -----------------------------
+
+
+## Daten einlesen
+
+pfad <- "C:/Users/mis/OneDrive - Stifterverband/Dateiablage - MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/01_Eingang/Bundesagentur für Arbeit/2026/"
+
+
+
+sheets <- c("Deutschland", "01 Schleswig-Holstein", "02 Hamburg", "03 Niedersachsen",
+            "04 Bremen", "05 NRW", "06 Hessen", "07 Rheinland-Pfalz", "08 Baden-Württemberg",
+            "09 Bayern", "10 Saarland", "11 Berlin", "12 Brandenburg", "13 Mecklenburg-Vorpommern",
+            "14 Sachsen", "15 Sachsen-Anhalt", "16 Thüringen")
+
+
+de <- readxl::read_excel(paste0(pfad, "EA_408228_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[1])
+sh <- readxl::read_excel(paste0(pfad, "EA_408228_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[2])
+ha <- readxl::read_excel(paste0(pfad, "EA_408228_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[3])
+ni <- readxl::read_excel(paste0(pfad, "EA_408228_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[4])
+br <- readxl::read_excel(paste0(pfad, "EA_408228_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[5])
+nr <- readxl::read_excel(paste0(pfad, "EA_408228_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[6])
+he <- readxl::read_excel(paste0(pfad, "EA_408228_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[7])
+rp <- readxl::read_excel(paste0(pfad, "EA_408228_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[8])
+bw <- readxl::read_excel(paste0(pfad, "EA_408228_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[9])
+by <- readxl::read_excel(paste0(pfad, "EA_408228_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[10])
+sr <- readxl::read_excel(paste0(pfad, "EA_408228_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[11])
+be <- readxl::read_excel(paste0(pfad, "EA_408228_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[12])
+ba <- readxl::read_excel(paste0(pfad, "EA_408228_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[13])
+mv <- readxl::read_excel(paste0(pfad, "EA_408228_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[14])
+sa <- readxl::read_excel(paste0(pfad, "EA_408228_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[15])
+sn <- readxl::read_excel(paste0(pfad, "EA_408228_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[16])
+th <- readxl::read_excel(paste0(pfad, "EA_408228_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[17])
+
+
+## Daten zusammenfügen und region ergänzen
+
+de$region <- "Deutschland"
+sh$region <- "Schleswig-Holstein"
+ha$region <- "Hamburg"
+ni$region <- "Niedersachsen"
+br$region <- "Bremen"
+nr$region <- "Nordrhein-Westfalen"
+he$region <- "Hessen"
+rp$region <- "Rheinland-Pfalz"
+bw$region <- "Baden-Württemberg"
+by$region <- "Bayern"
+sr$region <- "Saarland"
+be$region <- "Berlin"
+ba$region <- "Brandenburg"
+mv$region <- "Mecklenburg-Vorpommern"
+sa$region <- "Sachsen"
+sn$region <- "Sachsen-Anhalt"
+th$region <- "Thüringen"
+
+
+
+bulas_aufbereiten <- function(dat){
+
+  dat <- dat[-c(1:9, 511:523),]
+
+  colnames(dat) <- c(
+    "fachbereich",
+    "Gemeldete Arbeitslose",
+    "Gemeldete Stellen",
+    "Arbeitslosen-Stellen-Relation",
+    "Abgang (Jahressumme)",
+    "Abgeschlossene Vakanzzeit",
+    "region"
+  )
+
+  dat <- tidyr::pivot_longer(
+    dat,
+    cols = "Gemeldete Arbeitslose":"Abgeschlossene Vakanzzeit",
+    values_to = "wert",
+    names_to = "indikator"
+  )
+  dat$beruf <- dat$fachbereich
+  dat$jahr <- 2025
+
+
+
+  dat <- dat %>%
+    dplyr::mutate(
+      bereich = "Arbeitsmarkt",
+      anforderung = "Gesamt",
+      anforderung = dplyr::case_when(
+        grepl("Fachk", fachbereich) ~ "Fachkräfte",
+        grepl("Aufsic", fachbereich) ~ "Spezialist*innen",
+        grepl("Spezialis", fachbereich) ~ "Spezialist*innen",
+        grepl("Expert", fachbereich) ~ "Expert*innen",
+        grepl("Führung", fachbereich) ~ "Expert*innen",
+        T ~ anforderung
+      ),
+      fachbereich = dplyr::case_when(
+        grepl("[[:digit:]]", fachbereich) ~ NA,
+        T ~ fachbereich
+      ))
+
+  dat$fachbereich <- stats::ave(dat$fachbereich, cumsum(!is.na(dat$fachbereich)), FUN = function(x) x[1])
+  dat$fachbereich <- gsub(pattern = " - Experten", "", dat$fachbereich)
+  dat$fachbereich <- gsub(pattern = " - Fachkräfte", "", dat$fachbereich)
+  dat$fachbereich <- gsub(pattern = " - Spezialisten", "", dat$fachbereich)
+
+  dat$beruf <- gsub(pattern = " - Experten", "", dat$beruf)
+  dat$beruf <- gsub(pattern = " - Fachkräfte", "", dat$beruf)
+  dat$beruf <- gsub(pattern = " - Spezialisten", "", dat$beruf)
+  dat$beruf <- gsub(pattern = " - Experte", "", dat$beruf)
+  dat$beruf <- gsub(pattern = " - Fachkraft", "", dat$beruf)
+  dat$beruf <- gsub(pattern = " - Spezialist", "", dat$beruf)
+  dat$beruf <- gsub(pattern = "-Experte", "", dat$beruf)
+  dat$beruf <- gsub(pattern = "-Fachkraft", "", dat$beruf)
+  dat$beruf <- gsub(pattern = "-Spezialist", "", dat$beruf)
+  dat$beruf <- gsub(pattern = " -Experte", "", dat$beruf)
+  dat$beruf <- gsub(pattern = " -Fachkraft", "", dat$beruf)
+  dat$beruf <- gsub(pattern = " -Spezialist", "", dat$beruf)
+  dat$beruf <- gsub("[[:digit:]] ", "", dat$beruf)
+  dat$beruf <- gsub("[[:digit:]]", "", dat$beruf)
+
+  dat$indikator <- gsub("[[:digit:]]", "", dat$indikator)
+  dat$indikator <- gsub("_", "", dat$indikator)
+
+  dat <- dat %>%
+    dplyr::mutate(beruf = dplyr::case_when(
+      beruf == "MINT-Berufe" ~ "MINT-Berufe (gesamt)",
+      beruf == "Mathematik, Naturwissenschaften" ~ "Mathematik, Naturwissenschaften (gesamt)",
+      beruf == "Bau- und Gebäudetechnik" ~ "Bau- und Gebäudetechnik (gesamt)",
+      beruf == "Gesundheitstechnik" ~ "Gesundheitstechnik (gesamt)",
+      beruf == "Informatik" ~ "Informatik (gesamt)",
+      beruf == "Keine MINT-Berufe" ~ "Keine MINT-Berufe (gesamt)",
+      beruf == "Landtechnik" ~ "Landtechnik (gesamt)",
+      beruf == "Produktionstechnik" ~ "Produktionstechnik (gesamt)",
+      beruf == "Verkehrs-, Sicherheits- und Veranstaltungstechnik" ~ "Verkehrs-, Sicherheits- und Veranstaltungstechnik (gesamt)",
+      T ~ beruf
+    ))
+
+  return(dat)
+
+}
+
+
+de <- bulas_aufbereiten(de)
+sh <- bulas_aufbereiten(sh)
+ha <- bulas_aufbereiten(ha)
+ni <- bulas_aufbereiten(ni)
+br <- bulas_aufbereiten(br)
+nr <- bulas_aufbereiten(nr)
+he <- bulas_aufbereiten(he)
+rp <- bulas_aufbereiten(rp)
+bw <- bulas_aufbereiten(bw)
+by <- bulas_aufbereiten(by)
+sr <- bulas_aufbereiten(sr)
+be <- bulas_aufbereiten(be)
+ba <- bulas_aufbereiten(ba)
+mv <- bulas_aufbereiten(mv)
+sa <- bulas_aufbereiten(sa)
+sn <- bulas_aufbereiten(sn)
+th <- bulas_aufbereiten(th)
+
+dat <- rbind(de, sh, ha, ni, br, nr, he, rp, bw, by, sr, be, ba, mv, sa, sn, th)
+
+## Spalten sortieren
+dat <- dat[, c("bereich", "indikator", "fachbereich", "beruf", "anforderung",
+               "region", "jahr", "wert")]
+
+dat <- dat %>%
+  dplyr::mutate(dplyr::across(c(8), as.numeric))
+
+## speichern
+arbeitsmarkt_fachkraefte <- dat
+usethis::use_data(arbeitsmarkt_fachkraefte , overwrite = T)
+
+setwd("C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/02_data/data/")
+
+save(arbeitsmarkt_fachkraefte, file = "arbeitsmarkt_fachkraefte.rda")
+
+
+
 
