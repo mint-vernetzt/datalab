@@ -10,8 +10,8 @@ library(dplyr)
 library(tidyr)
 library(DBI)
 
-pfad <- "C:/Users/kbr/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/"
-
+#pfad <- "C:/Users/kbr/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/"
+pfad <- "C:/Users/mis/OneDrive - Stifterverband/Dateiablage - MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/"
 
 # arbeitsmarkt_detail -----------------------------------------------------
 
@@ -255,6 +255,7 @@ data <- rbind(data, data_geschlecht, data_alter, data_ausl_alter)
 
 # Daten Auszubildende ####
 
+
 #### 1. Einlesen und Cleaning ####
 
 data_a <- readxl::read_excel(paste0(pfad, "/BA070_Ausbildung_2026.xlsx"),
@@ -270,6 +271,7 @@ data_a$`...2` <- dplyr::coalesce(
 
 
 data_a$`...3` <- data_a$`...1`
+
 
 data_a <- data_a %>%
   dplyr::mutate(
@@ -299,6 +301,9 @@ data_a <- data_a %>%
   tidyr::separate(`...3`, c("a", "b"), sep = ",", fill = "right") %>%  # falls kein Komma vorhanden
   dplyr::rename(ort = a)
 
+
+
+
 # Schlüsselnummer extrahieren & Ort bereinigen
 data_a$`...4` <- stringr::str_extract(data_a$ort, "[[:digit:]]+")
 data_a$ort    <- gsub("[[:digit:]]", "", data_a$ort)
@@ -316,63 +321,134 @@ data_a$ort <- ifelse(grepl("Olde", data_a$ort), "Stadt Oldenburg", data_a$ort)
 data_a$ort <- ifelse(grepl("Olde", data_a$ort) & is.na(data_a$b),
                    "Landkreis Oldenburg", data_a$ort)
 
-### Hier weiter ####
+
+
+# Spalten bennenen
+data_a <- data_a[, -c(6, 7)]
+header <- c("region", "fachbereich", "ort", "zusatz", "schluesselnummer",
+            #
+            "Auszubildende im 1. Lehrjahr Gesamt",
+            "männliche Auszubildende im 1. Lehrjahr",
+            "weibliche Auszubildende im 1. Lehrjahr",
+            #
+            "bundesland"
+)
+colnames(data_a) <- header
+
+# leere Zeilen oben löschen
+data_a <- data_a[-1*1:2,]
+
+# bundesland nach unten auffüllen
+data_a$bundesland <- zoo::na.locf(data_a$bundesland)
+
+
+
+
+# Ortsnamen richtig benennen
 
 # orte <- unique(data_a$ort)
 # orte_sonderz <- orte[grepl("-", orte)]
 # An KI geben, aussortieren lassen, welche fälschlich Trennung mit - enthalten
 
 orte_sonderz <- readxl::read_excel(paste0(pfad, "/BA071_Ortsnamen_Klassifizierung.xlsx"))
-orte_sonderz <- orte_sonderz %>%
-  select()
 
-# Spalten bennenen
-data <- data[,-6]
-header <- c("region", "fachbereich", "ort", "zusatz", "schluesselnummer",
-            #
-            "Beschäftigte",
-            "weibliche Beschäftigte",
-            "Beschäftigte u25",
-            "Beschäftigte ü55",
-            #
-            "Beschäftigte (nur SVB)",
-            "weibliche Beschäftigte (nur SVB)",
-            "Beschäftigte u25 (nur SVB)",
-            "Beschäftigte ü55 (nur SVB)",
-            "Auszubildende",
-            "weibliche Auszubildende",
-            #
-            "Beschäftigte (nur GFB)",
-            "weibliche Beschäftigte (nur GFB)",
-            "Beschäftigte u25 (nur GFB)",
-            "Beschäftigte ü55 (nur GFB)",
-            #
-            "ausländische Beschäftigte",
-            "ausländische weibliche Beschäftigte",
-            "ausländische Beschäftigte u25",
-            "ausländische Beschäftigte ü55",
-            #
-            "ausländische Beschäftigte (nur SVB)",
-            "ausländische weibliche Beschäftigte (nur SVB)",
-            "ausländische Beschäftigte u25 (nur SVB)",
-            "ausländische Beschäftigte ü55 (nur SVB)",
-            "ausländische Auszubildende",
-            "ausländische weibliche Auszubildende",
-            #
-            "ausländische Beschäftigte (nur GFB)",
-            "ausländische weibliche Beschäftigte (nur GFB)",
-            "ausländische Beschäftigte u25 (nur GFB)",
-            "ausländische Beschäftigte ü55 (nur GFB)",
 
-            "bundesland"
-)
-colnames(data) <- header
+data_a <- data_a %>%
+  left_join(
+    orte_sonderz %>%
+      filter(!is.na(`Falsch mit Bindestrich`)) %>%
+      select(
+        ort = `Falsch mit Bindestrich`,
+        ort_neu = `Sollte ohne Bindestrich (korrigiert)`
+      ),
+    by = "ort"
+  ) %>%
+  mutate(
+    ort = coalesce(ort_neu, ort)
+  ) %>%
+  select(-ort_neu)
 
-# leere Zeilen oben löschen
-data <- data[-1*1:5,]
 
-# bundesland nach unten auffüllen
-data$bundesland <- zoo::na.locf(data$bundesland)
+
+# spalten auffüllen
+data_a <- data_a %>%
+  mutate(gruppe = cumsum(!is.na(region))) %>%
+  group_by(gruppe) %>%
+  fill(ort, zusatz, schluesselnummer, .direction = "down") %>%
+  ungroup() %>%
+  select(-gruppe)
+
+
+### 2. Datensatz aufbereiten ####
+
+
+# Zahlen formatieren und NAs definieren
+data_a <- data_a %>%
+  dplyr::mutate(dplyr::across(c(6:8), as.numeric))
+
+data_a[data_a == 0] <- NA
+
+
+# region ordnen
+data_a <- data_a %>%
+  dplyr::filter(!is.na(fachbereich))%>%
+  dplyr::select(-region)%>%
+  dplyr::rename(region = ort)
+
+
+
+# ins long-Format bringen
+data_a <- data_a %>%
+  tidyr::pivot_longer(cols = "Auszubildende im 1. Lehrjahr Gesamt":"weibliche Auszubildende im 1. Lehrjahr")
+
+
+# umbenennen
+data_a$name[data_a$name == "Auszubildende im 1. Lehrjahr Gesamt"]<-"Gesamt"
+data_a$name[data_a$name == "weibliche Auszubildende im 1. Lehrjahr"]<-"Frauen"
+data_a$name[data_a$name == "männliche Auszubildende im 1. Lehrjahr"]<-"Männer"
+
+
+# notwendige spalten erzeugen
+  data_a <- data_a %>%
+    dplyr::mutate(
+      fachbereich = dplyr::case_when(
+        fachbereich=="Insgesamt"~"Alle",
+        fachbereich=="MINT-Berufe"~"MINT",
+        fachbereich=="Technik"~ "Technik (gesamt)",
+        TRUE ~ fachbereich
+      ),
+      kategorie = "Auszubildende",
+      indikator = "Auszubildende (1. Jahr)",
+      bereich = "Arbeitsmarkt",
+      jahr = "2025",
+      anforderung = "Gesamt") %>%
+    dplyr::rename(geschlecht = name,
+                  wert = value,
+                  landkreis = region,
+                  landkreis_zusatz = zusatz,
+                  landkreis_nummer = schluesselnummer
+    )
+
+
+
+  # Spalten in logische Reihenfolge bringen
+  data_a <- data_a[,c("bereich","kategorie", "indikator", "fachbereich", "geschlecht",
+                      "bundesland", "landkreis", "landkreis_zusatz", "landkreis_nummer",
+                      "jahr", "anforderung", "wert"  )]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 #  epa / epa_detail -------------------------------------------------------
