@@ -103,7 +103,7 @@ mod_argumentation_ui <- function(id){
               ",
     column(
       width = 12,
-      h2("Regionalberichte und Beispielanalysen zum runterladen",
+      h3("Regionalberichte und Beispielanalysen zum runterladen",
       style = "margin-top: 30px;"),
 
     ))),
@@ -114,13 +114,13 @@ mod_argumentation_ui <- function(id){
           div(class = "clean-box",
               style = "margin-bottom:0px;
               border-top: 2px solid #154194;
-              border-bottom: 2px solid #154194;
+
               padding-top: 10px;
               padding-bottom: 400px;
-              ",
+              ",  #     border-bottom: 2px solid #154194;
               column(
                 width = 12,
-                h2("Datenanalyse mit KI: Einfach und individuell eigene Analysen erstellen", #Schnellstart: So analysieren Sie Daten mit dem MINT-DataLab-GPT, Catchy-Intro
+                h3("Datenanalyse mit KI: Einfach und individuell eigene Analysen erstellen", #Schnellstart: So analysieren Sie Daten mit dem MINT-DataLab-GPT, Catchy-Intro
                    style = "margin-top: 30px;"),
               ),
               column(
@@ -156,7 +156,7 @@ mod_argumentation_ui <- function(id){
 
                   p("Du willst mit DataLab-Daten argumentieren?"),
                   p("Mithilfe unseres Custom-GPTs kannst du schnell und einfach
-                    ganze Berichte und Argumentationsketten erstellen"),
+                    ganze Berichte und Argumentationsketten erstellen."),
 
                   strong("Der Chatbot unterstützt konkret in drei Situationen:"),
                   tags$ol(
@@ -239,8 +239,9 @@ mod_argumentation_ui <- function(id){
     ## 1. Region-Filter ----
 
 fluidRow(
-      h2("In Fünf Schritten zur individuellen Datenanalyse",
-         style = "margin-top: 30px;"),
+      p("In Fünf Schritten zur individuellen Datenanalyse",
+         style = "margin-top: 30px;
+        "),
 
     div(
       style = "display:flex; align-items:flex-start; margin-top:40px;",
