@@ -126,10 +126,11 @@ mod_argumentation_ui <- function(id){
               column(
                 width = 4,
                 tags$div(
-                  style = "display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-start;",
+                  style = "display: flex; flex-direction: column;
+                  align-items: flex-start; justify-content: flex-start;",
                   tags$strong(
                     "Direkt Analyse mit KI starten:",
-                    style = "margin: 40px 0px 0px 60px"
+                    style = "margin: 40px 0px 0px 40px"
                   ),
                   class = "linked-image",
                   style = "flex: 0 0 20%;",
@@ -140,7 +141,7 @@ mod_argumentation_ui <- function(id){
                       src = "www/Bild_MINT-DataLab-GPT.png",
                       alt = "MINT-DataLab-GPT Symbolbild",
                       style = "max-width: 28%; height: auto; cursor: pointer;
-                          margin: 10px 0px 0px 70px; border-radius: 10px;"
+                          margin: 10px 0px 0px 50px; border-radius: 10px;"
                     )
                   )
                 ),
@@ -166,7 +167,7 @@ mod_argumentation_ui <- function(id){
                   )
                 )
               )
-              ),
+          ),
 
 
 
@@ -236,12 +237,18 @@ mod_argumentation_ui <- function(id){
     # ),
 
 
-    ## 1. Region-Filter ----
 
 fluidRow(
       p("In Fünf Schritten zur individuellen Datenanalyse",
          style = "margin-top: 30px;
+         margin-left: 10px;
+         color: #154194;
+         font-weight: bold;
         "),
+
+  div( style = "margin-left: 40px;",
+
+      ## 1. Region-Filter ----
 
     div(
       style = "display:flex; align-items:flex-start; margin-top:40px;",
@@ -252,6 +259,7 @@ fluidRow(
         img(
           src = "www/gpt_schritt_1.png",
           class = "img-responsive",
+          alt = "Symbol Regionalauswahl",
           style = "
         display:block;
         margin-top:10px;
@@ -296,198 +304,180 @@ fluidRow(
           multiple = FALSE
         )
       )
-    )),
+    ),
 
+    ##  2. Fokus-Switch ----
 
-
-
-
-
-
-  ##  2. Fokus-Switch ----
-
-
-fluidRow(
-
-  div(
-    style = "display:flex; align-items:flex-start; margin-top:40px;",
-
-    # Bild
     div(
-      style = "margin: 0px 25px 20px 10px;",
-      img(
-        src = "www/gpt_schritt_2.1.png",
-        class = "img-responsive",
-        style = "
+      style = "display:flex; align-items:flex-start; margin-top:40px;",
+
+      # Bild
+      div(
+        style = "margin: 0px 25px 20px 10px;",
+        img(
+          src = "www/gpt_schritt_2.1.png",
+          class = "img-responsive",
+          alt = "Symbol Fokus",
+          style = "
+        display:block;
+        margin-top:10px;
+        border:2px solid #B16FAB;
+        border-radius:15px;
+        max-width:100px;
+      "
+        )
+      ),
+
+      # Text + Fokus Switch rechts
+      div(
+
+        p(
+          strong("2. Legen Sie hier Ihren inhaltlichen Schwerpunkt fest."),
+          style = "margin-bottom:10px;"
+        ),
+
+        div(
+          width = 8,
+          style = "display:flex; gap:20px; align-items:center; width:100%;
+        margin-bottom: 40px; margin-top: 20px;",
+          p(style="margin:0; flex:1; text-align:right;",
+            "MINT-Nachwuchsförderung allgemein"),
+
+          div(
+            style= "align-content: center; width: 60px;",
+            shinyWidgets::materialSwitch(
+              inputId = ns("frauen_fokus"),
+              value = FALSE
+            )
+          ),
+
+          p(style="margin:0; flex:1; text-align:left; margin-right: 10px;",
+            "Mädchen- und Frauenförderung in MINT")
+        )
+      )
+    ),
+
+    ##  3. Daten Download ----
+
+    div(
+      style = "display:flex; align-items:flex-start; margin-top:40px;",
+
+      # Bild
+      div(
+        style = "margin: 0px 25px 20px 10px;",
+        img(
+          src = "www/gpt_schritt_2.png",
+          class = "img-responsive",
+          alt = "Symbol Download",
+          style = "
           display:block;
           margin-top:10px;
           border:2px solid #B16FAB;
           border-radius:15px;
           max-width:100px;
         "
-      )
-    ),
-    div(
-      id = ns("ziel_col"),
-      style = "margin-top: 40px;",
-    ),
+        )
+      ),
 
-    # Inhalt rechts
-    div(
-      id = "fokus-auswahl",
-
-      p(strong("2. Legen Sie hier Ihren inhaltlichen Schwerpunkt fest."),
-        style = "margin-top: 20px; "),
-
-      div(
-        width = 8,
-        style = "display:flex; gap:20px; align-items:center; width:100%;
-        margin-bottom: 40px; margin-top: 20px;",
-        p(style="margin:0; flex:1; text-align:right;",
-          "MINT-Nachwuchsförderung allgemein"),
-
-        div(
-          style= "align-content: center; width: 60px;",
-          shinyWidgets::materialSwitch(
-            inputId = ns("frauen_fokus"),
-            value = FALSE
-          )
-        ),
-
-        p(style="margin:0; flex:1; text-align:left; margin-right: 10px;",
-          "Mädchen- und Frauenförderung in MINT")
-      )
-    )
-  )
-),
+      # Text + Download-Button
+      div(id = "download_section",
+         # style = "flex: 1; margin-bottom: 15px;",
 
 
-      # div(
-      #   id = "fokus-auswahl",
-      #
-      #   p(
-      #     strong("2. Legen Sie hier Ihren inhaltlichen Schwerpunkt fest."),
-      #     style = "margin-top: 20px; margin-left: 60px"
-      #   ),
-      #
-      #   shinyWidgets::pickerInput(
-      #     inputId = ns("frauen_fokus"),
-      #     label = NULL,
-      #     choices = c(
-      #       "MINT-Nachwuchsförderung allgemein" = FALSE,
-      #       "Mädchen- und Frauenförderung in MINT" = TRUE
-      #     ),
-      #     selected = "FALSE"
-      #   )))),
+          p(strong(style = "text-align: left; font-size: 18px; margin-left: 15px; margin-top: 20px",
+                   "3. Laden Sie die Datengrundlage herunter.")),
 
+          column(
+            width = 3,
+            div(
+              #style = "margin-left: 30px;",
+              downloadButton(style = "margin-top: 10px; margin-bottom: 5px;",
+                               outputId = ns("download_txt"),
+                               label = "   Daten herunterladen",
+                               class = "rosa-button")
+            )
+          ),
 
+          column(
+            width = 5,  # Text in der linken Spalte
 
-      ## 3. Daten-Download ----
-
-  fluidRow(
-      column(
-        width = 12,
-        style = "display: flex; align-items: center; margin-bottom: 15px;",
-        div(
-          style = "margin: 0px 25px 100px 0px;",
-          img(src='www/gpt_schritt_2.png',
-              class = "img-responsive",
-              alt = "Bild Schritt 2 klein",
-              style="display: block;
-                  margin-top: 10px; border: 2px solid #B16FAB;
-                  border-radius: 15px; max-width: 100px;")
-        ),
-        div(id = "download_section",
-            style = "flex: 1; margin-bottom: 15px;",
-
-
-              p(strong(style = "text-align: left; font-size: 18px; margin-left: 15px; margin-top: 20px",
-                       "3. Laden Sie die Datengrundlage herunter.")),
-              column(
-                width = 3,
-                div(style = "margin-left: 30px;",
-                    downloadButton(style = "margin-top: 10px; margin-bottom: 5px;",
-                                   outputId = ns("download_txt"),
-                                   label = "   Daten herunterladen",
-                                   class = "rosa-button")
-                )
-               ),
-
-              column(
-                width = 5,  # Text in der linken Spalte
-
-                p(
-                  "Als Basis für den Datenbericht sowie die datenbasierte Argumentation
+            p(
+              "Als Basis für den Datenbericht sowie die datenbasierte Argumentation
               haben wir fünf Statistiken aus dem MINT-DataLab ausgewählt."),
-                p("Das heruntergeladene txt.-Dokument Kopieren Sie in den Chat des MINT-DataLab-GPT oder
+            p("Das heruntergeladene txt.-Dokument Kopieren Sie in den Chat des MINT-DataLab-GPT oder
               hängen die Datei an.")
 
-            ),
+          ),
 
 
-              column(
-                width = 4,
-                div(style = "margin-left: 30px;",
-                    p(
-                      tags$a(href = "#daten_grafiken",
-                             style = "color: #000000; text-decoration: underline;",
-                             "→ Die in dem Download enthaltenen Daten sind in den interaktiven Grafiken weiter unten auf dieser Seite dargestellt."))
-                )
-              )
-            ))),
+          column(
+            width = 4,
+            div(style = "margin-left: 30px;",
+                p(
+                  tags$a(href = "#daten_grafiken",
+                         style = "color: #000000; text-decoration: underline;",
+                         "→ Die in dem Download enthaltenen Daten sind in den interaktiven Grafiken weiter unten auf dieser Seite dargestellt."))
+            )
+          )
+      )
+    ),
 
-      ## 4. MINT-DataLab-GPT ----
-fluidRow(
-      column(
-        width = 12,
-        style = "display: flex; align-items: center; ",
-        div(
-          style = "margin: 0px 25px 50px 0px;",
-          img(src='www/gpt_schritt_3.png',
-              class = "img-responsive",
-              alt = "Bild Schritt 3 klein",
-              style="display: block;
-                  margin-top: 10px; border: 2px solid #B16FAB;
-                  border-radius: 15px; max-width: 100px;")
+    # 4. MINT-DataLab-GPT ----
+
+    div(
+      style = "display:flex; align-items:flex-start; margin-top:40px;",
+
+      # Bild
+      div(
+        style = "margin: 0px 25px 20px 10px;",
+        img(
+          src = "www/gpt_schritt_3.png",
+          class = "img-responsive",
+          alt = "Symbol custom GPT",
+          style = "
+        display:block;
+        margin-top:10px;
+        border:2px solid #B16FAB;
+        border-radius:15px;
+        max-width:100px;"
+        )
+      ),
+
+      # Text + GPT-Absprung/Prompts
+      div(
+
+        p(strong(style = "text-align: left; font-size: 18px; margin-bottom: 15px;
+                 margin-left: 15px;",
+                 "4. Wechseln Sie zum MINT-DataLab-GPT und folgen Sie den Anweisungen.")
+          ),
+
+        column(
+          width = 3,
+          div(
+            #style = "margin-left: 30px;",
+              actionButton(label = tagList(icon("arrow-up-right-from-square"), "    Zum MINT-DataLab-GPT"),
+                           inputId = "GPT_link",
+                           onclick = 'window.open("https://chatgpt.com/g/g-695cd1fa74f881918a54b0517af8163e-mint-datalab-gpt", "_blank");',
+                           class = "rosa-button")
+          )
         ),
-        div(id = "MINT-DataLab-GPT",
-            style = "flex: 1; margin-bottom: 15px;",
-            fluidRow(
-              p(strong(style = "text-align: left; font-size: 18px; margin-bottom: 15px; margin-left: 15px;",
-                       "4. Wechseln Sie zum MINT-DataLab-GPT und folgen Sie den Anweisungen.")),
-              column(
-                width = 3,
-                div(style = "margin-left: 30px;",
-                    actionButton(label = tagList(icon("arrow-up-right-from-square"), "    Zum MINT-DataLab-GPT"),
-                                 inputId = "GPT_link",
-                                 onclick = 'window.open("https://chatgpt.com/g/g-695cd1fa74f881918a54b0517af8163e-mint-datalab-gpt", "_blank");',
-                                 class = "rosa-button")
-                )
-              ),
-              column(
-                width = 5,  # Text in der linken Spalte
+        column(
+          width = 5,  # Text in der linken Spalte
 
-                p( "Sobald Sie auf den Link zum MINT-DataLab-GPT klicken,
+          p( "Sobald Sie auf den Link zum MINT-DataLab-GPT klicken,
                    öffnet sich ein Chatfenster in ChatGPT."),
 
-                 p("Wählen Sie aus, ob sie eine Argumentation oder eine Bericht wollen,
+          p("Wählen Sie aus, ob sie eine Argumentation oder eine Bericht wollen,
                    der MINT-DataLab-GPT führt Sie durch die Erstellung der Analyse."),
-              )
+        ),
 
-            )
-        ))
-      ,
+        column(
+          width = 10,
+          div(
+            style = "margin-left:40px; margin-top:0px; margin-bottom: 30px; ",
 
-
-
-      ### Prompt-Bibliothek ----------
-      column(
-        width = 10,
-        div(
-          style = "margin-left:200px;margin-top:0px;margin-bottom: 30px; ",
-
-          actionButton(
-            style = "
+            actionButton(
+              style = "
               cursor:pointer;
               font-weight:500;
               padding:10px 14px;
@@ -498,15 +488,15 @@ fluidRow(
               list-style:none;
               margin-bottom: 20px;
               ",
-            ns("funktionsprompt"),
-            label = " Funktionsprompt für andere KIs",
-           ),
+              ns("funktionsprompt"),
+              label = " Funktionsprompt für andere KIs",
+            ),
 
 
-          tags$details(
+            tags$details(
 
-            tags$summary(
-              style = "
+              tags$summary(
+                style = "
               cursor:pointer;
               font-weight:500;
               font-size:14px;
@@ -517,88 +507,94 @@ fluidRow(
               display:inline-block;
               list-style:none;
               ",
-              "💡 Prompt-Vorschläge anzeigen"
-            ),
+                "💡 Prompt-Vorschläge anzeigen"
+              ),
 
-            div(
-              style = "
+              div(
+                style = "
                   margin-top:10px;
                   padding:12px;
                   background-color:#F7EFF6;;
                   ",
 
-            tags$table(
-              class = "table table-bordered table-sm",
-              style = "margin-top:0px;",
+                tags$table(
+                  class = "table table-bordered table-sm",
+                  style = "margin-top:0px;",
 
-              tags$thead(
-                tags$tr(
-                  tags$th("Prompt"),
-                  tags$th("Anwendung"),
-                  tags$th("xx")
-                )
-              ),
-
-              tags$tbody(
-                tags$tr(
-                  tags$td(
-                    actionLink(
-                      ns("prompt_bericht"),
-                      "Bericht erstellen"
+                  tags$thead(
+                    tags$tr(
+                      tags$th("Prompt"),
+                      tags$th("Anwendung"),
+                      tags$th("xx")
                     )
                   ),
-                  tags$td("xx"),
-                  tags$td("yy")
+
+                  tags$tbody(
+                    tags$tr(
+                      tags$td(
+                        actionLink(
+                          ns("prompt_bericht"),
+                          "Bericht erstellen"
+                        )
+                      ),
+                      tags$td("xx"),
+                      tags$td("yy")
+                    )
+                  )
                 )
               )
             )
           )
+          )
+      )
+    ),
+
+    # 5. Grafiken ----
+
+    div(
+      style = "display:flex; align-items:flex-start; margin-top:40px;",
+
+      # Bild
+      div(
+        style = "margin: 0px 25px 20px 10px;",
+        img(src='www/gpt_schritt_4.png',
+            class = "img-responsive",
+            alt = "Symbol Grafik-Download",
+            style = "
+        display:block;
+        margin-top:10px;
+        border:2px solid #B16FAB;
+        border-radius:15px;
+        max-width:100px;"
         )
-      ))),
+      ),
 
+      # Text + Dropdown rechts
+      div(
 
+        p(strong(style = "text-align: left; font-size: 18px; margin-left: 15px;",
+                 "5. Ergänzen Sie den KI-Bericht zur Veranschaulichung mit Grafiken.")
+          ),
 
-      ## 5. Grafiken ----
-fluidRow(
-      column(
-        width = 12,
-        style = "display: flex; align-items: center; margin-bottom: 20px;",
-        div(
-          style = "margin: 0px 25px 90px 0px;",
-          img(src='www/gpt_schritt_4.png',
-              class = "img-responsive",
-              alt = "Bild Schritt 4 klein",
-              style="display: block;
-                  margin-top: 10px; border: 2px solid #B16FAB;
-                  border-radius: 15px; max-width: 100px;")
+        column(
+          width = 3,
+          div(style = "display: flex; margin-right:10px; margin-top: 10px; width: 100%",
+              actionButton(
+                ns("download_all_png_client"),
+                label = tagList(icon("download"), "Alle Grafiken herunterladen (ZIP)",),
+                class = "rosa-button"),
+          )
         ),
-        div(id = "grafiken",
-            style = "flex: 1; margin-bottom: 15px;",
-            fluidRow(
-              p(strong(style = "text-align: left; font-size: 18px; margin-left: 15px;",
-                       "5. Ergänzen Sie den KI-Bericht zur Veranschaulichung mit Grafiken.")),
-              column(
-                width = 3,
-                div(style = "display: flex; margin-right:10px; margin-top: 10px; width: 100%",
-                    actionButton(
-                      ns("download_all_png_client"),
-                      label = tagList(icon("download"), "Alle Grafiken herunterladen (ZIP)",),
-                      class = "rosa-button"),
-                    )
-                )
-            ,
-              column(
-                width = 5,
-                p(" Die passenden Grafiken zu dem Datenbündel können Sie her herunterladen
+        column(
+          width = 5,
+          p(" Die passenden Grafiken zu dem Datenbündel können Sie her herunterladen
                   um Ihren Bericht damit fertigzustellen."),
-                p(stlye="margin-left: 20px;",
-                  "→ Falls Sie weitere Grafiken des MINT-DataLabs darstellen wollen, finden Sie eine Download-Option
+          p(stlye="margin-left: 20px;",
+            "→ Falls Sie weitere Grafiken des MINT-DataLabs darstellen wollen, finden Sie eine Download-Option
                   immer rechts oben an den Grafiken.")
-              )),
-
-
-
-              tags$script(HTML(sprintf("
+        )
+      ),
+      tags$script(HTML(sprintf("
 (function() {
   function dateStr(){ return new Date().toISOString().slice(0,10); }
   function blobFromCanvas(canvas, type, quality){
@@ -702,9 +698,11 @@ fluidRow(
   }, false);
 })();
 ", ns("download_all_png_client"))))
+    )
+  )
 
-            )
-        )),
+),
+
 
 # Beispiel Bericht und Cheatsheet ----
 
