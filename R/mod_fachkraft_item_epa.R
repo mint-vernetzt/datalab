@@ -36,7 +36,7 @@ mod_fachkraft_item_epa_ui <- function(id){
         "Alle Berufe" ="Gesamt",
         "Nicht MINT"
       ),
-      selected = c("MINT gesamt", "Informatik"), # "Nicht MINT"
+      selected = c("MINT gesamt", "Nicht MINT"),
       multiple = TRUE,
       options =  list(
         "max-options" = 2,
