@@ -29,7 +29,6 @@ map_selection_international <- readRDS("data/map_data/map_selection_internationa
 
 beruf_einstieg_vergleich <- function(r) {
 
-
   # load UI inputs from reactive value
   betrachtung <- r$ansicht_arbeitsmarkt_einsteig_vergleich
   timerange <- r$date_arbeitsmarkt_einstieg_vergleich
@@ -133,7 +132,7 @@ beruf_einstieg_vergleich <- function(r) {
       )
 
     color <- c("#b16fab","#efe8e6")
-    quelle <- "Quelle: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "Quelle: Bundesagentur für Arbeit, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
 
    out <- piebuilder_plotly(df, titel, x="fachbereich", y = "proportion",
@@ -169,7 +168,7 @@ beruf_einstieg_vergleich <- function(r) {
       titel <- paste0("MINT-Anteil unterschiedlicher Beschäftigtengruppen", praep, regio, " (", timerange, ")")
 
       color <- c("#b16fab", "#efe8e6")
-      quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
 
       out <- balkenbuilder_plotly(df=df, x=x, y=y, titel=titel, orientation = "h", group=group, color = color,
@@ -208,7 +207,7 @@ beruf_einstieg_vergleich <- function(r) {
       group <- "fachbereich"
 
       color <- c("#b16fab", "#efe8e6")
-      quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
 
       out <- balkenbuilder_plotly(df=df, x=x, y=y, titel=titel, orientation = "h", group=group, color = color,
@@ -312,7 +311,7 @@ beruf_verlauf_single <- function(r) {
     color <- c("#b16fab", "#154194","#66cbaf","#112c5f", "#35bd97", "#5d335a",
                "#5f94f9", "#007655", "#d0a9cd")[1:(length(unique(df$indikator)))]
 
-    quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
     out <- linebuilder_plotly(df, titel, x = "jahr", y = "prop", group = "indikator", color = color, quelle = quelle)
 
@@ -342,7 +341,7 @@ beruf_verlauf_single <- function(r) {
     color <- c("#b16fab", "#154194","#66cbaf", "#35bd97", "#5d335a",
                "#5f94f9", "#007655", "#d0a9cd", "#112c5f")[1:(length(unique(df$indikator)))]
 
-    quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
     out <- linebuilder_plotly(df, titel, x = "jahr", y = "wert", group = "indikator", format = ",d", color = color, quelle = quelle)
 
 
@@ -429,7 +428,7 @@ arbeitsmarkt_mint_bulas <- function(r) {
         )
       )
     titel <- paste0("Anteil von ",  title_help, " in MINT an allen ",  title_help, " (", timerange, ")")
-    quelle <- "uelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "uelle der Daten: Bundesagentur für Arbeit, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
     out <- mapbuilder_plotly(df,
                       value_col = "proportion",
@@ -529,7 +528,7 @@ arbeitsmarkt_mint_bulas <- function(r) {
     )
 
 
-    quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
     if (darstellung == "In Prozent"){
 
@@ -650,7 +649,7 @@ arbeitsmarkt_mint_bulas <- function(r) {
       color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
                  "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")[1:length(unique(df$bundesland))]
 
-      quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
       out <- linebuilder_plotly(df, titel, x = "jahr", y = "wert", group = "bundesland", color = color, quelle = quelle)
 
@@ -685,7 +684,7 @@ arbeitsmarkt_mint_bulas <- function(r) {
       color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
                  "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")[1:length(unique(df$bundesland))]
 
-      quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
       out <- linebuilder_plotly(df, titel, x = "jahr", y = "wert", group = "bundesland",
                                 format = format, color = color, quelle = quelle)
 
@@ -1177,7 +1176,7 @@ arbeitsmarkt_faecher_anteil <- function(r) {
       df <- df %>%
         dplyr::mutate(color = color_fachbereich[fachbereich])
 
-      quelle <- "Quelle: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      quelle <- "Quelle: Bundesagentur für Arbeit, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
 
       out <- piebuilder_plotly(
@@ -1216,7 +1215,7 @@ arbeitsmarkt_faecher_anteil <- function(r) {
       color1 <- as.character(df_1$color)
       color2 <- as.character(df_2$color)
 
-      quelle <- "Quelle: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      quelle <- "Quelle: Bundesagentur für Arbeit, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
       out_1 <- piebuilder_plotly(df_1, titel1, x="fachbereich", y = "prop", color = color1, legend_y=0.01,
                           quelle= "")|>
@@ -1350,7 +1349,7 @@ arbeitsmarkt_faecher_anteil <- function(r) {
 
     color <- bereich_balken
 
-    quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
 
     if(darstellung == "In Prozent"){
@@ -1641,7 +1640,7 @@ arbeitsmarkt_bula_faecher <- function(r) {
         )
       )
     titel <- paste0("Anteil von ",  title_help, " in ", faecher, " an allen ",  title_help, " (", timerange, ")")
-    quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
     out <- mapbuilder_plotly(df,
                       value_col = "proportion",
@@ -1723,7 +1722,7 @@ arbeitsmarkt_bula_faecher <- function(r) {
 
     titel <- paste0("Anteil von ", title_help, " im Berufsfeld ", faecher, " an allen ", title_help, " in ", timerange)
 
-    quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
     color <- c(
       "Deutschland" = "#b16fab",
@@ -1882,7 +1881,7 @@ arbeitsmarkt_bula_faecher <- function(r) {
 
       color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
                  "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")[1:length(unique(df$bundesland))]
-      quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
       out <- linebuilder_plotly(df, titel, x = "jahr", y = "prop", group = "bundesland", color = color, quelle = quelle)
 
 
@@ -1907,7 +1906,7 @@ arbeitsmarkt_bula_faecher <- function(r) {
       format <- ",d"
       color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
                  "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")[1:length(unique(df$bundesland))]
-      quelle2 <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      quelle2 <- "Quelle der Daten: Bundesagentur für Arbeit, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
       out <- linebuilder_plotly(df, titel, x = "jahr", y = "wert", group = "bundesland", format = format, color = color, quelle = quelle2)
 
 
@@ -2228,7 +2227,7 @@ arbeitsmarkt_einstieg_pie_gender <- function(r) {
          )
        )
 
-     quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+     quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
      p1 <- piebuilder_plotly(df_p, titel, x="geschlecht", y = "proportion",
                       color=color, quelle = quelle)
@@ -2251,7 +2250,7 @@ arbeitsmarkt_einstieg_pie_gender <- function(r) {
 
        color <- c("Männer" = "#efe8e6","Frauen" = "#154194")
 
-       quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+       quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
        p1g <- piebuilder_plotly(df_g, titel1, x="geschlecht", y = "proportion",
                                 color=color, quelle = quelle) |>
@@ -2300,7 +2299,7 @@ arbeitsmarkt_einstieg_pie_gender <- function(r) {
        )
      color <- c("Männer" = "#efe8e6","Frauen" = "#154194")
 
-     quelle <- "Quelle: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+     quelle <- "Quelle: Bundesagentur für Arbeit, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
      p1 <- piebuilder_plotly(df_1_pie, titel1, x="geschlecht", y = "proportion",
                       color=color, quelle=quelle)
@@ -2331,7 +2330,7 @@ arbeitsmarkt_einstieg_pie_gender <- function(r) {
 
        color <- c("Männer" = "#efe8e6","Frauen" = "#154194")
 
-       quelle <- "Quelle: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+       quelle <- "Quelle: Bundesagentur für Arbeit, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
        p1g <- piebuilder_plotly(df1_g, titel1, x="geschlecht", y = "proportion",
                          color=color, quelle=quelle)|>
@@ -2410,7 +2409,7 @@ arbeitsmarkt_einstieg_pie_gender <- function(r) {
    group <- "geschlecht"
 
    color <- c("#154194", "#efe8e6")
-   quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+   quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
    quelle_y <- -0.20
    legend_y <- -0.07
 
@@ -2533,7 +2532,7 @@ arbeitsmarkt_einstieg_verlauf_gender <- function(r) {
 
     color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
                "#bfc6d3", "#5f94f9")[1:length(unique(df$indikator))]
-    quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
     out <- linebuilder_plotly(df, titel, x = "jahr", y = "prop", group = "indikator", color = color, quelle = quelle)
 
@@ -2579,7 +2578,7 @@ arbeitsmarkt_einstieg_verlauf_gender <- function(r) {
     format <- ",d"
     color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
                "#bfc6d3", "#5f94f9")[1:length(unique(df$indikator))]
-    quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
     out <- linebuilder_plotly(df, titel, x = "jahr", y = "wert", group = "indikator", format = format, color = color, quelle = quelle)
 
   }
@@ -2695,7 +2694,7 @@ arbeitsmarkt_wahl_gender <- function(r) {
      subtitel1 <- paste0("Von allen weiblichen ", title_help, " arbeiten ", round(100-df_f$prop[df_f$fachbereich == "andere Berufsfelder"],1), "% in MINT")
      subtitel2 <-  paste0("Von allen männlichen ", title_help, " arbeiten ", round(100-df_m$prop[df_m$fachbereich == "andere Berufsfelder"],1), "% in MINT")
 
-     quelle <- "Quelle: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+     quelle <- "Quelle: Bundesagentur für Arbeit, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
      out_1 <- piebuilder_plotly(df_f, titel1, x="fachbereich", y = "prop", legend_y=0.01,
                                 color=as.character(df_f$color), subtitel = subtitel1, quelle="") |>
@@ -2807,7 +2806,7 @@ arbeitsmarkt_wahl_gender <- function(r) {
          )
        )
      titel <- titel_w
-     quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+     quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
      out_1 <- mapbuilder_plotly(df,
                          titel = titel,
                          value_col = "prop",
@@ -2825,7 +2824,7 @@ arbeitsmarkt_wahl_gender <- function(r) {
          )
        )
      titel <- titel_m
-     quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+     quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
      out_2 <- mapbuilder_plotly(df,
                          titel = titel,
                          value_col = "prop",
@@ -2927,7 +2926,7 @@ arbeitsmarkt_wahl_gender <- function(r) {
                   "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
 
 
-       quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+       quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
        out <- linebuilder_plotly(df, titel, x = "jahr", y = "prop", group = "bundesland", color=color, quelle = quelle)
 
 
@@ -2966,7 +2965,7 @@ arbeitsmarkt_wahl_gender <- function(r) {
       format <- ",d"
       color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
                  "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
-      quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
       out <- linebuilder_plotly(df, titel, x = "jahr", y = "wert", group = "bundesland", format= format, color = color, quelle = quelle)
 
      }
@@ -3368,7 +3367,7 @@ arbeitsmarkt_faecher_anteil_frauen <- function(r) {
       praep <- ifelse(regio == "Saarland", " im ", " in ")
 
       titel <- paste0( "Überblick über die Berufsfelder von weiblichen ", title_help, praep, regio, " (", timerange, ")")
-      quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
 
       order <- unique(df$fachbereich)
@@ -3580,7 +3579,7 @@ arbeitsmarkt_lk_detail_map <- function(r) {
   df1_map$wert <- prettyNum(df1_map$wert, big.mark = ".", decimal.mark = ",")
   domain_1 <- ifelse(domain_1 == "Alle", "alle Berufsbereiche", domain_1)
 
-  quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+  quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
   # create plots
 
@@ -3694,7 +3693,7 @@ arbeitsmarkt_lk_detail_vergleich <- function(r){
 
   x <- "landkreis"
   percent <- if (display_form == "In Prozent") TRUE else FALSE
-  quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+  quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
 
   landkreise <- unique(df_compare$landkreis)
@@ -3813,7 +3812,7 @@ arbeitsmarkt_lk_verlauf <- function(r){
     color <- c("#b16fab", "#154194", "#66cbaf","#fbbf24", "#ee7775", "#35bd97",
                "#d0a9cd", "#5f94f0", "#fca5a5", "#fde68a", "#007655", "#dc6262",
                "#9d7265", "#5d335a", "#bfc6d3",  "#B45309","#d4c1bb", "#112c5f", "#8893a7")
-    quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
     out <- linebuilder_plotly(df, titel, x = "jahr", y = "prop", group = "landkreis", color=color, quelle = quelle)
 
 
@@ -3841,7 +3840,7 @@ arbeitsmarkt_lk_verlauf <- function(r){
     color <- c("#b16fab", "#154194", "#66cbaf","#fbbf24", "#ee7775", "#35bd97",
                "#d0a9cd", "#5f94f0", "#fca5a5", "#fde68a", "#007655", "#dc6262",
                "#9d7265", "#5d335a", "#bfc6d3",  "#B45309","#d4c1bb", "#112c5f", "#8893a7")
-    queleeee <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    queleeee <- "Quelle der Daten: Bundesagentur für Arbeit, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
     out <- linebuilder_plotly(df, titel, x = "jahr", y = "wert", group = "landkreis", format = format, color = color, quelle=queleeee)
 
   }

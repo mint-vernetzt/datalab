@@ -74,9 +74,9 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
         shinydashboard::box(
           title = "Datenquellen",
           width = 5,
-          p("Die amtlichen Statistiken zeigen das aktuellste verfügbare Berichtsjahr 2023."),
-          p(tags$b(span("Auszubildenden- und Beschäftigtenzahlen: Bundesagentur für Arbeit 2024, auf Anfrage.")),
-          "Daten des Berichtsjahres 2024 ca. ab Juli 2025 verfügbar.")
+          p("Die amtlichen Statistiken zeigen das aktuellste verfügbare Berichtsjahr 2025."),
+          p(tags$b(span("Auszubildenden- und Beschäftigtenzahlen: Bundesagentur für Arbeit 2026, auf Anfrage.")),
+          "Daten des Berichtsjahres 2026 ca. ab August 2027 verfügbar.")
 
         )
       ),

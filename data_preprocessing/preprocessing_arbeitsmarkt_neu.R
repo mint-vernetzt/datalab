@@ -146,6 +146,7 @@ data <- data %>%
   dplyr::select(-region)%>%
   dplyr::rename(region = ort)
 
+
 data$zusatz <- ifelse(data$zusatz == data$region, NA, data$zusatz )
 data$schluesselnummer <- ifelse(data$schluesselnummer == data$region, NA, data$schluesselnummer )
 
@@ -213,6 +214,17 @@ data <- data %>%
     landkreis_nummer = schluesselnummer
   )
 
+# bundeslandebene in landkreise "alle Landkreise" nennen
+data$landkreis <- ifelse(
+  data$landkreis == data$bundesland |
+    (data$landkreis == "Westdeutschland" &
+       data$bundesland == "Westdeutschland (o. Berlin)") |
+    (data$landkreis == "Ostdeutschland" &
+       data$bundesland == "Ostdeutschland (inkl. Berlin)"),
+  "alle Landkreise",
+  data$landkreis
+)
+
 data <- data[, c("bereich", "kategorie", "indikator", "fachbereich", "geschlecht", "bundesland",
                  "landkreis", "landkreis_zusatz", "landkreis_nummer", "jahr", "anforderung", "wert")]
 
@@ -223,32 +235,32 @@ data_alter <- data %>% dplyr::filter(indikator %in% c("Beschäftigte", "Beschäf
                                      geschlecht == "Gesamt")
 
 data_alter <- data_alter %>% dplyr::group_by(bereich, kategorie, fachbereich, geschlecht, bundesland, landkreis,
-                                             landkreis_zusatz, landkreis_nummer, anforderung) %>%
+                                             landkreis_zusatz, landkreis_nummer, jahr, anforderung) %>%
   dplyr::summarise(wert = wert - dplyr::lead(wert, 1) - dplyr::lead(wert, 2)) %>%
   dplyr::mutate(indikator = "Beschäftigte 25-55") %>%
-  dplyr::filter(!is.na(wert)) %>%
-  dplyr::bind_rows(., data_alter)
+  dplyr::filter(!is.na(wert))
+
 
 # Calculate ausländische Beschäftigte 25-55
 data_ausl_alter <- data %>% dplyr::filter(indikator %in% c("ausländische Beschäftigte", "ausländische Beschäftigte u25", "ausländische Beschäftigte ü55"),
                                           geschlecht == "Gesamt")
 
 data_ausl_alter <- data_ausl_alter %>% dplyr::group_by(bereich, kategorie, fachbereich, geschlecht, bundesland, landkreis,
-                                                       landkreis_zusatz, landkreis_nummer, anforderung) %>%
+                                                       landkreis_zusatz, landkreis_nummer, jahr, anforderung) %>%
   dplyr::summarise(wert = wert - dplyr::lead(wert, 1) - dplyr::lead(wert, 2)) %>%
   dplyr::mutate(indikator = "ausländische Beschäftigte 25-55") %>%
-  dplyr::filter(!is.na(wert)) %>%
-  dplyr::bind_rows(., data_ausl_alter)
+  dplyr::filter(!is.na(wert))
+
 
 # Calculate males
 data_geschlecht <- data %>% dplyr::filter(!indikator %in% c("Beschäftigte u25", "Beschäftigte ü55",
                                                             "ausländische Beschäftigte u25", "ausländische Beschäftigte ü55")) %>%
   dplyr::group_by(bereich, kategorie, indikator, fachbereich, bundesland, landkreis,
-                  landkreis_zusatz, landkreis_nummer, anforderung) %>%
+                  landkreis_zusatz, landkreis_nummer, jahr, anforderung) %>%
   dplyr::summarise(wert = wert - dplyr::lead(wert, 1)) %>%
   dplyr::mutate(geschlecht = "Männer") %>%
-  dplyr::filter(!is.na(wert)) %>%
-  dplyr::bind_rows(., data)
+  dplyr::filter(!is.na(wert))
+
 
 data <- rbind(data, data_geschlecht, data_alter, data_ausl_alter)
 
@@ -396,7 +408,6 @@ data_a <- data_a %>%
   dplyr::rename(region = ort)
 
 
-
 # ins long-Format bringen
 data_a <- data_a %>%
   tidyr::pivot_longer(cols = "Auszubildende im 1. Lehrjahr Gesamt":"weibliche Auszubildende im 1. Lehrjahr")
@@ -430,6 +441,18 @@ data_a$name[data_a$name == "männliche Auszubildende im 1. Lehrjahr"]<-"Männer"
     )
 
 
+   # bundeslandebene in landkreise "alle Landkreise" nennen
+  data_a$landkreis <- ifelse(
+    data_a$landkreis == data_a$bundesland |
+      (data_a$landkreis == "Westdeutschland" &
+         data_a$bundesland == "Westdeutschland (o. Berlin)") |
+      (data_a$landkreis == "Ostdeutschland" &
+         data_a$bundesland == "Ostdeutschland (inkl. Berlin)"),
+    "alle Landkreise",
+    data_a$landkreis
+  )
+
+
 
   # Spalten in logische Reihenfolge bringen
   data_a <- data_a[,c("bereich","kategorie", "indikator", "fachbereich", "geschlecht",
@@ -448,6 +471,9 @@ data <- rbind(data, data_a)
   con <- DBI::dbConnect(duckdb::duckdb(), "data/mint_db.duckdb")
 
   arbeitsmarkt_detail <- dbGetQuery(con, "SELECT * FROM arbeitsmarkt_detail")
+
+  arbeitsmarkt_detail <- arbeitsmarkt_detail %>%
+    dplyr::filter(jahr != 2025)
 
   arbeitsmarkt_detail <- rbind(arbeitsmarkt_detail, data)
 
@@ -721,8 +747,8 @@ dbDisconnect(con, shutdown= TRUE)
 
 
 
-# Arbeitslosten-Stellen-Relation + Vakanzzeit -----------------------------
-
+# arbeitsmarkt_fachkraefte    -----------------------------
+# Arbeitslosten-Stellen-Relation + Vakanzzeit
 
 ## Daten einlesen
 

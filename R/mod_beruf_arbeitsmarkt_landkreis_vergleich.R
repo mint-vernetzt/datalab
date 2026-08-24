@@ -14,8 +14,8 @@ mod_beruf_arbeitsmarkt_landkreis_vergleich_ui <- function(id){
     shinyWidgets::sliderTextInput(
       inputId = ns("date_beruf_arbeitsmarkt_landkreis_vergleich"),
       label = NULL,
-      choices = 2013:2024,
-      selected = 2024
+      choices = 2013:2025,
+      selected = 2025
     ),
     p("Region:"),
     shinyWidgets::pickerInput(
