@@ -36,42 +36,28 @@ mod_startseite_start_ui <- function(id){
           Arbeitsmarkt in Deutschland.", br(),
           "Unser Ziel ist es, mit dem MINT-DataLab einen zentralen Ort
           für die wichtigsten Statistiken rund um MINT zu schaffen und mittels interaktiver
-          Diagramme einen intuitiven und informativen Zugang zu gewähren. Dabei entwickeln wir das MINT-DataLab stetig weiter."
-            ),
-            p(),
-
-          # Updates ----
-          h2(style = "color: #008F68;",
-             "Was ist Neu?"),
-          tags$ul(
-            tags$li("Erstellen Sie einfach MINT-Berichten durch das neue Angebot \"Datenanalyse mit KI\" - jetzt auch zum Thema Mädchenförderung in MINT"),
-          ),
-          h2(style = "color: #008F68;",
-             "Woran wir aktuell arbeiten:"),
-          tags$ul(
-            tags$li("Weiterentwicklung des Angebots \"Datenanalyse mit KI\""),
-            tags$li("Weitere Erhöhung der Barrierefreiheit"),
-            tags$li("Weitere grafische Darstellungen zum Theman Entgelte")),
-          p(),      p(),
-          p("Bei Fragen oder Anregungen, melden Sie sich jederzeit gerne ",
-            tags$a(href = "mailto:katharina.brunner@mint-vernetzt.de?subject= Feedback MINT-Datalab", "per E-Mail"),
-            " bei uns."),
+          Diagramme einen intuitiven und informativen Zugang zu gewähren. Dabei entwickeln wir das MINT-DataLab stetig weiter.",
+          style = "margin-bottom: 40px;"  ),
 
           p(),
           hr(),
           p(),
 
     # Kurzanalysen ----
-            h2("MINT-Themen im Fokus: Aktuelle Entwicklungen im Blick"),
+
+            h2("Kurzanalysen: Aktuelle Entwicklungen auf einen Blick",
+               style = "margin-top: 40px;"),
             p(
               "Unsere Kurzanalysen ordnen ausgewählte MINT-Kennzahlen ein,
               greifen aktuelle Entwicklungen auf und zeigen mögliche Handlungsansätze.
               Die Analysen basieren auf Daten aus dem MINT-DataLab und wissenschaftlichen Erkenntnissen.",
-              br()),
-              tags$a(href = "https://www.mint-vernetzt.de/blogbeitraege/",
-                     target = "_blank", "Weitere Schwerpunktthemen von MINTvernetzt",
-                     class = "btn btn-default",
-                     style = "margin-bottom: 30px; margin-top: 10px; font-size: 18px")
+              br())
+
+      # Button erstmal raus - vllt. zukünftig zur Übersicht der KA
+              # tags$a(href = "https://www.mint-vernetzt.de/blogbeitraege/",
+              #        target = "_blank", "Weitere Schwerpunktthemen von MINTvernetzt",
+              #        class = "btn btn-default",
+              #        style = "margin-bottom: 30px; margin-top: 10px; font-size: 18px")
     ),
     column(
       width = 12,
@@ -84,6 +70,8 @@ mod_startseite_start_ui <- function(id){
       gap:24px;
       padding:10px 0;
       align-items:stretch;
+      margin-left: 30px;
+      margin-right: 30px;
         ",
 
         # Kachel 1
@@ -99,8 +87,8 @@ mod_startseite_start_ui <- function(id){
           tags$a(href="https://www.mint-vernetzt.de/content/uploads/2026/06/MINTvernetzt_Kurzanalyse_schulisch_ausserschulisch.pdf",
                  class="btn btn-primary",
                  target = "_blank",
-                 style = "background-color: #b16fab;border:1px solid #b16fab;
-                 margin-top:auto; width:fit-content;",
+                 style = "background-color: #154194 ;border:1px solid #154194;
+                 margin-top:auto; width:fit-content; margin-top: 20px;",
                  "Download Kurzanalyse")
         ),
 
@@ -117,8 +105,8 @@ mod_startseite_start_ui <- function(id){
           tags$a(href="https://www.mint-vernetzt.de/content/uploads/2026/01/MINTvernetzt_Kurzanalyse_Fachkraeftemangel_MINT-Disziplinen.pdf",
                  class="btn btn-primary",
                  target = "_blank",
-                 style = "background-color: #b16fab;border:1px solid #b16fab;
-                 margin-top:auto; width:fit-content;",
+                 style = "background-color: #154194 ;border:1px solid #154194;
+                 margin-top:auto; width:fit-content; margin-top: 20px;",
                  "Download Kurzanalyse")
         ),
 
@@ -135,8 +123,8 @@ mod_startseite_start_ui <- function(id){
           tags$a(href="https://www.mint-vernetzt.de/content/uploads/2026/01/MINTvernetzt_Kurzanalyse_Zukunftsszenarien_Zuwanderung_MINT.pdf",
                  class="btn btn-primary",
                  target = "_blank",
-                 style = "background-color: #b16fab;border:1px solid #b16fab;
-                 margin-top:auto; width:fit-content;",
+                 style = "background-color: #154194 ;border:1px solid #154194;
+                 margin-top:auto; width:fit-content; margin-top: 20px;",
                  "Download Kurzanalyse")
         ),
 
@@ -153,8 +141,8 @@ mod_startseite_start_ui <- function(id){
           tags$a(href="https://www.mint-vernetzt.de/content/uploads/2026/01/MINTvernetzt_Kurzanalyse_Zukunftsszenarien_MINT-Fachkraefte.pdf",
                  class="btn btn-primary",
                  target = "_blank",
-                 style = "background-color: #b16fab;border:1px solid #b16fab;
-                 margin-top:auto; width:fit-content;",
+                 style = "background-color: #154194 ;border:1px solid #154194;
+                 margin-top:auto; width:fit-content; margin-top: 20px;",
                  "Download Kurzanalyse")
         ),
 
@@ -171,8 +159,8 @@ mod_startseite_start_ui <- function(id){
           tags$a(href="https://www.mint-vernetzt.de/content/uploads/2026/01/MINTvernetzt_Kurzanalyse_Maedchen_Mathematik.pdf",
                  class="btn btn-primary",
                  target = "_blank",
-                 style = "background-color: #b16fab;border:1px solid #b16fab;
-                 margin-top:auto; width:fit-content;",
+                 style = "background-color: #154194 ;border:1px solid #154194;
+                 margin-top:auto; width:fit-content; margin-top: 20px;",
                  "Download Kurzanalyse")
         ),
 
@@ -189,8 +177,8 @@ mod_startseite_start_ui <- function(id){
           tags$a(href="https://www.mint-vernetzt.de/content/uploads/2026/01/MINTvernetzt_Kurzanalyse_Chancengerechtigkeit_mit_MINT.pdf",
                  class="btn btn-primary",
                  target = "_blank",
-                 style = "background-color: #b16fab;border:1px solid #b16fab;
-                 margin-top:auto; width:fit-content;",
+                 style = "background-color: #154194 ;border:1px solid #154194;
+                 margin-top:auto; width:fit-content; margin-top: 20px;",
                  "Download Kurzanalyse")
         ),
 
@@ -207,8 +195,8 @@ mod_startseite_start_ui <- function(id){
           tags$a(href="https://www.mint-vernetzt.de/content/uploads/2026/01/MINTvernetzt_Kurzanalyse_Frauen_in_MINT-Berufen.pdf",
                  class="btn btn-primary",
                  target = "_blank",
-                 style = "background-color: #b16fab;border:1px solid #b16fab;
-                 margin-top:auto; width:fit-content;",
+                 style = "background-color: #154194 ;border:1px solid #154194;
+                 margin-top:auto; width:fit-content; margin-top: 20px;",
                  "Download Kurzanalyse")
         ),
 
@@ -225,11 +213,14 @@ mod_startseite_start_ui <- function(id){
           tags$a(href="https://www.mint-vernetzt.de/content/uploads/2026/01/MINTvernetzt_Kurzanalyse_Interesse_an_MINT.pdf",
                  class="btn btn-primary",
                  target = "_blank",
-                 style = "background-color: #b16fab;border:1px solid #b16fab;
-                 margin-top:auto; width:fit-content;",
+                 style = "background-color: #154194 ;border:1px solid #154194;
+                 margin-top:auto; width:fit-content; margin-top: 20px;",
                  "Download Kurzanalyse")
         )
       ),
+
+      p(),
+      hr(style = "margin-top: 40px;"),
 
 
       # Lernvideo ----
@@ -255,10 +246,34 @@ mod_startseite_start_ui <- function(id){
     column(
       width = 8,
 
+      p(),
+      hr(),
+
+      # Updates ----
+      h2(style = "color: #008F68; margin-top: 40px;",
+         "Was ist Neu?"),
+      tags$ul(
+        tags$li("Aktualisierte Daten für das Berichtsjahr 2025 der Bundesagentur für Arbeit auf den Unterseiten \"Ausbildung & Beruf\" und
+                \"MINT-Fachkräfte\""),
+        tags$li("Grafiken in neuem Design"),
+        tags$li("Alle Kurzanalysen auf einem Blick auf der Startseite des MINT-DataLab")
+      ),
+      h2(style = "color: #008F68;",
+         "Woran wir aktuell arbeiten:"),
+      tags$ul(
+        tags$li("Weiterentwicklung des Angebots \"Datenanalyse mit KI\" mit statistischen Berichten für jedes Bundesland zum Download"),
+        tags$li("Weitere Erhöhung der Barrierefreiheit")),
+      p(),      p(),
+      p("Bei Fragen oder Anregungen, melden Sie sich jederzeit gerne ",
+        tags$a(href = "mailto:katharina.brunner@mint-vernetzt.de?subject= Feedback MINT-Datalab", "per E-Mail"),
+        " bei uns."),
+
+
        # Abbinder ----
 
       p(),
-      hr(),
+      hr(style = "margin-top: 40px;"),
+
       h1("Entdecken Sie jetzt die verschiedenen MINT-Bereiche!",
          style = "margin-bottom: 40px; margin-top: 40px;")
       )
