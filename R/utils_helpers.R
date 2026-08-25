@@ -196,7 +196,7 @@ studi_det_ui_faecher <-function(spezif_i, spezif_r){
   SELECT DISTINCT fach
   FROM studierende_detailliert
   WHERE mint_select = 'MINT'
-     OR fach IN ('Alle MINT-Fächer', 'Alle Nicht MINT-Fächer')
+     OR fach IN ('Alle MINT-Fächer', 'Alle Nicht MINT-Fächer', 'Alle Fächer')
   ORDER BY fach
 ", .con = con)
 
@@ -220,7 +220,7 @@ studi_det_ui_faecher <-function(spezif_i, spezif_r){
     df1_query <- glue::glue_sql("
   SELECT DISTINCT fach
   FROM studierende_detailliert
-  WHERE (mint_select = 'MINT' OR fach IN ('Alle MINT-Fächer', 'Alle Nicht MINT-Fächer'))
+  WHERE (mint_select = 'MINT' OR fach IN ('Alle MINT-Fächer', 'Alle Nicht MINT-Fächer', 'Alle Fächer'))
     AND region IN ({spezif_r*})
   ORDER BY fach
 ", .con = con)
@@ -246,7 +246,7 @@ studi_det_ui_faecher <-function(spezif_i, spezif_r){
     df1_query <- glue::glue_sql("
   SELECT DISTINCT fach
   FROM studierende_detailliert
-  WHERE (mint_select = 'MINT' OR fach IN ('Alle MINT-Fächer', 'Alle Nicht MINT-Fächer'))
+  WHERE (mint_select = 'MINT' OR fach IN ('Alle MINT-Fächer', 'Alle Nicht MINT-Fächer', 'Alle Fächer'))
     AND indikator IN ({spezif_i*})
   ORDER BY fach
 ", .con = con)
@@ -783,8 +783,8 @@ fachkraft_ui_berufslevel <- function() {
   selection <- c(
     "Gesamt",
     "Fachkräfte",
-    "Spezialist*innen",
-    "Expert*innen"
+    "Spezialist:innen",
+    "Expert:innen"
   )
 
 
@@ -792,7 +792,6 @@ fachkraft_ui_berufslevel <- function() {
 }
 
 fachkraft_ui_berufe <- function(level = "Fachkräfte", zeitpunkt = 2023) {
-
 
   selection <- NULL
 

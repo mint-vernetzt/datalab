@@ -1049,7 +1049,7 @@ data_a22 <- readxl::read_excel(paste0(pfad, "/BA019_230823_EA_SvB_Azub_MINT.xlsx
 data_a23 <- readxl::read_excel(paste0(pfad, "/BA022_240731_EA_357830_SvB_Azub_MINT_Dauer.xlsx"),
                                sheet = "Auswertung", col_names = F, range = "A12:L4201")
 
-# 20 24
+# 2024
 data_a24 <- readxl::read_excel(paste0(pfad, "/BA048_250820_EA_394801_SvB_Azub_MINT_Dauer.xlsx"),
                                sheet = "Auswertung", col_names = F, range = "A12:L4201")
 
@@ -2853,39 +2853,264 @@ usethis::use_data(arbeitsmarkt_anzahl_azubis_oecd, overwrite = T)
 library(dplyr)
 ##  Engpassanalyse -------------------------------------------------------
 
+### seit 2026 ----
+# Seit 2026 Daten zum Download in eienr csv Tabelle mit Bula und DE in einem
+akro <- "kbr"
+pfad <- paste0("C:/Users/", akro,
+               "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
+
+# Daten einlesen, bennennen, filtern
+epa <- utils::read.csv2(file = paste0(pfad, "/BA068_epa_2025.csv"))
+
+colnames(epa) <- c("jahr",
+                   "beruf_schlüssel",
+                   "beruf",
+                   "anforderung_id",
+                   "anforderung",
+                   "bundeslland_id",
+                   "region",
+                   "wert_ges",
+                   "kl_vakanz",
+                   "vakanz",
+                   "kl_asr",
+                   "asr",
+                   "kl_aquote",
+                   "aquote",
+                   "kl_zuw",
+                   "zuw",
+                   "kl_aba",
+                   "aba",
+                   "kl_entgl",
+                   "entgl",
+                   "kategorie",
+                   "X")
+
+epa <- epa %>%
+  select(jahr, beruf_schlüssel, beruf, anforderung, region, kl_vakanz, kl_asr, kl_aquote, kl_zuw,
+         kl_aba, kl_entgl, kategorie, wert_ges) %>%
+  filter(kategorie != "keine Bewertung möglich") %>%
+  mutate(across(all_of(c("kl_vakanz", "kl_asr", "kl_aquote",
+                         "kl_zuw", "kl_aba", "kl_entgl")), ~ na_if(.x, "X")))
+
+# Variablen ergänzen und Format anpassen
+epa <- epa %>%
+  mutate(indikator_anzahl = rowSums(!(is.na(epa[c("kl_vakanz", "kl_asr", "kl_aquote",
+                                                   "kl_zuw", "kl_aba", "kl_entgl")]))),
+         bereich = "Arbeitsmarkt")
+
+epa <- epa[,c("bereich", "beruf_schlüssel", "beruf", "region", "anforderung", "jahr", "kategorie", "indikator_anzahl",
+              "kl_vakanz", "kl_asr", "kl_aquote", "kl_zuw", "kl_aba", "kl_entgl", "wert_ges")]
+
+epa <- epa %>%
+  tidyr::pivot_longer(cols = c("kl_vakanz", "kl_asr", "kl_aquote", "kl_zuw", "kl_aba", "kl_entgl", "wert_ges"),
+                      values_to = "wert",
+                      names_to = "indikator") %>%
+  mutate(indikator = case_when(
+    indikator == "kl_vakanz" ~ "Vakanzzeit",
+    indikator == "kl_asr" ~ "Arbeitssuchenden-Sellen-Relation",
+    indikator == "kl_aquote" ~ "Berufssp. Arbeitslosenquote",
+    indikator == "kl_zuw"~ "Veränderung des Anteils s.v. pfl. Beschäftigung von Ausländern",
+    indikator == "kl_aba" ~ "Abgangsrate aus Arbeitslosigkeit",
+    indikator ==  "kl_entgl" ~ "Entwicklung der mittleren Entgelte",
+    indikator ==  "wert_ges" ~ "Engpassindikator"
+  ))
+
+# Datensätze trennen und MINT-Kategorisierung ergänzen
+
+epa_detail <- epa %>%
+  filter(region == "Deutschland - Berufsuntergruppen")
+
+epa <- epa %>%
+  filter(region != "Deutschland - Berufsuntergruppen",
+         region != "Deutschland")
+
+epa$region[epa$region == "Deutschland - Berufsgruppen"] <- "Deutschland"
+
+# Schlüssel für MINT-Zuordnung einlesen
+  mint_f <- readxl::read_excel(paste0(pfad, "BA018_MINT-Berufe.xlsx"), sheet = "Fachkräfte", col_names = TRUE)
+  mint_s <- readxl::read_excel(paste0(pfad, "BA018_MINT-Berufe.xlsx"), sheet = "Spezialisten", col_names = TRUE)
+  mint_e <- readxl::read_excel(paste0(pfad, "BA018_MINT-Berufe.xlsx"), sheet = "Experten", col_names = TRUE)
+  mint <- rbind(mint_f, mint_s, mint_e)
+  mint <- na.omit(mint)
+
+  mint$Code <- ifelse(grepl("[[:digit:]]", mint$Code), mint$Code, NA)
+
+   mint <- mint %>%
+    rename(indikator = Bereich) %>%
+    dplyr::mutate(indikator = dplyr::case_when(
+      indikator == "MN" ~ "Mathematik, Naturwissenschaften",
+      indikator == "I" ~ "Informatik",
+      indikator == "LT" ~ "Landtechnik",
+      indikator == "PT" ~ "Produktionstechnik",
+      indikator == "BT" ~ "Bau- und Gebäudetechnik",
+      indikator == "VT" ~ "Verkehrs-, Sicherheits- und Veranstaltungstechnik",
+      indikator == "GT" ~ "Gesundheitstechnik",
+      T ~ indikator
+    ))
+  mint <- na.omit(mint)
+  mint <- mint %>%
+    mutate(anforderung = case_when(
+      substr(Code, 5, 5) == "2" ~ "Fachkräfte",
+      substr(Code, 5, 5) == "3" ~ "Spezialisten",
+      substr(Code, 5, 5) == "4" ~ "Experten",
+    ))
+  mint$Code <- substr(mint$Code, 1, 4)
+
+  mint <- mint %>%
+    dplyr::select(-`MINT-Tätigkeiten`) %>%
+    dplyr::rename(mint_zuordnung = indikator)
+  mint <- unique(mint)
+
+  #### epa_detail ----
+
+epa_detail <- epa_detail %>%
+  dplyr::left_join(mint, by = join_by(beruf_schlüssel == Code, anforderung), relationship = "many-to-many")
+epa_detail$mint_zuordnung <- ifelse(is.na(epa_detail$mint_zuordnung), "Nicht MINT", epa_detail$mint_zuordnung)
+epa_detail <- epa_detail %>%
+  mutate(jahr = as.numeric(jahr),
+         wert = as.numeric(sub(",", ".", wert)),
+         indikator_anzahl = as.numeric(indikator_anzahl))
+
+## Aggregate Berechnen
+# Alle Berufe
+alle <- epa_detail %>%
+  dplyr::group_by(bereich, jahr, region, anforderung, indikator) %>%
+  dplyr::summarise(wert = mean(wert, na.rm = TRUE),
+                   indikator_anzahl = mean(indikator_anzahl, na.rm = TRUE)) %>%
+  ungroup()
+
+alle <- alle %>%
+  group_by(bereich, jahr, region, anforderung) %>%
+  mutate(
+   kategorie = case_when(
+     wert[indikator == "Engpassindikator"] > 1.9 ~ "Engpassberuf",
+     wert[indikator == "Engpassindikator"] > 1.4 & wert[indikator == "Engpassindikator"] < 2 ~ "unter Beobachtung",
+     T ~ "kein Engpassberuf"
+   )
+  ) %>%
+  ungroup()
+
+alle$beruf <- "Gesamt"
+alle$beruf_schlüssel <- NA
+alle$mint_zuordnung <- "Gesamt"
+alle <- alle[, c("bereich", "beruf_schlüssel", "beruf",
+                 "mint_zuordnung", "region", "anforderung", "jahr",  "kategorie",
+                 "indikator_anzahl", "indikator", "wert")]
+
+
+epa_detail <- epa_detail[, c("bereich", "beruf_schlüssel", "beruf",
+                 "mint_zuordnung", "region", "anforderung", "jahr",  "kategorie",
+                 "indikator_anzahl", "indikator", "wert")]
+
+epa_detail <- rbind(epa_detail, alle)
+
+epa_detail <- epa_detail %>%
+  mutate(berufsgruppe = NA,
+         berufsgruppe_schlüssel = NA,
+         epa_kat = kategorie,
+         kategorie = "Engpassanalyse")
+
+epa_detail <- epa_detail[, c("bereich", "berufsgruppe", "berufsgruppe_schlüssel",
+                             "beruf",  "beruf_schlüssel",
+                             "mint_zuordnung", "region", "anforderung", "jahr",  "kategorie",
+                             "indikator_anzahl", "indikator", "wert", "epa_kat")]
+
+epa_detail$epa_kat[epa_detail$epa_kat == "unter Beobachtung"] <- "Anzeichen eines Engpassberufs"
+epa_detail$epa_kat[epa_detail$epa_kat == "kein Engpassberuf"] <- "Kein Engpassberuf"
+epa_detail$region <- "Deutschland"
+epa_detail <- epa_detail %>% filter(jahr > 2024)
+
+## Datensatz aktualisieren und in Datenbank spielen
+
+library(DBI)
+con <- DBI::dbConnect(duckdb::duckdb(), "data/mint_db.duckdb")
+
+arbeitsmarkt_epa_detail <- dbGetQuery(con, "SELECT * FROM arbeitsmarkt_epa_detail")
+
+arbeitsmarkt_epa_detail <- arbeitsmarkt_epa_detail %>% select(-anzahl_beschäftigte)
+arbeitsmarkt_epa_detail <- arbeitsmarkt_epa_detail %>%
+  mutate(anforderung = case_when(
+    anforderung %in% c("Spezialist*innen", "Spezialisten") ~ "Spezialist:innen",
+    anforderung %in% c("Expert*innen", "Experten") ~ "Expert:innen",
+    T ~ anforderung
+  ))
+
+arbeitsmarkt_epa_detail <- rbind(arbeitsmarkt_epa_detail, epa_detail)
+
+save(arbeitsmarkt_epa_detail, file = "arbeitsmarkt_epa_detail.rda")
+
+dbWriteTable(con, "arbeitsmarkt_epa_detail", arbeitsmarkt_epa_detail, append = FALSE, overwrite = TRUE)
+
+dbDisconnect(con, shutdown= TRUE)
+
+  #### epa ----
+
+epa <- epa %>%
+  rename(berufsgruppe = beruf,
+         berufsgruppe_schlüssel = beruf_schlüssel,
+         epa_kat = kategorie) %>%
+  mutate(kategorie = "Engpassanalyse",
+         wert = as.numeric(sub(",", ".", wert)))
+
+mint$Code <- substr(mint$Code, 1, 3)
+mint <- unique(mint)
+
+epa <- epa %>%
+  dplyr::left_join(mint, by = join_by(berufsgruppe_schlüssel == Code, anforderung), relationship = "many-to-many")
+epa$mint_zuordnung <- ifelse(is.na(epa$mint_zuordnung), "Nicht MINT", epa$mint_zuordnung)
+
+
+## Datensatz aktualisieren und in Datenbank spielen
+
+library(DBI)
+con <- DBI::dbConnect(duckdb::duckdb(), "data/mint_db.duckdb")
+
+arbeitsmarkt_epa <- dbGetQuery(con, "SELECT * FROM arbeitsmarkt_epa")
+
+arbeitsmarkt_epa <- arbeitsmarkt_epa %>% select(-anzahl_beschäftigte,
+                                                              -beruf,
+                                                              -beruf_schlüssel)
+arbeitsmarkt_epa <- arbeitsmarkt_epa %>%
+  mutate(anforderung = case_when(
+    anforderung %in% c("Spezialist*innen", "Spezialisten") ~ "Spezialist:innen",
+    anforderung %in% c("Expert*innen", "Experten") ~ "Expert:innen",
+    T ~ anforderung
+  ))
+
+epa <- epa %>%
+  mutate(anforderung = case_when(
+    anforderung %in% c("Spezialist*innen", "Spezialisten") ~ "Spezialist:innen",
+    anforderung %in% c("Expert*innen", "Experten") ~ "Expert:innen",
+    T ~ anforderung
+  ),
+  epa_kat = case_when(
+    epa_kat == "unter Beobachtung" ~ "Anzeichen eines Engpassberufs",
+    epa_kat == "kein Engpassberuf" ~ "Kein Engpassberuf",
+    T ~ epa_kat
+  )) %>%
+  filter(indikator == "Engpassindikator" & jahr == 2025)
+
+epa <- epa[,c("bereich", "berufsgruppe", "berufsgruppe_schlüssel", "mint_zuordnung", "region",
+              "anforderung", "jahr", "kategorie", "indikator_anzahl", "indikator", "wert", "epa_kat")]
+
+arbeitsmarkt_epa <- rbind(arbeitsmarkt_epa, epa)
+
+save(arbeitsmarkt_epa, file = "arbeitsmarkt_epa.rda")
+
+dbWriteTable(con, "arbeitsmarkt_epa", arbeitsmarkt_epa, append = FALSE, overwrite = TRUE)
+
+dbDisconnect(con, shutdown= TRUE)
+
+
+
+### Vor 2026 ----
+
 ### BULA Vergleich ####
-
-
-
-
-
-
-
-
-
-# 2022 und 2024 Lan
-
-
-
-
-
-
-
-
-
-
-
 
 sheets <- c("Fachkräfte", "Spezialisten", "Experten")
 # Vorbereitung 2024, da die Deutschen Daten unterschiedlich sind
 
-
 pfad <- "C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/"
-
-
-
-
-
 
 
 #### Rohdaten einlesen -------------------------------------------------------
@@ -3058,9 +3283,6 @@ epa <- epa %>%
 
 
 ### Detaillierte Daten für DE ####
-
-
-## hello turan ---------------
 
 library(dplyr)
 

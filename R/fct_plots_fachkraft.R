@@ -881,7 +881,7 @@ plot_fachkraft_epa_item <- function(r) {
   #df_json <- subset(plot_data, select = c(x, y, group))
   df_json <- jsonlite::toJSON(plot_data,dataframe = "rows",auto_unbox = TRUE, na = "null")
   titel_js <- jsonlite::toJSON(titel_1, auto_unbox = TRUE)
-  quelle_js <- jsonlite::toJSON("Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",auto_unbox = TRUE)
+  quelle_js <- jsonlite::toJSON("Quelle der Daten: Bundesagentur für Arbeit, 2026, freier Download, eigene Berechnungen durch MINTvernetzt.",auto_unbox = TRUE)
   x_js      <- "XX"
   y_js      <- "YY"
   group_js  <- "epa_kat"
@@ -944,7 +944,7 @@ plot_fachkraft_epa_item <- function(r) {
       ),
       annotations = list(
         list(
-          text = "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+          text = "Quelle: Bundesagentur für Arbeit, 2026, freier Download, eigene Berechnungen durch MINTvernetzt.",
           x = 0,
           y = -0.17,
           xref = "paper",
@@ -1103,7 +1103,7 @@ plot_fachkraft_epa_item <- function(r) {
 
     #df_json <- jsonlite::toJSON(df_download2,dataframe = "rows",auto_unbox = TRUE, na = "null")
     titel_js <- jsonlite::toJSON(titel_2, auto_unbox = TRUE)
-    quelle_js <- jsonlite::toJSON("Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",auto_unbox = TRUE)
+    quelle_js <- jsonlite::toJSON("Quelle der Daten: Bundesagentur für Arbeit, 2026, freier Download, eigene Berechnungen durch MINTvernetzt.",auto_unbox = TRUE)
     x_js      <- "XX"
     y_js      <- "YY"
     group_js  <- "epa_kat"
@@ -1162,13 +1162,13 @@ plot_fachkraft_epa_item <- function(r) {
           ),
         annotations = list(
           list(
-            text = "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+            text = "Quelle: Bundesagentur für Arbeit, 2026, freier Download, eigene Berechnungen durch MINTvernetzt.",
             x = 0,y = -0.17,
             xref = "paper",yref = "paper",
             showarrow = FALSE,xanchor = "left",
             font = list(
               family = "Calibri, sans-serif",size = 11,color = "gray"
-            )))) %>%
+            ))))   %>%
       plotly::config(
         displaylogo = FALSE,
         modeBarButtonsToRemove = c(
@@ -1287,9 +1287,7 @@ plot_fachkraft_epa_item <- function(r) {
 }
 
 
-
 plot_fachkraft_epa_bulas <- function(r) {
-
 
    timerange <- r$y_fachkraft_epa_bulas
    fach <- r$f_fachkraft_epa_bulas
@@ -1324,19 +1322,6 @@ plot_fachkraft_epa_bulas <- function(r) {
    plot_data_raw <- DBI::dbGetQuery(con, df_query)
 
    # Aggregate rausfiltern
-   plot_data_raw <- subset(plot_data_raw, !(plot_data_raw$beruf %in%
-                                              c("Gesamt",
-                                                "MINT gesamt",
-                                                "Informatik",
-                                                "Landtechnik",
-                                                "Produktionstechnik",
-                                                "Bau- und Gebäudetechnik",
-                                                "Mathematik, Naturwissenschaften",
-                                                "Verkehrs-, Sicherheits- und Veranstaltungstechnik",
-                                                "Gesundheitstechnik",
-                                                "Nicht MINT"
-                                              ))
-   )
 
    if ("MINT gesamt" %in% fach) {
      plot_data_raw <- plot_data_raw %>%
@@ -1394,286 +1379,75 @@ plot_fachkraft_epa_bulas <- function(r) {
     plot_data <- rbind(plot_data, plot_data_ges)
   }
 
+
+  # prüfen ob genug daten vorliegen sonst ausfiltern
+  not_req_length <- plot_data %>%
+    dplyr::group_by(mint_zuordnung) %>%
+    dplyr::summarise(ges_beruf_n = sum(beruf_num)) %>%
+    dplyr::ungroup() %>%
+    dplyr::filter(ges_beruf_n == 1) %>%
+    dplyr::select(mint_zuordnung) %>%
+    as.character()
+
+  plot_data <- plot_data %>%
+    dplyr::filter(mint_zuordnung != not_req_length)
+
   # expand data for heatmap
-  expanded_dt <- plot_data[rep(row.names(plot_data), plot_data$value),] %>%
-    dplyr::arrange(mint_zuordnung, epa_group_order) %>%
-    #
-    dplyr::mutate(XX = rep(c(1:10), each = 10),
-                  YY = rep(c(1:10), times = 10),
-                  epa_kat = factor(x = epa_kat,
-                                   levels = epa_kat_levels))
+    expanded_dt <- plot_data[rep(row.names(plot_data), plot_data$value),] %>%
+      dplyr::arrange(mint_zuordnung, epa_group_order) %>%
+      #
+      dplyr::mutate(XX = rep(c(1:10), each = 10),
+                    YY = rep(c(1:10), times = 10),
+                    epa_kat = factor(x = epa_kat,
+                                     levels = epa_kat_levels))
 
-  used_colors <- group_col_dt %>%
-    dplyr::filter(epa_kat %in% (expanded_dt %>%
-                                  dplyr::filter(mint_zuordnung == fach[1]) %>%
-                                  dplyr::pull(epa_kat) %>%
-                                  unique())) %>%
-    dplyr::pull(group_col)
-
-  # titel zusammenbauen
-  level <- dplyr::case_when(
-    bf_label == "Gesamt" ~ "",
-    bf_label == "Fachkräfte" ~ "Nur Beschäftigte in Ausbildungsberufen, ",
-    bf_label == "Spezialist*innen" ~ "Nur Beschäftigte in Meister-/Technikerstellen o.ä., ",
-    bf_label == "Expert*innen" ~ "Nur Beschäftigten in Akademikerberufen, ",
-  )
-  fach_1 <- dplyr::case_when(
-    fach[1] == "MINT gesamt" ~ "MINT",
-    fach[1] == "Gesamt" ~ "allen Berufen",
-    fach[1] == "Nicht MINT" ~ "allen Berufen außer MINT",
-    T ~ fach[1]
-  )
-
-
-
-
-
-  titel_1 <- stringr::str_wrap(
-    paste0("Engpassrisiko von Berufen in ", fach_1, " in ", regio, " (", level, timerange, ")"),
-    width = 40
-  )
-
-  df_download <- expanded_dt %>%
-    dplyr::filter(mint_zuordnung == fach[1])
-
-  # Entfernen aller Zeilen, bei denen group_col NA ist
-  df_download <- df_download %>%
-    dplyr::filter(!is.na(group_col))
-
-  #df_json <- subset(plot_data, select = c(x, y, group))
-  df_json <- jsonlite::toJSON(plot_data,dataframe = "rows",auto_unbox = TRUE, na = "null")
-  titel_js <- jsonlite::toJSON(titel_1, auto_unbox = TRUE)
-  quelle_js <- jsonlite::toJSON("Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",auto_unbox = TRUE)
-  x_js      <- "XX"
-  y_js      <- "YY"
-  group_js  <- "epa_kat"
-
-
-
-  plot_left <- plotly::plot_ly(
-    data = df_download,
-    x = ~XX,
-    y = ~YY,
-    type = "scatter",
-    mode = "markers",
-    color = ~epa_kat,
-    colors = group_col_dt$group_col,
-    text = ~paste0(
-      "<b>", epa_kat, "</b><br>",
-      "Anteil: ", value, " %<br>",
-      "Anzahl betroffener Berufe: ", beruf_num
-    ),
-    hoverinfo = "text",
-    marker = list(
-      symbol = "square",
-      size = 30,
-      line = list(
-        width = 0))
-  ) %>%
-    plotly::style(
-      hoverlabel = list(bgcolor = "white",
-                        font = list(size = 12))
-    ) %>%
-    plotly::layout(
-      title = list(
-        text = titel_1,
-        x = 0.5, y=0.95,
-        xanchor = "center",
-        font = list(
-          family = "Calibri, sans-serif",
-          size = 20,
-          color = "black"
-        )
-      ),
-      xaxis = list(
-        visible = FALSE,showgrid = FALSE,
-        zeroline = FALSE,fixedrange = TRUE
-      ),
-      yaxis = list(
-        visible = FALSE,showgrid = FALSE,
-        zeroline = FALSE,fixedrange = TRUE,
-        scaleanchor = "x"
-      ),
-      legend = list(
-        orientation = "v",
-        x = 0.2,y = -0.15,
-        font = list(
-          family = "Calibri, sans-serif",size = 12)
-      ),
-      margin = list(
-        t = 80,b = 120,
-        l = 20,r = 20
-      ),
-      annotations = list(
-        list(
-          text = "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
-          x = 0,
-          y = -0.22,
-          xref = "paper",
-          yref = "paper",
-          showarrow = FALSE,
-          xanchor = "left",
-          font = list(
-            family = "Calibri, sans-serif",
-            size = 11,
-            color = "gray"
-          )
-        )
-      )
-    ) %>%
-    plotly::config(
-      displaylogo = FALSE,
-      modeBarButtonsToRemove = c(
-        "sendDataToCloud", "autoScale2d", "resetScale2d", "toggleSpikelines",
-        "hoverClosestCartesian", "hoverCompareCartesian",
-        "zoom2d", "pan2d", "select2d", "lasso2d", "zoomIn2d", "zoomOut2d"
-      ),
-      modeBarButtonsToAdd = list(
-
-        # CSV-Download
-        list(
-          name = "Download CSV",
-          icon = list(
-            path = "M16,2H8C6.9,2,6,2.9,6,4v16c0,1.1,0.9,2,2,2h8c1.1,0,2-0.9,2-2V4C18,2.9,17.1,2,16,2z M16,20H8V4h8V20z M14.5,14h-2v3h-1v-3h-2l2.5-3.5L14.5,14z",
-            width = 24,
-            height = 24
-          ),
-
-          click = htmlwidgets::JS(
-            paste0("
-              function(gd) {
-                var rows = ", df_json, ";
-
-                var date = new Date().toISOString().slice(0,10);
-                var filename = 'export_' + date + '.csv';
-
-                if (!rows.length) return;
-
-                var cols = Object.keys(rows[0]);
-                var csv = cols.join(';') + '\\n';
-
-                rows.forEach(function(row) {
-                  var values = cols.map(function(col) {
-                    var value = row[col];
-                    if (value == null) return '';
-                    value = String(value).replace(/\"/g, '\"\"');
-                    if (value.search(/[\";\\n]/) >= 0) {
-                      value = '\"' + value + '\"';
-                    }
-                    return value;
-                  });
-                  csv += values.join(';') + '\\n';
-                });
-
-                var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-
-                var link = document.createElement('a');
-                link.href = URL.createObjectURL(blob);
-                link.download = filename;
-                link.click();
-              }
-            ")
-          )
-        ),
-
-        # TXT-Download für KI
-        list(
-          name = "Download Daten für KI-Chats als txt",
-          icon = list(
-            path = "M14,2H6C4.9,2,4,2.9,4,4v16c0,1.1,0.9,2,2,2h12c1.1,0,2-0.9,2-2V8L14,2z M14,4.5L17.5,8H14V4.5z M18,20H6V4h6v6h6V20z",
-            width = 24,
-            height = 24
-          ),
-          click = htmlwidgets::JS(
-            paste0("
-              function(gd) {
-                var rows = ", df_json, ";
-                var titel = ", titel_js, ";
-                var quelle = ", quelle_js, ";
-
-                var date = new Date().toISOString().slice(0,10);
-                var chartTitle = titel.replace(/\\s+/g, '_');
-                var filename = chartTitle + '_' + date + '.txt';
-
-                if (!rows.length) return;
-
-                var cols = Object.keys(rows[0]);
-
-                var text = '';
-                text += 'Titel: ' + titel + '\\n';
-                text += 'Quelle: ' + quelle + '\\n\\n';
-                text += 'Daten:\\n';
-
-                text += cols.join('\\t') + '\\n';
-
-                rows.forEach(function(row) {
-                  var values = cols.map(function(col) {
-                    var value = row[col];
-                    if (value === null || value === undefined) return '';
-                    return String(value);
-                  });
-                  text += values.join('\\t') + '\\n';
-                });
-
-                var blob = new Blob([text], { type: 'text/plain;charset=utf-8;' });
-
-                var link = document.createElement('a');
-                link.href = URL.createObjectURL(blob);
-                link.download = filename;
-                link.click();
-              }
-            ")
-          )
-        )
-      )
-    )
-
-
-
-
-
-
-
-  if (length(fach) == 2) {
-
-
-
-    fach_2 <- dplyr::case_when(
-      fach[2] == "MINT gesamt" ~ "MINT",
-      fach[2] == "Gesamt" ~ "allen Berufen",
-      fach[2] == "Nicht MINT" ~ "allen Berufen außer MINT",
-      T ~ fach[2]
-    )
-
-    titel_2 <- stringr::str_wrap(
-      paste0("Engpassrisiko von Berufen in ", fach_2, " in ", regio, " (", level, timerange, ")"),
-      width = 40
-    )
     used_colors <- group_col_dt %>%
       dplyr::filter(epa_kat %in% (expanded_dt %>%
-                                    dplyr::filter(mint_zuordnung == fach[2]) %>%
+                                    dplyr::filter(mint_zuordnung == fach[1]) %>%
                                     dplyr::pull(epa_kat) %>%
                                     unique())) %>%
       dplyr::pull(group_col)
 
+    # titel zusammenbauen
+    level <- dplyr::case_when(
+      bf_label == "Gesamt" ~ "",
+      bf_label == "Fachkräfte" ~ "Nur Beschäftigte in Ausbildungsberufen, ",
+      bf_label == "Spezialist*innen" ~ "Nur Beschäftigte in Meister-/Technikerstellen o.ä., ",
+      bf_label == "Expert*innen" ~ "Nur Beschäftigten in Akademikerberufen, ",
+    )
 
-    df_download2 <- expanded_dt %>%
-      dplyr::filter(mint_zuordnung == fach[2]) %>%
+    if(fach[1] %in% plot_data$mint_zuordnung){
+
+    fach_1 <- dplyr::case_when(
+      fach[1] == "MINT gesamt" ~ "MINT",
+      fach[1] == "Gesamt" ~ "allen Berufen",
+      fach[1] == "Nicht MINT" ~ "allen Berufen außer MINT",
+      T ~ fach[1]
+    )
+
+    titel_1 <- stringr::str_wrap(
+      paste0("Engpassrisiko von Berufen in ", fach_1, " in ", regio, " (", level, timerange, ")"),
+      width = 40
+    )
+
+    df_download <- expanded_dt %>%
+      dplyr::filter(mint_zuordnung == fach[1])
+
+    # Entfernen aller Zeilen, bei denen group_col NA ist
+    df_download <- df_download %>%
       dplyr::filter(!is.na(group_col))
 
+    #df_json <- subset(plot_data, select = c(x, y, group))
     df_json <- jsonlite::toJSON(plot_data,dataframe = "rows",auto_unbox = TRUE, na = "null")
-
-    #df_json <- jsonlite::toJSON(df_download2,dataframe = "rows",auto_unbox = TRUE, na = "null")
-    titel_js <- jsonlite::toJSON(titel_2, auto_unbox = TRUE)
-    quelle_js <- jsonlite::toJSON("Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",auto_unbox = TRUE)
+    titel_js <- jsonlite::toJSON(titel_1, auto_unbox = TRUE)
+    quelle_js <- jsonlite::toJSON("Quelle: Bundesagentur für Arbeit, 2026, freier Download, eigene Berechnungen durch MINTvernetzt.",auto_unbox = TRUE)
     x_js      <- "XX"
     y_js      <- "YY"
     group_js  <- "epa_kat"
 
 
-
-    plot_right <- plotly::plot_ly(
-      data = df_download2,
+    plot_left <- plotly::plot_ly(
+      data = df_download,
       x = ~XX,
       y = ~YY,
       type = "scatter",
@@ -1698,10 +1472,14 @@ plot_fachkraft_epa_bulas <- function(r) {
       ) %>%
       plotly::layout(
         title = list(
-          text = titel_2,
-          x = 0.5,y=0.95, xanchor = "center",
+          text = titel_1,
+          x = 0.5, y=0.95,
+          xanchor = "center",
           font = list(
-            family = "Calibri, sans-serif",size = 20,color = "black")
+            family = "Calibri, sans-serif",
+            size = 20,
+            color = "black"
+          )
         ),
         xaxis = list(
           visible = FALSE,showgrid = FALSE,
@@ -1714,7 +1492,7 @@ plot_fachkraft_epa_bulas <- function(r) {
         ),
         legend = list(
           orientation = "v",
-          x = 0.2, y = -0.15,
+          x = 0.2,y = -0.15,
           font = list(
             family = "Calibri, sans-serif",size = 12)
         ),
@@ -1724,13 +1502,21 @@ plot_fachkraft_epa_bulas <- function(r) {
         ),
         annotations = list(
           list(
-            text = "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
-            x = 0,y = -0.22,
-            xref = "paper",yref = "paper",
-            showarrow = FALSE,xanchor = "left",
+            text = "Quelle: Bundesagentur für Arbeit, 2026, freier Download, eigene Berechnungen durch MINTvernetzt.",
+            x = 0,
+            y = -0.22,
+            xref = "paper",
+            yref = "paper",
+            showarrow = FALSE,
+            xanchor = "left",
             font = list(
-              family = "Calibri, sans-serif",size = 11,color = "gray"
-            )))) %>%
+              family = "Calibri, sans-serif",
+              size = 11,
+              color = "gray"
+            )
+          )
+        )
+      ) %>%
       plotly::config(
         displaylogo = FALSE,
         modeBarButtonsToRemove = c(
@@ -1838,6 +1624,219 @@ plot_fachkraft_epa_bulas <- function(r) {
         )
       )
 
+  }else{
+    titel_text <- "Es liegen nicht genug Daten für diesen Fachbereich vor."
+    plot_left <- linebuilder_plotly(titel = titel_text, df = data.frame())
+  }
+
+
+  if (length(fach) == 2) {
+
+    if(fach[2] %in% plot_data$mint_zuordnung){
+      fach_2 <- dplyr::case_when(
+        fach[2] == "MINT gesamt" ~ "MINT",
+        fach[2] == "Gesamt" ~ "allen Berufen",
+        fach[2] == "Nicht MINT" ~ "allen Berufen außer MINT",
+        T ~ fach[2]
+      )
+
+      titel_2 <- stringr::str_wrap(
+        paste0("Engpassrisiko von Berufen in ", fach_2, " in ", regio, " (", level, timerange, ")"),
+        width = 40
+      )
+      used_colors <- group_col_dt %>%
+        dplyr::filter(epa_kat %in% (expanded_dt %>%
+                                      dplyr::filter(mint_zuordnung == fach[2]) %>%
+                                      dplyr::pull(epa_kat) %>%
+                                      unique())) %>%
+        dplyr::pull(group_col)
+
+
+      df_download2 <- expanded_dt %>%
+        dplyr::filter(mint_zuordnung == fach[2]) %>%
+        dplyr::filter(!is.na(group_col))
+
+      df_json <- jsonlite::toJSON(plot_data,dataframe = "rows",auto_unbox = TRUE, na = "null")
+
+      #df_json <- jsonlite::toJSON(df_download2,dataframe = "rows",auto_unbox = TRUE, na = "null")
+      titel_js <- jsonlite::toJSON(titel_2, auto_unbox = TRUE)
+      quelle_js <- jsonlite::toJSON("Quelle: Bundesagentur für Arbeit, 2026, freier Download, eigene Berechnungen durch MINTvernetzt.",auto_unbox = TRUE)
+      x_js      <- "XX"
+      y_js      <- "YY"
+      group_js  <- "epa_kat"
+
+
+
+      plot_right <- plotly::plot_ly(
+        data = df_download2,
+        x = ~XX,
+        y = ~YY,
+        type = "scatter",
+        mode = "markers",
+        color = ~epa_kat,
+        colors = group_col_dt$group_col,
+        text = ~paste0(
+          "<b>", epa_kat, "</b><br>",
+          "Anteil: ", value, " %<br>",
+          "Anzahl betroffener Berufe: ", beruf_num
+        ),
+        hoverinfo = "text",
+        marker = list(
+          symbol = "square",
+          size = 30,
+          line = list(
+            width = 0))
+      ) %>%
+        plotly::style(
+          hoverlabel = list(bgcolor = "white",
+                            font = list(size = 12))
+        ) %>%
+        plotly::layout(
+          title = list(
+            text = titel_2,
+            x = 0.5,y=0.95, xanchor = "center",
+            font = list(
+              family = "Calibri, sans-serif",size = 20,color = "black")
+          ),
+          xaxis = list(
+            visible = FALSE,showgrid = FALSE,
+            zeroline = FALSE,fixedrange = TRUE
+          ),
+          yaxis = list(
+            visible = FALSE,showgrid = FALSE,
+            zeroline = FALSE,fixedrange = TRUE,
+            scaleanchor = "x"
+          ),
+          legend = list(
+            orientation = "v",
+            x = 0.2, y = -0.15,
+            font = list(
+              family = "Calibri, sans-serif",size = 12)
+          ),
+          margin = list(
+            t = 80,b = 120,
+            l = 20,r = 20
+          ),
+          annotations = list(
+            list(
+              text = "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+              x = 0,y = -0.22,
+              xref = "paper",yref = "paper",
+              showarrow = FALSE,xanchor = "left",
+              font = list(
+                family = "Calibri, sans-serif",size = 11,color = "gray"
+              )))) %>%
+        plotly::config(
+          displaylogo = FALSE,
+          modeBarButtonsToRemove = c(
+            "sendDataToCloud", "autoScale2d", "resetScale2d", "toggleSpikelines",
+            "hoverClosestCartesian", "hoverCompareCartesian",
+            "zoom2d", "pan2d", "select2d", "lasso2d", "zoomIn2d", "zoomOut2d"
+          ),
+          modeBarButtonsToAdd = list(
+
+            # CSV-Download
+            list(
+              name = "Download CSV",
+              icon = list(
+                path = "M16,2H8C6.9,2,6,2.9,6,4v16c0,1.1,0.9,2,2,2h8c1.1,0,2-0.9,2-2V4C18,2.9,17.1,2,16,2z M16,20H8V4h8V20z M14.5,14h-2v3h-1v-3h-2l2.5-3.5L14.5,14z",
+                width = 24,
+                height = 24
+              ),
+
+              click = htmlwidgets::JS(
+                paste0("
+              function(gd) {
+                var rows = ", df_json, ";
+
+                var date = new Date().toISOString().slice(0,10);
+                var filename = 'export_' + date + '.csv';
+
+                if (!rows.length) return;
+
+                var cols = Object.keys(rows[0]);
+                var csv = cols.join(';') + '\\n';
+
+                rows.forEach(function(row) {
+                  var values = cols.map(function(col) {
+                    var value = row[col];
+                    if (value == null) return '';
+                    value = String(value).replace(/\"/g, '\"\"');
+                    if (value.search(/[\";\\n]/) >= 0) {
+                      value = '\"' + value + '\"';
+                    }
+                    return value;
+                  });
+                  csv += values.join(';') + '\\n';
+                });
+
+                var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+
+                var link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = filename;
+                link.click();
+              }
+            ")
+              )
+            ),
+
+            # TXT-Download für KI
+            list(
+              name = "Download Daten für KI-Chats als txt",
+              icon = list(
+                path = "M14,2H6C4.9,2,4,2.9,4,4v16c0,1.1,0.9,2,2,2h12c1.1,0,2-0.9,2-2V8L14,2z M14,4.5L17.5,8H14V4.5z M18,20H6V4h6v6h6V20z",
+                width = 24,
+                height = 24
+              ),
+              click = htmlwidgets::JS(
+                paste0("
+              function(gd) {
+                var rows = ", df_json, ";
+                var titel = ", titel_js, ";
+                var quelle = ", quelle_js, ";
+
+                var date = new Date().toISOString().slice(0,10);
+                var chartTitle = titel.replace(/\\s+/g, '_');
+                var filename = chartTitle + '_' + date + '.txt';
+
+                if (!rows.length) return;
+
+                var cols = Object.keys(rows[0]);
+
+                var text = '';
+                text += 'Titel: ' + titel + '\\n';
+                text += 'Quelle: ' + quelle + '\\n\\n';
+                text += 'Daten:\\n';
+
+                text += cols.join('\\t') + '\\n';
+
+                rows.forEach(function(row) {
+                  var values = cols.map(function(col) {
+                    var value = row[col];
+                    if (value === null || value === undefined) return '';
+                    return String(value);
+                  });
+                  text += values.join('\\t') + '\\n';
+                });
+
+                var blob = new Blob([text], { type: 'text/plain;charset=utf-8;' });
+
+                var link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = filename;
+                link.click();
+              }
+            ")
+              )
+            )
+          )
+        )
+
+    }else{
+      titel_text <- "Es liegen nicht genug Daten für diesen Fachbereich vor."
+      plot_right <- linebuilder_plotly(titel = titel_text, df = data.frame())
+    }
 
     return(list(plot_left, plot_right))
 
@@ -2218,7 +2217,7 @@ plot_fachkraft_detail_item  <- function(r) {
    width = 40
  )
 
- quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+ quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
 
 
@@ -2635,8 +2634,8 @@ plot_fachkraft_ranking_epa  <- function(r) {
   df <- df %>%
     dplyr::mutate(beruf = dplyr::case_when(
       anforderung == "Fachkräfte" ~ paste(beruf, " (nach Grundausbildung)"),
-      anforderung == "Spezialist*innen" ~ paste(beruf, " (nach Weiterbildung, z. B. Meister/Techniker)"),
-      anforderung == "Expert*innen" ~ paste(beruf, " (nach Studium)")
+      anforderung == "Spezialist:innen" ~ paste(beruf, " (nach Weiterbildung, z. B. Meister/Techniker)"),
+      anforderung == "Expert:innen" ~ paste(beruf, " (nach Studium)")
     ))
 
 
@@ -2665,17 +2664,12 @@ plot_fachkraft_ranking_epa  <- function(r) {
     y <- "wert"
 
 
-    quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
     quelle_y <- -0.11
 
 
     out <- balkenbuilder_plotly(df=df, x=x, y=y, titel=titel, orientation = "h", group=NULL, color = color,
                                 order = order, stacking = FALSE, percent = FALSE, quelle_y=quelle_y, quelle=quelle)
-
-
-
-
-
 
   return(out)
 }

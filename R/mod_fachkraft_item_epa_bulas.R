@@ -16,7 +16,7 @@ mod_fachkraft_item_epa_bulas_ui <- function(id){
       inputId = ns("y_fachkraft_epa_bulas"),
       label = NULL,
       choices = fachkraft_ui_years(reg="BULA"),
-      selected = "2024"
+      selected = "2025"
     ),
 
     conditionalPanel(
@@ -72,7 +72,7 @@ mod_fachkraft_item_epa_bulas_ui <- function(id){
     ),
 
     conditionalPanel(
-      condition = "input.y_fachkraft_epa_bulas == '2023' | input.y_fachkraft_epa_bulas == '2024' ",
+      condition = "input.y_fachkraft_epa_bulas == '2023' | input.y_fachkraft_epa_bulas == '2024' | input.y_fachkraft_epa_bulas == '2025'",
       ns = ns,
       p("Bundesland:"),
       shinyWidgets::pickerInput(

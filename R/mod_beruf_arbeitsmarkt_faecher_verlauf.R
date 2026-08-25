@@ -15,8 +15,8 @@ mod_beruf_arbeitsmarkt_faecher_verlauf_ui <- function(id){
     shinyWidgets::sliderTextInput(
       inputId = ns("date_arbeitsmarkt_faecher_verlauf"),
       label = NULL,
-      choices = 2013:2024,
-      selected = c(2017, 2024)
+      choices = 2013:2025,
+      selected = c(2018, 2025)
     ),
     p("Region:"),
     shinyWidgets::pickerInput(

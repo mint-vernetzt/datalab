@@ -40,8 +40,8 @@ mod_beruf_arbeitsmarkt_bula_faecher_ui <- function(id){
                      shinyWidgets::sliderTextInput(
                        inputId = ns("zeit_beruf_faecher_bula_karte"),
                        label = NULL,
-                       choices = 2013:2024,
-                       selected = 2024
+                       choices = 2013:2025,
+                       selected = 2025
                      ),
                      p("Beschäftigtengruppe:"),
                      shinyWidgets::pickerInput(
@@ -86,8 +86,8 @@ mod_beruf_arbeitsmarkt_bula_faecher_ui <- function(id){
                      shinyWidgets::sliderTextInput(
                        inputId = ns("zeit_beruf_faecher_bula_verlauf"),
                        label = NULL,
-                       choices = 2013:2024,
-                       selected = c(2017, 2024)
+                       choices = 2013:2025,
+                       selected = c(2018, 2025)
                      ),
                      p("Beschäftigtengruppe:"),
                      shinyWidgets::pickerInput(
@@ -167,8 +167,8 @@ mod_beruf_arbeitsmarkt_bula_faecher_ui <- function(id){
                      shinyWidgets::sliderTextInput(
                        inputId = ns("zeit_beruf_faecher_bula_balken"),
                        label = NULL,
-                       choices = 2013:2024,
-                       selected = 2024
+                       choices = 2013:2025,
+                       selected = 2025
                      ),
                      p("Beschäftigtengruppe:"),
                      shinyWidgets::pickerInput(

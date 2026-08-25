@@ -81,11 +81,11 @@ mod_fachkraft_start_ui <- function(id){
           Bundesagentur für Arbeit, 2023; Vorausberechnung durch IW Köln, 2024,
           beauftragt durch MINTvernetzt"))),
         p(style = "text-align: left; font-size = 16px",
-          tags$b(span("Fachkräftedaten: Bundesagentur für Arbeit, 2024, auf Anfrage.")),
-        "Daten des Berichtsjahres 2024 ca. ab Juli 2025 verfügbar."),
+          tags$b(span("Fachkräftedaten: Bundesagentur für Arbeit, 2026, freier Download und auf Anfrage.")),
+        "Daten des Berichtsjahres 2026 im ab Frühjahr 2027 verfügbar."),
         p("Die amtlichen Statistiken der Fachkräftedaten
           (Engpassanalyse, Vakanzzeit, Arbeitslosen-Stellen-Relation)
-          zeigen das aktuellste verfügbare Berichtsjahr 2023.")
+          zeigen das aktuellste verfügbare Berichtsjahr 2025.")
 
       )
     ),
@@ -367,10 +367,31 @@ mod_fachkraft_start_ui <- function(id){
               width = 9,
               p("Auf Bundesebene liegen Daten zum Fachkräfteengpass in den einzelnen Berufen bzw.
                 genauer Berufsgattungen, z. B. Mechatronik, vor."),
-              shinycssloaders::withSpinner(htmlOutput(ns("plot_fachkraft_epa_item_1")),
-                                           color = "#154194"),
+              fluidRow(
 
+                column(
+                  width = 6,
+                  shinycssloaders::withSpinner(
+                    plotly::plotlyOutput(
+                      ns("plot_fachkraft_epa_item_1_left"),
+                      height = "600px"
+                    ),
+                    color = "#154194"
+                  )
+                ),
 
+                column(
+                  width = 6,
+                  shinycssloaders::withSpinner(
+                    plotly::plotlyOutput(
+                      ns("plot_fachkraft_epa_item_1_right"),
+                      height = "600px"
+                    ),
+                    color = "#154194"
+                  )
+                )
+
+              ),
 
               shinyBS::bsPopover(
                 id="h_fachkraft-berufsgruppen_1", title="",
@@ -397,10 +418,32 @@ mod_fachkraft_start_ui <- function(id){
                 Deutschland. Hier sehen wir Informationen zum mittleren Fachkräfteengpass in den
                 verschiedenen, MINT-dominierten Berufsgruppen, z. B. Mechatronik und Automatisierungstechnik.
                 Die Berufsgrattungen werden zu Berufsgruppen zusammengefasst und gemeinsam betrachtet."),
-              shinycssloaders::withSpinner(htmlOutput(ns("plot_fachkraft_epa_bulas")),
-                                           color = "#154194"),
 
+              fluidRow(
 
+                column(
+                  width = 6,
+                  shinycssloaders::withSpinner(
+                    plotly::plotlyOutput(
+                      ns("plot_fachkraft_epa_bulas_left"),
+                      height = "600px"
+                    ),
+                    color = "#154194"
+                  )
+                ),
+
+                column(
+                  width = 6,
+                  shinycssloaders::withSpinner(
+                    plotly::plotlyOutput(
+                      ns("plot_fachkraft_epa_bulas_right"),
+                      height = "600px"
+                    ),
+                    color = "#154194"
+                  )
+                )
+
+              ),
 
               shinyBS::bsPopover(
                 id="h_fachkraft-berufsgruppen_2", title="",
@@ -628,44 +671,72 @@ mod_fachkraft_start_server <- function(id, r){
 
   # Box 2 - Fachkraft - Berufsgruppen-Ebene ----
 
+    epa_plots <- reactive({
 
+      req(r$map_y_fachkraft_arbeit_epa)
+      req(r$map_f_fachkraft_arbeit_epa)
+      req(r$map_bl_fachkraft_arbeit_epa)
 
-    output$plot_fachkraft_epa_item_1 <- renderUI({
+      plot_fachkraft_epa_item(r)
 
-      plots <- plot_fachkraft_epa_item(r)
+    })
 
+    epa_bula_plots <- reactive({
 
-      if (length(plots) == 2) {
-        fluidRow(
-          column(width = 6, plots[[1]]),
-          column(width = 6, plots[[2]])
-        )
-      } else {
-        fluidRow(
-          column(width = 6, plots[[1]])
-        )
+      req(r$y_fachkraft_epa_bulas)
+      req(r$f_fachkraft_epa_bulas)
+      req(r$bl_fachkraft_epa_bulas)
+
+      plot_fachkraft_epa_bulas(r)
+
+    })
+
+    output$plot_fachkraft_epa_item_1_left <- plotly::renderPlotly({
+
+      plots <- epa_plots()
+
+      req(length(plots) >= 1)
+
+      plots[[1]]
+
+    })
+
+    output$plot_fachkraft_epa_item_1_right <- plotly::renderPlotly({
+
+      plots <- epa_plots()
+
+      if (length(plots) < 2) {
+        return(NULL)
       }
+
+      plots[[2]]
 
     })
 
 
+    output$plot_fachkraft_epa_bulas_left <- plotly::renderPlotly({
 
-    ## Fachkräfteegpass Bulas
-    output$plot_fachkraft_epa_bulas <- renderUI({
-      plots <- plot_fachkraft_epa_bulas(r)
+      plots <- epa_bula_plots()
 
-      if (length(plots) == 2) {
-        fluidRow(
-          column(width = 6, plots[[1]]),
-          column(width = 6, plots[[2]])
-        )
-      } else {
-        fluidRow(
-          column(width = 6, plots[[1]])
-        )
-      }
+      req(length(plots) >= 1)
+
+      plots[[1]]
 
     })
+
+    output$plot_fachkraft_epa_bulas_right <- plotly::renderPlotly({
+
+      plots <- epa_bula_plots()
+
+      if (length(plots) < 2) {
+        return(NULL)
+      }
+
+      plots[[2]]
+
+    })
+
+
     ## Bar Vakanz
 
     # Download für JT kurz raus
