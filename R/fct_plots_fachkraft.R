@@ -881,7 +881,7 @@ plot_fachkraft_epa_item <- function(r) {
   #df_json <- subset(plot_data, select = c(x, y, group))
   df_json <- jsonlite::toJSON(plot_data,dataframe = "rows",auto_unbox = TRUE, na = "null")
   titel_js <- jsonlite::toJSON(titel_1, auto_unbox = TRUE)
-  quelle_js <- jsonlite::toJSON("Quelle der Daten: Bundesagentur für Arbeit, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",auto_unbox = TRUE)
+  quelle_js <- jsonlite::toJSON("Quelle der Daten: Bundesagentur für Arbeit, 2026, freier Download, eigene Berechnungen durch MINTvernetzt.",auto_unbox = TRUE)
   x_js      <- "XX"
   y_js      <- "YY"
   group_js  <- "epa_kat"
@@ -944,7 +944,7 @@ plot_fachkraft_epa_item <- function(r) {
       ),
       annotations = list(
         list(
-          text = "Quelle der Daten: Bundesagentur für Arbeit, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+          text = "Quelle: Bundesagentur für Arbeit, 2026, freier Download, eigene Berechnungen durch MINTvernetzt.",
           x = 0,
           y = -0.17,
           xref = "paper",
@@ -1103,7 +1103,7 @@ plot_fachkraft_epa_item <- function(r) {
 
     #df_json <- jsonlite::toJSON(df_download2,dataframe = "rows",auto_unbox = TRUE, na = "null")
     titel_js <- jsonlite::toJSON(titel_2, auto_unbox = TRUE)
-    quelle_js <- jsonlite::toJSON("Quelle der Daten: Bundesagentur für Arbeit, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",auto_unbox = TRUE)
+    quelle_js <- jsonlite::toJSON("Quelle der Daten: Bundesagentur für Arbeit, 2026, freier Download, eigene Berechnungen durch MINTvernetzt.",auto_unbox = TRUE)
     x_js      <- "XX"
     y_js      <- "YY"
     group_js  <- "epa_kat"
@@ -1162,13 +1162,13 @@ plot_fachkraft_epa_item <- function(r) {
           ),
         annotations = list(
           list(
-            text = "Quelle der Daten: Bundesagentur für Arbeit, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+            text = "Quelle: Bundesagentur für Arbeit, 2026, freier Download, eigene Berechnungen durch MINTvernetzt.",
             x = 0,y = -0.17,
             xref = "paper",yref = "paper",
             showarrow = FALSE,xanchor = "left",
             font = list(
               family = "Calibri, sans-serif",size = 11,color = "gray"
-            )))) %>%
+            ))))   %>%
       plotly::config(
         displaylogo = FALSE,
         modeBarButtonsToRemove = c(
@@ -1287,7 +1287,6 @@ plot_fachkraft_epa_item <- function(r) {
 }
 
 
-
 plot_fachkraft_epa_bulas <- function(r) {
 
    timerange <- r$y_fachkraft_epa_bulas
@@ -1379,7 +1378,7 @@ plot_fachkraft_epa_bulas <- function(r) {
 
     plot_data <- rbind(plot_data, plot_data_ges)
   }
-browser()
+
 
   # prüfen ob genug daten vorliegen sonst ausfiltern
   not_req_length <- plot_data %>%
@@ -1441,7 +1440,7 @@ browser()
     #df_json <- subset(plot_data, select = c(x, y, group))
     df_json <- jsonlite::toJSON(plot_data,dataframe = "rows",auto_unbox = TRUE, na = "null")
     titel_js <- jsonlite::toJSON(titel_1, auto_unbox = TRUE)
-    quelle_js <- jsonlite::toJSON("Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",auto_unbox = TRUE)
+    quelle_js <- jsonlite::toJSON("Quelle: Bundesagentur für Arbeit, 2026, freier Download, eigene Berechnungen durch MINTvernetzt.",auto_unbox = TRUE)
     x_js      <- "XX"
     y_js      <- "YY"
     group_js  <- "epa_kat"
@@ -1503,7 +1502,7 @@ browser()
         ),
         annotations = list(
           list(
-            text = "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+            text = "Quelle: Bundesagentur für Arbeit, 2026, freier Download, eigene Berechnungen durch MINTvernetzt.",
             x = 0,
             y = -0.22,
             xref = "paper",
@@ -1661,7 +1660,7 @@ browser()
 
       #df_json <- jsonlite::toJSON(df_download2,dataframe = "rows",auto_unbox = TRUE, na = "null")
       titel_js <- jsonlite::toJSON(titel_2, auto_unbox = TRUE)
-      quelle_js <- jsonlite::toJSON("Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",auto_unbox = TRUE)
+      quelle_js <- jsonlite::toJSON("Quelle: Bundesagentur für Arbeit, 2026, freier Download, eigene Berechnungen durch MINTvernetzt.",auto_unbox = TRUE)
       x_js      <- "XX"
       y_js      <- "YY"
       group_js  <- "epa_kat"
