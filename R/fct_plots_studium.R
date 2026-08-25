@@ -1701,7 +1701,9 @@ mint_anteile <- function(r) {
 
   color_fach <- c(
     "Informatik" = "#2D6BE1",
-    "Elektrotechnik und Informationstechnik" = "#00a87a",
+    "Ingenieurwissenschaften (ohne Informatik)" = "#00a87a",
+    "Ingenieurwissenschaften (inkl. Informatik)" = "#66CBAF",
+    "Elektrotechnik und Informationstechnik" = "#005C43",
     "Maschinenbau/Verfahrenstechnik" = "#004331",
     "Biologie" = "#fbbf24",
     "Mathematik" = "#ee7775",
@@ -1717,12 +1719,14 @@ mint_anteile <- function(r) {
     "Pharmazie" = "#FCD34D",
     "Raumplanung" = "#008F68",
     "Geowissenschaften (ohne Geographie)" = "#fcc433",
+    "Mathematik, Naturwissenschaften" = "#fcc433",
     "Materialwissenschaft und Werkstofftechnik" = "#004331",
-    "Vermessungswesen" = "#EFFFF7",
-    "Bergbau, Hüttenwesen" = "#EDF3FF",
+    "Vermessungswesen" = "#AFF3E0",
+    "Bergbau, Hüttenwesen" = "#005C43",
     "allgemeine naturwissenschaftliche und mathematische Fächer" = "#FEF3C7",
-
-    "Alle Nicht MINT-Fächer" = "#efe8e6"
+    "Alle MINT-Fächer" = "#b16fab",
+    "Alle Nicht MINT-Fächer" = "#D4C1BB",
+    "Alle Fächer" = "#164194"
   )
 
   gruppe <- indi
@@ -1737,7 +1741,7 @@ mint_anteile <- function(r) {
     T ~ gruppe
   )
 
-  if(ordering == "MINT-Fachbereiche"){
+  if(ordering == "MINT-Fächergruppen"){
     faecher_select <- c("Ingenieurwissenschaften (ohne Informatik)",
                         "Mathematik, Naturwissenschaften", "Informatik")
   }else{
@@ -1757,9 +1761,9 @@ mint_anteile <- function(r) {
   df <- DBI::dbGetQuery(con, df_query)
 
   # Farbzuordnung basierend auf der Auswahl
-  colors <- if (ordering == "MINT-Fächergruppen") {
+  colors <- if (ordering == "Studienbereich") {
     as.character(color_fach)
-  } else if (ordering == "MINT-Fachbereiche") {
+  } else if (ordering == "Fächergruppen") {
     as.character(color_fachbereich)
   }
 
@@ -1775,8 +1779,9 @@ mint_anteile <- function(r) {
 
     df <- df %>%
       dplyr::left_join(df_ges, by = c("jahr")) %>%
-      dplyr::mutate(prop = round(wert / wert_ges * 100),1) %>%
-      dplyr::filter(fach != "Alle Fächer")
+      dplyr::mutate(prop = round(wert / wert_ges * 100),1)
+
+    if(!("Alle Fächer" %in% faecher_select)) df <- df %>% dplyr::filter(fach != "Alle Fächer")
 
     sorted_indicators <- df %>%
       dplyr::group_by(fach) %>%
@@ -1786,7 +1791,7 @@ mint_anteile <- function(r) {
 
     df$fach <- factor(df$fach, levels = sorted_indicators)
 
-    if(ordering == "MINT-Fachbereiche"){
+    if(ordering == "MINT-Fächergruppen"){
       colors <- color_fachbereich[sorted_indicators]
     }else{
       colors <- color_fach[sorted_indicators]
@@ -1794,13 +1799,13 @@ mint_anteile <- function(r) {
 
     df <- df[with(df, order(jahr)),]
 
-    titel <- ifelse(ordering == "MINT-Fachbereiche",
+    titel <- ifelse(ordering == "Fächergruppen",
                     ifelse(states == "Saarland",
-                           paste0("Zeitverlauf der MINT-Fachbereiche von ", gruppe, " im ", states),
-                           paste0("Zeitverlauf der MINT-Fachbereiche von ", gruppe, " in ", states)),
+                           paste0("Zeitverlauf von ", gruppe, " im ", states, " nach Fächergruppen"),
+                           paste0("Zeitverlauf von ", gruppe, " in ", states, " nach Fächergruppen")),
                     ifelse(states == "Saarland",
-                           paste0("Zeitverlauf der MINT-Fächer von ", gruppe, " im ", states),
-                           paste0("Zeitverlauf der MINT-Fächer von ", gruppe, " in ", states)))
+                           paste0("Zeitverlauf von ", gruppe, " im ", states, " nach Studienbereichen"),
+                           paste0("Zeitverlauf von ", gruppe, " in ", states, " nach Studienbereichen")))
 
     df <- df %>%
       dplyr::mutate(
@@ -1818,8 +1823,7 @@ mint_anteile <- function(r) {
 
   } else if (betrachtung == "Anzahl"){
 
-    df <- df %>%
-      dplyr::filter(fach != "Alle Fächer")
+    if(!("Alle Fächer" %in% faecher_select)) df <- df %>% dplyr::filter(fach != "Alle Fächer")
 
     sorted_indicators <- df %>%
       dplyr::group_by(fach) %>%
@@ -1829,7 +1833,7 @@ mint_anteile <- function(r) {
 
     df$fach <- factor(df$fach, levels = sorted_indicators)
 
-    if(ordering == "MINT-Fachbereiche"){
+    if(ordering == "MINT-Fächergruppen"){
       colors <- color_fachbereich[sorted_indicators]
     }else{
       colors <- color_fach[sorted_indicators]
@@ -1837,13 +1841,13 @@ mint_anteile <- function(r) {
 
     df <- df[with(df, order(jahr)),]
 
-    titel <- ifelse(ordering == "MINT-Fachbereiche",
+    titel <- ifelse(ordering == "MINT-Fächergruppen",
                     ifelse(states== "Saarland",
-                           paste0("Zeitverlauf der MINT-Fachbereiche von ", gruppe, " im ", states),
-                           paste0("Zeitverlauf der MINT-Fachbereiche von ", gruppe, " in ", states)),
+                           paste0("Zeitverlauf von ", gruppe, " im ", states, " nach Fächergruppen"),
+                           paste0("Zeitverlauf von ", gruppe, " in ", states, " nach Fächergruppen")),
                     ifelse(states == "Saarland",
-                           paste0("Zeitverlauf der MINT-Fächer von ", gruppe, " im ", states),
-                           paste0("Zeitverlauf der MINT-Fächer von ", gruppe, " in ", states)))
+                           paste0("Zeitverlauf von ", gruppe, " im ", states, " nach Studienbereichen"),
+                           paste0("Zeitverlauf von ", gruppe, " in ", states, " nach Studienbereichen")))
 
     df <- df %>%
       dplyr::mutate(
