@@ -448,7 +448,7 @@ fluidRow(
 
         p(strong(style = "text-align: left; font-size: 18px; margin-bottom: 15px;
                  margin-left: 15px;",
-                 "4. Wechseln Sie zum MINT-DataLab-GPT und folgen Sie den Anweisungen.")
+                 "4. Wechseln Sie zum MINT-DataLab-GPT und befolgen Sie unseren Prompt-Workflow.")
           ),
 
         column(
@@ -459,25 +459,10 @@ fluidRow(
                            inputId = "GPT_link",
                            onclick = 'window.open("https://chatgpt.com/g/g-695cd1fa74f881918a54b0517af8163e-mint-datalab-gpt", "_blank");',
                            class = "rosa-button")
-          )
-        ),
-        column(
-          width = 5,  # Text in der linken Spalte
-
-          p( "Sobald Sie auf den Link zum MINT-DataLab-GPT klicken,
-                   öffnet sich ein Chatfenster in ChatGPT."),
-
-          p("Wählen Sie aus, ob sie eine Argumentation oder eine Bericht wollen,
-                   der MINT-DataLab-GPT führt Sie durch die Erstellung der Analyse."),
-        ),
-
-        column(
-          width = 10,
+          ),
           div(
-            style = "margin-left:40px; margin-top:0px; margin-bottom: 30px; ",
-
-            actionButton(
-              style = "
+          actionButton(
+            style = "
               cursor:pointer;
               font-weight:500;
               padding:10px 14px;
@@ -488,9 +473,30 @@ fluidRow(
               list-style:none;
               margin-bottom: 20px;
               ",
-              ns("funktionsprompt"),
-              label = " Funktionsprompt für andere KIs",
-            ),
+            ns("funktionsprompt"),
+            label = " Funktionsprompt für andere KIs",
+          )
+         ),
+        ),
+        column(
+          width = 5,  # Text in der linken Spalte
+
+          div(
+          p( "Sobald Sie auf den Link zum MINT-DataLab-GPT klicken,
+             öffnet sich ein Chatfenster in ChatGPT."),
+
+          p("Für typische Analyseaufgaben stehen vorbereitete Workflow-Prompts zur Verfügung.
+          Diese führen Sie Schritt für Schritt durch die Erstellung einer Argumentation,
+          eines Berichts oder weiterer Analyseergebnisse."),
+        )
+        ),
+
+        column(
+          width = 10,
+          div(
+            style = "margin-left:40px; margin-top:0px; margin-bottom: 30px; ",
+
+
 
 
             tags$details(
@@ -498,7 +504,7 @@ fluidRow(
               tags$summary(
                 style = "
               cursor:pointer;
-              font-weight:500;
+              font-weight:600;
               font-size:14px;
               padding:10px 14px;
               background-color:#B16FAB30;
@@ -507,7 +513,7 @@ fluidRow(
               display:inline-block;
               list-style:none;
               ",
-                "💡 Prompt-Vorschläge anzeigen"
+                "💡 Die Workflow-Vorlagen finden Sie hier"
               ),
 
               div(
@@ -517,35 +523,16 @@ fluidRow(
                   background-color:#F7EFF6;;
                   ",
 
-                tags$table(
-                  class = "table table-bordered table-sm",
-                  style = "margin-top:0px;",
-
-                  tags$thead(
-                    tags$tr(
-                      tags$th("Prompt"),
-                      tags$th("Anwendung"),
-                      tags$th("xx")
-                    )
-                  ),
-
-                  tags$tbody(
-                    tags$tr(
-                      tags$td(
-                        actionLink(
-                          ns("prompt_bericht"),
-                          "Bericht erstellen"
-                        )
-                      ),
-                      tags$td("xx"),
-                      tags$td("yy")
-                    )
-                  )
+                tags$iframe(
+                  src = "quarto/prompt_workflow.html",
+                  width = "100%",
+                  height = "1500px",
+                  style = "border:none;"
                 )
               )
             )
           )
-          )
+        )
       )
     ),
 
@@ -581,7 +568,7 @@ fluidRow(
           div(style = "display: flex; margin-right:10px; margin-top: 10px; width: 100%",
               actionButton(
                 ns("download_all_png_client"),
-                label = tagList(icon("download"), "Alle Grafiken herunterladen (ZIP)",),
+                label = tagList(icon("download"), "Grafiken herunterladen (ZIP)",),
                 class = "rosa-button"),
           )
         ),
@@ -1946,27 +1933,7 @@ Vertiefe deine erste Antwort danach iterativ mit der Nutzer:in. Frage dafür:
     })
 
 
-    observeEvent(input$prompt_bericht, {
 
-      showModal(
-        modalDialog(
-
-          title = "Prompt: Bericht erstellen",
-
-          textAreaInput(
-            ns("bericht_prompt"),
-            label = NULL,
-            value = "xxxxxxx",        # hier prompt reinschreiben
-            width = "100%",
-            height = "300px"
-          ),
-
-          easyClose = TRUE,
-          size = "l"
-        )
-      )
-
-    })
 
 
     ## Download der gesammelten Daten ----

@@ -1,0 +1,325 @@
+---
+title: "prompt_workflow"
+author: "Katharina Brunner, Marietta Isfort"
+format:
+  html:
+    include-in-header:
+      text: |
+        <style>
+        .quarto-title-block {
+          display: none;
+        }
+        </style>
+editor: visual
+---
+
+```{=html}
+<style>
+
+.eingerückt {
+  margin-left: 30px;
+}
+
+.workflow-steps div {
+  margin-bottom: 18px;
+}
+
+.wichtig-note {
+  border-left: 4px solid #ee7775;
+  background-color: rgba(238, 119, 117, 0.08);
+  padding: 12px 16px;
+  margin: 20px 0;
+  border-radius: 0 8px 8px 0;
+}
+
+.hinweis-note {
+  border-left: 4px solid #154194;
+  background-color: #EAF3FF;
+  padding: 12px 16px;
+  margin: 20px 0;
+  border-radius: 0 8px 8px 0;
+}
+
+</style>
+```
+
+### In vier Schritten zum Projektziel: Eine Anleitung für gute Datenanalyse mit KI
+
+Nutzen Sie die folgenden Prompts, um Daten mit KI systematisch auszuwerten und daraus Berichte oder Handlungsempfehlungen abzuleiten.
+
+**So funktioniert der Workflow:**
+
+::::::: eingerückt
+::: {}
+<strong>1. Setting festlegen</strong><br> Rolle, Kontext und Analyseziel definieren.
+:::
+
+::: {}
+<strong>2. Daten verstehen</strong><br> Daten beschreiben und wichtige Entwicklungen identifizieren.
+:::
+
+::: {}
+<strong>3. Daten interpretieren</strong><br> Ergebnisse einordnen und auf die Fragestellung beziehen.
+:::
+
+::: {}
+<strong>4. Text erstellen</strong><br> Erkenntnisse zielgruppengerecht aufbereiten.
+:::
+:::::::
+
+::: wichtig-note
+<strong>WICHTIG!!</strong> Die Prompts sind erste Beispiele für einen guten Gesprächsstart, jedoch kann Ihr individuelles Ziel nur durch weitere Rückfragen oder Prompts ideal erreicht werden.
+:::
+
+::: hinweis-note
+<strong>Hinweis:</strong> Die [grün markierten]{style="color:#00a87a;font-style:italic;"} Abschnitte sind Platzhalter und sollten an Ihren Anwendungsfall angepasst werden.
+:::
+
+```{=html}
+<style>
+
+.prompt-box {
+  font-family: monospace; 
+  position: relative;
+  font-size: 0.9rem;
+  background: #efe8e650;
+  border: 1px solid #efe8e6;
+  border-radius: 16px;
+  padding: 40px; padding-top: 48px;
+  line-height: 1.4;
+}
+
+.copy-button {
+  background: transparent;
+  border: none;
+  color: #666;
+  position: absolute;
+  top: 8px; right: 6px;
+  height: 38px; width: 110px;
+  border-radius: 8px;
+  padding-bottom: 8px; padding-left: 4px; padding-top: 23px;
+  font-size: 1rem;
+  font-family: Calibri, sans-serif;
+  line-height: 1;
+  transition: background-color 0.2s ease;
+  cursor: pointer;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center; 
+}
+
+.copy-button:hover {
+  background-color: rgba(0,0,0,0.10);
+}
+
+.copy-button:active {
+  background-color: rgba(0,0,0,0.15);
+}
+
+.copy-message {
+position: absolute;
+top: 46px;
+right: 2px;
+color: #666;
+font-family: Calibri, sans-serif;
+font-size: 0.85rem;
+opacity: 0;
+transition: opacity 0.2s ease;
+}
+
+
+</style>
+
+<script>
+
+function copyPrompt(id) {
+
+  const text = document.getElementById(id).innerText;
+  navigator.clipboard.writeText(text);
+
+  const msg = document.getElementById(id + "-msg");
+
+  msg.style.opacity = "1";
+
+  setTimeout(() => {
+    msg.style.opacity = "0";
+  }, 2000);
+
+}
+
+</script>
+```
+
+## Prompt 1: Das Setting
+
+::: hinweis-note
+Nutzen Sie den Custom-GPT oder kopieren Sie den Funktionsprompt in Ihre KI. Starten Sie dann den Workflow.
+:::
+
+:::: prompt-box
+<button class="copy-button" onclick="copyPrompt(&#39;prompt1&#39;,&#39;msg&#39; )">
+
+⧉ Kopieren
+
+</button>
+
+[In Zwischenablage kopiert ✓]{#prompt1-msg .copy-message}
+
+::: {#prompt1}
+<strong> Rolle:</strong> <br> Übernimm die Rolle eines kritischen Analysten und bewerte die Daten wissenschaftlich und nachvollziehbar.
+
+<strong> Kontext:</strong><br> Ich arbeite im Bereich der MINT-Bildung und brauche eine Datenanalyse für [\[einen Förderantrag / einen Projektbericht / einen Wirkungsanalyse / eine Präsentation / unsere Website / eine Pressemitteilung / Vorstandsvorlagen / Handlungsempfehlungen / eine Fachpublikation\]]{style="color:#00a87a;font-style:italic;"}. Ziel ist es [\[Ein neues Projekt von einer Stiftung gefördert zu bekommen/Fachpublikum von der xy Lage zu überzeugen/…\]]{style="color:#00a87a;font-style:italic;"}.
+
+<strong> Aufgabe:</strong><br> Erarbeite mit mir diese Datenanalyse in einem iterativen Workflow. Der Workflow hat folgende Phasen: <br> 1. Datensatz beschreiben <br> 2. Daten interpretieren <br> 3. Text erzeugen <br> Für jede dieser Phasen erhältst du Anweisungen von mir dazu, wie du diese zu bearbeiten hast. Warte nach jedem Schritt meinen Input ab und arbeite die Schritte so nacheinander ab.
+:::
+::::
+
+[──── PROMPT ENDE ────]{style="font-style:italic;font-size:13px;color:#888;"}
+
+::: eingerückt
+➜ Dieser Prompt legt das Fundament für die Datenanalyse.
+:::
+
+Stellen Sie jetzt Ihre Datengrundlage zusammen.
+
+Das kann zum Beispiel das Datenbündel aus dem MINT-DataLab von der Unterseite „Datenanalyse mit KI“ sein, in dem das MINTvernetzt Team Daten zu Beschäftigten, Nachwuchszahlen, Fachkräfte und MINT-Disziplinen zusammengestellt hat, oder wählen Sie einzelne Statistiken der Unterseiten aus.
+
+Alternativ können Sie Ihre eigenen Projektdaten oder öffentlich verfügbare Daten hochladen, die für Ihren Anwendungszweck relevant sind.
+
+::: wichtig-note
+**WICHTIG!!** Ihre Datengrundlage und Anweisungen an die KI bestimmt mit, wie qualitativ hochwertig die spätere Analyse wird.
+:::
+
+Laden Sie also die für Ihren Anwendungsfall relevanten Daten in den Chat hoch und suchen Sie erst nach öffentlich verfügbaren Daten bevor Sie die KI nach möglichen Daten fragen, so können Sie die Richtigkeit der Daten besser kontrollieren und prüfen.
+
+## Prompt 2: Daten verstehen
+
+**Wichtig:** Arbeiten Sie im gleichen KI-Chat weiter, damit der Gesprächskontext erhalten bleibt.
+
+:::: prompt-box
+<button class="copy-button" onclick="copyPrompt(&#39;prompt2&#39;,&#39;msg&#39; )">
+
+⧉ Kopieren
+
+</button>
+
+[In Zwischenablage kopiert ✓]{#prompt2-msg .copy-message}
+
+::: {#prompt2}
+<strong> Aufgabe:</strong><br> Analysiere die bereitgestellten Daten zunächst ausschließlich deskriptiv. Es sollen noch keine tiefgehenden Ursachenanalysen oder politischen Bewertungen vorgenommen werden. [\[Besonders wichtig sind mir die Berufseinsteigenden/Zahlen zu Informatik/…\]]{style="color:#00a87a;font-style:italic;"}.
+
+<strong> Ziel:</strong><br> Ziel hier ist es, die Datenlage einmal übersichtlich zu verstehen und relevante Entwicklungen sichtbar zu machen.
+
+<strong> Vorgehensweise:</strong><br> 1. Beschreibe den Datensatz: <br> - Welche Themenbereiche sind enthalten? <br> - Welche Kennzahlen werden erhoben? <br> - Über welche Zeiträume liegen Daten vor? <br> - Welche Dimensionen werden betrachtet? <br> 2. Beschreibe die Entwicklung der wichtigsten Kennzahlen <br> 3. Identifiziere Auffälligkeiten und Trends und hebe interessante Muster vor <br> 4. Nenne Ansatzpunkte für die weitere Analyse basierend auf markanten Ergebnissen <br>
+:::
+::::
+
+[──── PROMPT ENDE ────]{style="font-style:italic;font-size:13px;color:#888;"}
+
+::: eingerückt
+➜ Dieser Prompt liefert einen Überblick über die Datengrundlage. Überlegen Sie mit der KI welche <br>      Zahlen Ihnen wichtig sind oder welche Muster interessant sind. Dann können Sie einen Fokus <br>      festlegen und darauf aufbauend arbeiten.
+:::
+
+Stellen Sie Nachfragen und lassen Sie sich Bestimmtes genauer erklären. Die KI kann auch weitere Webseiten/Datenquellen vorschlagen, die für den Anwendungszweck relevant sind, oder wo Erklärlücken bestehen. Je mehr Datenquellen Sie der KI bereitstellen, desto ganzheitlicher wird Ihre Analyse.
+
+::: hinweis-note
+**HINWEIS: GUTE NACHFRAGEN**
+
+- Was fällt am meisten auf?
+- Könnten hinter den Mustern in meinen Daten Einflussgrößen stecken, die ich zusätzlich berücksichtigen sollte?
+- Welche Daten fehlen, brauche ich mehr für eine gute Argumentation zu xy?
+- Welche Erkenntnisse wären für Fördergeber/… relevant?
+- Welche Aussage sollte ich nicht treffen, wo muss ich drauf achten?
+:::
+
+## Prompt 3: Daten interpretieren
+
+**WICHTIG!!** Arbeiten Sie im gleichen KI-Chat weiter, damit die im vorherigen Schritt analysierten Daten und Ergebnisse erhalten bleiben.
+
+:::: prompt-box
+<button class="copy-button" onclick="copyPrompt(&#39;prompt3&#39;,&#39;msg&#39; )">
+
+⧉ Kopieren
+
+</button>
+
+[In Zwischenablage kopiert ✓]{#prompt3-msg .copy-message}
+
+::: {#prompt3}
+<strong> Aufgabe:</strong><br> Analysiere die bereits hochgeladenen Daten. Interpretiere die Ergebnisse und Trends im Hinblick auf ihre Bedeutung und Relevanz für [\[die Förderung außerschulischer MINT-Bildungsangebote/ Nachwuchsförderung in Sachsen-Anhalt/…\]]{style="color:#00a87a;font-style:italic;"}. <br> Erkläre hierfür nochmal alle wichtigen Muster die in den Daten erkennbar sind und ordne sie fachlich ein. Gehe auch auf mögliche Einschränkungen und Datenlücken ein. Vermeide Spekulationen über die vorliegenden Daten hinaus.
+
+<strong> Ziel:</strong><br> [\[Beschreibe dein Projektziel, und wofür du die Datenergebnisse nutzen willst\]]{style="color:#00a87a;font-style:italic;"}
+
+<strong> Vorgehensweise:</strong><br> 1. Fasse die wichtigsten Befunde aus der Datenanalyse zusammen. <br> 2. Interpretiere die Bedeutung dieser Befunde für das gewählte Thema/den gewählten Zweck. <br> 3. Unterscheide dabei klar zwischen Beobachtungen aus den Daten, Fachlicher Interpretation und Möglichen Erklärungen oder Hypothesen. <br> 4. Benenne mögliche Einschränkungen z.B. Datenlücken, Unsicherheiten oder alternative Interpretationen <br> 5. Erläutere, welche Erkenntnisse besonders relevant für das Analyseziel sind. <br>
+:::
+::::
+
+[──── PROMPT ENDE ────]{style="font-style:italic;font-size:13px;color:#888;"}
+
+::: eingerückt
+➜ In diesem Schritt wechseln Sie von der Beschreibung zur Interpretation der Daten. Hier sollte Ihr<br>     Analyseziel erreicht werden. Die zuvor identifizierten Entwicklungen sollen eingeordnet werden <br>     und ihre Bedeutung für die Fragestellung herausgearbeitet werden.
+:::
+
+Legen Sie der KI möglichst konkret dar, worauf Sie hinausmöchtest.
+
+Möchten Sie beispielsweise den Bedarf für ein Förderprogramm belegen, die Wirkung eines Projekts beschreiben oder Argumente für eine bestimmte Zielgruppe entwickeln, sollte dies hier benannt werden.
+
+::: hinweis-note
+**HINWEIS: Wie führe ich ein gutes Gespräch über Daten?**
+
+- Erst verstehen, dann bewerten - Immer wieder nach genauen Zahlen fragen
+- Sofort berichtigen falls der Output falsch ist, die KI korrigiert sich dann
+- Nachfragen, „Bist du dir sicher? Ich meine zu wissen, dass …“
+- Gegenargumente einfordern bzw. mögliche Fehlinterpretationen erfragen
+- Mehrere „Feinschliffe“ der gleichen Aufgabenstellung -\> Sage der KI konkret, welche Teile des Outputs Sie beibehalten wollen und welche angepasst werden sollen
+:::
+
+Die Qualität der Interpretation hängt wesentlich davon ab, wie klar das Analyseziel beschrieben wird. In dieser Phase sollten Sie alle relevanten Informationen erarbeiten und Ihr Ziel inhaltlich erreichen.
+
+## Prompt 4: Text erstellen
+
+**WICHTIG!!** Es hilft in dem nächsten Prompt zu erwähnen, was Sie an dem vorherigen Output am interessantesten fanden, damit die KI sich dann darauf fokussieren kann.
+
+:::: prompt-box
+<button class="copy-button" onclick="copyPrompt(&#39;prompt4&#39;,&#39;msg&#39; )">
+
+⧉ Kopieren
+
+</button>
+
+[In Zwischenablage kopiert ✓]{.copy-message}
+
+::: {}
+<strong> Aufgabe:</strong><br> Erstelle einen Fließtext auf Basis deiner bisherigen Dateninterpretation der [\[Fachkräftezahlen in Hessen/Studienabbruchsquote in MINT/…\]]{style="color:#00a87a;font-style:italic;"} der die Daten kurz deskriptiv beschreibt und dann auf die Bedeutung der Ergebnisse für [\[Zielgruppe\]]{style="color:#00a87a;font-style:italic;"} eingeht. <br> Der Text soll die wichtigsten Erkenntnisse sachlich zusammenfassen. Inkludiere mögliche Konsequenzen und Handlungsbedarfe für [\[Bildungspolitik/Schulen/…\]]{style="color:#00a87a;font-style:italic;"}. <br> Erkläre für die Handlungsbedarfe warum die sinnvoll sind und was der erwartete Nutzen ist.
+
+<strong> Ziel:</strong><br> [\[Beschreibe dein Projektziel, wofür du den Text haben willst\]]{style="color:#00a87a;font-style:italic;"}.
+:::
+::::
+
+[──── PROMPT ENDE ────]{style="font-style:italic;font-size:13px;color:#888;"}
+
+::: eingerückt
+➜ Dieser Prompt erstellt Ihnen aus Ihrer Analyse einen zielgruppengerechten Text. Die vorherigen <br>     Schritte haben bereits beschrieben, welche Entwicklungen in den Daten sichtbar sind. Hier geht es <br>     um die Aufbereitung für Ihren konkreten Anwendungsfall.
+:::
+
+::: wichtig-note
+**WICHTIG!!** In dieser Phase sollten Sie möglichst genau beschreiben:
+
+- Für wen der Text bestimmt ist.
+- Welches Ziel Sie mit dem Text verfolgen.
+- Welche Erkenntnisse besonders hervorgehoben werden sollen.
+- Welchen Stil der Text haben soll (z. B. sachlich, wissenschaftlich, überzeugend oder öffentlichkeitswirksam).
+:::
+
+::: hinweis-note
+**HINWEIS: Gute Nachfragen**
+
+- Kannst du den Text stärker auf Fördermittelgeber ausrichten?
+- Welche Erkenntnisse sollten für diese Zielgruppe besonders hervorgehoben werden?
+- Kannst du die Argumentation prägnanter formulieren?
+- Welche Aussagen eignen sich als Kernaussagen oder Executive Summary?
+- Wo sollte ich vorsichtig formulieren, weil die Datenlage unsicher ist?
+- Kannst du den Text für eine Pressemitteilung, Präsentation oder Vorstandsvorlage umschreiben? •
+- Welche Handlungsempfehlungen lassen sich aus den Ergebnissen ableiten?
+- Welche Gegenargumente könnten auftreten und wie sollten diese eingeordnet werden?
+:::
