@@ -103,17 +103,17 @@ mod_argumentation_ui <- function(id){
               padding-top: 10px;
               ",
     column(
-      width = 12,
+      width = 8,
 
       h3("Regionalberichte und Beispielanalysen zum herunterladen",
       style = "margin-top: 30px;"),
 
-      p("Hier können Sie einen statistischen MINT-Bericht Ihres Bundeslands downloaden.
+      p("Hier können Sie einen statistischen MINT-Bericht zu Ihrem Bundesland downloaden.
         Die Berichte wurden mithilfe des MINT-DataLab-GPT erstellt und durch das MINT-DataLab-Team
         geprüft und ergänzt."),
 
 
-      draw_regioberichte(ns),
+      ui_draw_regioberichte(ns),
 
 
       shinyBS::bsPopover(id="hinweis_bula_berichte", title = "",
@@ -123,8 +123,8 @@ mod_argumentation_ui <- function(id){
       tags$a(paste0("Fehlt Ihr Bundesland?"), icon("question-circle"), id = "hinweis_bula_berichte"),
 
       p(style = "margin-top: 15px;",
-      "Wollen Sie eigene Analysen erstellen, z. B. einen Pitch für Finanzierungsgesuche, oder
-        suchen Daten für einen Förderantrag? Dann erstellen Sie hier Ihre eigene Analyse!")
+      "Wollen Sie eigene Analysen erstellen, z. B. einen Pitch der von Ihrem Projekt überzeugt, oder
+        eine Datenübersicht für einen Förderantrag? Dann erstellen Sie hier Ihre eigene Analyse!")
 
     ))),
 
@@ -134,7 +134,6 @@ mod_argumentation_ui <- function(id){
           div(class = "clean-box",
               style = "margin-bottom:0px;
               border-top: 2px solid #154194;
-
               padding-top: 10px;
               padding-bottom: 400px;
               ",  #     border-bottom: 2px solid #154194;
@@ -143,6 +142,76 @@ mod_argumentation_ui <- function(id){
                 h3("Datenanalyse mit KI: Einfach und individuell eigene Analysen erstellen", #Schnellstart: So analysieren Sie Daten mit dem MINT-DataLab-GPT, Catchy-Intro
                    style = "margin-top: 30px;"),
                 p("Unsere Angebote für einfaches Arbeiten mit MINT-Daten:"),
+              ),
+
+              # Row mit Workflow
+              column(
+                width = 12,
+                style = "margin-top: 20px;
+                         margin-bottom: 20px;",
+
+                column(
+                  width = 4,
+
+                  strong("1. Workflow für eigene Datenanalysen mit KI",
+                         style = "margin-left:40px;"),
+
+                  actionButton(
+                    inputId = ns("show_workflow"),
+                    class = "btn btn-primary",
+                    style = "font-weight:500;
+                            padding:10px 14px;
+                            background-color:#B16FAB30;
+                            border:1px solid #B16FAB70;
+                            border-radius:8px;
+                            display:inline-block;
+                            list-style:none;
+                            width: 230px;
+                            margin-bottom: 20px;
+                            margin-left: 40px;
+                            margin-top: 15px;",
+                    "💡 Workflow anzeigen"
+                  )
+
+                  # tags$details(
+                  #
+                  #   tags$summary(
+                  #     style = "cursor:pointer;
+                  #               font-weight:600;
+                  #               font-size:14px;
+                  #               padding:10px 14px;
+                  #               background-color:#B16FAB30;
+                  #               border:1px solid #B16FAB70;
+                  #               border-radius:8px;
+                  #               display:inline-block;
+                  #               list-style:none;
+                  #               margin-top: 15px;
+                  #               margin-left:40px;",
+                  #     "💡 Die Workflow-Vorlage finden Sie hier"
+                  #   ),
+                  #
+                  #   div(
+                  #     style = "margin-top:10px;
+                  #               padding:12px;
+                  #               background-color:#F7EFF6;;
+                  #               ",
+                  #
+                  #     tags$iframe(
+                  #       src = "quarto/prompt_workflow.html",
+                  #       width = "100%",
+                  #       height = "1500px",
+                  #       style = "border:none;"
+                  #     )
+                  #   )
+                  # )
+                ),
+
+                column(
+                  width = 6,
+
+                  p("Sie wollen in Ihrer eigenen KI-Umgebung Datenanalysen erstellen?
+                    Nutzen Sie unseren Workflow mit Prompts und Tipps für eine starke, KI-gestüzte Analyse.")
+                )
               ),
 
               # Row mit MINT-DL-GPT
@@ -154,7 +223,7 @@ mod_argumentation_ui <- function(id){
                     style = "display: flex; flex-direction: column;
                   align-items: flex-start; justify-content: flex-start;",
                     tags$strong(
-                      "1. MINT-DataLab-GPT:",
+                      "2. MINT-DataLab-GPT:",
                       style = "margin: 20px 0px 0px 40px"
                     ),
                     class = "linked-image",
@@ -194,58 +263,7 @@ mod_argumentation_ui <- function(id){
                   )
                 )
 
-              ),
-
-              # Row mit Workflow
-              column(
-                width = 12,
-                style = "margin-top: 20px",
-
-                column(
-                  width = 4,
-
-                  strong("2. Workflow für eigene Datenanalysen mit KI;
-                         margin-left:40px;",),
-                    tags$details(
-
-                      tags$summary(
-                        style = "cursor:pointer;
-                                font-weight:600;
-                                font-size:14px;
-                                padding:10px 14px;
-                                background-color:#B16FAB30;
-                                border:1px solid #B16FAB70;
-                                border-radius:8px;
-                                display:inline-block;
-                                list-style:none;
-                                margin-top: 15px;
-                                margin-left:40px;",
-                        "💡 Die Workflow-Vorlage finden Sie hier"
-                      ),
-
-                      div(
-                        style = "margin-top:10px;
-                                padding:12px;
-                                background-color:#F7EFF6;;
-                                ",
-
-                        tags$iframe(
-                          src = "quarto/prompt_workflow.html",
-                          width = "100%",
-                          height = "1500px",
-                          style = "border:none;"
-                        )
-                      )
-                    )
-                  ),
-
-                column(
-                  width = 6,
-
-                  p("Sie wollen in Ihrer eigenen KI-Umgebung Datenanalysen erstellen?
-                    Nutzen Sie unseren Workflow mit Prompts und Tipps für eine starke, KI-gestüzte Analyse.")
-                )
-              ),
+              )
 
 
         )
@@ -486,9 +504,10 @@ fluidRow(
               border-radius:8px;
               display:inline-block;
               list-style:none;
+              width: 230px;
               margin-bottom: 20px;
               ",
-            ns("funktionsprompt"),
+            inputId = ns("funktionsprompt"),
             label = " Funktionsprompt für andere KIs",
           )
          ),
@@ -925,7 +944,7 @@ div(
     )
 }
 
-draw_regioberichte <- function(ns){
+ui_draw_regioberichte <- function(ns){
 
   bundeslaender <- data.frame(
     name = c(
@@ -1916,6 +1935,28 @@ mod_argumentation_server <- function(id){
     }, ignoreInit = FALSE)
 
 
+    ## Workflow Iframe ----
+    observeEvent(input$show_workflow, {
+
+      showModal(
+        modalDialog(
+          title = "Workflow für eigene Datenanalysen mit KI",
+
+          tags$iframe(
+            src = "quarto/prompt_workflow.html",
+            width = "100%",
+            height = "800px",
+            style = "border:none;"
+          ),
+
+          size = "l",
+          easyClose = TRUE,
+          footer = modalButton("Schließen")
+        )
+      )
+
+    })
+
     ## Farb-Wechsel ----
     observeEvent(input$frauen_fokus, {
       if (as.logical(input$frauen_fokus)) {
@@ -2003,7 +2044,7 @@ Vertiefe deine erste Antwort danach iterativ mit der Nutzer:in. Frage dafür:
 – „MINTvernetzt: Kurzanalyse ‚Frauen in MINT-Berufen‘, 2024“ (Als Beispiel für eine Kurzanalyse aus dem MINT-DataLab)
 ",
             width = "100%",
-            height = "600px"
+            height = "800px"
           ),
           footer = tagList(
             modalButton("Schließen")
