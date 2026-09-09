@@ -337,12 +337,14 @@ beruf_verlauf_single <- function(r) {
           "Anzahl: ", prettyNum(wert, big.mark = ".", decimal.mark = ",")
         )
       )
+   # df$label <- prettyNum(df$wert, decimal.mark = ",", big.mark = ".")
 
     color <- c("#b16fab", "#154194","#66cbaf", "#35bd97", "#5d335a",
                "#5f94f9", "#007655", "#d0a9cd", "#112c5f")[1:(length(unique(df$indikator)))]
 
     quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
-    out <- linebuilder_plotly(df, titel, x = "jahr", y = "wert", group = "indikator", format = ",d", color = color, quelle = quelle)
+    out <- linebuilder_plotly(df, titel, x = "jahr", y = "wert", group = "indikator", format = ",d",
+                              color = color, quelle = quelle) #, label = TRUE
 
 
 
