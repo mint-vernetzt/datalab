@@ -32,7 +32,7 @@ mod_international_schule_migration_ui <- function(id){
     p("Erhebung:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("line_l_int_schule"),
-      choices = c("TIMSS", "PISA"),
+      choices = c("PISA", "TIMSS"),
       justified = TRUE
     ),
 
