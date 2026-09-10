@@ -10,12 +10,10 @@ map_de_bl <- sf::st_read("data/map_data/VG2500_LAN.shp") |>
     dTolerance = 0.01,
     preserveTopology = TRUE
   ) |>
-  sf::st_make_valid()
-|>
+  sf::st_make_valid()|>
   sf::st_make_valid() |>
   dplyr::select(AGS, GEN, geometry) |>
-  sf::st_transform(4326)
-|>
+  sf::st_transform(4326)|>
   rmapshaper::ms_simplify(
     keep = 0.2,
     keep_shapes = TRUE

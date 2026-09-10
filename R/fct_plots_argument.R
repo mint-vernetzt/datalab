@@ -197,7 +197,7 @@ daten_download <- function(r){
       FROM arbeitsmarkt_detail
       WHERE jahr = {timerange}
       AND landkreis = 'alle Landkreise'
-      AND bundesland = {regio}
+      AND bundesland = {region_reserve}
       AND anforderung = 'Gesamt'
       AND geschlecht = 'Gesamt'
       AND indikator IN ({gruppe*})
@@ -217,7 +217,7 @@ daten_download <- function(r){
       SELECT region, fach, jahr, indikator, wert
       FROM studierende_detailliert
       WHERE jahr IN (2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024)
-      AND region = {regio}
+      AND region = {region_reserve}
       AND geschlecht = 'Gesamt'
       AND fach IN ('Mathematik, Naturwissenschaften', 'Informatik', 'Ingenieurwissenschaften (ohne Informatik)')
       AND indikator = 'Studierende'
@@ -229,7 +229,7 @@ daten_download <- function(r){
       SELECT bundesland, fachbereich, jahr, indikator, wert
       FROM arbeitsmarkt_detail
       WHERE jahr IN (2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024)
-      AND bundesland = {regio}
+      AND bundesland = {region_reserve}
       AND geschlecht = 'Gesamt'
       AND fachbereich IN ('Mathematik, Naturwissenschaften', 'Informatik', 'Technik (gesamt)')
       AND indikator = 'Auszubildende'
@@ -294,18 +294,6 @@ daten_download <- function(r){
 
     ### Wirkhebel ----
     year_filter <- 2037
-
-    df_query <- glue::glue_sql("
-      SELECT *
-      FROM fachkraefte_prognose
-      WHERE jahr = {year_filter}
-      AND indikator = 'Verbesserung'
-      AND geschlecht = 'Gesamt'
-      AND nationalitaet = 'Gesamt'
-      AND anforderung = 'Gesamt'
-    ", .con = con)
-
-    whatever_this_is <- DBI::dbGetQuery(con, df_query)
 
     df_query <- glue::glue_sql("
       SELECT *
@@ -2017,6 +2005,7 @@ argument_nachwuchs <- function(r){
     AND geschlecht = 'Gesamt'
     AND fachbereich IN ('Mathematik, Naturwissenschaften', 'Informatik', 'Technik (gesamt)')
     AND indikator = 'Auszubildende'
+    AND landkreis = 'alle Landkreise'
 ", .con = con)
 
   df_auszubildende <- DBI::dbGetQuery(con, query_df)
@@ -2105,8 +2094,8 @@ argument_nachwuchs <- function(r){
 
   df_nachwuchs_agg <- df_nachwuchs_agg %>%
     dplyr::mutate(label = dplyr::case_when(
-      fach == "Informatik" ~ "",
-      fach %in% c("Mathematik, Naturwissenschaften",
+      fach == "Mathematik, Naturwissenschaften" ~ "",
+      fach %in% c("Informatik",
                   "Technik (inkl. Ingenieurwesen)") ~ wert_disp
     ))
 
@@ -2117,8 +2106,8 @@ argument_nachwuchs <- function(r){
   quelle <- "Destatis, 2025 und Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
 
-  out <- linebuilder_plotly(df_nachwuchs_agg, titel = titel, x = "jahr",
-                            y = "wert", group = "fach", format = format, color = colors,
+  out <- linebuilder_plotly(df_nachwuchs_agg, titel = titel, subtitel = "Studierenden- und Auszubildendenzahlen werden aggregiert betrachtet.",
+                            x = "jahr", y = "wert", group = "fach", format = format, color = colors,
                             quelle = quelle, label = TRUE)
 
   return(out)
