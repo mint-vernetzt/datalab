@@ -196,7 +196,7 @@ studi_det_ui_faecher <-function(spezif_i, spezif_r){
   SELECT DISTINCT fach
   FROM studierende_detailliert
   WHERE mint_select = 'MINT'
-     OR fach IN ('Alle MINT-Fächer', 'Alle Nicht MINT-Fächer')
+     OR fach IN ('Alle MINT-Fächer', 'Alle Nicht MINT-Fächer', 'Alle Fächer')
   ORDER BY fach
 ", .con = con)
 
@@ -220,7 +220,7 @@ studi_det_ui_faecher <-function(spezif_i, spezif_r){
     df1_query <- glue::glue_sql("
   SELECT DISTINCT fach
   FROM studierende_detailliert
-  WHERE (mint_select = 'MINT' OR fach IN ('Alle MINT-Fächer', 'Alle Nicht MINT-Fächer'))
+  WHERE (mint_select = 'MINT' OR fach IN ('Alle MINT-Fächer', 'Alle Nicht MINT-Fächer', 'Alle Fächer'))
     AND region IN ({spezif_r*})
   ORDER BY fach
 ", .con = con)
@@ -246,7 +246,7 @@ studi_det_ui_faecher <-function(spezif_i, spezif_r){
     df1_query <- glue::glue_sql("
   SELECT DISTINCT fach
   FROM studierende_detailliert
-  WHERE (mint_select = 'MINT' OR fach IN ('Alle MINT-Fächer', 'Alle Nicht MINT-Fächer'))
+  WHERE (mint_select = 'MINT' OR fach IN ('Alle MINT-Fächer', 'Alle Nicht MINT-Fächer', 'Alle Fächer'))
     AND indikator IN ({spezif_i*})
   ORDER BY fach
 ", .con = con)
@@ -783,8 +783,8 @@ fachkraft_ui_berufslevel <- function() {
   selection <- c(
     "Gesamt",
     "Fachkräfte",
-    "Spezialist*innen",
-    "Expert*innen"
+    "Spezialist:innen",
+    "Expert:innen"
   )
 
 
@@ -792,7 +792,6 @@ fachkraft_ui_berufslevel <- function() {
 }
 
 fachkraft_ui_berufe <- function(level = "Fachkräfte", zeitpunkt = 2023) {
-
 
   selection <- NULL
 
@@ -885,22 +884,22 @@ fachkraft_ui_scenario <- function(wirkhebel) {
 
 
 # function to extract a plot title from a highcharter object
-get_plot_title <- function(plot, path = ".") {
-
-  shiny::req(highcharter::is.highchart(plot))
-
-  out <- file.path(
-    path,
-    paste0(
-      ifelse(
-        is.null(plot$x$hc_opts$title$text),
-        "MINTvernetzt_PLOT",
-        plot$x$hc_opts$title$text),
-      "_", format(Sys.time(), "%Y%M%d_%H%M"),
-      ".png")
-  )
-  return(out)
-}
+# get_plot_title <- function(plot, path = ".") {
+#
+#   shiny::req(highcharter::is.highchart(plot))
+#
+#   out <- file.path(
+#     path,
+#     paste0(
+#       ifelse(
+#         is.null(plot$x$hc_opts$title$text),
+#         "MINTvernetzt_PLOT",
+#         plot$x$hc_opts$title$text),
+#       "_", format(Sys.time(), "%Y%M%d_%H%M"),
+#       ".png")
+#   )
+#   return(out)
+# }
 
 # Funktion zur Jahreswahl bei Arbeit-Fachkraft Daten
 arbeit_fachkraft_ui_years <- function() {
@@ -965,115 +964,115 @@ arbeit_fachkraft_ui_region <- function() {
 }
 
 # function to download plots with added cption and logo
-add_caption_and_download <- function(
-    hc,
-    filename = "plot.png",
-    labelformat = '{point.y}',
-    with_labels = TRUE
-    ,
-    width = 450,
-    height = 300
-    ) {
-
-  require(highcharter)
-  require(webshot2)
-  require(htmlwidgets)
-
-
-  ## roll back webshot2
-
-  # remove.packages("webshot2")
-  # packageurl <- "https://cran.r-project.org/src/contrib/Archive/webshot2/webshot2_0.1.0.tar.gz"
-  # install.packages(packageurl, repos=NULL, type="source")
-  #
-  # packageVersion("webshot2")
-
-
-  # set chromote, determine chromium variant
-  # Sys.setenv(
-  #   CHROMOTE_CHROME = "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe"
-  # )
-
-  # force the use of pagedown to install chrome on shinyapps.io (this is a workaround)
-  require(pagedown)
-  # force the use of curl because chromote needs it (see https://github.com/rstudio/chromote/issues/37)
-  require(curl)
-
-  # hc <- plot
-  shiny::req(highcharter::is.highchart(hc))
-
-  shiny::showNotification(ui = "Plot wird gespeichert...",
-                          type = "message",
-                          duration = NULL,
-                          id = "download_notification")
-#browser()
-  hc_out <- hc %>%
-    # Add the caption to the plot
-    highcharter::hc_size(width = width, height = height) %>%
-    highcharter::hc_caption(text = paste0(
-      '<div style="width: ',width - 10, 'px;',
-      ' display: flex; justify-content: space-between;">',
-      '<span>',
-      # '<span style="font-size: 10px;">', # max-width: ', width - 50, 'px;
-      'Quellen: Statistisches Bundesamt, 2022; Bundesagentur für Arbeit, 2022;',
-      ' KMK, 2022, alle auf Anfrage,<br>',
-      ' Eigene Berechnungen durch MINTvernetzt</span>',
-      '<span>',
-      '<span style="padding-right: 10px;">',
-      #'<img src="https://mint-vernetzt.de/static/e99e5a7a75c99c8651863585408242bb/mintvernetzt_og-img.png"',
-      '<img src="https://raw.githubusercontent.com/mint-vernetzt/datalab/main/inst/app/www/MINTvernetztLogo_klein.png"',
-      #'<img src="www/MINTvernetztLogo_klein.png"',
-      'alt="MINT vernetzt Logo" width="30" height="30">',
-      '</span>',
-      '</div>'
-    ),
-    useHTML = TRUE,
-    align = "right") %>%
-    # TODO add correct font
-    highcharter::hc_title(
-      # only overwrite needed values
-      style = list(fontFamily = "Calibri")
-    ) %>%
-    highcharter::hc_chart(
-      style = list(fontFamily = "Calibri")
-    )
-
-  if (with_labels) {
-    hc_out <- hc_out %>%
-      highcharter::hc_plotOptions(
-        series = list(
-          # Add value labels
-          dataLabels = list(
-            enabled = TRUE,
-            format = paste(labelformat)
-          )
-        )
-      )
-  }
-
-  #browser()
-  #print(hc_out)
-  # Save the plot as a standalone HTML file
-  html_file <- tempfile(fileext = ".html")
-  htmlwidgets::saveWidget(hc_out, file = html_file, selfcontained = TRUE)
-  print(html_file)
-  # # Capture the HTML as a PNG image
-  webshot2::webshot(url = html_file,
-                    file = filename
-                    ,
-                    delay = 2,
-                    zoom = 2,
-                    vwidth = width,
-                    vheight = height
-                    )
-
-  shiny::showNotification(
-    ui = paste0("Gespeichert als '", filename, "'"),
-    type = "message",
-    id = "download_notification")
-
-  return(NULL)
-}
+#' add_caption_and_download <- function(
+#'     hc,
+#'     filename = "plot.png",
+#'     labelformat = '{point.y}',
+#'     with_labels = TRUE
+#'     ,
+#'     width = 450,
+#'     height = 300
+#'     ) {
+#'
+#'   require(highcharter)
+#'   require(webshot2)
+#'   require(htmlwidgets)
+#'
+#'
+#'   ## roll back webshot2
+#'
+#'   # remove.packages("webshot2")
+#'   # packageurl <- "https://cran.r-project.org/src/contrib/Archive/webshot2/webshot2_0.1.0.tar.gz"
+#'   # install.packages(packageurl, repos=NULL, type="source")
+#'   #
+#'   # packageVersion("webshot2")
+#'
+#'
+#'   # set chromote, determine chromium variant
+#'   # Sys.setenv(
+#'   #   CHROMOTE_CHROME = "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe"
+#'   # )
+#'
+#'   # force the use of pagedown to install chrome on shinyapps.io (this is a workaround)
+#'   require(pagedown)
+#'   # force the use of curl because chromote needs it (see https://github.com/rstudio/chromote/issues/37)
+#'   require(curl)
+#'
+#'   # hc <- plot
+#'   shiny::req(highcharter::is.highchart(hc))
+#'
+#'   shiny::showNotification(ui = "Plot wird gespeichert...",
+#'                           type = "message",
+#'                           duration = NULL,
+#'                           id = "download_notification")
+#' #browser()
+#'   hc_out <- hc %>%
+#'     # Add the caption to the plot
+#'     highcharter::hc_size(width = width, height = height) %>%
+#'     highcharter::hc_caption(text = paste0(
+#'       '<div style="width: ',width - 10, 'px;',
+#'       ' display: flex; justify-content: space-between;">',
+#'       '<span>',
+#'       # '<span style="font-size: 10px;">', # max-width: ', width - 50, 'px;
+#'       'Quellen: Statistisches Bundesamt, 2022; Bundesagentur für Arbeit, 2022;',
+#'       ' KMK, 2022, alle auf Anfrage,<br>',
+#'       ' Eigene Berechnungen durch MINTvernetzt</span>',
+#'       '<span>',
+#'       '<span style="padding-right: 10px;">',
+#'       #'<img src="https://mint-vernetzt.de/static/e99e5a7a75c99c8651863585408242bb/mintvernetzt_og-img.png"',
+#'       '<img src="https://raw.githubusercontent.com/mint-vernetzt/datalab/main/inst/app/www/MINTvernetztLogo_klein.png"',
+#'       #'<img src="www/MINTvernetztLogo_klein.png"',
+#'       'alt="MINT vernetzt Logo" width="30" height="30">',
+#'       '</span>',
+#'       '</div>'
+#'     ),
+#'     useHTML = TRUE,
+#'     align = "right") %>%
+#'     # TODO add correct font
+#'     highcharter::hc_title(
+#'       # only overwrite needed values
+#'       style = list(fontFamily = "Calibri")
+#'     ) %>%
+#'     highcharter::hc_chart(
+#'       style = list(fontFamily = "Calibri")
+#'     )
+#'
+#'   if (with_labels) {
+#'     hc_out <- hc_out %>%
+#'       highcharter::hc_plotOptions(
+#'         series = list(
+#'           # Add value labels
+#'           dataLabels = list(
+#'             enabled = TRUE,
+#'             format = paste(labelformat)
+#'           )
+#'         )
+#'       )
+#'   }
+#'
+#'   #browser()
+#'   #print(hc_out)
+#'   # Save the plot as a standalone HTML file
+#'   html_file <- tempfile(fileext = ".html")
+#'   htmlwidgets::saveWidget(hc_out, file = html_file, selfcontained = TRUE)
+#'   print(html_file)
+#'   # # Capture the HTML as a PNG image
+#'   webshot2::webshot(url = html_file,
+#'                     file = filename
+#'                     ,
+#'                     delay = 2,
+#'                     zoom = 2,
+#'                     vwidth = width,
+#'                     vheight = height
+#'                     )
+#'
+#'   shiny::showNotification(
+#'     ui = paste0("Gespeichert als '", filename, "'"),
+#'     type = "message",
+#'     id = "download_notification")
+#'
+#'   return(NULL)
+#' }
 
 
 
@@ -1297,137 +1296,137 @@ darstellung <- function(id, title = NULL) {
 # Grafik-Funktionen -------------------------------------------------------
 
 
-piebuilder <- function(df, titel, x, y, tooltip, color = c("#b16fab", "#efe8e6"),
-                       format = '{point.prop_besr}%', subtitel = NULL, quelle="Quelle"){
-
-  if (is.null(subtitel)){
-    out <- highcharter::hchart(df, size = 280, type = "pie", mapping =
-                                 highcharter::hcaes(x = !!rlang::sym(x),
-                                                    y = !!rlang::sym(y)), name = "value") %>%
-      highcharter::hc_tooltip(
-        pointFormat=tooltip) %>%
-      highcharter::hc_colors(color) %>%
-      highcharter::hc_title(text = titel,
-                            margin = 45,
-                            align = "center",
-                            style = list(color = "black", useHTML = TRUE,
-                                         fontFamily = "Calibri Regular",
-                                         fontSize = "20px")) %>% #Calibri Regular
-      highcharter::hc_chart(
-        style = list(fontFamily = "Calibri Regular", fontSize = "14px")) %>%
-      highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
-      highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
-                                             dataLabels = list(enabled = TRUE,
-                                                               format = format ),
-                                             showInLegend = TRUE)) %>%
-      highcharter::hc_caption(text = quelle,
-                              style = list(fontSize = "11px", color = "gray")) %>%
-      highcharter::hc_exporting(enabled = TRUE,
-                                buttons = list(
-                                  contextButton = list(
-                                    menuItems = list("downloadPNG", "downloadCSV",
-                                                     list(
-                                                       text = "Daten für GPT",
-                                                       onclick = htmlwidgets::JS(sprintf(
-                                                         "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
-
-     var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle: %s';
-
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-
-   }",
-                                                         gsub("'", "\\\\'", titel),
-                                                         gsub("'", "\\\\'", titel),
-                                                         gsub("'", "\\\\'", quelle)
-                                                       ))
-
-                                                     )
-                                                     )
-                                  )
-                                )
-      )
-  } else {
-    out <- highcharter::hchart(df, size = 280, type = "pie",
-                               mapping = highcharter::hcaes(x = !!rlang::sym(x),
-                                                            y = !!rlang::sym(y)), name = "value") %>%
-      highcharter::hc_tooltip(
-        pointFormat=tooltip) %>%
-      highcharter::hc_colors(color) %>%
-      highcharter::hc_title(text = titel,
-                            margin = 45,
-                            align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
-      highcharter::hc_subtitle(text = subtitel,
-                               style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "16px")) %>%
-      highcharter::hc_chart(
-        style = list(fontFamily = "Calibri Regular", fontSize = "14px")) %>%
-      highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
-      highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
-                                             dataLabels = list(enabled = TRUE, format = format ), showInLegend = TRUE)) %>%
-      highcharter::hc_caption(text = quelle,
-                              style = list(fontSize = "11px", color = "gray")) %>%
-      highcharter::hc_exporting(enabled = TRUE,
-                                buttons = list(
-                                  contextButton = list(
-
-                                    menuItems = list("downloadPNG", "downloadCSV",
-                                                     list(
-                                                       text = "Daten für GPT",
-                                                       onclick = htmlwidgets::JS(sprintf(
-                                                         "function () {
-
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
-
-     var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle: %s';
-
-
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-
-   }",
-                                                         gsub("'", "\\\\'", titel),
-                                                         gsub("'", "\\\\'", titel),
-                                                         gsub("'", "\\\\'", quelle)
-                                                       ))
-
-                                                     )
-                                                     )
-                                  )
-                                )
-      )
-  }
-
-  return(out)
-}
+# piebuilder <- function(df, titel, x, y, tooltip, color = c("#b16fab", "#efe8e6"),
+#                        format = '{point.prop_besr}%', subtitel = NULL, quelle="Quelle"){
+#
+#   if (is.null(subtitel)){
+#     out <- highcharter::hchart(df, size = 280, type = "pie", mapping =
+#                                  highcharter::hcaes(x = !!rlang::sym(x),
+#                                                     y = !!rlang::sym(y)), name = "value") %>%
+#       highcharter::hc_tooltip(
+#         pointFormat=tooltip) %>%
+#       highcharter::hc_colors(color) %>%
+#       highcharter::hc_title(text = titel,
+#                             margin = 45,
+#                             align = "center",
+#                             style = list(color = "black", useHTML = TRUE,
+#                                          fontFamily = "Calibri Regular",
+#                                          fontSize = "20px")) %>% #Calibri Regular
+#       highcharter::hc_chart(
+#         style = list(fontFamily = "Calibri Regular", fontSize = "14px")) %>%
+#       highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
+#       highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
+#                                              dataLabels = list(enabled = TRUE,
+#                                                                format = format ),
+#                                              showInLegend = TRUE)) %>%
+#       highcharter::hc_caption(text = quelle,
+#                               style = list(fontSize = "11px", color = "gray")) %>%
+#       highcharter::hc_exporting(enabled = TRUE,
+#                                 buttons = list(
+#                                   contextButton = list(
+#                                     menuItems = list("downloadPNG", "downloadCSV",
+#                                                      list(
+#                                                        text = "Daten für GPT",
+#                                                        onclick = htmlwidgets::JS(sprintf(
+#                                                          "function () {
+#      var date = new Date().toISOString().slice(0,10);
+#      var chartTitle = '%s'.replace(/\\s+/g, '_');
+#      var filename = chartTitle + '_' + date + '.txt';
+#
+#      var data = 'Titel: %s\\n' + this.getCSV();
+#      data += '\\nQuelle: %s';
+#
+#      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+#      if (window.navigator.msSaveBlob) {
+#        window.navigator.msSaveBlob(blob, filename);
+#      } else {
+#        var link = document.createElement('a');
+#        link.href = URL.createObjectURL(blob);
+#        link.download = filename;
+#        link.click();
+#      }
+#
+#    }",
+#                                                          gsub("'", "\\\\'", titel),
+#                                                          gsub("'", "\\\\'", titel),
+#                                                          gsub("'", "\\\\'", quelle)
+#                                                        ))
+#
+#                                                      )
+#                                                      )
+#                                   )
+#                                 )
+#       )
+#   } else {
+#     out <- highcharter::hchart(df, size = 280, type = "pie",
+#                                mapping = highcharter::hcaes(x = !!rlang::sym(x),
+#                                                             y = !!rlang::sym(y)), name = "value") %>%
+#       highcharter::hc_tooltip(
+#         pointFormat=tooltip) %>%
+#       highcharter::hc_colors(color) %>%
+#       highcharter::hc_title(text = titel,
+#                             margin = 45,
+#                             align = "center",
+#                             style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
+#       highcharter::hc_subtitle(text = subtitel,
+#                                style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "16px")) %>%
+#       highcharter::hc_chart(
+#         style = list(fontFamily = "Calibri Regular", fontSize = "14px")) %>%
+#       highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
+#       highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
+#                                              dataLabels = list(enabled = TRUE, format = format ), showInLegend = TRUE)) %>%
+#       highcharter::hc_caption(text = quelle,
+#                               style = list(fontSize = "11px", color = "gray")) %>%
+#       highcharter::hc_exporting(enabled = TRUE,
+#                                 buttons = list(
+#                                   contextButton = list(
+#
+#                                     menuItems = list("downloadPNG", "downloadCSV",
+#                                                      list(
+#                                                        text = "Daten für GPT",
+#                                                        onclick = htmlwidgets::JS(sprintf(
+#                                                          "function () {
+#
+#      var date = new Date().toISOString().slice(0,10);
+#      var chartTitle = '%s'.replace(/\\s+/g, '_');
+#      var filename = chartTitle + '_' + date + '.txt';
+#
+#      var data = 'Titel: %s\\n' + this.getCSV();
+#      data += '\\nQuelle: %s';
+#
+#
+#      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+#      if (window.navigator.msSaveBlob) {
+#        window.navigator.msSaveBlob(blob, filename);
+#      } else {
+#        var link = document.createElement('a');
+#        link.href = URL.createObjectURL(blob);
+#        link.download = filename;
+#        link.click();
+#      }
+#
+#    }",
+#                                                          gsub("'", "\\\\'", titel),
+#                                                          gsub("'", "\\\\'", titel),
+#                                                          gsub("'", "\\\\'", quelle)
+#                                                        ))
+#
+#                                                      )
+#                                                      )
+#                                   )
+#                                 )
+#       )
+#   }
+#
+#   return(out)
+# }
 
 piebuilder_plotly <- function(
     df,
     titel, titel_y = 0.95,
     x,
     y,
-    height=550,
+    height = 450,
     color = c("#b16fab", "#efe8e6"),
     quelle = "Quelle",
     subtitel = NULL,
@@ -1513,7 +1512,6 @@ piebuilder_plotly <- function(
   # Layout
   p <- p |>
     plotly::layout(
-      height = height,
       title = list(
         text = titel_wrapped,
         x = 0.5, y= titel_y,
@@ -1551,7 +1549,7 @@ piebuilder_plotly <- function(
           font = list(size = 11, color = "gray", family = "Calibri Regular", align = "right")
         )
       ),
-      height= 450,
+      height= height,
       margin = list(t = 90, b = 120, r = 50, l = 50)
     ) |>
     plotly::config(
@@ -2515,625 +2513,625 @@ balkenbuilder_plotly <- function(df, titel, x, y, yaxis_size = 11, orientation =
 
 
 
-balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color,
-                          optional=NULL, reverse = TRUE, TF=NULL, stacking=NULL, subtitel = NULL, quelle="Quelle"){
-
-  if (is.numeric(df[[y]])) {
-  df <- df %>%
-    dplyr::mutate(!!y := round(!!rlang::sym(y), 1))
-  }
-
-
-  if(is.null(group) && is.null(optional)){
-
-
-    out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y =!!rlang::sym(y), x = !!rlang::sym(x))) %>%
-      highcharter::hc_tooltip(pointFormat = tooltip) %>%
-      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = format)) %>%
-      highcharter::hc_xAxis(title = list(text = "")) %>%
-      highcharter::hc_colors(color) %>%
-      highcharter::hc_title(text = titel,
-                            margin = 45, # o. war vorher /
-                            align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
-      highcharter::hc_chart(
-        style = list(fontFamily = "Calibri Regular", fontSize = "14px")
-      ) %>%
-      highcharter::hc_legend(enabled = TRUE, reversed = reverse)  %>%
-      highcharter::hc_caption(text = quelle,
-                              style = list(fontSize = "11px", color = "gray")) %>%
-      highcharter::hc_exporting(enabled = TRUE,
-                                buttons = list(
-                                  contextButton = list(
-                                    menuItems = list("downloadPNG", "downloadCSV",
-                                                     list(
-                                                       text = "Daten für GPT",
-                                                       onclick = htmlwidgets::JS(sprintf(
-                                                         "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
-
-     var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle: %s';
-
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-
-   }",
-                                                         gsub("'", "\\\\'", titel),
-                                                         gsub("'", "\\\\'", titel),
-                                                         gsub("'", "\\\\'", quelle)
-                                                       ))
-
-                                                     ))
-                                  )
-                                )
-      )
-
-  } else if (!is.null(group) && is.null(optional) && is.null(stacking)){
-
-    out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y =!!rlang::sym(y), x = !!rlang::sym(x), group = !!rlang::sym(group))) %>%
-      highcharter::hc_tooltip(pointFormat = tooltip) %>%
-      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = format)) %>%
-      highcharter::hc_xAxis(title = list(text = "")) %>%
-      highcharter::hc_colors(color) %>%
-      highcharter::hc_title(text = titel,
-                            margin = 45, # o. war vorher /
-                            align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
-      highcharter::hc_chart(
-        style = list(fontFamily = "Calibri Regular", fontSize = "14px")
-      ) %>%
-      highcharter::hc_legend(enabled = TRUE, reversed = reverse)  %>%
-      highcharter::hc_caption(text = quelle,
-                              style = list(fontSize = "11px", color = "gray")) %>%
-      highcharter::hc_exporting(enabled = TRUE,
-                                buttons = list(
-                                  contextButton = list(
-                                    menuItems = list("downloadPNG", "downloadCSV",
-                                                     list(
-                                                       text = "Daten für GPT",
-                                                       onclick = htmlwidgets::JS(sprintf(
-                                                         "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
-
-     var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle: %s';
-
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-
-   }",
-                                                         gsub("'", "\\\\'", titel),  # Titel escapen
-                                                         gsub("'", "\\\\'", titel),  # Quelle escapen
-                                                         gsub("'", "\\\\'", quelle)
-                                                       ))
-
-                                                     ))
-                                  )
-                                )
-      )
-
-  } else if (is.null(group) && !is.null(optional) && is.null(stacking)) {
-
-
-    out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y =!!rlang::sym(y), x = !!rlang::sym(x))) %>%
-      highcharter::hc_tooltip(pointFormat = tooltip) %>%
-      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = format)) %>%
-      highcharter::hc_xAxis(title = list(text = "")) %>%
-      {do.call(highcharter::hc_plotOptions,  c(list(.), optional))} %>% #keine ahnung wieso chatgpt help
-      highcharter::hc_colors(color) %>%
-      highcharter::hc_title(text = titel,
-                            margin = 45, # o. war vorher /
-                            align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
-      highcharter::hc_chart(
-        style = list(fontFamily = "Calibri Regular", fontSize = "14px")
-      ) %>%
-      highcharter::hc_legend(enabled = TRUE, reversed = reverse)  %>%
-      highcharter::hc_caption(text = quelle,
-                              style = list(fontSize = "11px", color = "gray")) %>%
-      highcharter::hc_exporting(enabled = TRUE,
-                                buttons = list(
-                                  contextButton = list(
-                                    menuItems = list("downloadPNG", "downloadCSV",
-                                                     list(
-                                                       text = "Daten für GPT",
-                                                       onclick = htmlwidgets::JS(sprintf(
-                                                         "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
-
-     var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle: %s';
-
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-
-   }",
-                                                         gsub("'", "\\\\'", titel),  # Titel escapen
-                                                         gsub("'", "\\\\'", titel),###
-                                                         gsub("'", "\\\\'", quelle)
-
-                                                       ))
-
-                                                     ))
-                                  )
-                                )
-      )
-
-
-  } else if (!is.null(group) && !is.null(optional) && is.null(stacking)){
-
-
-
-    out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y =!!rlang::sym(y), x = !!rlang::sym(x), group = !!rlang::sym(group))) %>%
-      highcharter::hc_tooltip(pointFormat = tooltip) %>%
-      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = format)) %>%
-      highcharter::hc_xAxis(title = list(text = "")) %>%
-      {do.call(highcharter::hc_plotOptions,  c(list(.), optional))} %>% #keine ahnung wieso chatgpt help
-      highcharter::hc_colors(color) %>%
-      highcharter::hc_title(text = titel,
-                            margin = 45, # o. war vorher /
-                            align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
-      highcharter::hc_chart(
-        style = list(fontFamily = "Calibri Regular", fontSize = "14px")
-      ) %>%
-      highcharter::hc_legend(enabled = TRUE, reversed = reverse)  %>%
-      highcharter::hc_caption(text = quelle,
-                              style = list(fontSize = "11px", color = "gray")) %>%
-      highcharter::hc_exporting(enabled = TRUE,
-                                buttons = list(
-                                  contextButton = list(
-                                    menuItems = list("downloadPNG", "downloadCSV",
-                                                     list(
-                                                       text = "Daten für GPT",
-                                                       onclick = htmlwidgets::JS(sprintf(
-                                                         "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
-
-
-
-     var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle: %s';
-
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-
-   }",
-                                                         gsub("'", "\\\\'", titel),
-                                                         gsub("'", "\\\\'", titel),# Titel escapen
-                                                         gsub("'", "\\\\'", quelle)  # Quelle escapen
-                                                       ))
-
-                                                     ))
-                                  )
-                                )
-      )
-
-
-  } else if (!is.null(TF) && !is.null(group) && is.null(stacking)){
-
-
-
-    out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y =!!rlang::sym(y), x = !!rlang::sym(x), group = !!rlang::sym(group))) %>%
-      highcharter::hc_tooltip(pointFormat = tooltip) %>%
-      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = format), reversedStacks = TF) %>%
-      highcharter::hc_xAxis(title = list(text = "")) %>%
-      highcharter::hc_colors(color) %>%
-      highcharter::hc_title(text = titel,
-                            margin = 45, # o. war vorher /
-                            align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
-      highcharter::hc_chart(
-        style = list(fontFamily = "Calibri Regular", fontSize = "14px")
-      ) %>%
-      highcharter::hc_legend(enabled = TRUE, reversed = reverse) %>%
-      highcharter::hc_caption(text = quelle,
-                              style = list(fontSize = "11px", color = "gray")) %>%
-      highcharter::hc_exporting(enabled = TRUE,
-                                buttons = list(
-                                  contextButton = list(
-                                    menuItems = list("downloadPNG", "downloadCSV",
-                                                     list(
-                                                       text = "Daten für GPT",
-                                                       onclick = htmlwidgets::JS(sprintf(
-                                                         "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
-
-     var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle: %s';
-
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-   }",
-                                                         gsub("'", "\\\\'", titel),
-                                                         gsub("'", "\\\\'", titel),
-                                                         gsub("'", "\\\\'", quelle)
-                                                       ))
-
-                                                     ))
-                                  )
-                                )
-      )
-
-
-  } else if (!is.null(TF) && !is.null(group) && !is.null(stacking)){
-
-
-
-    out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y =!!rlang::sym(y), x = !!rlang::sym(x), group = !!rlang::sym(group))) %>%
-      highcharter::hc_plotOptions(bar = list(stacking = stacking )) %>%
-      highcharter::hc_tooltip(pointFormat = tooltip) %>%
-      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = format), reversedStacks = TF) %>%
-      highcharter::hc_xAxis(title = list(text = "")) %>%
-      highcharter::hc_colors(color) %>%
-      highcharter::hc_title(text = titel,
-                            margin = 45, # o. war vorher /
-                            align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
-      highcharter::hc_chart(
-        style = list(fontFamily = "Calibri Regular", fontSize = "14px")
-      ) %>%
-      highcharter::hc_legend(enabled = TRUE, reversed = reverse) %>%
-      highcharter::hc_caption(text = quelle,
-                              style = list(fontSize = "11px", color = "gray")) %>%
-      highcharter::hc_exporting(enabled = TRUE,
-                                buttons = list(
-                                  contextButton = list(
-                                    menuItems = list("downloadPNG", "downloadCSV",
-                                                     list(
-                                                       text = "Daten für GPT",
-                                                       onclick = htmlwidgets::JS(sprintf(
-                                                         "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
-
-     var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle: %s';
-
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-   }",
-                                                         gsub("'", "\\\\'", titel),
-                                                         gsub("'", "\\\\'", titel),
-                                                         gsub("'", "\\\\'", quelle)  # Quelle escapen
-                                                       ))
-
-                                                     ))
-                                  )
-                                )
-      )
-
-
-  }  else if(!is.null(stacking) && format == "1" ){
-
-    unused_format <- format
-
-
-
-    out <- df %>% highcharter::hchart("bar", highcharter::hcaes(y =!!rlang::sym(y), x = !!rlang::sym(x), group = !!rlang::sym(group)))%>%
-      highcharter::hc_plotOptions(bar = list(stacking = stacking )) %>%
-      highcharter::hc_tooltip(pointFormat=tooltip) %>%
-      highcharter::hc_colors(color) %>%
-      highcharter::hc_title(text = titel,
-                            margin = 45,
-                            align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
-      highcharter::hc_subtitle(text = subtitel,
-                               align = "center",
-                               style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "18px")) %>%
-      highcharter::hc_yAxis(title = list(text = "")) %>% #######NO FORMAT
-      highcharter::hc_xAxis(title = list(text = "")) %>%
-      highcharter::hc_chart(
-        style = list(fontFamily = "Calibri Regular", fontSize = "18px")) %>%
-      highcharter::hc_legend(enabled = TRUE, reversed = reverse) %>%
-      highcharter::hc_caption(text = quelle,
-                              style = list(fontSize = "11px", color = "gray")) %>%
-      highcharter::hc_exporting(enabled = TRUE,
-                                buttons = list(
-                                  contextButton = list(
-                                    menuItems = list("downloadPNG", "downloadCSV",
-                                                     list(
-                                                       text = "Daten für GPT",
-                                                       onclick = htmlwidgets::JS(sprintf(
-                                                         "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
-
-     var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle: %s';
-
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-   }",
-                                                         gsub("'", "\\\\'", titel),
-                                                         gsub("'", "\\\\'", titel),
-                                                         gsub("'", "\\\\'", quelle)  # Quelle escapen
-                                                       ))
-
-                                                     ))
-                                  )
-                                )
-      )
-
-
-  } else if(!is.null(stacking) && !is.null(group) && format != "1"){
-
-
-    out <- df %>% highcharter::hchart("bar", highcharter::hcaes(y =!!rlang::sym(y), x = !!rlang::sym(x), group = !!rlang::sym(group)))%>%
-      highcharter::hc_plotOptions(bar = list(stacking = stacking )) %>%
-      highcharter::hc_tooltip(pointFormat=tooltip) %>%
-      highcharter::hc_colors(color) %>%
-      highcharter::hc_title(text = titel,
-                            margin = 45,
-                            align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
-      highcharter::hc_subtitle(text = subtitel,
-                               align = "center",
-                               style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "18px")) %>%
-      highcharter::hc_yAxis(title = list(text = ""),  labels = list(format = "{value}%"), reversedStacks =  FALSE) %>%
-      highcharter::hc_xAxis(title = list(text = "")) %>%
-      highcharter::hc_chart(
-        style = list(fontFamily = "Calibri Regular", fontSize = "18px")) %>%
-      highcharter::hc_legend(enabled = TRUE, reversed = reverse) %>%
-      highcharter::hc_caption(text = quelle,
-                              style = list(fontSize = "11px", color = "gray")) %>%
-      highcharter::hc_exporting(enabled = TRUE,
-                                buttons = list(
-                                  contextButton = list(
-                                    menuItems = list("downloadPNG", "downloadCSV",
-                                                     list(
-                                                       text = "Daten für GPT",
-                                                       onclick = htmlwidgets::JS(sprintf(
-                                                         "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
-
-     var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle: %s';
-
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-   }",
-                                                         gsub("'", "\\\\'", titel),
-                                                         gsub("'", "\\\\'", titel),
-                                                         gsub("'", "\\\\'", quelle)  # Quelle escapen
-                                                       ))
-
-                                                     ))
-                                  )
-                                )
-      )
-
-
-  }
-
-  else {
-    return(1)
-  }
-
-
-  return(out)
-
-}
-
-
-
-
-
-get_top10_hc_plot_options <- function(hc,
-                                      hc_title = "",
-                                      hc_tooltip = "",
-                                      max_percent_used = 100,
-                                      col = "#B16FAB",
-                                      marker = "IEA") {
-  if(marker=="IEA"){
-    its <- "Quelle der Daten: IEA, 2023; OECD, 2023, freier Download, eigene Berechnungen durch MINTvernetzt."
-  } else if (marker=="OECD"){
-    its <- "Quelle der Daten: Eurostat, 2023; OECD, 2023; UNESCO, 2023; freier Download, eigene Berechnungen durch MINTvernetzt."
-
-  }
-
-
-  out <- hc %>%
-    highcharter::hc_plotOptions(
-      series = list(
-        boderWidth = 0,
-        dataLabels = list(enabled = TRUE, format = "{point.wert} %",
-                          style = list(textOutline = "none"))
-      )) %>%
-    highcharter::hc_tooltip(pointFormat = hc_tooltip) %>%
-    highcharter::hc_yAxis(title = list(text = ""),
-                          labels = list(format = "{value} %"),
-                          min = 0,
-                          max = max_percent_used,
-                          tickInterval = 10) %>%
-    highcharter::hc_xAxis(title = list(text = "")) %>%
-    highcharter::hc_colors(c(col)) %>%
-    highcharter::hc_title(text = hc_title,
-                          margin = 45,
-                          align = "center",
-                          style = list(color = "black",
-                                       useHTML = TRUE,
-                                       fontFamily = "Calibri Regular",
-                                       fontSize = "20px")) %>%
-    highcharter::hc_chart(
-      style = list(fontFamily = "Calibri Regular", fontSize = "14px")
-    ) %>%
-    highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
-    highcharter::hc_caption(text = its,
-                            style = list(fontSize = "11px", color = "gray")) %>%
-    highcharter::hc_exporting(enabled = TRUE,
-                              buttons = list(
-                                contextButton = list(
-                                  menuItems = list("downloadPNG", "downloadCSV",
-                                                   list(
-                                                     text = "Daten für GPT",
-                                                     onclick = htmlwidgets::JS(sprintf(
-                                                       "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
-
-    var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle: %s';
-
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-   }", gsub("'", "\\\\'", titel),
-                                                       gsub("'", "\\\\'", titel),
-                                                       gsub("'", "\\\\'", quelle))  #
-                                                     )
-
-                                                   ))
-                                )
-                              )
-    )
-
-  return(out)
-}
-
-
-
-
-
-
-balkenbuilder3 <- function(df, titel , x, y, tooltip, format, color, optional, optional2,  quelle="Quelle"){
-
-  out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y =!!rlang::sym(y), x = !!rlang::sym(x))) %>%
-    highcharter::hc_tooltip(pointFormat = tooltip) %>%
-    highcharter::hc_yAxis(title = list(text = ""), labels = list(format = format)) %>%
-    highcharter::hc_xAxis(title = list(text = "")) %>%
-    {do.call(highcharter::hc_plotOptions,  c(list(.), optional))} %>% #keine ahnung wieso chatgpt help
-    {
-      if (!is.null(optional2)) {
-        optional2(.)
-      } else {
-        .
-      }
-    } %>%
-    highcharter::hc_colors(color) %>%
-    highcharter::hc_title(text = titel,
-                          margin = 45, # o. war vorher /
-                          align = "center",
-                          style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
-    highcharter::hc_chart(
-      style = list(fontFamily = "Calibri Regular", fontSize = "14px")
-    ) %>%
-    highcharter::hc_legend(enabled = TRUE, reversed = TRUE)  %>%
-    highcharter::hc_caption(text = quelle,
-                            style = list(fontSize = "11px", color = "gray")) %>%
-    highcharter::hc_exporting(enabled = TRUE,
-                              buttons = list(
-                                contextButton = list(
-                                  menuItems = list("downloadPNG", "downloadCSV",
-                                                   list(
-                                                     text = "Daten für GPT",
-                                                     onclick = htmlwidgets::JS(sprintf(
-                                                       "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
-
-     var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle: %s';
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-   }", gsub("'", "\\\\'", titel),gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", quelle))  #
-                                                     )
-
-                                                   ))
-                                )
-                              )
-    )
-
-  return(out)
-
-
-}
+# balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color,
+#                           optional=NULL, reverse = TRUE, TF=NULL, stacking=NULL, subtitel = NULL, quelle="Quelle"){
+#
+#   if (is.numeric(df[[y]])) {
+#   df <- df %>%
+#     dplyr::mutate(!!y := round(!!rlang::sym(y), 1))
+#   }
+#
+#
+#   if(is.null(group) && is.null(optional)){
+#
+#
+#     out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y =!!rlang::sym(y), x = !!rlang::sym(x))) %>%
+#       highcharter::hc_tooltip(pointFormat = tooltip) %>%
+#       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = format)) %>%
+#       highcharter::hc_xAxis(title = list(text = "")) %>%
+#       highcharter::hc_colors(color) %>%
+#       highcharter::hc_title(text = titel,
+#                             margin = 45, # o. war vorher /
+#                             align = "center",
+#                             style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
+#       highcharter::hc_chart(
+#         style = list(fontFamily = "Calibri Regular", fontSize = "14px")
+#       ) %>%
+#       highcharter::hc_legend(enabled = TRUE, reversed = reverse)  %>%
+#       highcharter::hc_caption(text = quelle,
+#                               style = list(fontSize = "11px", color = "gray")) %>%
+#       highcharter::hc_exporting(enabled = TRUE,
+#                                 buttons = list(
+#                                   contextButton = list(
+#                                     menuItems = list("downloadPNG", "downloadCSV",
+#                                                      list(
+#                                                        text = "Daten für GPT",
+#                                                        onclick = htmlwidgets::JS(sprintf(
+#                                                          "function () {
+#      var date = new Date().toISOString().slice(0,10);
+#      var chartTitle = '%s'.replace(/\\s+/g, '_');
+#      var filename = chartTitle + '_' + date + '.txt';
+#
+#      var data = 'Titel: %s\\n' + this.getCSV();
+#      data += '\\nQuelle: %s';
+#
+#      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+#      if (window.navigator.msSaveBlob) {
+#        window.navigator.msSaveBlob(blob, filename);
+#      } else {
+#        var link = document.createElement('a');
+#        link.href = URL.createObjectURL(blob);
+#        link.download = filename;
+#        link.click();
+#      }
+#
+#    }",
+#                                                          gsub("'", "\\\\'", titel),
+#                                                          gsub("'", "\\\\'", titel),
+#                                                          gsub("'", "\\\\'", quelle)
+#                                                        ))
+#
+#                                                      ))
+#                                   )
+#                                 )
+#       )
+#
+#   } else if (!is.null(group) && is.null(optional) && is.null(stacking)){
+#
+#     out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y =!!rlang::sym(y), x = !!rlang::sym(x), group = !!rlang::sym(group))) %>%
+#       highcharter::hc_tooltip(pointFormat = tooltip) %>%
+#       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = format)) %>%
+#       highcharter::hc_xAxis(title = list(text = "")) %>%
+#       highcharter::hc_colors(color) %>%
+#       highcharter::hc_title(text = titel,
+#                             margin = 45, # o. war vorher /
+#                             align = "center",
+#                             style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
+#       highcharter::hc_chart(
+#         style = list(fontFamily = "Calibri Regular", fontSize = "14px")
+#       ) %>%
+#       highcharter::hc_legend(enabled = TRUE, reversed = reverse)  %>%
+#       highcharter::hc_caption(text = quelle,
+#                               style = list(fontSize = "11px", color = "gray")) %>%
+#       highcharter::hc_exporting(enabled = TRUE,
+#                                 buttons = list(
+#                                   contextButton = list(
+#                                     menuItems = list("downloadPNG", "downloadCSV",
+#                                                      list(
+#                                                        text = "Daten für GPT",
+#                                                        onclick = htmlwidgets::JS(sprintf(
+#                                                          "function () {
+#      var date = new Date().toISOString().slice(0,10);
+#      var chartTitle = '%s'.replace(/\\s+/g, '_');
+#      var filename = chartTitle + '_' + date + '.txt';
+#
+#      var data = 'Titel: %s\\n' + this.getCSV();
+#      data += '\\nQuelle: %s';
+#
+#      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+#      if (window.navigator.msSaveBlob) {
+#        window.navigator.msSaveBlob(blob, filename);
+#      } else {
+#        var link = document.createElement('a');
+#        link.href = URL.createObjectURL(blob);
+#        link.download = filename;
+#        link.click();
+#      }
+#
+#    }",
+#                                                          gsub("'", "\\\\'", titel),  # Titel escapen
+#                                                          gsub("'", "\\\\'", titel),  # Quelle escapen
+#                                                          gsub("'", "\\\\'", quelle)
+#                                                        ))
+#
+#                                                      ))
+#                                   )
+#                                 )
+#       )
+#
+#   } else if (is.null(group) && !is.null(optional) && is.null(stacking)) {
+#
+#
+#     out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y =!!rlang::sym(y), x = !!rlang::sym(x))) %>%
+#       highcharter::hc_tooltip(pointFormat = tooltip) %>%
+#       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = format)) %>%
+#       highcharter::hc_xAxis(title = list(text = "")) %>%
+#       {do.call(highcharter::hc_plotOptions,  c(list(.), optional))} %>% #keine ahnung wieso chatgpt help
+#       highcharter::hc_colors(color) %>%
+#       highcharter::hc_title(text = titel,
+#                             margin = 45, # o. war vorher /
+#                             align = "center",
+#                             style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
+#       highcharter::hc_chart(
+#         style = list(fontFamily = "Calibri Regular", fontSize = "14px")
+#       ) %>%
+#       highcharter::hc_legend(enabled = TRUE, reversed = reverse)  %>%
+#       highcharter::hc_caption(text = quelle,
+#                               style = list(fontSize = "11px", color = "gray")) %>%
+#       highcharter::hc_exporting(enabled = TRUE,
+#                                 buttons = list(
+#                                   contextButton = list(
+#                                     menuItems = list("downloadPNG", "downloadCSV",
+#                                                      list(
+#                                                        text = "Daten für GPT",
+#                                                        onclick = htmlwidgets::JS(sprintf(
+#                                                          "function () {
+#      var date = new Date().toISOString().slice(0,10);
+#      var chartTitle = '%s'.replace(/\\s+/g, '_');
+#      var filename = chartTitle + '_' + date + '.txt';
+#
+#      var data = 'Titel: %s\\n' + this.getCSV();
+#      data += '\\nQuelle: %s';
+#
+#      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+#      if (window.navigator.msSaveBlob) {
+#        window.navigator.msSaveBlob(blob, filename);
+#      } else {
+#        var link = document.createElement('a');
+#        link.href = URL.createObjectURL(blob);
+#        link.download = filename;
+#        link.click();
+#      }
+#
+#    }",
+#                                                          gsub("'", "\\\\'", titel),  # Titel escapen
+#                                                          gsub("'", "\\\\'", titel),###
+#                                                          gsub("'", "\\\\'", quelle)
+#
+#                                                        ))
+#
+#                                                      ))
+#                                   )
+#                                 )
+#       )
+#
+#
+#   } else if (!is.null(group) && !is.null(optional) && is.null(stacking)){
+#
+#
+#
+#     out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y =!!rlang::sym(y), x = !!rlang::sym(x), group = !!rlang::sym(group))) %>%
+#       highcharter::hc_tooltip(pointFormat = tooltip) %>%
+#       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = format)) %>%
+#       highcharter::hc_xAxis(title = list(text = "")) %>%
+#       {do.call(highcharter::hc_plotOptions,  c(list(.), optional))} %>% #keine ahnung wieso chatgpt help
+#       highcharter::hc_colors(color) %>%
+#       highcharter::hc_title(text = titel,
+#                             margin = 45, # o. war vorher /
+#                             align = "center",
+#                             style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
+#       highcharter::hc_chart(
+#         style = list(fontFamily = "Calibri Regular", fontSize = "14px")
+#       ) %>%
+#       highcharter::hc_legend(enabled = TRUE, reversed = reverse)  %>%
+#       highcharter::hc_caption(text = quelle,
+#                               style = list(fontSize = "11px", color = "gray")) %>%
+#       highcharter::hc_exporting(enabled = TRUE,
+#                                 buttons = list(
+#                                   contextButton = list(
+#                                     menuItems = list("downloadPNG", "downloadCSV",
+#                                                      list(
+#                                                        text = "Daten für GPT",
+#                                                        onclick = htmlwidgets::JS(sprintf(
+#                                                          "function () {
+#      var date = new Date().toISOString().slice(0,10);
+#      var chartTitle = '%s'.replace(/\\s+/g, '_');
+#      var filename = chartTitle + '_' + date + '.txt';
+#
+#
+#
+#      var data = 'Titel: %s\\n' + this.getCSV();
+#      data += '\\nQuelle: %s';
+#
+#      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+#      if (window.navigator.msSaveBlob) {
+#        window.navigator.msSaveBlob(blob, filename);
+#      } else {
+#        var link = document.createElement('a');
+#        link.href = URL.createObjectURL(blob);
+#        link.download = filename;
+#        link.click();
+#      }
+#
+#    }",
+#                                                          gsub("'", "\\\\'", titel),
+#                                                          gsub("'", "\\\\'", titel),# Titel escapen
+#                                                          gsub("'", "\\\\'", quelle)  # Quelle escapen
+#                                                        ))
+#
+#                                                      ))
+#                                   )
+#                                 )
+#       )
+#
+#
+#   } else if (!is.null(TF) && !is.null(group) && is.null(stacking)){
+#
+#
+#
+#     out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y =!!rlang::sym(y), x = !!rlang::sym(x), group = !!rlang::sym(group))) %>%
+#       highcharter::hc_tooltip(pointFormat = tooltip) %>%
+#       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = format), reversedStacks = TF) %>%
+#       highcharter::hc_xAxis(title = list(text = "")) %>%
+#       highcharter::hc_colors(color) %>%
+#       highcharter::hc_title(text = titel,
+#                             margin = 45, # o. war vorher /
+#                             align = "center",
+#                             style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
+#       highcharter::hc_chart(
+#         style = list(fontFamily = "Calibri Regular", fontSize = "14px")
+#       ) %>%
+#       highcharter::hc_legend(enabled = TRUE, reversed = reverse) %>%
+#       highcharter::hc_caption(text = quelle,
+#                               style = list(fontSize = "11px", color = "gray")) %>%
+#       highcharter::hc_exporting(enabled = TRUE,
+#                                 buttons = list(
+#                                   contextButton = list(
+#                                     menuItems = list("downloadPNG", "downloadCSV",
+#                                                      list(
+#                                                        text = "Daten für GPT",
+#                                                        onclick = htmlwidgets::JS(sprintf(
+#                                                          "function () {
+#      var date = new Date().toISOString().slice(0,10);
+#      var chartTitle = '%s'.replace(/\\s+/g, '_');
+#      var filename = chartTitle + '_' + date + '.txt';
+#
+#      var data = 'Titel: %s\\n' + this.getCSV();
+#      data += '\\nQuelle: %s';
+#
+#      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+#      if (window.navigator.msSaveBlob) {
+#        window.navigator.msSaveBlob(blob, filename);
+#      } else {
+#        var link = document.createElement('a');
+#        link.href = URL.createObjectURL(blob);
+#        link.download = filename;
+#        link.click();
+#      }
+#    }",
+#                                                          gsub("'", "\\\\'", titel),
+#                                                          gsub("'", "\\\\'", titel),
+#                                                          gsub("'", "\\\\'", quelle)
+#                                                        ))
+#
+#                                                      ))
+#                                   )
+#                                 )
+#       )
+#
+#
+#   } else if (!is.null(TF) && !is.null(group) && !is.null(stacking)){
+#
+#
+#
+#     out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y =!!rlang::sym(y), x = !!rlang::sym(x), group = !!rlang::sym(group))) %>%
+#       highcharter::hc_plotOptions(bar = list(stacking = stacking )) %>%
+#       highcharter::hc_tooltip(pointFormat = tooltip) %>%
+#       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = format), reversedStacks = TF) %>%
+#       highcharter::hc_xAxis(title = list(text = "")) %>%
+#       highcharter::hc_colors(color) %>%
+#       highcharter::hc_title(text = titel,
+#                             margin = 45, # o. war vorher /
+#                             align = "center",
+#                             style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
+#       highcharter::hc_chart(
+#         style = list(fontFamily = "Calibri Regular", fontSize = "14px")
+#       ) %>%
+#       highcharter::hc_legend(enabled = TRUE, reversed = reverse) %>%
+#       highcharter::hc_caption(text = quelle,
+#                               style = list(fontSize = "11px", color = "gray")) %>%
+#       highcharter::hc_exporting(enabled = TRUE,
+#                                 buttons = list(
+#                                   contextButton = list(
+#                                     menuItems = list("downloadPNG", "downloadCSV",
+#                                                      list(
+#                                                        text = "Daten für GPT",
+#                                                        onclick = htmlwidgets::JS(sprintf(
+#                                                          "function () {
+#      var date = new Date().toISOString().slice(0,10);
+#      var chartTitle = '%s'.replace(/\\s+/g, '_');
+#      var filename = chartTitle + '_' + date + '.txt';
+#
+#      var data = 'Titel: %s\\n' + this.getCSV();
+#      data += '\\nQuelle: %s';
+#
+#      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+#      if (window.navigator.msSaveBlob) {
+#        window.navigator.msSaveBlob(blob, filename);
+#      } else {
+#        var link = document.createElement('a');
+#        link.href = URL.createObjectURL(blob);
+#        link.download = filename;
+#        link.click();
+#      }
+#    }",
+#                                                          gsub("'", "\\\\'", titel),
+#                                                          gsub("'", "\\\\'", titel),
+#                                                          gsub("'", "\\\\'", quelle)  # Quelle escapen
+#                                                        ))
+#
+#                                                      ))
+#                                   )
+#                                 )
+#       )
+#
+#
+#   }  else if(!is.null(stacking) && format == "1" ){
+#
+#     unused_format <- format
+#
+#
+#
+#     out <- df %>% highcharter::hchart("bar", highcharter::hcaes(y =!!rlang::sym(y), x = !!rlang::sym(x), group = !!rlang::sym(group)))%>%
+#       highcharter::hc_plotOptions(bar = list(stacking = stacking )) %>%
+#       highcharter::hc_tooltip(pointFormat=tooltip) %>%
+#       highcharter::hc_colors(color) %>%
+#       highcharter::hc_title(text = titel,
+#                             margin = 45,
+#                             align = "center",
+#                             style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
+#       highcharter::hc_subtitle(text = subtitel,
+#                                align = "center",
+#                                style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "18px")) %>%
+#       highcharter::hc_yAxis(title = list(text = "")) %>% #######NO FORMAT
+#       highcharter::hc_xAxis(title = list(text = "")) %>%
+#       highcharter::hc_chart(
+#         style = list(fontFamily = "Calibri Regular", fontSize = "18px")) %>%
+#       highcharter::hc_legend(enabled = TRUE, reversed = reverse) %>%
+#       highcharter::hc_caption(text = quelle,
+#                               style = list(fontSize = "11px", color = "gray")) %>%
+#       highcharter::hc_exporting(enabled = TRUE,
+#                                 buttons = list(
+#                                   contextButton = list(
+#                                     menuItems = list("downloadPNG", "downloadCSV",
+#                                                      list(
+#                                                        text = "Daten für GPT",
+#                                                        onclick = htmlwidgets::JS(sprintf(
+#                                                          "function () {
+#      var date = new Date().toISOString().slice(0,10);
+#      var chartTitle = '%s'.replace(/\\s+/g, '_');
+#      var filename = chartTitle + '_' + date + '.txt';
+#
+#      var data = 'Titel: %s\\n' + this.getCSV();
+#      data += '\\nQuelle: %s';
+#
+#      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+#      if (window.navigator.msSaveBlob) {
+#        window.navigator.msSaveBlob(blob, filename);
+#      } else {
+#        var link = document.createElement('a');
+#        link.href = URL.createObjectURL(blob);
+#        link.download = filename;
+#        link.click();
+#      }
+#    }",
+#                                                          gsub("'", "\\\\'", titel),
+#                                                          gsub("'", "\\\\'", titel),
+#                                                          gsub("'", "\\\\'", quelle)  # Quelle escapen
+#                                                        ))
+#
+#                                                      ))
+#                                   )
+#                                 )
+#       )
+#
+#
+#   } else if(!is.null(stacking) && !is.null(group) && format != "1"){
+#
+#
+#     out <- df %>% highcharter::hchart("bar", highcharter::hcaes(y =!!rlang::sym(y), x = !!rlang::sym(x), group = !!rlang::sym(group)))%>%
+#       highcharter::hc_plotOptions(bar = list(stacking = stacking )) %>%
+#       highcharter::hc_tooltip(pointFormat=tooltip) %>%
+#       highcharter::hc_colors(color) %>%
+#       highcharter::hc_title(text = titel,
+#                             margin = 45,
+#                             align = "center",
+#                             style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
+#       highcharter::hc_subtitle(text = subtitel,
+#                                align = "center",
+#                                style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "18px")) %>%
+#       highcharter::hc_yAxis(title = list(text = ""),  labels = list(format = "{value}%"), reversedStacks =  FALSE) %>%
+#       highcharter::hc_xAxis(title = list(text = "")) %>%
+#       highcharter::hc_chart(
+#         style = list(fontFamily = "Calibri Regular", fontSize = "18px")) %>%
+#       highcharter::hc_legend(enabled = TRUE, reversed = reverse) %>%
+#       highcharter::hc_caption(text = quelle,
+#                               style = list(fontSize = "11px", color = "gray")) %>%
+#       highcharter::hc_exporting(enabled = TRUE,
+#                                 buttons = list(
+#                                   contextButton = list(
+#                                     menuItems = list("downloadPNG", "downloadCSV",
+#                                                      list(
+#                                                        text = "Daten für GPT",
+#                                                        onclick = htmlwidgets::JS(sprintf(
+#                                                          "function () {
+#      var date = new Date().toISOString().slice(0,10);
+#      var chartTitle = '%s'.replace(/\\s+/g, '_');
+#      var filename = chartTitle + '_' + date + '.txt';
+#
+#      var data = 'Titel: %s\\n' + this.getCSV();
+#      data += '\\nQuelle: %s';
+#
+#      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+#      if (window.navigator.msSaveBlob) {
+#        window.navigator.msSaveBlob(blob, filename);
+#      } else {
+#        var link = document.createElement('a');
+#        link.href = URL.createObjectURL(blob);
+#        link.download = filename;
+#        link.click();
+#      }
+#    }",
+#                                                          gsub("'", "\\\\'", titel),
+#                                                          gsub("'", "\\\\'", titel),
+#                                                          gsub("'", "\\\\'", quelle)  # Quelle escapen
+#                                                        ))
+#
+#                                                      ))
+#                                   )
+#                                 )
+#       )
+#
+#
+#   }
+#
+#   else {
+#     return(1)
+#   }
+#
+#
+#   return(out)
+#
+# }
+
+
+
+
+
+# get_top10_hc_plot_options <- function(hc,
+#                                       hc_title = "",
+#                                       hc_tooltip = "",
+#                                       max_percent_used = 100,
+#                                       col = "#B16FAB",
+#                                       marker = "IEA") {
+#   if(marker=="IEA"){
+#     its <- "Quelle der Daten: IEA, 2023; OECD, 2023, freier Download, eigene Berechnungen durch MINTvernetzt."
+#   } else if (marker=="OECD"){
+#     its <- "Quelle der Daten: Eurostat, 2023; OECD, 2023; UNESCO, 2023; freier Download, eigene Berechnungen durch MINTvernetzt."
+#
+#   }
+#
+#
+#   out <- hc %>%
+#     highcharter::hc_plotOptions(
+#       series = list(
+#         boderWidth = 0,
+#         dataLabels = list(enabled = TRUE, format = "{point.wert} %",
+#                           style = list(textOutline = "none"))
+#       )) %>%
+#     highcharter::hc_tooltip(pointFormat = hc_tooltip) %>%
+#     highcharter::hc_yAxis(title = list(text = ""),
+#                           labels = list(format = "{value} %"),
+#                           min = 0,
+#                           max = max_percent_used,
+#                           tickInterval = 10) %>%
+#     highcharter::hc_xAxis(title = list(text = "")) %>%
+#     highcharter::hc_colors(c(col)) %>%
+#     highcharter::hc_title(text = hc_title,
+#                           margin = 45,
+#                           align = "center",
+#                           style = list(color = "black",
+#                                        useHTML = TRUE,
+#                                        fontFamily = "Calibri Regular",
+#                                        fontSize = "20px")) %>%
+#     highcharter::hc_chart(
+#       style = list(fontFamily = "Calibri Regular", fontSize = "14px")
+#     ) %>%
+#     highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+#     highcharter::hc_caption(text = its,
+#                             style = list(fontSize = "11px", color = "gray")) %>%
+#     highcharter::hc_exporting(enabled = TRUE,
+#                               buttons = list(
+#                                 contextButton = list(
+#                                   menuItems = list("downloadPNG", "downloadCSV",
+#                                                    list(
+#                                                      text = "Daten für GPT",
+#                                                      onclick = htmlwidgets::JS(sprintf(
+#                                                        "function () {
+#      var date = new Date().toISOString().slice(0,10);
+#      var chartTitle = '%s'.replace(/\\s+/g, '_');
+#      var filename = chartTitle + '_' + date + '.txt';
+#
+#     var data = 'Titel: %s\\n' + this.getCSV();
+#      data += '\\nQuelle: %s';
+#
+#      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+#      if (window.navigator.msSaveBlob) {
+#        window.navigator.msSaveBlob(blob, filename);
+#      } else {
+#        var link = document.createElement('a');
+#        link.href = URL.createObjectURL(blob);
+#        link.download = filename;
+#        link.click();
+#      }
+#    }", gsub("'", "\\\\'", titel),
+#                                                        gsub("'", "\\\\'", titel),
+#                                                        gsub("'", "\\\\'", quelle))  #
+#                                                      )
+#
+#                                                    ))
+#                                 )
+#                               )
+#     )
+#
+#   return(out)
+# }
+
+
+
+
+
+
+# balkenbuilder3 <- function(df, titel , x, y, tooltip, format, color, optional, optional2,  quelle="Quelle"){
+#
+#   out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y =!!rlang::sym(y), x = !!rlang::sym(x))) %>%
+#     highcharter::hc_tooltip(pointFormat = tooltip) %>%
+#     highcharter::hc_yAxis(title = list(text = ""), labels = list(format = format)) %>%
+#     highcharter::hc_xAxis(title = list(text = "")) %>%
+#     {do.call(highcharter::hc_plotOptions,  c(list(.), optional))} %>% #keine ahnung wieso chatgpt help
+#     {
+#       if (!is.null(optional2)) {
+#         optional2(.)
+#       } else {
+#         .
+#       }
+#     } %>%
+#     highcharter::hc_colors(color) %>%
+#     highcharter::hc_title(text = titel,
+#                           margin = 45, # o. war vorher /
+#                           align = "center",
+#                           style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
+#     highcharter::hc_chart(
+#       style = list(fontFamily = "Calibri Regular", fontSize = "14px")
+#     ) %>%
+#     highcharter::hc_legend(enabled = TRUE, reversed = TRUE)  %>%
+#     highcharter::hc_caption(text = quelle,
+#                             style = list(fontSize = "11px", color = "gray")) %>%
+#     highcharter::hc_exporting(enabled = TRUE,
+#                               buttons = list(
+#                                 contextButton = list(
+#                                   menuItems = list("downloadPNG", "downloadCSV",
+#                                                    list(
+#                                                      text = "Daten für GPT",
+#                                                      onclick = htmlwidgets::JS(sprintf(
+#                                                        "function () {
+#      var date = new Date().toISOString().slice(0,10);
+#      var chartTitle = '%s'.replace(/\\s+/g, '_');
+#      var filename = chartTitle + '_' + date + '.txt';
+#
+#      var data = 'Titel: %s\\n' + this.getCSV();
+#      data += '\\nQuelle: %s';
+#      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+#      if (window.navigator.msSaveBlob) {
+#        window.navigator.msSaveBlob(blob, filename);
+#      } else {
+#        var link = document.createElement('a');
+#        link.href = URL.createObjectURL(blob);
+#        link.download = filename;
+#        link.click();
+#      }
+#    }", gsub("'", "\\\\'", titel),gsub("'", "\\\\'", titel),  gsub("'", "\\\\'", quelle))  #
+#                                                      )
+#
+#                                                    ))
+#                                 )
+#                               )
+#     )
+#
+#   return(out)
+#
+#
+# }
 
 
 #mapbuilder
@@ -3154,11 +3152,17 @@ mapbuilder_plotly <- function(
 ) {
 
   # Text vorbereiten
-  titel_wrapped <- stringr::str_wrap(titel, width = 40)
-  titel_wrapped <- gsub("\n", "<br>", titel_wrapped)
+  if(map == "germany_choropleth_federal_states.rds" ){
+    titel_wrapped <- stringr::str_wrap(titel, width = 40)
+    titel_wrapped <- gsub("\n", "<br>", titel_wrapped)
+  }else{
+    titel_wrapped <- stringr::str_wrap(titel, width = 60)
+    titel_wrapped <- gsub("\n", "<br>", titel_wrapped)
+  }
+
+
 
   # Download vorbereiten
-
   df_json <- jsonlite::toJSON(
     df[, c(regio_col, value_col), drop = FALSE],
     dataframe = "rows",
@@ -3166,15 +3170,15 @@ mapbuilder_plotly <- function(
     na = "null"
   )
 
-
   titel_js  <- jsonlite::toJSON(titel, auto_unbox = TRUE)
   quelle_js <- jsonlite::toJSON(quelle, auto_unbox = TRUE)
+
 
   # Geodaten mit df verbinden
   geodata <- readRDS(paste0("data/", map))
   if(map == "germany_choropleth_landkreise.rds"){
     map_data <-
-      sf::st_as_sf(dplyr::left_join(
+      sf::st_as_sf(dplyr::inner_join(
         tibble::tibble(geodata),
         df,
         by = c("AGS" = "landkreis_nummer")
@@ -3208,10 +3212,22 @@ mapbuilder_plotly <- function(
       )) %>%
       sf::st_simplify()
   }
-
-
   map_values <- map_data[!is.na(map_data[[value_col]]), , drop = FALSE]
   map_na     <- map_data[is.na(map_data[[value_col]]), , drop = FALSE]
+
+
+  # Farbskalierung
+  if(map == "world_choropleth.rds"){
+    if(is.null(cmin)){
+      cmin <- 0
+      cmax <- round(max(df[[value_col]])+(max(df[[value_col]])/4))
+    }
+    map_values[[".color_value"]] <- scales::rescale(
+      map_values[[value_col]],
+      to = c(0, 1),
+      from = c(cmin, cmax)
+    )
+    map_values[[".color_value"]] <- pmax(0, pmin(1, map_values[[".color_value"]]))
 
 
     # Plot erzeugen
@@ -3226,10 +3242,8 @@ mapbuilder_plotly <- function(
         plotly::add_sf(
           data = map_values,
           split = ~NAME_1,
-          color = as.formula(paste0("~`", value_col, "`")),
+          color = ~.color_value,
           colors = c(mincolor, maxcolor),
-          # zmin = cmin,
-          # zmax = cmax,
           alpha = 1,
           stroke = I("#FAFAFA"),
           text = ~tooltip,
@@ -3238,10 +3252,35 @@ mapbuilder_plotly <- function(
           showlegend = FALSE
         )
     }
+  }else{
+    # Plot erzeugen
+    p <- plotly::plot_ly(
+      hoverinfo = "text",
+      hoveron = "fills"
+    )
+
+    # Werte-Trace
+    if (nrow(map_values) > 0) {
+      p <- p |>
+        plotly::add_sf(
+          data = map_values,
+          split = ~NAME_1,
+          color = as.formula(paste0("~`", value_col, "`")),
+          colors = c(mincolor, maxcolor),
+          alpha = 1,
+          stroke = I("#FAFAFA"),
+          text = ~tooltip,
+          hoverinfo = "text",
+          hoveron = "fills",
+          showlegend = FALSE
+        )
+    }
+  }
+
 
     # NA-Trace grau
     if (nrow(map_na) > 0) {
-      map_na[[".na_value"]] <- 1
+      map_na[[".na_value"]] <- 0
 
       p <- p |>
         plotly::add_sf(
@@ -3249,8 +3288,6 @@ mapbuilder_plotly <- function(
           split = ~NAME_1,
           color = ~.na_value,
           colors = c(na_color, na_color),
-          # zmin = cmin,
-          # zmax = cmax,
           alpha = 1,
           stroke = I("#FAFAFA"),
           text = "fehlender Wert",
@@ -3266,8 +3303,6 @@ mapbuilder_plotly <- function(
       hoverlabel = list(
         bgcolor = "white",
         font = list(size = 12),
-        zmin = cmin,
-        zmax = cmax,
         traces = 1
       )
     ) |>
@@ -3316,20 +3351,48 @@ mapbuilder_plotly <- function(
           font = list(size = 11, color = "gray", family = "Calibri Regular")
         )
       )
-    ) |>
-    plotly::colorbar(
-      title = "",
-      orientation = "h",
-      x = 0.5,
-      xanchor = "center",
-      y = -0.015,
-      yanchor = "top",
-      len = 0.35,
-      thickness = 8,
-      tickfont = list(size = 10),
-      borderwidth = 0,
-      outlinewidth = 0
-    ) |>
+    )
+
+    if(map == "world_choropleth.rds"){
+      p <- p |>
+      plotly::colorbar(
+        title = "",
+        tickvals = c(0, 0.5, 1),
+        ticktext = c(
+          format(cmin, big.mark = ".", decimal.mark = ","),
+          format((cmin + cmax) / 2, big.mark = ".", decimal.mark = ","),
+          format(cmax, big.mark = ".", decimal.mark = ",")
+        ),
+        orientation = "h",
+        x = 0.5,
+        xanchor = "center",
+        y = -0.015,
+        yanchor = "top",
+        len = 0.35,
+        thickness = 8,
+        tickfont = list(size = 10),
+        borderwidth = 0,
+        outlinewidth = 0
+      )
+    }else{
+      p <- p |>
+      plotly::colorbar(
+        title = "",
+        orientation = "h",
+        x = 0.5,
+        xanchor = "center",
+        y = -0.015,
+        yanchor = "top",
+        len = 0.35,
+        thickness = 8,
+        tickfont = list(size = 10),
+        borderwidth = 0,
+        outlinewidth = 0
+      )
+    }
+
+    # Download
+    p <- p |>
     plotly::config(
       displaylogo = FALSE,
       modeBarButtonsToRemove = c(
@@ -3427,336 +3490,336 @@ mapbuilder_plotly <- function(
   return(p)
 }
 
-mapbuilder <- function(df, joinby, name, tooltip,titel, mincolor, maxcolor, prop = FALSE, wert = FALSE, map = NULL, landkarten = FALSE, states=NULL,  quelle="Quelle", reg = "Deutschland"){
-
-if(prop==FALSE && wert == FALSE){
-  out<- highcharter::highchart(type="map") %>%
-    highcharter::hc_add_series_map(
-    map = map,
-    df = df,
-    value = "proportion",
-    joinBy = joinby,
-    borderColor = "#FAFAFA",
-    name = name,
-    borderWidth = 0.1,
-    nullColor = "#A9A9A9",
-    tooltip = list(
-      valueDecimals = 0,
-      valueSuffix = "%"
-    )) %>%
-    highcharter::hc_tooltip(pointFormat = tooltip) %>%
-    highcharter::hc_colorAxis(min=0,minColor= mincolor, maxColor=maxcolor, labels = list(format = "{text}%")) %>%
-    highcharter::hc_title(
-      text = titel,
-      margin = 10,
-      align = "center",
-      style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")
-    ) %>%
-    highcharter::hc_chart(
-      style = list(fontFamily = "Calibri Regular")
-    ) %>% highcharter::hc_size(600, 550) %>%
-    highcharter::hc_credits(enabled = FALSE) %>%
-    highcharter::hc_legend(layout = "horizontal", floating = FALSE,
-                           verticalAlign = "bottom")  %>%
-    highcharter::hc_caption(text = quelle,
-                            style = list(fontSize = "11px", color = "gray")) %>%
-    highcharter::hc_exporting(enabled = TRUE,
-                              buttons = list(
-                                contextButton = list(
-                                  menuItems = list("downloadPNG", "downloadCSV",
-                                                   list(
-                                                     text = "Daten für GPT",
-                                                     onclick = htmlwidgets::JS(sprintf(
-                                                       "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
-
-     var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle: %s';
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-   }", gsub("'", "\\\\'", titel),gsub("'", "\\\\'", titel),gsub("'", "\\\\'", quelle))  #
-                                                     )
-
-                                                   ))
-                                )
-                              )
-    )
-
-}
-  else if(prop == TRUE && landkarten == FALSE){
-  out<- highcharter::highchart(type="map") %>%
-    highcharter::hc_add_series_map(
-    map = map,
-    df = df,
-    value = "prop",
-    joinBy = joinby,
-    borderColor = "#FAFAFA",
-    name = name,
-    borderWidth = 0.1,
-    nullColor = "#A9A9A9",
-    tooltip = list(
-      valueDecimals = 0,
-      valueSuffix = "%"
-    )) %>%
-    highcharter::hc_tooltip(pointFormat = tooltip) %>%
-    highcharter::hc_colorAxis(min=0,minColor= mincolor, maxColor=maxcolor, labels = list(format = "{text}%")) %>%
-    highcharter::hc_title(
-      text = titel,
-      margin = 10,
-      align = "center",
-      style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")
-    ) %>%
-    highcharter::hc_chart(
-      style = list(fontFamily = "Calibri Regular")
-    ) %>% highcharter::hc_size(600, 550) %>%
-    highcharter::hc_credits(enabled = FALSE) %>%
-    highcharter::hc_legend(layout = "horizontal", floating = FALSE,
-                           verticalAlign = "bottom")  %>%
-    highcharter::hc_caption(text = quelle,
-                            style = list(fontSize = "11px", color = "gray")) %>%
-    highcharter::hc_exporting(enabled = TRUE,
-                              buttons = list(
-                                contextButton = list(
-                                  menuItems = list("downloadPNG", "downloadCSV",
-                                                   list(
-                                                     text = "Daten für GPT",
-                                                     onclick = htmlwidgets::JS(sprintf(
-                                                       "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
-
-     var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle: %s';
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-   }", gsub("'", "\\\\'", titel),gsub("'", "\\\\'", titel), gsub("'", "\\\\'", quelle))  #
-                                                     )
-
-                                                   ))
-                                )
-                              )
-    )
-
-}
-  else if(wert==TRUE){
-
-
-  out <- highcharter::highchart(type="map") %>%
-    highcharter::hc_add_series_map(
-    map = map,
-    df = df,
-    value = "wert",
-    joinBy = joinby,
-    borderColor = "#FAFAFA",
-    name = name,
-    borderWidth = 0.1,
-    nullColor = "#A9A9A9",
-    tooltip = list(
-      valueDecimals = 0,
-      valueSuffix = "%"
-    )) %>%
-    highcharter::hc_tooltip(pointFormat = tooltip) %>%
-    highcharter::hc_colorAxis(min=0, minColor= mincolor, maxColor=maxcolor,labels = list(format = "{text}%")) %>%
-    highcharter::hc_title(
-      text = titel,
-      margin = 10,
-      align = "center",
-      style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")
-    ) %>%
-    highcharter::hc_chart(
-      style = list(fontFamily = "Calibri Regular")
-    ) %>% highcharter::hc_size(1000, 600) %>%
-    highcharter::hc_credits(enabled = FALSE) %>%
-    highcharter::hc_legend(layout = "horizontal", floating = FALSE,
-                           verticalAlign = "bottom")  %>%
-    highcharter::hc_caption(text = quelle,
-                            style = list(fontSize = "11px", color = "gray")) %>%
-    highcharter::hc_exporting(enabled = TRUE,
-                              buttons = list(
-                                contextButton = list(
-                                  menuItems = list("downloadPNG", "downloadCSV",
-                                                   list(
-                                                     text = "Daten für GPT",
-                                                     onclick = htmlwidgets::JS(sprintf(
-                                                       "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
-
-     var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle: %s';
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-   }", gsub("'", "\\\\'", titel),gsub("'", "\\\\'", titel), gsub("'", "\\\\'", quelle))  #
-                                                     )
-
-                                                   ))
-                                )
-                              )
-    )
-
-} else if (landkarten == TRUE && prop == TRUE && !is.null(states))
-{
-
-  state_codes <- data.frame(
-    state = c(
-      "Baden-Württemberg","Bayern","Berlin","Brandenburg","Bremen","Hamburg",
-      "Hessen","Mecklenburg-Vorpommern","Niedersachsen","Nordrhein-Westfalen",
-      "Rheinland-Pfalz","Saarland","Sachsen","Sachsen-Anhalt",
-      "Schleswig-Holstein","Thüringen"
-    ),
-    short = c("bw","by","be","bb","hb","hh","he","mv","ni",
-              "nw","rp","sl","sn","st","sh","th")
-  )
-  mincolor1 <- mincolor
-  maxcolor1 <- maxcolor
-
-
-  state_code <- state_codes %>%
-    dplyr::filter(state == states) %>%
-    dplyr::pull(short)
-
-
-  map_state <- readRDS(paste0("data/map_data/map_de_", state_code, ".rds"))
-
-
-
-  #state_codes <- data.frame(
-  #  state = c(
-  #    "Baden-Württemberg",
-  #    "Bayern",
-  #    "Berlin",
-  #    "Brandenburg",
-  #    "Bremen",
-  #    "Hamburg",
-  #    "Hessen",
-  #    "Mecklenburg-Vorpommern",
-  #    "Niedersachsen",
-  #    "Nordrhein-Westfalen",
-  #    "Rheinland-Pfalz",
-  #    "Saarland",
-  #    "Sachsen",
-  #    "Sachsen-Anhalt",
-  #    "Schleswig-Holstein",
-  #    "Thüringen"
-  #  ),
-  #  short = c(
-  #    "bw",
-  #    "by",
-  #    "be",
-  #    "bb",
-  #    "hb",
-  #    "hh",
-  #    "he",
-  #    "mv",
-   #   "ni",
-  #    "nw",
-   #   "rp",
-    #  "sl",
-     # "sn",
-    #  "st",
-    #  "sh",
-    #  "th"
-    #)
-  #)
-
-  #state_code <- state_codes %>% dplyr::filter(state == states) %>% dplyr::pull()
-
-  out <- highcharter::highchart(type="map") %>%
-    highcharter::hc_add_series_map(
-    map = map_state,
-    df = df,
-    value = "prob",
-    joinBy = joinby,
-    borderColor = "#FAFAFA",
-    name = name,
-    borderWidth = 0.1,
-    nullColor = "#A9A9A9",
-    tooltip = list(
-      valueDecimals = 0,
-      valueSuffix = "%"
-    )
-    #,
-    # download_map_data = FALSE
-  ) %>%
-    highcharter::hc_colorAxis(min=0, labels = list(format = "{text}%")) %>%
-    highcharter::hc_title(
-      text = titel,
-      margin = 10,
-      align = "center",
-      style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")
-    ) %>%
-    highcharter::hc_chart(
-      style = list(fontFamily = "Calibri Regular")
-    ) %>% #highcharter::hc_size(600, 550) %>%
-    highcharter::hc_credits(enabled = FALSE) %>%
-    highcharter::hc_legend(layout = "horizontal", floating = FALSE,
-                           verticalAlign = "bottom"
-    ) %>%
-    highcharter::hc_caption(text = quelle,
-                            style = list(fontSize = "11px", color = "gray")) %>%
-    highcharter::hc_exporting(enabled = TRUE,
-                              buttons = list(
-                                contextButton = list(
-                                  menuItems = list("downloadPNG", "downloadCSV",
-                                                   list(
-                                                     text = "Daten für GPT",
-                                                     onclick = htmlwidgets::JS(sprintf(
-                                                       "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
-
-     var data = 'Titel: %s\\n' + this.getCSV();
-     data += '\\nQuelle: %s';
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-   }", gsub("'", "\\\\'", titel),gsub("'", "\\\\'", titel), gsub("'", "\\\\'", quelle))  #
-                                                     )
-
-                                                   ))
-                                )
-                              )
-    )
-
-
-
-
-}
-
-  return(out)
-}
+# mapbuilder <- function(df, joinby, name, tooltip,titel, mincolor, maxcolor, prop = FALSE, wert = FALSE, map = NULL, landkarten = FALSE, states=NULL,  quelle="Quelle", reg = "Deutschland"){
+#
+# if(prop==FALSE && wert == FALSE){
+#   out<- highcharter::highchart(type="map") %>%
+#     highcharter::hc_add_series_map(
+#     map = map,
+#     df = df,
+#     value = "proportion",
+#     joinBy = joinby,
+#     borderColor = "#FAFAFA",
+#     name = name,
+#     borderWidth = 0.1,
+#     nullColor = "#A9A9A9",
+#     tooltip = list(
+#       valueDecimals = 0,
+#       valueSuffix = "%"
+#     )) %>%
+#     highcharter::hc_tooltip(pointFormat = tooltip) %>%
+#     highcharter::hc_colorAxis(min=0,minColor= mincolor, maxColor=maxcolor, labels = list(format = "{text}%")) %>%
+#     highcharter::hc_title(
+#       text = titel,
+#       margin = 10,
+#       align = "center",
+#       style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")
+#     ) %>%
+#     highcharter::hc_chart(
+#       style = list(fontFamily = "Calibri Regular")
+#     ) %>% highcharter::hc_size(600, 550) %>%
+#     highcharter::hc_credits(enabled = FALSE) %>%
+#     highcharter::hc_legend(layout = "horizontal", floating = FALSE,
+#                            verticalAlign = "bottom")  %>%
+#     highcharter::hc_caption(text = quelle,
+#                             style = list(fontSize = "11px", color = "gray")) %>%
+#     highcharter::hc_exporting(enabled = TRUE,
+#                               buttons = list(
+#                                 contextButton = list(
+#                                   menuItems = list("downloadPNG", "downloadCSV",
+#                                                    list(
+#                                                      text = "Daten für GPT",
+#                                                      onclick = htmlwidgets::JS(sprintf(
+#                                                        "function () {
+#      var date = new Date().toISOString().slice(0,10);
+#      var chartTitle = '%s'.replace(/\\s+/g, '_');
+#      var filename = chartTitle + '_' + date + '.txt';
+#
+#      var data = 'Titel: %s\\n' + this.getCSV();
+#      data += '\\nQuelle: %s';
+#      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+#      if (window.navigator.msSaveBlob) {
+#        window.navigator.msSaveBlob(blob, filename);
+#      } else {
+#        var link = document.createElement('a');
+#        link.href = URL.createObjectURL(blob);
+#        link.download = filename;
+#        link.click();
+#      }
+#    }", gsub("'", "\\\\'", titel),gsub("'", "\\\\'", titel),gsub("'", "\\\\'", quelle))  #
+#                                                      )
+#
+#                                                    ))
+#                                 )
+#                               )
+#     )
+#
+# }
+#   else if(prop == TRUE && landkarten == FALSE){
+#   out<- highcharter::highchart(type="map") %>%
+#     highcharter::hc_add_series_map(
+#     map = map,
+#     df = df,
+#     value = "prop",
+#     joinBy = joinby,
+#     borderColor = "#FAFAFA",
+#     name = name,
+#     borderWidth = 0.1,
+#     nullColor = "#A9A9A9",
+#     tooltip = list(
+#       valueDecimals = 0,
+#       valueSuffix = "%"
+#     )) %>%
+#     highcharter::hc_tooltip(pointFormat = tooltip) %>%
+#     highcharter::hc_colorAxis(min=0,minColor= mincolor, maxColor=maxcolor, labels = list(format = "{text}%")) %>%
+#     highcharter::hc_title(
+#       text = titel,
+#       margin = 10,
+#       align = "center",
+#       style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")
+#     ) %>%
+#     highcharter::hc_chart(
+#       style = list(fontFamily = "Calibri Regular")
+#     ) %>% highcharter::hc_size(600, 550) %>%
+#     highcharter::hc_credits(enabled = FALSE) %>%
+#     highcharter::hc_legend(layout = "horizontal", floating = FALSE,
+#                            verticalAlign = "bottom")  %>%
+#     highcharter::hc_caption(text = quelle,
+#                             style = list(fontSize = "11px", color = "gray")) %>%
+#     highcharter::hc_exporting(enabled = TRUE,
+#                               buttons = list(
+#                                 contextButton = list(
+#                                   menuItems = list("downloadPNG", "downloadCSV",
+#                                                    list(
+#                                                      text = "Daten für GPT",
+#                                                      onclick = htmlwidgets::JS(sprintf(
+#                                                        "function () {
+#      var date = new Date().toISOString().slice(0,10);
+#      var chartTitle = '%s'.replace(/\\s+/g, '_');
+#      var filename = chartTitle + '_' + date + '.txt';
+#
+#      var data = 'Titel: %s\\n' + this.getCSV();
+#      data += '\\nQuelle: %s';
+#      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+#      if (window.navigator.msSaveBlob) {
+#        window.navigator.msSaveBlob(blob, filename);
+#      } else {
+#        var link = document.createElement('a');
+#        link.href = URL.createObjectURL(blob);
+#        link.download = filename;
+#        link.click();
+#      }
+#    }", gsub("'", "\\\\'", titel),gsub("'", "\\\\'", titel), gsub("'", "\\\\'", quelle))  #
+#                                                      )
+#
+#                                                    ))
+#                                 )
+#                               )
+#     )
+#
+# }
+#   else if(wert==TRUE){
+#
+#
+#   out <- highcharter::highchart(type="map") %>%
+#     highcharter::hc_add_series_map(
+#     map = map,
+#     df = df,
+#     value = "wert",
+#     joinBy = joinby,
+#     borderColor = "#FAFAFA",
+#     name = name,
+#     borderWidth = 0.1,
+#     nullColor = "#A9A9A9",
+#     tooltip = list(
+#       valueDecimals = 0,
+#       valueSuffix = "%"
+#     )) %>%
+#     highcharter::hc_tooltip(pointFormat = tooltip) %>%
+#     highcharter::hc_colorAxis(min=0, minColor= mincolor, maxColor=maxcolor,labels = list(format = "{text}%")) %>%
+#     highcharter::hc_title(
+#       text = titel,
+#       margin = 10,
+#       align = "center",
+#       style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")
+#     ) %>%
+#     highcharter::hc_chart(
+#       style = list(fontFamily = "Calibri Regular")
+#     ) %>% highcharter::hc_size(1000, 600) %>%
+#     highcharter::hc_credits(enabled = FALSE) %>%
+#     highcharter::hc_legend(layout = "horizontal", floating = FALSE,
+#                            verticalAlign = "bottom")  %>%
+#     highcharter::hc_caption(text = quelle,
+#                             style = list(fontSize = "11px", color = "gray")) %>%
+#     highcharter::hc_exporting(enabled = TRUE,
+#                               buttons = list(
+#                                 contextButton = list(
+#                                   menuItems = list("downloadPNG", "downloadCSV",
+#                                                    list(
+#                                                      text = "Daten für GPT",
+#                                                      onclick = htmlwidgets::JS(sprintf(
+#                                                        "function () {
+#      var date = new Date().toISOString().slice(0,10);
+#      var chartTitle = '%s'.replace(/\\s+/g, '_');
+#      var filename = chartTitle + '_' + date + '.txt';
+#
+#      var data = 'Titel: %s\\n' + this.getCSV();
+#      data += '\\nQuelle: %s';
+#      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+#      if (window.navigator.msSaveBlob) {
+#        window.navigator.msSaveBlob(blob, filename);
+#      } else {
+#        var link = document.createElement('a');
+#        link.href = URL.createObjectURL(blob);
+#        link.download = filename;
+#        link.click();
+#      }
+#    }", gsub("'", "\\\\'", titel),gsub("'", "\\\\'", titel), gsub("'", "\\\\'", quelle))  #
+#                                                      )
+#
+#                                                    ))
+#                                 )
+#                               )
+#     )
+#
+# } else if (landkarten == TRUE && prop == TRUE && !is.null(states))
+# {
+#
+#   state_codes <- data.frame(
+#     state = c(
+#       "Baden-Württemberg","Bayern","Berlin","Brandenburg","Bremen","Hamburg",
+#       "Hessen","Mecklenburg-Vorpommern","Niedersachsen","Nordrhein-Westfalen",
+#       "Rheinland-Pfalz","Saarland","Sachsen","Sachsen-Anhalt",
+#       "Schleswig-Holstein","Thüringen"
+#     ),
+#     short = c("bw","by","be","bb","hb","hh","he","mv","ni",
+#               "nw","rp","sl","sn","st","sh","th")
+#   )
+#   mincolor1 <- mincolor
+#   maxcolor1 <- maxcolor
+#
+#
+#   state_code <- state_codes %>%
+#     dplyr::filter(state == states) %>%
+#     dplyr::pull(short)
+#
+#
+#   map_state <- readRDS(paste0("data/map_data/map_de_", state_code, ".rds"))
+#
+#
+#
+#   #state_codes <- data.frame(
+#   #  state = c(
+#   #    "Baden-Württemberg",
+#   #    "Bayern",
+#   #    "Berlin",
+#   #    "Brandenburg",
+#   #    "Bremen",
+#   #    "Hamburg",
+#   #    "Hessen",
+#   #    "Mecklenburg-Vorpommern",
+#   #    "Niedersachsen",
+#   #    "Nordrhein-Westfalen",
+#   #    "Rheinland-Pfalz",
+#   #    "Saarland",
+#   #    "Sachsen",
+#   #    "Sachsen-Anhalt",
+#   #    "Schleswig-Holstein",
+#   #    "Thüringen"
+#   #  ),
+#   #  short = c(
+#   #    "bw",
+#   #    "by",
+#   #    "be",
+#   #    "bb",
+#   #    "hb",
+#   #    "hh",
+#   #    "he",
+#   #    "mv",
+#    #   "ni",
+#   #    "nw",
+#    #   "rp",
+#     #  "sl",
+#      # "sn",
+#     #  "st",
+#     #  "sh",
+#     #  "th"
+#     #)
+#   #)
+#
+#   #state_code <- state_codes %>% dplyr::filter(state == states) %>% dplyr::pull()
+#
+#   out <- highcharter::highchart(type="map") %>%
+#     highcharter::hc_add_series_map(
+#     map = map_state,
+#     df = df,
+#     value = "prob",
+#     joinBy = joinby,
+#     borderColor = "#FAFAFA",
+#     name = name,
+#     borderWidth = 0.1,
+#     nullColor = "#A9A9A9",
+#     tooltip = list(
+#       valueDecimals = 0,
+#       valueSuffix = "%"
+#     )
+#     #,
+#     # download_map_data = FALSE
+#   ) %>%
+#     highcharter::hc_colorAxis(min=0, labels = list(format = "{text}%")) %>%
+#     highcharter::hc_title(
+#       text = titel,
+#       margin = 10,
+#       align = "center",
+#       style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")
+#     ) %>%
+#     highcharter::hc_chart(
+#       style = list(fontFamily = "Calibri Regular")
+#     ) %>% #highcharter::hc_size(600, 550) %>%
+#     highcharter::hc_credits(enabled = FALSE) %>%
+#     highcharter::hc_legend(layout = "horizontal", floating = FALSE,
+#                            verticalAlign = "bottom"
+#     ) %>%
+#     highcharter::hc_caption(text = quelle,
+#                             style = list(fontSize = "11px", color = "gray")) %>%
+#     highcharter::hc_exporting(enabled = TRUE,
+#                               buttons = list(
+#                                 contextButton = list(
+#                                   menuItems = list("downloadPNG", "downloadCSV",
+#                                                    list(
+#                                                      text = "Daten für GPT",
+#                                                      onclick = htmlwidgets::JS(sprintf(
+#                                                        "function () {
+#      var date = new Date().toISOString().slice(0,10);
+#      var chartTitle = '%s'.replace(/\\s+/g, '_');
+#      var filename = chartTitle + '_' + date + '.txt';
+#
+#      var data = 'Titel: %s\\n' + this.getCSV();
+#      data += '\\nQuelle: %s';
+#      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+#      if (window.navigator.msSaveBlob) {
+#        window.navigator.msSaveBlob(blob, filename);
+#      } else {
+#        var link = document.createElement('a');
+#        link.href = URL.createObjectURL(blob);
+#        link.download = filename;
+#        link.click();
+#      }
+#    }", gsub("'", "\\\\'", titel),gsub("'", "\\\\'", titel), gsub("'", "\\\\'", quelle))  #
+#                                                      )
+#
+#                                                    ))
+#                                 )
+#                               )
+#     )
+#
+#
+#
+#
+# }
+#
+#   return(out)
+# }
 
 
 

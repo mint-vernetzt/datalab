@@ -15,19 +15,17 @@ mod_fachkraft_item_detail_ui <- function(id){
       inputId = ns("map_y_fachkraft_arbeit_detail"),
       label = NULL,
       choices = fachkraft_ui_years(),
-      selected = "2024"
+      selected = "2025"
     ),
 
     p("Berufslevel:"),
     shinyWidgets::pickerInput(
       inputId = ns("map_bl_fachkraft_arbeit_detail"),
-      choices = c("Fachkräfte",
-                  "Spezialist*innen",
-                  "Expert*innen"), #fachkraft_ui_berufslevel(),
+      choices = c("Fachkräfte", "Spezialist:innen", "Expert:innen"),
       selected = c("Fachkräfte"),
       multiple = FALSE
     ),
-    #"Fachkräfte" "Spezialist*innen" "Expert*innen"
+
     p("Beruf:"),
     shinyWidgets::pickerInput(
       inputId = ns("map_b_fachkraft_arbeit_detail"),

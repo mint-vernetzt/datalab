@@ -14,8 +14,8 @@ mod_beruf_arbeitsmarkt_anforderungen_frauen_ui <- function(id){
     shinyWidgets::sliderTextInput(
       inputId = ns("date_arbeitsmarkt_fach_vergleich_frauen"),
       label = NULL,
-      choices = 2013:2024,
-      selected = 2024
+      choices = 2013:2025,
+      selected = 2025
     ),
     p("Region:"),
     shinyWidgets::pickerInput(

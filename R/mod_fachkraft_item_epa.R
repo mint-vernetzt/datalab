@@ -16,13 +16,26 @@ mod_fachkraft_item_epa_ui <- function(id){
       inputId = ns("map_y_fachkraft_arbeit_epa"),
       label = NULL,
       choices = fachkraft_ui_years(reg="DE"),
-      selected = "2024"
+      selected = "2025"
     ),
 
     p("Fachbereich:"),
     shinyWidgets::pickerInput(
       inputId = ns("map_f_fachkraft_arbeit_epa"),
-      choices = fachkraft_ui_faecher(),
+      #choices = fachkraft_ui_faecher(),
+      choices = c(
+        "MINT gesamt", #"MINT",
+        "Mathematik, Naturwissenschaften",
+        "Informatik",
+        "Technik gesamt",
+        "Landtechnik",
+        "Produktionstechnik",
+        "Bau- und Gebäudetechnik",
+        "Verkehrs-, Sicherheits- und Veranstaltungstechnik",
+        "Gesundheitstechnik",
+        "Alle Berufe" ="Gesamt",
+        "Nicht MINT"
+      ),
       selected = c("MINT gesamt", "Nicht MINT"),
       multiple = TRUE,
       options =  list(

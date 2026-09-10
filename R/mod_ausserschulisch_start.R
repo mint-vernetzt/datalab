@@ -81,7 +81,7 @@ mod_ausserschulisch_start_ui <- function(id){
         title = "Datenquellen",
         width = 5,
         p(style = "text-align: left; font-size = 16px",
-          span(tags$b(span("Daten zu den außerschulische MINT-Akteur:innen und MINTvernetzt Befragungen: Quelle MINTvernetzt, Stand 14. April 20-25.")))),
+          span(tags$b(span("Daten zu den außerschulische MINT-Akteur:innen und MINTvernetzt Befragungen: Quelle MINTvernetzt, Stand 29. Juli 2026.")))),
         p(style = "text-align: left; font-size = 16px",
           span(tags$b(span("Daten zu frühklindlicher Bildung: Quelle Stiftung Kinder forschen, 2023."))))
       )
@@ -186,7 +186,7 @@ mod_ausserschulisch_start_ui <- function(id){
                                          div(
                                            style = "display: flex; justify-content: center; align-items: center; margin-bottom: 25px;
                                            margin-top: 20px;",
-                                           img(src='www/Ausserschulisch_CP_Ausfuellstatus.png',
+                                           img(src='www/Ausserschulisch_CP_Ausfuellstatus_neu.png',
                                                class = "img-responsive",
                                                alt = "Bild Ausfuellstatus Community Plattform",
                                                style = "max-width: 60%;"

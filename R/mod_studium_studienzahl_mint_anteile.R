@@ -53,19 +53,18 @@ mod_studium_studienzahl_mint_anteile_ui <- function(id){
     shinyWidgets::pickerInput(
       inputId = ns("anteile_order"),
       choices = c("MINT-Fächergruppen",
-                  "MINT-Fachbereiche"),
+                  "Studienbereiche"),
       multiple = FALSE,
-      selected = "MINT-Fächergruppen"
+      selected = "Studienbereiche"
     ),
 
-    conditionalPanel(condition = "input.anteile_order == 'MINT-Fächergruppen'",
+    conditionalPanel(condition = "input.anteile_order == 'Studienbereiche'",
                      ns = ns,
-                     p("Fächergruppen:"),
+                     p("Studienbereiche:"),
                      shinyWidgets::pickerInput(
                        inputId = ns("anteile_faecher_mint"),
                        choices = studi_det_ui_faecher(),
-                       selected = c("Informatik", "Elektrotechnik und Informationstechnik",
-                                    "Physik, Astronomie", "Mathematik", "Chemie", "Maschinenbau/Verfahrenstechnik"),
+                       selected = c("Informatik", "Elektrotechnik und Informationstechnik"),
                        multiple = TRUE,
                        options = list(`actions-box` = TRUE,
                                       `deselect-all-text` = "Alle abwählen",

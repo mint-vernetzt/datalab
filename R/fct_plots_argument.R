@@ -42,7 +42,7 @@ daten_download <- function(r){
   df_alle <- rbind(df_beschäftigte, df_andere)
 
   ### Daten Fachkräfte ----
-  timerange <- 2024
+  timerange <- 2025
   fach <- c("MINT gesamt", "Nicht MINT")
   bf <- fachkraft_ui_berufslevel()
 
@@ -183,7 +183,7 @@ daten_download <- function(r){
 
     ### Daten Demografie ----
     betrachtung <- "Gruppenvergleich - Balkendiagramm"
-    timerange <- 2024 #L
+    timerange <- 2025 #L
     faecher <- "MINT"
 
     gruppe <- c(
@@ -197,7 +197,7 @@ daten_download <- function(r){
       FROM arbeitsmarkt_detail
       WHERE jahr = {timerange}
       AND landkreis = 'alle Landkreise'
-      AND bundesland = {regio}
+      AND bundesland = {region_reserve}
       AND anforderung = 'Gesamt'
       AND geschlecht = 'Gesamt'
       AND indikator IN ({gruppe*})
@@ -217,7 +217,7 @@ daten_download <- function(r){
       SELECT region, fach, jahr, indikator, wert
       FROM studierende_detailliert
       WHERE jahr IN (2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024)
-      AND region = {regio}
+      AND region = {region_reserve}
       AND geschlecht = 'Gesamt'
       AND fach IN ('Mathematik, Naturwissenschaften', 'Informatik', 'Ingenieurwissenschaften (ohne Informatik)')
       AND indikator = 'Studierende'
@@ -226,13 +226,12 @@ daten_download <- function(r){
     df_studierende <- DBI::dbGetQuery(con, query_df)
 
     query_df <- glue::glue_sql("
-      SELECT bundesland, fachbereich, jahr, kategorie, wert
+      SELECT bundesland, fachbereich, jahr, indikator, wert
       FROM arbeitsmarkt_detail
       WHERE jahr IN (2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024)
-      AND bundesland = {regio}
+      AND bundesland = {region_reserve}
       AND geschlecht = 'Gesamt'
       AND fachbereich IN ('Mathematik, Naturwissenschaften', 'Informatik', 'Technik (gesamt)')
-      AND kategorie = 'Auszubildende'
       AND indikator = 'Auszubildende'
       AND landkreis = 'alle Landkreise'
       ", .con = con)
@@ -241,13 +240,14 @@ daten_download <- function(r){
 
 
     df_azubi_clean <- df_auszubildende %>%
-      dplyr::rename(region = bundesland, fach = fachbereich, indikator = kategorie) %>%
+      dplyr::rename(region = bundesland, fach = fachbereich) %>%
       dplyr::mutate(
         fach = dplyr::case_when(
           fach == "Technik (gesamt)" ~ "Technik (inkl. Ingenieurwesen)",
           TRUE ~ fach
         ),
-        indikator = "Nachwuchs"
+        indikator = "Nachwuchs",
+        jahr = as.numeric(jahr)
       )
 
     df_studi_clean <- df_studierende %>%
@@ -294,18 +294,6 @@ daten_download <- function(r){
 
     ### Wirkhebel ----
     year_filter <- 2037
-
-    df_query <- glue::glue_sql("
-      SELECT *
-      FROM fachkraefte_prognose
-      WHERE jahr = {year_filter}
-      AND indikator = 'Verbesserung'
-      AND geschlecht = 'Gesamt'
-      AND nationalitaet = 'Gesamt'
-      AND anforderung = 'Gesamt'
-    ", .con = con)
-
-    whatever_this_is <- DBI::dbGetQuery(con, df_query)
 
     df_query <- glue::glue_sql("
       SELECT *
@@ -369,13 +357,13 @@ daten_download <- function(r){
     # 2. Engpassindikator
     plot_data_clean <- plot_data %>%
       dplyr::mutate(Bereich = "Engpassindikator",
-             Quelle = "Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt",
+             Quelle = "Berichtsjahr 2025, Bundesagentur für Arbeit, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt",
              Region = save_regio)
 
     # 3. Demografie MINT
     df_demografie_clean <- df %>%
       dplyr::mutate(Bereich = "Demografie MINT",
-             Quelle = "Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt",
+             Quelle = "Bundesagentur für Arbeit, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt",
              Region = region_reserve)
 
 
@@ -485,7 +473,7 @@ daten_download <- function(r){
 
 
     ### Frauen in MINT-Berufen ----
-    timerange <- 2024
+    timerange <- 2025
     indi <- "Beschäftigte"
 
     df_query <- glue::glue_sql("
@@ -687,7 +675,7 @@ daten_download <- function(r){
     # 2. Frauen im Beruf
     df_beruf_clean <- df_fr_beruf %>%
       dplyr::mutate(Bereich = "Anteil aller berufstätigen Frauen, die MINT-Beruf ergreifen",
-                    Quelle = "Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt",
+                    Quelle = "Bundesagentur für Arbeit, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt",
                     Region = regio)
 
     # 3. Selbstkonzept in MINT-Fächern
@@ -748,7 +736,7 @@ daten_download <- function(r){
 argument_verlauf_1 <- function(r){
 
   # load UI inputs from reactive value
-  t <- 2017:2024
+  t <- 2017:2025
   regio <- r$region_argumentationshilfe
 
   query_df <- glue::glue_sql("
@@ -791,7 +779,7 @@ argument_verlauf_1 <- function(r){
     color1 <- c("#b16fab")
 
     titel <- titel_beschäftigte
-    quelle <- "Destatis, 2025 und Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
     out <- linebuilder_plotly(df_beschäftigte, titel = titel, x = "jahr", y = "wert", group = "indikator",
                        format = format, color = color1, quelle = quelle, quelle_y = -0.17,
@@ -807,7 +795,7 @@ argument_verlauf_1 <- function(r){
 argument_verlauf_2 <- function(r){
 
   # load UI inputs from reactive value
-  t <- 2017:2024
+  t <- 2017:2025
   regio <- r$region_argumentationshilfe
 
   query_df <- glue::glue_sql("
@@ -868,7 +856,7 @@ argument_verlauf_2 <- function(r){
 
 argument_fachkraft <- function(r){
 
-  timerange <- 2024
+  timerange <- 2025
   fach <- c("MINT gesamt", "Nicht MINT")
   bf <- fachkraft_ui_berufslevel()
   regio <- r$region_argumentationshilfe
@@ -981,7 +969,7 @@ argument_fachkraft <- function(r){
     #df_json <- subset(plot_data, select = c(x, y, group))
     df_json <- jsonlite::toJSON(plot_data,dataframe = "rows",auto_unbox = TRUE, na = "null")
     titel_js <- jsonlite::toJSON(titel_1, auto_unbox = TRUE)
-    quelle_js <- jsonlite::toJSON("Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",auto_unbox = TRUE)
+    quelle_js <- jsonlite::toJSON("Quelle der Daten: Bundesagentur für Arbeit, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",auto_unbox = TRUE)
     x_js      <- "XX"
     y_js      <- "YY"
     group_js  <- "epa_kat"
@@ -1008,6 +996,10 @@ argument_fachkraft <- function(r){
         line = list(
           width = 0))
     ) %>%
+      plotly::style(
+        hoverlabel = list(bgcolor = "white",
+                          font = list(size = 12))
+      ) %>%
       plotly::layout(
         title = list(
           text = titel_1,
@@ -1040,7 +1032,7 @@ argument_fachkraft <- function(r){
         ),
         annotations = list(
           list(
-            text = "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+            text = "Quelle der Daten: Bundesagentur für Arbeit, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
             x = 0,
             y = -0.22,
             xref = "paper",
@@ -1192,7 +1184,7 @@ argument_fachkraft <- function(r){
 
     #df_json <- jsonlite::toJSON(df_download2,dataframe = "rows",auto_unbox = TRUE, na = "null")
     titel_js <- jsonlite::toJSON(titel_2, auto_unbox = TRUE)
-    quelle_js <- jsonlite::toJSON("Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",auto_unbox = TRUE)
+    quelle_js <- jsonlite::toJSON("Quelle der Daten: Bundesagentur für Arbeit, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",auto_unbox = TRUE)
     x_js      <- "XX"
     y_js      <- "YY"
     group_js  <- "epa_kat"
@@ -1218,6 +1210,10 @@ argument_fachkraft <- function(r){
         size = 30,
         line = list(
           width = 0))
+    ) %>%
+      plotly::style(
+      hoverlabel = list(bgcolor = "white",
+                        font = list(size = 12))
     ) %>%
       plotly::layout(
         title = list(
@@ -1247,7 +1243,7 @@ argument_fachkraft <- function(r){
         ),
         annotations = list(
           list(
-            text = "Quelle der Daten: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+            text = "Quelle der Daten: Bundesagentur für Arbeit, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
             x = 0,y = -0.22,
             xref = "paper",yref = "paper",
             showarrow = FALSE,xanchor = "left",
@@ -1393,36 +1389,11 @@ argument_fachkraft <- function(r){
                                ", .con = con)
    plot_data_raw <- DBI::dbGetQuery(con, df_query)
 
-   # Aggregate rausfiltern
-   plot_data_raw <- subset(plot_data_raw, !(plot_data_raw$beruf %in%
-                                              c("Gesamt",
-                                                "MINT gesamt",
-                                                "Informatik",
-                                                "Landtechnik",
-                                                "Produktionstechnik",
-                                                "Bau- und Gebäudetechnik",
-                                                "Mathematik, Naturwissenschaften",
-                                                "Verkehrs-, Sicherheits- und Veranstaltungstechnik",
-                                                "Gesundheitstechnik",
-                                                "Nicht MINT"
-                                              ))
-   )
 
    if ("MINT gesamt" %in% fach) {
      plot_data_raw <- plot_data_raw %>%
        dplyr::filter(!mint_zuordnung %in% c("Nicht MINT", "Gesamt")) %>%
        dplyr::mutate(mint_zuordnung = "MINT gesamt") %>%
-       rbind(plot_data_raw)
-   }
-
-   if ("Technik gesamt" %in% fach) {
-     plot_data_raw <- plot_data_raw %>%
-       dplyr::filter(mint_zuordnung %in% c("Landtechnik",
-                                           "Produktionstechnik",
-                                           "Bau- und Gebäudetechnik",
-                                           "Verkehrs-, Sicherheits- und Veranstaltungstechnik",
-                                           "Gesundheitstechnik")) %>%
-       dplyr::mutate(mint_zuordnung = "Technik gesamt") %>%
        rbind(plot_data_raw)
    }
 
@@ -1940,7 +1911,7 @@ argument_fachkraft <- function(r){
 argument_demografie <- function(r){
 
   betrachtung <- "Gruppenvergleich - Balkendiagramm"
-  timerange <- 2024
+  timerange <- 2025
   regio <- r$region_argumentationshilfe
   faecher <- "MINT"
 
@@ -1978,7 +1949,7 @@ argument_demografie <- function(r){
                   paste0("Demografischer Wandel: Beschäftigte in MINT nach Altersgruppen im ", regio, " (", timerange, ")"),
                   paste0("Demografischer Wandel: Beschäftigte in MINT nach Altersgruppen in ", regio, " (", timerange, ")"))
 
-  quelle <- "Quelle: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+  quelle <- "Quelle: Bundesagentur für Arbeit, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
   quelle_y <- -0.13
 
@@ -2027,37 +1998,31 @@ argument_nachwuchs <- function(r){
   df_studierende <- DBI::dbGetQuery(con, query_df)
 
   query_df <- glue::glue_sql("
-  SELECT bundesland, fachbereich, jahr, kategorie, wert
+  SELECT bundesland, fachbereich, jahr, indikator, wert
   FROM arbeitsmarkt_detail
   WHERE jahr IN (2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024)
     AND bundesland = {regio}
     AND geschlecht = 'Gesamt'
     AND fachbereich IN ('Mathematik, Naturwissenschaften', 'Informatik', 'Technik (gesamt)')
-    AND kategorie = 'Auszubildende'
+    AND indikator = 'Auszubildende'
+    AND landkreis = 'alle Landkreise'
 ", .con = con)
 
   df_auszubildende <- DBI::dbGetQuery(con, query_df)
 
-
-
   df_azubi_clean <- df_auszubildende %>%
-    dplyr::rename(region = bundesland, fach = fachbereich, indikator = kategorie) %>%
+    dplyr::rename(region = bundesland, fach = fachbereich) %>%
     dplyr::mutate(
       fach = dplyr::case_when(
         fach == "Technik (gesamt)" ~ "Technik (inkl. Ingenieurwesen)",
         TRUE ~ fach
       ),
       indikator = "Nachwuchs",
-      wert = as.numeric(wert)
+      wert = as.numeric(wert),
+      jahr = as.numeric(jahr)
     ) %>%
     dplyr::mutate(across(c(region, fach, indikator), as.character)) %>%
     dplyr::filter(!is.na(wert))
-
-  df_azubi_clean %>%
-    dplyr::group_by(region, fach, jahr, indikator) %>%
-    dplyr::summarise(wert = sum(wert, na.rm = TRUE), .groups = "drop")
-
-
 
   df_studi_clean <- df_studierende %>%
     dplyr::rename(fach = fach) %>%
@@ -2068,12 +2033,6 @@ argument_nachwuchs <- function(r){
       ),
       indikator = "Nachwuchs"
     )
-
-  df_studi_clean <- df_studi_clean %>%
-    dplyr::group_by(region, fach, jahr, indikator) %>%
-    dplyr::summarise(wert = sum(wert), .groups = "drop") %>%
-    dplyr::ungroup()
-
 
   df_nachwuchs <- dplyr::bind_rows(df_azubi_clean, df_studi_clean)
 
@@ -2135,8 +2094,8 @@ argument_nachwuchs <- function(r){
 
   df_nachwuchs_agg <- df_nachwuchs_agg %>%
     dplyr::mutate(label = dplyr::case_when(
-      fach == "Informatik" ~ "",
-      fach %in% c("Mathematik, Naturwissenschaften",
+      fach == "Mathematik, Naturwissenschaften" ~ "",
+      fach %in% c("Informatik",
                   "Technik (inkl. Ingenieurwesen)") ~ wert_disp
     ))
 
@@ -2397,7 +2356,7 @@ argument_großer_unterschied <- function(r) {
       "andere Berufsfelder" = "#efe8e6"
     )
 
-    timerange <- 2024
+    timerange <- 2025
     regio <- r$region_argumentationshilfe
     indi <- "Beschäftigte"
 
@@ -2478,7 +2437,7 @@ argument_großer_unterschied <- function(r) {
     subtitel1 <- paste0("Von allen weiblichen ", title_help, " arbeiten ", round(100-df_f$prop[df_f$fachbereich == "andere Berufsfelder"],1), "% in MINT")
     subtitel2 <-  paste0("Von allen männlichen ", title_help, " arbeiten ", round(100-df_m$prop[df_m$fachbereich == "andere Berufsfelder"],1), "% in MINT")
 
-    quelle <- "Quelle: Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "Quelle: Bundesagentur für Arbeit, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
     out_1 <- piebuilder_plotly(df_f, titel1, x="fachbereich", y = "prop", legend_y= 0.06,
                                color=color_fachbereich, subtitel = subtitel1, quelle="") |>

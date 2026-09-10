@@ -578,16 +578,16 @@ mod_schule_kurse_server <- function(id, r){
 
     ## Karte Gender
 
-    output$plot_map_kurse_gender <- renderUI({
-      plot_list <- kurse_map_gender(r)
-
-      # return plots
-      out <- highcharter::hw_grid(
-        plot_list,
-        ncol = 2)
-      out
-
-    })
+    # output$plot_map_kurse_gender <- renderUI({
+    #   plot_list <- kurse_map_gender(r)
+    #
+    #   # return plots
+    #   out <- highcharter::hw_grid(
+    #     plot_list,
+    #     ncol = 2)
+    #   out
+    #
+    # })
 
 
     output$plot_mint_map_kurse <- renderUI({
