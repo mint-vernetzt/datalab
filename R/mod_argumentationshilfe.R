@@ -99,25 +99,29 @@ mod_argumentation_ui <- function(id){
   fluidRow(
     div(class = "clean-box",
         style = "margin-bottom:0px;
+              margin-top: 30px;
               border-top: 2px solid #154194;
               padding-top: 10px;
               ",
     column(
       width = 8,
 
-      h3("Regionalberichte und Beispielanalysen zum herunterladen",
+      h3("PREVIEW: Statistische Regionalberichte zum herunterladen",
       style = "margin-top: 30px;"),
 
-      p("Hier können Sie einen statistischen MINT-Bericht zu Ihrem Bundesland downloaden.
+      p("Hier entsteht ein neues Angebot für Sie: Statistische MINT-Berichte Ihres Bundeslandes zum downloaden.
         Die Berichte wurden mithilfe des MINT-DataLab-GPT erstellt und durch das MINT-DataLab-Team
-        geprüft und ergänzt."),
+        geprüft und ergänzt. Wie die Berichte gefüllt werden sollen, entwickeln wir gerade in Austausch mit unserer
+        Community weiter."),
+      p("Die Berichte werden stets mit den aktuellsten Statistiken upgedatet.
+        In den folgenden Wochen werden aktualisierte Versionen und Berichte der weiteren Bundesländer ergänzt."),
 
 
       ui_draw_regioberichte(ns),
 
 
       shinyBS::bsPopover(id="hinweis_bula_berichte", title = "",
-                         content = paste0("Wir erstellen aktuell schrittweise Berichte zu allen Bundesländern. In den nächsten Wochen werden die fehlenden Regionalberichte ergänzt."),
+                         content = paste0("Wir erstellen aktuell schrittweise Berichte zu allen Bundesländern. In den nächsten Wochen werden weitere Regionalberichte ergänzt."),
                          placement = "top",
                          trigger = "hover"),
       tags$a(paste0("Fehlt Ihr Bundesland?"), icon("question-circle"), id = "hinweis_bula_berichte"),
@@ -136,6 +140,7 @@ mod_argumentation_ui <- function(id){
               border-top: 2px solid #154194;
               padding-top: 10px;
               padding-bottom: 400px;
+              margin-top: 30px;
               ",  #     border-bottom: 2px solid #154194;
               column(
                 width = 12,
@@ -491,7 +496,8 @@ fluidRow(
               actionButton(label = tagList(icon("arrow-up-right-from-square"), "    Zum MINT-DataLab-GPT"),
                            inputId = "GPT_link",
                            onclick = 'window.open("https://chatgpt.com/g/g-695cd1fa74f881918a54b0517af8163e-mint-datalab-gpt", "_blank");',
-                           class = "rosa-button")
+                           class = "rosa-button",
+                           style = "margin-top: 10px;")
           ),
           div(
           actionButton(
@@ -519,9 +525,8 @@ fluidRow(
           p( "Sobald Sie auf den Link zum MINT-DataLab-GPT klicken,
              öffnet sich ein Chatfenster in ChatGPT."),
 
-          p("Für typische Analyseaufgaben stehen vorbereitete Workflow-Prompts zur Verfügung.
-          Diese führen Sie Schritt für Schritt durch die Erstellung einer Argumentation,
-          eines Berichts oder weiterer Analyseergebnisse."),
+          p("Wollen Sie in einer anderen KI-Umgebung arbeiten? Nutzen Sie unseren Funktionsprompt. Als
+            zusätzliches Wissen nutzt der MINT-DataLab-GPT die Kurzanalysen des MINT-DataLabs."),
         )
         )
       )
@@ -565,11 +570,8 @@ fluidRow(
         ),
         column(
           width = 5,
-          p(" Die passenden Grafiken zu dem Datenbündel können Sie her herunterladen
-                  um Ihren Bericht damit fertigzustellen."),
-          p(stlye="margin-left: 20px;",
-            "→ Falls Sie weitere Grafiken des MINT-DataLabs darstellen wollen, finden Sie eine Download-Option
-                  immer rechts oben an den Grafiken.")
+          p(" Die passenden Grafiken zu dem Datenbündel können Sie hier herunterladen
+                  um Ihre Analyse damit zu ergänzen")
         )
       ),
       tags$script(HTML(sprintf("
@@ -684,88 +686,88 @@ fluidRow(
 
 # Beispiel Bericht und Cheatsheet ----
 
-column(
-  id = "bsp_cheatsheet",
-  width = 12,
-
-  hr(style = "border-top: 2px solid #154194; margin-top: 40px; margin-bottom: 30px;"),
-  h2("So könnte Ihr MINT-Bericht aussehen", style = "margin-bottom: 30px;"),
-
-  div(
-    style = "
-      display: grid;
-      grid-template-columns: 41.6667% 41.6667%;
-      column-gap: 30px;
-      row-gap: 0px;
-      align-items: start;
-    ",
-
-    div(
-      tags$strong("Beispielbericht für Hamburg:"),
-      p("Hier können Sie exemplarisch sehen, wie man die Textbausteine und Grafiken
-        zu einem Bericht integrieren kann. Außerdem finden Sie Tipps dazu,
-        welche Daten darüber hinaus ergänzt werden können,
-        um den Bericht abzurunden.")
-    ),
-
-    div(
-      tags$strong("Cheatsheet Argumentation für Mädchenförderung"),
-      p("Ihr Projekt fokussiert sich auf die Förderung von Mädchen in MINT?
-        In diesem Cheatsheet finden Sie Tipps dazu, wie das MINT-DataLab-GPT Sie
-        bei der Argumentation und Datenauswertung unterstützen kann.")
-    ),
-
-    div(
-      tags$a(
-        href = "www/MINTvernetzt_Argumentationskette_Hamburg.pdf",
-        target = "_blank",
-        tags$img(
-          src = "www/Bild_Beispielbericht.png",
-          alt = "Cover Beispielbericht Hamburg",
-          style = "
-            display:block;
-            max-width: 15%;
-            height: auto;
-            cursor: pointer;
-            margin: 10px 0px 10px 60px;
-            border: 1px solid #EFE8E6;
-          "
-        )
-      ),
-      tags$a(
-        href = "www/MINTvernetzt_Argumentationskette_Hamburg.pdf",
-        target = "_blank",
-        "MINTvernetzt_Argumentationskette_Hamburg.pdf",
-        style = "text-decoration: underline; display: block;"
-      )
-    ),
-
-    div(
-      tags$a(
-        href = "www/MINTvernetzt_Cheatsheet_MINT-DataLab-GPT_Maedchenfoerderung.pdf",
-        target = "_blank",
-        tags$img(
-          src = "www/Cover_Cheatsheet.png",
-          alt = "Cover Cheatsheet Maedchenfoerderung",
-          style = "
-            display:block;
-            max-width: 15%;
-            height: auto;
-            cursor: pointer;
-            margin: 10px 0px 10px 60px;
-            border: 1px solid #EFE8E6;
-          "
-        )
-      ),
-      tags$a(
-        href = "www/MINTvernetzt_Cheatsheet_MINT-DataLab-GPT_Maedchenfoerderung.pdf",
-        target = "_blank",
-        "MINTvernetzt_Cheatsheet_Maedchenfoerderung.pdf",
-        style = "text-decoration: underline; display: block;"
-      )
-    )
-  )
-),
+# column(
+#   id = "bsp_cheatsheet",
+#   width = 12,
+#
+#   hr(style = "border-top: 2px solid #154194; margin-top: 40px; margin-bottom: 30px;"),
+#   h2("So könnte Ihr MINT-Bericht aussehen", style = "margin-bottom: 30px;"),
+#
+#   div(
+#     style = "
+#       display: grid;
+#       grid-template-columns: 41.6667% 41.6667%;
+#       column-gap: 30px;
+#       row-gap: 0px;
+#       align-items: start;
+#     ",
+#
+#     div(
+#       tags$strong("Beispielbericht für Hamburg:"),
+#       p("Hier können Sie exemplarisch sehen, wie man die Textbausteine und Grafiken
+#         zu einem Bericht integrieren kann. Außerdem finden Sie Tipps dazu,
+#         welche Daten darüber hinaus ergänzt werden können,
+#         um den Bericht abzurunden.")
+#     ),
+#
+#     div(
+#       tags$strong("Cheatsheet Argumentation für Mädchenförderung"),
+#       p("Ihr Projekt fokussiert sich auf die Förderung von Mädchen in MINT?
+#         In diesem Cheatsheet finden Sie Tipps dazu, wie das MINT-DataLab-GPT Sie
+#         bei der Argumentation und Datenauswertung unterstützen kann.")
+#     ),
+#
+#     div(
+#       tags$a(
+#         href = "www/MINTvernetzt_Argumentationskette_Hamburg.pdf",
+#         target = "_blank",
+#         tags$img(
+#           src = "www/Bild_Beispielbericht.png",
+#           alt = "Cover Beispielbericht Hamburg",
+#           style = "
+#             display:block;
+#             max-width: 15%;
+#             height: auto;
+#             cursor: pointer;
+#             margin: 10px 0px 10px 60px;
+#             border: 1px solid #EFE8E6;
+#           "
+#         )
+#       ),
+#       tags$a(
+#         href = "www/MINTvernetzt_Argumentationskette_Hamburg.pdf",
+#         target = "_blank",
+#         "MINTvernetzt_Argumentationskette_Hamburg.pdf",
+#         style = "text-decoration: underline; display: block;"
+#       )
+#     ),
+#
+#     div(
+#       tags$a(
+#         href = "www/MINTvernetzt_Cheatsheet_MINT-DataLab-GPT_Maedchenfoerderung.pdf",
+#         target = "_blank",
+#         tags$img(
+#           src = "www/Cover_Cheatsheet.png",
+#           alt = "Cover Cheatsheet Maedchenfoerderung",
+#           style = "
+#             display:block;
+#             max-width: 15%;
+#             height: auto;
+#             cursor: pointer;
+#             margin: 10px 0px 10px 60px;
+#             border: 1px solid #EFE8E6;
+#           "
+#         )
+#       ),
+#       tags$a(
+#         href = "www/MINTvernetzt_Cheatsheet_MINT-DataLab-GPT_Maedchenfoerderung.pdf",
+#         target = "_blank",
+#         "MINTvernetzt_Cheatsheet_Maedchenfoerderung.pdf",
+#         style = "text-decoration: underline; display: block;"
+#       )
+#     )
+#   )
+# ),
 
 
 # Überleitung zu Grafiken ----
@@ -780,19 +782,14 @@ column(
     column(
       style = "margin-bottom: 40px;",
       width = 8,
-      p("Im Folgenden finden Sie die Daten, die Sie dem MINT-DataLab-GPT eingespeist haben,
-        als Grafiken dargestellt. Diese können Sie herunterladen und Ihrem Bericht hinzufügen.", br(),
-        # "Einen Beispielbericht für Hamburg können sie ",tags$a(href = "www/MINTvernetzt_Argumentationskette_Hamburg.pdf",
-        #                                                       target = "_blank",
-        #
-        #"hier") , " herunterladen. "
+      p("Hier finden Sie die Daten, die Sie unter Schritt 3 herunterladen können,
+        als Grafiken dargestellt. Diese können Sie nutzen, um die Korrektheit der Daten zu prüfen.", br(),
+
         ),
       p("Hilfestellung für die weiteren Schritte:"),
       p(stlye="margin-left: 20px;",
         "→ Die Download-Option für alle Grafiken des MINT-DataLab finden Sie rechts oben an den Grafiken.", br(),
-        # "→ Die ", tags$span("blauen Boxen", style = "color: #154194;"),
-        # " rechts neben den Grafiken geben Impulse, welche weiteren
-        #    Statistiken in einem MINT-Bericht ergänzt werden könnten.", br(),
+
 
         "→ Die ", tags$span("grünen Boxen", style = "color: #007655;"),
         "unter den Grafiken zeigen beispielhaft, wie man anhand
@@ -953,53 +950,53 @@ ui_draw_regioberichte <- function(ns){
       # "Berlin",
       # "Brandenburg",
       # "Bremen",
-      "Hamburg",
+      # "Hamburg",
       # "Hessen",
       # "Mecklenburg-Vorpommern",
-      # "Niedersachsen",
+      "Niedersachsen",
       # "Nordrhein-Westfalen",
-      "Rheinland-Pfalz"
+      "Rheinland-Pfalz",
       # "Saarland",
       # "Sachsen",
       # "Sachsen-Anhalt",
       # "Schleswig-Holstein",
-      # "Thüringen"
+       "Thüringen"
     ),
     bild = c(
-      "www/Bild_Beispielbericht.png", #"www/bw.png",
+      "www/bw.jpg",
       # "www/by.png",
       # "www/be.png",
       # "www/bb.png",
       # "www/hb.png",
-      "www/Bild_Beispielbericht.png", # "www/hh.png",
+      # "www/hh.png",
       # "www/he.png",
       # "www/mv.png",
-      # "www/ni.png",
+       "www/ni.jpg",
       # "www/nw.png",
-      "www/Bild_Beispielbericht.png" #"www/rp.png",
+      "www/rlp.jpg",
       # "www/sl.png",
       # "www/sn.png",
       # "www/st.png",
       # "www/sh.png",
-      # "www/th.png"
+      "www/th.jpg"
     ),
     pdf = c(
-      "www/MINTvernetzt_Foliensatz_MINT-Fachkräfteszenarien_erklärt.pdf", #"www/bw.pdf",
+      "www/Regionaler_MINT-Bericht_BW.pdf", #"www/bw.pdf",
       # "www/by.pdf",
       # "www/be.pdf",
       # "www/bb.pdf",
       # "www/hb.pdf",
-      "www/MINTvernetzt_Foliensatz_MINT-Fachkräfteszenarien_erklärt.pdf", #"www/hh.pdf",
+      # "www/hh.pdf",
       # "www/he.pdf",
       # "www/mv.pdf",
-      # "www/ni.pdf",
+      "www/Regionaler_MINT-Bericht_NI.pdf",
       # "www/nw.pdf",
-      "www/MINTvernetzt_Foliensatz_MINT-Fachkräfteszenarien_erklärt.pdf" #"www/rp.pdf",
+      "www/Regionaler_MINT-Bericht_RLP.pdf",
       # "www/sl.pdf",
       # "www/sn.pdf",
       # "www/st.pdf",
       # "www/sh.pdf",
-      # "www/th.pdf"
+      "www/Regionaler_MINT-Bericht_THÜ.pdf"
     ),
     stringsAsFactors = FALSE
   )
@@ -1013,6 +1010,7 @@ ui_draw_regioberichte <- function(ns){
     align-items:stretch;
     margin-left:30px;
     margin-right:30px;
+    margin-bottom: 20px;
   ",
 
     lapply(seq_len(nrow(bundeslaender)), function(i) {

@@ -45,13 +45,13 @@ mod_startseite_start_ui <- function(id){
              "Was ist Neu?"),
           tags$ul(
             tags$li("Erstellen Sie einfach MINT-Berichten durch das neue Angebot \"Datenanalyse mit KI\" - jetzt auch zum Thema Mädchenförderung in MINT"),
+            tags$li("Preview: Laden Sie einen statistischen Bericht zu Ihrem Bundesland unter \"Datenanalyse mit KI\" herunter.")
           ),
           h2(style = "color: #008F68;",
              "Woran wir aktuell arbeiten:"),
           tags$ul(
             tags$li("Weiterentwicklung des Angebots \"Datenanalyse mit KI\""),
-            tags$li("Weitere Erhöhung der Barrierefreiheit"),
-            tags$li("Weitere grafische Darstellungen zum Theman Entgelte")),
+            tags$li("Weitere Erhöhung der Barrierefreiheit")),
           p(),      p(),
           p("Bei Fragen oder Anregungen, melden Sie sich jederzeit gerne ",
             tags$a(href = "mailto:katharina.brunner@mint-vernetzt.de?subject= Feedback MINT-Datalab", "per E-Mail"),
