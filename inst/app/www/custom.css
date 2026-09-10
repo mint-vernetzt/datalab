@@ -220,6 +220,52 @@ background-color:#FCFCFD;
     margin: 10px 0px 10px 0px;
 }
 
+/* buttons für KI Analysen Seite */
+.btn.rosa-button {
+    background-color: #b16fab50 !important;
+    color: black!important;
+    box-shadow: none !important;
+    border: 1px solid #b16fab;
+    border-radius: 10px !important;
+    margin-bottom: 15px;
+    margin-right: 5px;
+    padding: 12px 24px !important;
+    width: 230px;
+    max-width: 450px;
+    text-align: center;
+
+}
+.rosa-button .action-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: inherit !important;
+  font-weight: 500;
+  gap: 6px;
+}
+
+#argumentationshilfe_ui_1-funktionsprompt .action-label {
+    font-size: 14px !important;
+}
+
+
+
+button[data-id="argumentationshilfe_ui_1-region_argumentationshilfe"] {
+    background-color: #b16fab50 !important;
+    border: 1px solid #B16FAB !important;
+    border-radius: 10px !important;
+}
+/* geöffnet */
+button[data-id="argumentationshilfe_ui_1-region_argumentationshilfe"]:focus,
+button[data-id="argumentationshilfe_ui_1-region_argumentationshilfe"]:active,
+.open > button[data-id="argumentationshilfe_ui_1-region_argumentationshilfe"] {
+    background-color: #B16FAB50 !important;
+    border: 1px solid #B16FAB !important;
+}
+
+
+
+
 /* Slider */
 .slick-slide{
   background-color: #FCFCFD;;

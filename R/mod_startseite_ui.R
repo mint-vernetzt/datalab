@@ -39,6 +39,7 @@ mod_startseite_start_ui <- function(id){
           Diagramme einen intuitiven und informativen Zugang zu gewähren. Dabei entwickeln wir das MINT-DataLab stetig weiter.",
           style = "margin-bottom: 40px;"  ),
 
+
           p(),
           hr(),
           p(),
@@ -255,6 +256,7 @@ mod_startseite_start_ui <- function(id){
       tags$ul(
         tags$li("Aktualisierte Daten für das Berichtsjahr 2025 der Bundesagentur für Arbeit auf den Unterseiten \"Ausbildung & Beruf\" und
                 \"MINT-Fachkräfte\""),
+        tags$li("Preview: Laden Sie einen statistischen Bericht zu Ihrem Bundesland unter \"Datenanalyse mit KI\" herunter."),
         tags$li("Grafiken in neuem Design"),
         tags$li("Alle Kurzanalysen auf einem Blick auf der Startseite des MINT-DataLab")
       ),
