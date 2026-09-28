@@ -91,6 +91,35 @@ mod_argumentation_ui <- function(id){
             )
           ),
 
+          column(
+            width = 8,
+
+            h3("PREVIEW: Statistische Regionalberichte zum herunterladen",
+               style = "margin-top: 30px;"),
+
+            p("Hier entsteht ein neues Angebot für Sie: Statistische MINT-Berichte Ihres Bundeslandes zum downloaden.
+        Die Berichte wurden mithilfe des MINT-DataLab-GPT erstellt und durch das MINT-DataLab-Team
+        geprüft und ergänzt. Wie die Berichte gefüllt werden sollen, entwickeln wir gerade in Austausch mit unserer
+        Community weiter."),
+            p("Die Berichte werden stets mit den aktuellsten Statistiken upgedatet.
+        In den folgenden Wochen werden aktualisierte Versionen und Berichte der weiteren Bundesländer ergänzt."),
+
+
+            ui_draw_regioberichte(ns),
+
+
+            shinyBS::bsPopover(id="hinweis_bula_berichte", title = "",
+                               content = paste0("Wir erstellen aktuell schrittweise Berichte zu allen Bundesländern. In den nächsten Wochen werden weitere Regionalberichte ergänzt."),
+                               placement = "top",
+                               trigger = "hover"),
+            tags$a(paste0("Fehlt Ihr Bundesland?"), icon("question-circle"), id = "hinweis_bula_berichte"),
+
+            p(style = "margin-top: 15px;",
+              "Wollen Sie eigene Analysen erstellen, z. B. einen Pitch der von Ihrem Projekt überzeugt, oder
+        eine Datenübersicht für einen Förderantrag? Dann erstellen Sie hier Ihre eigene Analyse!")
+
+          ),
+
           ## 4 Schritte ----
 
           column(
@@ -765,6 +794,117 @@ mod_argumentation_ui <- function(id){
 
     funct_footer()
 
+  )
+}
+
+ui_draw_regioberichte <- function(ns){
+
+  bundeslaender <- data.frame(
+    name = c(
+      "Baden-Württemberg",
+      # "Bayern",
+      # "Berlin",
+      # "Brandenburg",
+      # "Bremen",
+      # "Hamburg",
+      # "Hessen",
+      # "Mecklenburg-Vorpommern",
+      "Niedersachsen",
+      # "Nordrhein-Westfalen",
+      "Rheinland-Pfalz",
+      # "Saarland",
+      # "Sachsen",
+      # "Sachsen-Anhalt",
+      # "Schleswig-Holstein",
+      "Thüringen"
+    ),
+    bild = c(
+      "www/bw.jpg",
+      # "www/by.png",
+      # "www/be.png",
+      # "www/bb.png",
+      # "www/hb.png",
+      # "www/hh.png",
+      # "www/he.png",
+      # "www/mv.png",
+      "www/ni.jpg",
+      # "www/nw.png",
+      "www/rlp.jpg",
+      # "www/sl.png",
+      # "www/sn.png",
+      # "www/st.png",
+      # "www/sh.png",
+      "www/th.jpg"
+    ),
+    pdf = c(
+      "www/Regionaler_MINT-Bericht_BW.pdf", #"www/bw.pdf",
+      # "www/by.pdf",
+      # "www/be.pdf",
+      # "www/bb.pdf",
+      # "www/hb.pdf",
+      # "www/hh.pdf",
+      # "www/he.pdf",
+      # "www/mv.pdf",
+      "www/Regionaler_MINT-Bericht_NI.pdf",
+      # "www/nw.pdf",
+      "www/Regionaler_MINT-Bericht_RLP.pdf",
+      # "www/sl.pdf",
+      # "www/sn.pdf",
+      # "www/st.pdf",
+      # "www/sh.pdf",
+      "www/Regionaler_MINT-Bericht_THÜ.pdf"
+    ),
+    stringsAsFactors = FALSE
+  )
+
+  tags$div(
+    style = "
+    display:flex;
+    overflow-x:auto;
+    gap:24px;
+    padding:10px 0;
+    align-items:stretch;
+    margin-left:30px;
+    margin-right:30px;
+    margin-bottom: 20px;
+  ",
+
+    lapply(seq_len(nrow(bundeslaender)), function(i) {
+
+      tags$div(
+        style = "
+        background:white;
+        align-items:center;
+        border-radius:12px;
+        padding:20px;
+        display:flex;
+        flex-direction:column;
+        flex-shrink:0;
+      ",
+
+        tags$img(
+          src = bundeslaender$bild[i],
+          loading = "lazy",
+          decoding = "async",
+          style = "height:180px;"
+        ),
+
+        tags$a(
+          href = bundeslaender$pdf[i],
+          class = "btn btn-primary",
+          target = "_blank",
+          style = "
+          background-color:#154194;
+          border:1px solid #154194;
+          margin-top:auto;
+          width:180px;
+          margin-top:20px;
+        ",
+          bundeslaender$name[i]
+        )
+      )
+
+    })
   )
 }
 
