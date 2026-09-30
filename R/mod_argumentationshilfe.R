@@ -73,7 +73,7 @@ mod_argumentation_ui <- function(id){
               class = "linked-image",
               style = "flex: 0 0 20%;",
               tags$a(
-                href = "https://chatgpt.com/g/g-695cd1fa74f881918a54b0517af8163e-mint-datalab-gpt",
+                href = "https://chatgpt.com/g/g-67e4f41fd91881919a753f4309194bf7-mint-datalab-gpt",
                 target = "_blank",
                 tags$img(
                   src = "www/Bild_MINT-DataLab-GPT.png",
@@ -84,7 +84,7 @@ mod_argumentation_ui <- function(id){
               )
             ),
             tags$a(
-              href = "https://chatgpt.com/g/g-695cd1fa74f881918a54b0517af8163e-mint-datalab-gpt",
+              href = "https://chatgpt.com/g/g-67e4f41fd91881919a753f4309194bf7-mint-datalab-gpt",
               target = "_blank",
               p("Link MINT-DataLab-GPT", style = "text-decoration: underline; color: #b16fab;
                 margin-left: 60px;")
@@ -376,7 +376,7 @@ mod_argumentation_ui <- function(id){
                 width = 5,
                 div(style = "margin-left: 30px;",
                     actionButton(label = tagList(icon("arrow-up-right-from-square"), "    Zum MINT-DataLab-GPT"), inputId = "GPT_link",
-                                 onclick = 'window.open("https://chatgpt.com/g/g-695cd1fa74f881918a54b0517af8163e-mint-datalab-gpt", "_blank");')
+                                 onclick = 'window.open("https://chatgpt.com/g/g-67e4f41fd91881919a753f4309194bf7-mint-datalab-gpt", "_blank");')
                 )
               )
             )
