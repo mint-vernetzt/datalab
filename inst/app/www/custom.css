@@ -52,6 +52,9 @@ a {
 #mod_beruf_arbeitsmarkt_ui_1-plot_arbeitsmarkt_detail_vergleich.plotly.html-widget.js-plotly-plot{
   height: 1600px !important;
 }
+#mod_international_start_ui_1-plot_international_schule_map_1 {
+  height: 900px !important;
+}
 div.plotly.html-widget.js-plotly-plot {
   height: 650px !important;
 }

@@ -1695,6 +1695,8 @@ linebuilder_plotly <- function(
     color = c("#b16fab", "#154194", "#66cbaf", "#fbbf24"),
     quelle = "Quelle",
     subtitel = NULL,
+    linetype = NULL,
+    line_pattern = NULL,
     label = NULL,
     area = NULL,
     quelle_y = -0.22
@@ -1781,6 +1783,20 @@ linebuilder_plotly <- function(
       hovertext = ~tooltip,
       hovertemplate = "%{hovertext}<extra></extra>"
     )
+   } else if (!is.null(linetype)) {
+
+      p <- plotly::plot_ly(
+        data = df,
+        x = as.formula(paste0("~`", x, "`")),
+        y = as.formula(paste0("~`", y, "`")),
+        color = as.formula(paste0("~`", group, "`")),
+        linetype = as.formula(paste0("~`", linetype, "`")),
+        colors = color,
+        type = "scatter",
+        mode = "lines+markers",
+        hovertext = ~tooltip,
+        hovertemplate = "%{hovertext}<extra></extra>"
+      )
     }else{
     p <- plotly::plot_ly(
       data = df,
@@ -1793,7 +1809,9 @@ linebuilder_plotly <- function(
       hovertext = ~tooltip,
       hovertemplate = "%{hovertext}<extra></extra>"
     )
-  }
+    }
+
+
 
   p <- p |>
     plotly::style(
@@ -1985,6 +2003,23 @@ linebuilder_plotly <- function(
       x = 0.5,
       font = list(family = "Calibri Regular", size = 20, color = "black")))
   }
+
+  if(!is.null(line_pattern)) {
+
+    for(i in seq_along(p$x$data)) {
+
+      if(
+        !is.null(p$x$data[[i]]$name) &&
+        !is.na(p$x$data[[i]]$name) &&
+        grepl(line_pattern, p$x$data[[i]]$name)
+      ) {
+
+        p$x$data[[i]]$line$dash <- "dash"
+
+      }
+    }
+  }
+
 
   return(p)
 }

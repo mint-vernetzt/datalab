@@ -46,6 +46,7 @@ mod_schule_server <- function(id, r){
 
   # Box 4
   mod_schule_kurse_iqb_standard_zeitverlauf_server("mod_schule_kurse_iqb_standard_zeitverlauf_ui_1", r)
+  mod_schule_kurse_iqb_linien_server("mod_schule_kurse_iqb_linien_ui_1", r)
   mod_schule_kurse_iqb_mathe_mittel_zeitverlauf_server("mod_schule_kurse_iqb_mathe_mittel_zeitverlauf_ui_1", r)
   mod_schule_kurse_iqb_fragen_server("mod_schule_kurse_iqb_fragen_ui_1", r)
 

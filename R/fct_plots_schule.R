@@ -2299,10 +2299,10 @@ iqb_standard_zeitverlauf <- function(r){
   }
 
   if (kl_select == "4. Klasse") {
-    fach_titel <- paste0("Anteil der Schüler:innen aus ", title_help, "die den Mindeststandard in Mathematik nicht erreichen (", kl_select, ")")
+    fach_titel <- paste0("Anteil der Schüler:innen aus ", title_help, " die den Mindeststandard in Mathematik nicht erreichen (", kl_select, ")")
 
   } else {
-    fach_titel <- paste0("Anteil der Schüler:innen aus ", title_help, "die den Mindeststandard in ", fach_select, " nicht erreichen (", kl_select, ")")
+    fach_titel <- paste0("Anteil der Schüler:innen aus ", title_help, " die den Mindeststandard in ", fach_select, " nicht erreichen (", kl_select, ")")
 
   }
 
@@ -2323,8 +2323,12 @@ iqb_standard_zeitverlauf <- function(r){
   x <- "region"
   y <- "wert"
   group <- "jahr"
-  quelle <- "Quelle der Daten: Institut zur Qualitätsentwicklung im Bildungswesen, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
+  if (kl_select == "4. Klasse") {
+    quelle <- "Quelle der Daten: Institut zur Qualitätsentwicklung im Bildungswesen, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+  } else {
+    quelle <- "Quelle der Daten: Institut zur Qualitätsentwicklung im Bildungswesen, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+  }
 
   out <- balkenbuilder_plotly(df=df, x=x, y=y, titel=fach_titel, orientation = "v", group=group, color=color,
                               percent = TRUE,stacking=FALSE, quelle=quelle)
@@ -2333,6 +2337,103 @@ iqb_standard_zeitverlauf <- function(r){
 
   return(out)
 
+}
+
+
+iqb_linien <- function(r){
+
+
+  # reactive values übergeben
+  kl_select <- r$klasse_iqb_linien
+  if(kl_select == "4. Klasse"){
+    bl_select <- r$land_iqb_linien_4
+
+    df_query <- glue::glue_sql("
+  SELECT jahr, indikator, fach, region, wert
+  FROM iqb
+  WHERE klasse = {kl_select}
+  AND region IN ({bl_select*})
+  AND geschlecht = 'gesamt'
+  AND indikator = 'Mindeststandard nicht erreicht'
+                               ", .con = con)
+    df <- DBI::dbGetQuery(con, df_query)
+
+  }else{
+    bl_select <- r$land_iqb_linien_9
+    fach_select <- r$fach_iqb_linien_9
+
+    df_query <- glue::glue_sql("
+  SELECT jahr, indikator, fach, region, wert
+  FROM iqb
+  WHERE klasse = {kl_select}
+  AND region IN ({bl_select*})
+  AND fach = {fach_select}
+  AND geschlecht = 'gesamt'
+  AND indikator = 'Mindeststandard nicht erreicht'
+                               ", .con = con)
+    df <- DBI::dbGetQuery(con, df_query)
+  }
+
+  df <- df %>%
+  dplyr::arrange(region, jahr) %>%
+  dplyr::mutate(
+    jahr = as.numeric(jahr)
+  )
+
+  df <- df %>%
+    dplyr::mutate(
+      tooltip = paste0(
+        "<b><span style='font-size:15px;'>", region, "</span></b><br>",
+        "<span style='font-size:15px;'>", jahr, "</span><br>",
+        formatC(wert, format = "f", digits = 1, decimal.mark = ","),
+        " % leistungsschwach"
+      )
+    )
+
+
+  if (kl_select == "4. Klasse") {
+    fach_titel <- paste0(
+      "Zeitverlauf des Anteils leistungsschwacher Schüler:innen in Mathematik (",
+      kl_select, ")"
+    )
+  } else {
+    fach_titel <- paste0(
+      "Zeitverlauf des Anteils leistungsschwacher Schüler:innen in ",
+      fach_select,
+      " (", kl_select, ")"
+    )
+  }
+
+
+  color <- c("#b16fab", "#154194", "#66cbaf", "#fbbf24", "#AFF3E0", "#2D6BE1", "#008F68", "#8893a7", "#ee7775", "#9d7265", "#35bd97",
+             "#bfc6d3", "#5f94f9", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")[1:length(unique(df$region))]
+
+
+  if (kl_select == "4. Klasse") {
+    quelle <- "Quelle der Daten: Institut zur Qualitätsentwicklung im Bildungswesen, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+  } else {
+    quelle <- "Quelle der Daten: Institut zur Qualitätsentwicklung im Bildungswesen, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+  }
+
+  jahr_order <- sort(unique(df$jahr))
+
+  out <- linebuilder_plotly(
+    df = df,
+    titel = fach_titel,
+    x = "jahr",
+    y = "wert",
+    group = "region",
+    color = color,
+    quelle = quelle
+  ) %>%
+    plotly::layout(
+      xaxis = list(
+        tickmode = "array",
+        tickvals = sort(unique(df$jahr))
+      )
+    )
+
+  return(out)
 }
 
 
@@ -2355,10 +2456,13 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
   fach_select <- r$fach_iqb_mathe_mittel_zeitverlauf
   score_select <- r$score_iqb_mathe_mittel_zeitverlauf
 
+
   if(klasse_select == "4. Klasse"){
     indikator_select <- r$indi_iqb_mathe_mittel_zeitverlauf_4
   }else{
     indikator_select <- r$indi_iqb_mathe_mittel_zeitverlauf_9
+    darstellung_select <- r$darstellung_iqb_mathe_mittel_zeitverlauf_9
+    jahr_select <- r$jahr_iqb_mathe_mittel_zeitverlauf_9
   }
 
 
@@ -2380,11 +2484,6 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
   df <- DBI::dbGetQuery(con, df_query)
 
 
-  # für 9 Klassen Fach filtern
-
-  if(klasse_select == "9. Klasse"){
-    df <- df %>% dplyr::filter(fach == fach_select)
-  }
 
   # Jahr als Faktor speichern, für schönere x-Achse
   df$jahr <- as.factor(df$jahr)
@@ -2431,6 +2530,7 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
   }
 
   # Datensatzaufbereitung bei Auswahl Zuwanderungsgeschichte
+
   if (indikator_select == "nach Zuwanderungsgeschichte"){
     df <- df %>% dplyr::filter(indikator %in% c("mit Zuwanderungsgeschichte", "ohne Zuwanderungsgeschichte"))
     df <- df %>% dplyr::filter(geschlecht == "gesamt")
@@ -2440,11 +2540,11 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
     df$indikator <- factor(df$indikator, levels = c("ohne Zuwanderungsgeschichte",
                                                     "mit Zuwanderungsgeschichte"))
 
-
   }
 
 
   # Datensatzaufbereitung bei Auswahl Bildungskapital/sozialem Status
+
   if(indikator_select == "nach Bildungskapital" & klasse_select == "4. Klasse") {
     df <- df %>% dplyr::filter(indikator %in% c("kapital_hoch", "kapital_niedrig"))
     df <- df %>% dplyr::filter(geschlecht == "gesamt")%>%
@@ -2478,82 +2578,385 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
 
   # Plot
 
-  if (klasse_select == "9. Klasse") {
+  if (klasse_select == "9. Klasse" &&
+         darstellung_select == "Zeitverlauf - Linien"){
 
-    if (indikator_select == "nach Geschlecht") {
+
+    df <- df %>%
+      dplyr::filter(
+        fach %in% c(
+          "Mathematik",
+          "Biologie (Fachwissen)",
+          "Chemie (Fachwissen)",
+          "Physik (Fachwissen)"
+        )
+      ) %>%
+      dplyr::mutate(
+        fach = dplyr::recode(
+          fach,
+          "Biologie (Fachwissen)" = "Biologie",
+          "Chemie (Fachwissen)" = "Chemie",
+          "Physik (Fachwissen)" = "Physik"
+        )
+      )
+
+    jahr_order <- sort(unique(df$jahr))
+
+      if (indikator_select == "nach Geschlecht") {
+
+        df <- df %>%
+          dplyr::filter(geschlecht != "gesamt") %>%
+          dplyr::mutate(
+            gruppe = paste(fach, geschlecht)
+          )
 
 
-      jahr_order <- sort(unique(df$jahr))
+        color <- c(
+          "Mathematik Mädchen" = "#154194",
+          "Mathematik Jungen" = "#8EA7D9",
 
-      df <- df %>%
-        dplyr::mutate(
-          jahr = factor(jahr, levels = jahr_order),
-          geschlecht = factor(geschlecht, levels = c("Mädchen", "Jungen"))
-        ) %>%
-        dplyr::arrange(indikator, geschlecht) %>%
-        dplyr::mutate(
-          .tooltip = paste0(
-            "<b><span style='font-size:15px;'>", jahr, "</span></b><br>",
-            "<span style='font-size:15px;'>", geschlecht, "</span><br>",
-            "Durchschnittliche Punktzahl: ", wert)
+          "Biologie Mädchen" = "#00a87a",
+          "Biologie Jungen" = "#9FD9C9",
+
+          "Chemie Mädchen" = "#B16FAB",
+          "Chemie Jungen" = "#D0A9CD",
+
+          "Physik Mädchen" = "#ee7775",
+          "Physik Jungen" = "#F8CACA"
         )
 
+        line_pattern <- "Jungen"
 
-      percent <- FALSE
-      color <- c("Mädchen" = "#154194", "Jungen" = "#efe8e6")
-      group <- "geschlecht"
-      titel <- paste0("Durchschnittliche Leistung der Schüler:innen im ", fach_select, "-Kompetenztest, ", "nach Geschlecht" ,praep,  bl_select, " (", klasse_select, ")")
+        df <- df %>%
+          dplyr::mutate(
+            jahr = factor(jahr, levels = jahr_order),
+              tooltip = paste0(
+                "<b><span style='font-size:15px;'>", fach, "</span></b><br>",
+                "<span style='font-size:15px;'>", geschlecht, "</span><br>",
+                jahr, "<br>",
+                "Punktzahl: ", wert
+              )
+          )
+
+        quelle_y <- -0.22
 
 
-    } else if (indikator_select == "nach Zuwanderungsgeschichte") {
+      } else if (indikator_select == "nach Zuwanderungsgeschichte") {
 
-      if(bl_select %in% c("Berlin", "Bremen", "Saarland")){
-        df <- df %>% dplyr::filter(jahr == "2018") }
+        df <- df %>%
+          dplyr::filter(indikator %in% c(
+            "mit Zuwanderungsgeschichte",
+            "ohne Zuwanderungsgeschichte"
+          )) %>%
+          dplyr::mutate(
+            gruppe = paste(df$fach, df$indikator)
+          )
 
-      jahr_order <- sort(unique(df$jahr))
 
-      df <- df %>%
-        dplyr::mutate(
-          jahr = factor(jahr, levels = jahr_order)) %>%
-        dplyr::arrange(indikator) %>%
-        dplyr::mutate(
-          .tooltip = paste0(
-            "<b><span style='font-size:15px;'>", jahr, "</span></b><br>",
-            "<span style='font-size:15px;'>", indikator, "</span><br>",
-            "Durchschnittliche Punktzahl: ", wert)
+        color <- c(
+          "Mathematik mit Zuwanderungsgeschichte" = "#154194",
+          "Mathematik ohne Zuwanderungsgeschichte" = "#8EA7D9",
+
+          "Biologie mit Zuwanderungsgeschichte" = "#00a87a",
+          "Biologie ohne Zuwanderungsgeschichte" = "#9FD9C9",
+
+          "Chemie mit Zuwanderungsgeschichte" = "#B16FAB",
+          "Chemie ohne Zuwanderungsgeschichte" = "#D0A9CD",
+
+          "Physik mit Zuwanderungsgeschichte" = "#ee7775",
+          "Physik ohne Zuwanderungsgeschichte" = "#F8CACA"
         )
 
-      percent <- FALSE
-      color <- c("#efe8e6", "#66cbaf")
-      group <- "indikator"
-      titel <- paste0("Durchschnittliche Leistung der Schüler:innen im ", fach_select, "-Kompetenztest, ", "nach Zuwanderungsgeschichte", praep , bl_select, " (", klasse_select, ")")
+        line_pattern <- "ohne Zuwanderungsgeschichte"
+
+        df <- df %>%
+          dplyr::mutate(
+            jahr = factor(jahr, levels = jahr_order),
+              tooltip = paste0(
+                "<b><span style='font-size:15px;'>", fach, "</span></b><br>",
+                "<span style='font-size:15px;'>", indikator, "</span><br>",
+                jahr, "<br>",
+                "Punktzahl: ", wert
+              )
+          )
+
+        quelle_y <- -0.28
 
 
-    } else if (indikator_select == "nach sozialem Status") {
+      } else if (indikator_select == "nach sozialem Status") {
 
-      jahr_order <- sort(unique(df$jahr))
+        df <- df %>%
+         dplyr::filter(indikator %in% c(
+           "hoher Status/hohes Bildungskapital",
+           "niedriger Status/niedriges Bildungskapital"
+         )) %>%
+         dplyr::mutate(
+            gruppe = paste(df$fach, df$indikator)
+          )
 
-      df <- df %>%
-        dplyr::mutate(
-          jahr = factor(jahr, levels = jahr_order)) %>%
-        dplyr::arrange(indikator) %>%
-        dplyr::mutate(
-          .tooltip = paste0(
-            "<b><span style='font-size:15px;'>", jahr, "</span></b><br>",
-            "<span style='font-size:15px;'>", indikator, "</span><br>",
-            "Durchschnittliche Punktzahl: ", wert)
+
+        color <- c(
+          "Mathematik niedriger Status/niedriges Bildungskapital" = "#154194",
+          "Mathematik hoher Status/hohes Bildungskapital" = "#8EA7D9",
+
+          "Biologie niedriger Status/niedriges Bildungskapital" = "#00a87a",
+          "Biologie hoher Status/hohes Bildungskapital" = "#9FD9C9",
+
+          "Chemie niedriger Status/niedriges Bildungskapital" = "#B16FAB",
+          "Chemie hoher Status/hohes Bildungskapital" = "#D0A9CD",
+
+          "Physik niedriger Status/niedriges Bildungskapital" = "#ee7775",
+          "Physik hoher Status/hohes Bildungskapital" = "#F8CACA"
         )
 
-      percent <- FALSE
-      color <- c("#efe8e6", "#66cbaf")
-      group <- "indikator"
-      titel <- paste0("Durchschnittliche Leistung der Schüler:innen im ", fach_select, "-Kompetenztest, ", "nach sozialem Status", praep , bl_select, " (", klasse_select, ")")
+        line_pattern <- "hoher Status/hohes Bildungskapital"
 
-    }
+        df <- df %>%
+          dplyr::mutate(
+              tooltip = paste0(
+                "<b><span style='font-size:15px;'>", fach, "</span></b><br>",
+                "<span style='font-size:15px;'>", indikator, "</span><br>",
+                jahr, "<br>",
+                "Punktzahl: ", wert
+              )
+          )
+
+        quelle_y <- -0.28
+
+      }
+
+
+
+      titel <- paste0("Durchschnittliche Leistung (erreichte Punktzahl) der 9.Klässler:innen in MINT-Kompetenztests ",indikator_select, praep , bl_select )
+      quelle <- "Quelle der Daten: Institut zur Qualitätsentwicklung im Bildungswesen, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+
+
+      out <- linebuilder_plotly(
+        df = df,
+        titel = titel,
+        x = "jahr",
+        y = "wert",
+        group = "gruppe",
+        format = ".0f",
+        color = color,
+        line_pattern = line_pattern,
+        quelle = quelle, quelle_y=quelle_y
+      )
+
+      return(out)
+
+} else if (klasse_select == "9. Klasse" && darstellung_select == "Fachvergleich - Balken") {
+
+  df <- df %>%
+    dplyr::filter(jahr == jahr_select)
+
+  df <- df %>%
+    dplyr::filter(
+      fach %in% c(
+        "Mathematik",
+        "Biologie (Fachwissen)",
+        "Chemie (Fachwissen)",
+        "Physik (Fachwissen)"
+      )
+    ) %>%
+    dplyr::mutate(
+      fach = dplyr::recode(
+        fach,
+        "Biologie (Fachwissen)" = "Biologie",
+        "Chemie (Fachwissen)" = "Chemie",
+        "Physik (Fachwissen)" = "Physik"
+      )
+    )
+
+  if (indikator_select == "nach Geschlecht") {
+
+    df <- df %>%
+      dplyr::filter(geschlecht != "gesamt")
+
+
+    group <- "geschlecht"
+
+    color <- c(
+      "Mädchen" = "#154194",
+      "Jungen" = "#efe8e6"   )
+
+    df <- df %>%
+      dplyr::mutate(
+        .tooltip = paste0(
+          "<b><span style='font-size:15px;'>", fach, "</span></b><br>",
+          "<span style='font-size:15px;'>", geschlecht, "</span><br>",
+          jahr, "<br>",
+          "Punktzahl: ", wert
+        )
+      )
+
+
+  } else if (indikator_select == "nach Zuwanderungsgeschichte") {
+
+    df <- df %>%
+      dplyr::filter(
+        indikator %in% c(
+          "mit Zuwanderungsgeschichte",
+          "ohne Zuwanderungsgeschichte"
+        )
+      )
+
+
+    group <- "indikator"
+
+
+    color <- c(
+      "ohne Zuwanderungsgeschichte" = "#efe8e6",
+      "mit Zuwanderungsgeschichte" = "#66cbaf"
+
+    )
+
+    df <- df %>%
+      dplyr::mutate(
+        .tooltip = paste0(
+          "<b><span style='font-size:15px;'>", fach, "</span></b><br>",
+          "<span style='font-size:15px;'>", indikator, "</span><br>",
+          jahr, "<br>",
+          "Punktzahl: ", wert
+        )
+      )
+
+
+  } else if (indikator_select == "nach sozialem Status") {
+
+    df <- df %>%
+      dplyr::filter(
+        indikator %in% c(
+          "hoher Status/hohes Bildungskapital",
+          "niedriger Status/niedriges Bildungskapital"
+        )
+      )
+
+    group <- "indikator"
+
+
+    color <- c(
+      "niedriger Status/niedriges Bildungskapital" = "#66cbaf",
+      "hoher Status/hohes Bildungskapital" = "#efe8e6"
+    )
+
+    df <- df %>%
+      dplyr::mutate(
+        .tooltip = paste0(
+          "<b><span style='font-size:15px;'>", fach, "</span></b><br>",
+          "<span style='font-size:15px;'>", indikator, "</span><br>",
+          jahr, "<br>",
+          "Punktzahl: ", wert
+        )
+      )
 
   }
 
-  if (klasse_select == "4. Klasse") {
+
+
+  titel <- paste0(
+    "Durchschnittliche Leistung (erreichte Punktzahl) der 9.Klässler:innen in MINT-Kompetenztests ", jahr_select," ",
+    indikator_select,
+    praep,
+    bl_select
+  )
+
+  quelle <- "Quelle der Daten: Institut zur Qualitätsentwicklung im Bildungswesen, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+
+  out <- balkenbuilder_plotly(
+    df = df,
+    x = "fach",
+    y = "wert",
+    group = group,
+    titel = titel,
+    color = color,
+    orientation = "v",
+    stacking = FALSE,
+    percent = FALSE,
+    quelle = quelle,
+    legend_y = -0.06,
+    quelle_y = -0.14
+  )
+
+  return(out)
+
+
+}
+
+    # if (indikator_select == "nach Geschlecht") {
+    #
+    #
+    #   jahr_order <- sort(unique(df$jahr))
+    #
+    #   df <- df %>%
+    #     dplyr::mutate(
+    #       jahr = factor(jahr, levels = jahr_order),
+    #       geschlecht = factor(geschlecht, levels = c("Mädchen", "Jungen"))
+    #     ) %>%
+    #     dplyr::arrange(indikator, geschlecht) %>%
+    #     dplyr::mutate(
+    #       .tooltip = paste0(
+    #         "<b><span style='font-size:15px;'>", jahr, "</span></b><br>",
+    #         "<span style='font-size:15px;'>", geschlecht, "</span><br>",
+    #         "Durchschnittliche Punktzahl: ", wert)
+    #     )
+    #
+    #
+    #   percent <- FALSE
+    #   color <- c("Mädchen" = "#154194", "Jungen" = "#efe8e6")
+    #   group <- "geschlecht"
+    #   titel <- paste0("Durchschnittliche Leistung der Schüler:innen im ", fach_select, "-Kompetenztest, ", "nach Geschlecht" ,praep,  bl_select, " (", klasse_select, ")")
+    #
+    #
+    # } else if (indikator_select == "nach Zuwanderungsgeschichte") {
+    #
+    #   if(bl_select %in% c("Berlin", "Bremen", "Saarland")){
+    #     df <- df %>% dplyr::filter(jahr == "2018") }
+    #
+    #   jahr_order <- sort(unique(df$jahr))
+    #
+    #   df <- df %>%
+    #     dplyr::mutate(
+    #       jahr = factor(jahr, levels = jahr_order)) %>%
+    #     dplyr::arrange(indikator) %>%
+    #     dplyr::mutate(
+    #       .tooltip = paste0(
+    #         "<b><span style='font-size:15px;'>", jahr, "</span></b><br>",
+    #         "<span style='font-size:15px;'>", indikator, "</span><br>",
+    #         "Durchschnittliche Punktzahl: ", wert)
+    #     )
+    #
+    #   percent <- FALSE
+    #   color <- c("#efe8e6", "#66cbaf")
+    #   group <- "indikator"
+    #   titel <- paste0("Durchschnittliche Leistung der Schüler:innen im ", fach_select, "-Kompetenztest, ", "nach Zuwanderungsgeschichte", praep , bl_select, " (", klasse_select, ")")
+    #
+    #
+    # } else if (indikator_select == "nach sozialem Status") {
+    #
+    #   jahr_order <- sort(unique(df$jahr))
+    #
+    #   df <- df %>%
+    #     dplyr::mutate(
+    #       jahr = factor(jahr, levels = jahr_order)) %>%
+    #     dplyr::arrange(indikator) %>%
+    #     dplyr::mutate(
+    #       .tooltip = paste0(
+    #         "<b><span style='font-size:15px;'>", jahr, "</span></b><br>",
+    #         "<span style='font-size:15px;'>", indikator, "</span><br>",
+    #         "Durchschnittliche Punktzahl: ", wert)
+    #     )
+    #
+    #   percent <- FALSE
+    #   color <- c("#efe8e6", "#66cbaf")
+    #   group <- "indikator"
+    #   titel <- paste0("Durchschnittliche Leistung der Schüler:innen im ", fach_select, "-Kompetenztest, ", "nach sozialem Status", praep , bl_select, " (", klasse_select, ")")
+    #
+
+
+
+
+   else if (klasse_select == "4. Klasse") {
 
     if (indikator_select == "nach Geschlecht" &&
         score_select == "Mindeststandard") {
@@ -2647,7 +3050,7 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
 
     }
 
-  }
+
 
 
   x <- "jahr"
@@ -2666,7 +3069,7 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
 
 
     return(out)
-}
+}}
 
 
 

@@ -1377,6 +1377,7 @@ df_query <- glue::glue_sql("
 ## schule ----
 plot_international_schule_map <- function(r) {
 
+  darstellung <- r$darstellung_l_int_schule
   timerange <- r$map_y_int_schule_timss
   label_m <- r$map_l_int_schule
   fach_m <- r$map_f_int_schule_timss
@@ -1444,14 +1445,16 @@ plot_international_schule_map <- function(r) {
   dfs$display_wert <- prettyNum(round(dfs$wert, 1),
                                 big.mark = ".",
                                 decimal.mark = ",")
+  quelle <- paste0("Quelle der Daten: IEA, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.")
+
 
   if (leistungsindikator_m == "Test-Punktzahl") {
 
     dfs <- dfs %>%
       dplyr::mutate(
-        tooltip = paste0(
+        .tooltip = paste0(
           "<b>", land, "</b><br>",
-          "Punktzahl: ", display_wert
+          "Punktzahl: ",formatC(wert, format = "f", digits = 1, decimal.mark = ",")
         )
       )
 
@@ -1460,7 +1463,7 @@ plot_international_schule_map <- function(r) {
 
     dfs <- dfs %>%
       dplyr::mutate(
-        tooltip = paste0(
+        .tooltip = paste0(
           "<b>", land, "</b><br>",
           "Anteil: ", display_wert, " %"
         )
@@ -1470,6 +1473,55 @@ plot_international_schule_map <- function(r) {
                     ", die im ", fach_m, "-Kompetenztest von ",
                     label_m, " den mittleren internationalen Standard erreichen (", timerange, ")")
   }
+
+  if (darstellung == "Balkendiagramm") {
+
+    plot_data_bar <- dfs %>%
+      dplyr::arrange(wert) %>%
+      dplyr::mutate(
+
+        farbe = dplyr::case_when(
+          land == "Deutschland" ~ "#154194",
+          land == "OECD Durchschnitt" ~ "#B16FAB",
+          TRUE ~ "#B2B6BA"
+        )
+
+      )
+
+    order <- plot_data_bar %>%
+      dplyr::arrange(desc(wert)) %>%
+      dplyr::pull(land)
+
+    farben <- setNames(
+      plot_data_bar$farbe,
+      plot_data_bar$land
+    )
+
+
+    p <- balkenbuilder_plotly(
+      df = plot_data_bar,
+      titel = titel,
+      x = "land",
+      y = "wert",
+      orientation = "h",
+      color = plot_data_bar$farbe,
+      order = order,
+      quelle = quelle, margin_t = 80, quelle_y = -0.05,
+      yaxis_size = 10
+    )
+
+
+    p <- p %>%
+      plotly::layout(
+        height = 900
+      )
+
+
+    return(p)
+
+
+  } else {
+
 
   # Skalen-Minimum/-Maximum anpassen
   s_min <- ifelse(label_m == "PISA", 300, 200)
@@ -1493,12 +1545,127 @@ plot_international_schule_map <- function(r) {
                            map = "world_choropleth.rds")
 
   return(map)
+}}
+
+
+plot_international_schule_verlauf <- function(r) {
+#browser()
+
+  label_v <-r$verlauf_l_int_schule
+  #fach_v <- r$verlauf_f_pisa_int_schule
+
+
+
+  if (label_v == "TIMSS") {
+
+    fach_v <- r$verlauf_f_int_schule
+    leistungsindikator_v <- r$verlauf_li_int_schule
+
+    this_ordnung <- ifelse(
+      leistungsindikator_v == "Test-Punktzahl",
+      "Achievement",
+      "Benchmarks"
+    )
+
+    this_indikator <- ifelse(
+      leistungsindikator_v == "Mittlerer Standard erreicht",
+      "Mittlerer int'l. Maßstab (475)",
+      "Insgesamt"
+    )
+
+        df_query <- glue::glue_sql("
+          SELECT *
+          FROM schule_timss
+          WHERE ordnung = {this_ordnung}
+          AND indikator = {this_indikator}
+        ", .con = con)
+
+        df <- DBI::dbGetQuery(con, df_query)
+
+        help_l <- "4. Klasse"
+  }
+
+  if (label_v == "PISA") {
+
+    fach_v <- r$verlauf_f_int_schule
+
+      df_query <- glue::glue_sql("
+        SELECT *
+        FROM schule_pisa
+        WHERE bereich = 'Ländermittel'
+        AND indikator = 'Insgesamt'
+      ", .con = con)
+
+      df <- DBI::dbGetQuery(con, df_query)
+
+      help_l <- "9. & 10. Klasse"
+  }
+
+
+  dfs <- df %>%
+    dplyr::filter(
+      fach == fach_v,
+      !is.na(wert)
+    )
+
+
+  laender_v <- r$verlauf_land_int_schule
+
+  if (!is.null(laender_v)) {
+
+    dfs <- dfs %>%
+      dplyr::filter(land %in% laender_v)
+
+  }
+
+  dfs <- dfs %>%
+    dplyr::mutate(
+      jahr = as.numeric(jahr)
+    ) %>%
+    dplyr::arrange(land, jahr)
+
+  dfs <- dfs %>%
+    dplyr::mutate(
+      tooltip = paste0(
+        "<b>", land, "</b><br>",
+        "Jahr: ", jahr, "<br>",
+        "Wert: ", round(wert, 1)
+      )
+    )
+  quelle <- "Quelle: IEA, 2023, freier Download, eigene Berechnungen durch MINTvernetzt."
+
+  titel <- paste0(
+    "MINT-Kompetenz im Zeitverlauf (",
+    label_v,
+    ", ",
+    fach_v,
+    ")"
+  )
+
+  p <- linebuilder_plotly(
+    df = dfs,
+    titel = titel,
+    x = "jahr",
+    y = "wert",
+    group = "land",
+    quelle = quelle
+  )
+
+  return(p)
+
+
 }
+
+
+
+
+
 
 
 plot_international_schule_item <- function(r) {
 
-
+  laender_labels <- r$label_laender_timss
+  darstellung <- r$darstellung_timss_int_schule
   timerange <- r$item_y_int_schule
   label_m <- "TIMSS"
   fach_m <- r$item_f_int_schule
@@ -1600,7 +1767,7 @@ plot_international_schule_item <- function(r) {
                   label_m, " (", timerange, ")")
   quelle <- "Quelle: IEA, 2023, freier Download, eigene Berechnungen durch MINTvernetzt."
 
-  titel_wrapped <- stringr::str_wrap(titel, width = 40)
+  titel_wrapped <- stringr::str_wrap(titel, width = 60)
   titel_wrapped <- gsub("\n", "<br>", titel_wrapped)
 
 
@@ -1614,6 +1781,176 @@ plot_international_schule_item <- function(r) {
 
   titel_js  <- jsonlite::toJSON(titel, auto_unbox = TRUE)
   quelle_js <- jsonlite::toJSON(quelle, auto_unbox = TRUE)
+
+
+  if (darstellung == "Scatterplot") {
+
+
+    plot_data <- plot_data %>%
+      dplyr::mutate(
+        mittelwert = (wert_Mädchen + wert_Jungen) / 2,
+        differenz = wert_Jungen - wert_Mädchen,
+
+        tooltip = paste0(
+          "<span style='font-size:15px;'>",
+          "<b>", land, "</b><br>",
+          group, "<br>",
+          "Mittlere Test-Punktzahl: ", round(mittelwert, 1), "<br>",
+          "Mädchen: ", wert_Mädchen, "<br>",
+          "Jungen: ", wert_Jungen, "<br>",
+          "Differenz (Jungen - Mädchen): ", differenz,
+          "</span>"
+        )
+      )
+
+
+      x_min <- floor(min(plot_data$mittelwert, na.rm = TRUE) / 10) * 10
+      x_max <- ceiling(max(plot_data$mittelwert, na.rm = TRUE) / 10) * 10
+
+      y_min <- floor(min(plot_data$differenz, na.rm = TRUE) / 5) * 5
+      y_max <- ceiling(max(plot_data$differenz, na.rm = TRUE) / 5) * 5
+
+      mittelwert_alle <- mean(plot_data$mittelwert, na.rm = TRUE)
+
+
+      # optional: Länder beschriften
+      plot_data_labels <- plot_data %>%
+        dplyr::filter(
+          land == "Deutschland" |
+            land %in% laender_labels
+        )
+
+
+      p <- plotly::plot_ly(
+        data = plot_data,
+        x = ~mittelwert,
+        y = ~differenz,
+        type = "scatter",
+        mode = "markers",
+        text = ~tooltip,
+        hovertemplate = paste( "%{text}<extra></extra>" ),
+        color = ~group,
+        colors = c(
+          "kein signifikanter Unterschied" = "#66cbaf",
+          "Jungen signifikant besser" = "#D0A9CD",
+          "Mädchen signifikant besser" = "#154194"
+        ),
+        marker = list(size = 10)
+      )
+
+
+      # horizontale Referenzlinie
+      p <- p %>%
+        plotly::add_segments(
+          x = (x_min + 3),
+          xend = (x_max - 1),
+          y = 0,
+          yend = 0,
+          inherit = FALSE,
+          line = list(
+            color = "lightgrey",
+            dash = "dash"
+          ),
+          showlegend = FALSE
+        )
+
+      p <- p %>%
+        plotly::layout(
+          font = list(
+            family = "Calibri, sans-serif"
+          ),
+            margin = list(
+              t = 100,
+              b = 100,
+              l = 70,
+              r = 30
+            ),
+          title = list(
+            text = titel_wrapped,
+            x = 0.5,
+            xanchor = "center"
+          ),
+
+          xaxis = list(
+            title = list(
+              text = "Mittlere Test-Punktzahl",
+              standoff = 6
+            ),
+            range = c(x_min, x_max)
+          ),
+
+          yaxis = list(
+            title = "Differenz Jungen − Mädchen",
+            range = c(y_min, (y_max+2)),
+            zeroline = FALSE
+          ),
+
+          annotations = list(
+
+            list(
+              x = x_max,
+              y = (y_max),
+              text = "Jungen besser",
+              showarrow = FALSE,
+              xanchor = "right"
+            ),
+
+            list(
+              x = x_max,
+              y = (y_min + 2),
+              text = "Mädchen besser",
+              showarrow = FALSE,
+              xanchor = "right"
+            ),
+
+            list(
+              text = quelle,
+              x = 0.02,
+              y = -0.15,
+              xref = "paper",
+              yref = "paper",
+              xanchor = "left",
+              yanchor = "top",
+              showarrow = FALSE,
+              font = list(
+                size = 11,
+                color = "gray"
+              )
+            )
+          ),
+
+          legend = list(
+            orientation = "h",
+            x = 0.5,
+            xanchor = "center",
+            y = -0.08
+          )
+        )
+
+
+      if (!is.null(laender_labels)) {
+
+        p <- p %>%
+          plotly::add_text(
+            data = plot_data_labels,
+            x = ~mittelwert,
+            y = ~differenz,
+            text = ~land,
+            textposition = "top center",
+            showlegend = FALSE,
+            inherit = FALSE
+          )
+
+      }
+
+
+      return(p)
+
+
+
+
+  } else if (darstellung == "Karte") {
+
 
 
   # Geodaten mit df verbinden
@@ -1829,7 +2166,7 @@ plot_international_schule_item <- function(r) {
 
   return(p)
 }
-
+}
 
 
 

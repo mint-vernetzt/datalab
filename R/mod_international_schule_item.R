@@ -13,12 +13,27 @@ mod_international_schule_item_ui <- function(id){
   ns <- NS(id)
   tagList(
 
+    p("Darstellung:"),
+
+    shinyWidgets::radioGroupButtons(
+      inputId = ns("darstellung_timss_int_schule"),
+      choices = c(
+        "Scatterplot",
+        "Karte"
+      ),
+      selected = "Scatterplot",
+      justified = TRUE
+    ),
+
     p("Fach:"),
-    shinyWidgets::pickerInput(
+    shinyWidgets::radioGroupButtons(
       inputId = ns("item_f_timss_int_schule"),
-      choices = c("Mathematik", "Naturwissenschaften"),
-      selected = c("Mathematik"),
-      multiple = FALSE
+      choices = c(
+        "Mathematik",
+        "Naturwissenschaften"
+      ),
+      selected = "Mathematik",
+      justified = TRUE
     ),
 
     p("Jahr:"),
@@ -27,6 +42,18 @@ mod_international_schule_item_ui <- function(id){
       label = NULL,
       choices = international_ui_years(region = "TIMSS"),
       selected = "2023"
+    ),
+    p("Länder beschriften:"),
+    shinyWidgets::pickerInput(
+      inputId = ns("label_laender_timss"),
+      choices = " ",
+      selected = "Deutschland",
+      multiple = TRUE,
+      options = list(
+        `actions-box` = TRUE,
+        `max-options` = 5,
+        `live-search` = TRUE
+      )
     ),
   br(),
   shinyBS::bsPopover(id="ih_international_schule_item", title="",
@@ -48,6 +75,10 @@ mod_international_schule_item_server <- function(id, r){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
+    observeEvent(input$darstellung_timss_int_schule, {
+      r$darstellung_timss_int_schule <- input$darstellung_timss_int_schule
+    })
+
     observeEvent(input$item_f_timss_int_schule, {
       r$item_f_int_schule <- input$item_f_timss_int_schule
     })
@@ -55,6 +86,35 @@ mod_international_schule_item_server <- function(id, r){
     observeEvent(input$item_y_timss_int_schule, {
       r$item_y_int_schule <- input$item_y_timss_int_schule
     })
+
+    observeEvent(input$label_laender_timss, {
+      r$label_laender_timss <- input$label_laender_timss
+    })
+
+    observe({
+
+      req(input$item_y_timss_int_schule)
+      req(input$item_f_timss_int_schule)
+
+      df_query <- glue::glue_sql("
+    SELECT *
+    FROM schule_timss
+    WHERE jahr = {input$item_y_timss_int_schule}
+    AND fach = {input$item_f_timss_int_schule}
+    AND ordnung = 'Gender'
+  ", .con = con)
+
+      df <- DBI::dbGetQuery(con, df_query)
+
+      shinyWidgets::updatePickerInput(
+        session = session,
+        inputId = "label_laender_timss",
+        choices = sort(unique(df$land)),
+        selected = "Deutschland"
+      )
+
+    })
+
 
   })
 }

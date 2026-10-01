@@ -410,7 +410,27 @@ mod_schule_kurse_ui <- function(id){
 
                                   )
                          ),
-                         tabPanel("Leistung Mathematik im Gruppenvergleich", br(),
+                         tabPanel("Leistungsschwäche im Zeitverlauf", br(),
+
+                                  tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                                           .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                                  shiny::sidebarPanel(
+                                    width = 3,
+                                    mod_schule_kurse_iqb_linien_ui("mod_schule_kurse_iqb_linien_ui_1"),
+                                  ),
+                                  shiny::mainPanel(
+                                    width = 9,
+                                    shinycssloaders::withSpinner(plotly::plotlyOutput(ns("plot_iqb_linien"), height = "500px"),
+                                                                 color = "#154194"),
+                                    shinyBS::bsPopover(id="h_schule_kompetenz_1", title = "",
+                                                       content = paste0("Für Mecklenburg-Vorpommern liegen 2021 keine Daten vor, da pandemiebedingt nicht genug Testungen realisiert werden konnten.", "<br> <br> Gesamte realisierte Stichprobengröße:", "<br> 2024: 1.556 Schulen mit N = 48.279 Schüler:innen", "<br> 2021: 1.464 Schulen mit N = 26.844 Schüler:innen", "<br> 2018: 1.462 Schulen mit N = 44.941 Schüler:innen", "<br> 2016: 1.508 Schulen mit N = 29.259 Schüler:innen", "<br> 2012: 1.326 Schulen mit N = 44.584 Schüler:innen", "<br> 2011: 1.349 Schulen mit N = 27.081 Schüler:innen"),
+                                                       placement = "top",
+                                                       trigger = "hover"),
+                                    tags$a(paste0("Hinweis zu den Daten und Stichprobengröße"), icon("info-circle"), id = "h_schule_kompetenz_1")
+
+                                  )
+                         ),
+                         tabPanel("MINT-Leistung im Gruppenvergleich", br(),
 
                                   tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
                                            .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
@@ -778,8 +798,14 @@ mod_schule_kurse_server <- function(id, r){
        iqb_standard_zeitverlauf(r)
     })
 
-
     # Tab 2
+
+    output$plot_iqb_linien <- plotly::renderPlotly({
+      iqb_linien(r)
+    })
+
+
+    # Tab 3
 
 
     output$plot_iqb_mathe_mittel_zeitverlauf <- plotly::renderPlotly({
@@ -788,7 +814,7 @@ mod_schule_kurse_server <- function(id, r){
 
 
 
-    # Tab 3
+    # Tab 4
 
     output$plot_iqb_fragebogen <- plotly::renderPlotly({
     iqb_fragebogen(r)

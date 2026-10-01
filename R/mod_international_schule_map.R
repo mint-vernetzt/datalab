@@ -18,9 +18,18 @@ mod_international_schule_map_ui <- function(id){
       inputId = ns("map_l_int_schule"),
       choices = c("TIMSS", "PISA"),
       selected = "TIMSS",
-      justified = TRUE#,
-      # checkIcon = list(yes = icon("ok",
-      #                             lib = "glyphicon"))
+      justified = TRUE,
+    ),
+
+    p("Darstellung:"),
+    shinyWidgets::radioGroupButtons(
+      inputId = ns("darstellung_l_int_schule"),
+      choices = c(
+        "Balkendiagramm",
+        "Karte"
+      ),
+      selected = "Balkendiagramm",
+      justified = TRUE
     ),
 
     #Conditional Panel, um für Lehramt nur sinnvollere Fächer auswählen zu lassen
@@ -91,6 +100,11 @@ mod_international_schule_map_server <- function(id, r){
 
   moduleServer( id, function(input, output, session){
     ns <- session$ns
+
+
+    observeEvent(input$darstellung_l_int_schule, {
+      r$darstellung_l_int_schule <- input$darstellung_l_int_schule
+    })
 
     # region change updates respective sub inputs, which will otherwise
     # still be the last values.
