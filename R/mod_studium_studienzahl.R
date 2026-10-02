@@ -72,9 +72,9 @@ mod_studium_studienzahl_ui <- function(id){
       shinydashboard::box(
         title = "Datenquellen",
         width = 5,
-        p("Die amtlichen Statistiken zeigen das aktuellste verfügbare Berichtsjahr 2024."),
-        p(tags$b(span("Studierendenzahlen: Destatis 2025, auf Anfrage. ")),
-          "Daten des Berichtsjahres 2025 sind ca. ab September 2026 verfügbar."),
+        p("Die amtlichen Statistiken zeigen das aktuellste verfügbare Berichtsjahr 2025."),
+        p(tags$b(span("Studierendenzahlen: Destatis 2026, auf Anfrage. ")),
+          "Daten des Berichtsjahres 2026 sind ca. ab September 2027 verfügbar."),
 
       )
     ),

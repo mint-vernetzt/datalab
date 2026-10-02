@@ -14,8 +14,8 @@ mod_studium_top_faecher_ui <- function(id){
     shinyWidgets::sliderTextInput(
       inputId = ns("date_top_faecher"),
       label = NULL,
-      choices = 2013:2024,
-      selected = 2024
+      choices = 2013:2025,
+      selected = 2025
     ),
     # Region
     p("Region:"),
