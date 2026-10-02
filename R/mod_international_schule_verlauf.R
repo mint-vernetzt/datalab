@@ -35,9 +35,22 @@ mod_international_schule_verlauf_ui <- function(id){
     ),
     p("Länder:"),
     shinyWidgets::pickerInput(
-      inputId = ns("verlauf_land_int_schule"),
-      choices = c()
-  )),
+      inputId = ns("verlauf_land_timss_int_schule"),
+      choices = sort(
+        DBI::dbGetQuery(
+          con,
+          "SELECT DISTINCT land FROM schule_timss"
+        )$land
+      ),
+      selected = c("Deutschland"),
+      multiple = TRUE,
+      options = list(
+        `actions-box` = TRUE,
+        `max-options` = 5
+      )
+    )
+
+    ),
 
   conditionalPanel(
     condition = "input.verlauf_l_int_schule == 'PISA'",
@@ -51,58 +64,28 @@ mod_international_schule_verlauf_ui <- function(id){
     ),
     p("Länder:"),
     shinyWidgets::pickerInput(
-      inputId = ns("verlauf_land_int_schule"),
-      choices = c(
-        "Australien",
-        "Belgien",
-        "Chile",
-        "Costa Rica",
-        "Dänemark",
+      inputId = ns("verlauf_land_pisa_int_schule"),
+      choices = sort(
+        DBI::dbGetQuery(
+          con,
+          "SELECT DISTINCT land FROM schule_pisa"
+        )$land
+      ),
+      selected = c(
         "Deutschland",
-        "Estland",
-        "Finnland",
-        "Frankreich",
-        "Griechenland",
-        "Großbritannien",
-        "Irland",
-        "Island",
-        "Israel",
-        "Italien",
-        "Japan",
-        "Kanada",
-        "Kolumbien",
-        "Korea, Republik von",
-        "Lettland",
-        "Litauen",
-        "Mexiko",
-        "Neuseeland",
-        "Niederlande",
-        "Norwegen",
-        "OECD Durchschnitt",
-        "Österreich",
-        "Polen",
-        "Portugal",
-        "Schweden",
-        "Schweiz",
-        "Slowakei",
-        "Slowenien",
-        "Spanien",
-        "Tschechische Republik",
-        "Türkei",
-        "Ungarn",
-        "Vereinigte Staaten"
-    ),
-    selected = c(
-      "Deutschland",
-      "OECD Durchschnitt"
-    ),
-    multiple = TRUE,
-    options = list(
-      `actions-box` = TRUE,
-      `max-options` = 5
-    ))
-  )
-)
+        "OECD Durchschnitt"
+      ),
+      multiple = TRUE,
+      options = list(
+        `actions-box` = TRUE,
+        `max-options` = 5
+      )
+    )
+
+
+
+  ))
+
 }
 
 
@@ -112,25 +95,30 @@ mod_international_schule_verlauf_server <- function(id, r){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
+    observeEvent(input$verlauf_l_int_schule, {
+      r$verlauf_l_int_schule <- input$verlauf_l_int_schule
+      })
 
-    observe({
-
-      req(input$verlauf_l_int_schule)
-
-      r$verlauf_l_int_schule  <- input$verlauf_l_int_schule
-      r$verlauf_land_int_schule <- input$verlauf_land_int_schule
-
-      if (input$verlauf_l_int_schule == "TIMSS") {
-
-        r$verlauf_f_int_schule  <- input$verlauf_f_timss_int_schule
-        r$verlauf_li_int_schule <- input$verlauf_li_timss_int_schule
-
-      } else {
-
-        r$verlauf_f_int_schule <- input$verlauf_f_pisa_int_schule
-
-      }
+    observeEvent(input$verlauf_f_pisa_int_schule, {
+      r$verlauf_f_int_schule <- input$verlauf_f_pisa_int_schule
     })
+
+    observeEvent(input$verlauf_li_timss_int_schule, {
+      r$verlauf_li_int_schule <- input$verlauf_li_timss_int_schule
+    })
+
+    observeEvent(input$verlauf_f_timss_int_schule, {
+      r$verlauf_f_int_schule <- input$verlauf_f_timss_int_schule
+    })
+
+    observeEvent(input$verlauf_land_timss_int_schule, {
+      r$verlauf_land_timss_int_schule <- input$verlauf_land_timss_int_schule
+    })
+
+    observeEvent(input$verlauf_land_pisa_int_schule, {
+      r$verlauf_land_pisa_int_schule <- input$verlauf_land_pisa_int_schule
+    })
+
     })
 }
 

@@ -446,6 +446,11 @@ mod_schule_kurse_ui <- function(id){
                                                        content = paste0("Mit Zuwanderungsgeschichte = Kinder, die selbst oder deren beider Eltern nach Deutschland zugewandert sind. <br> Ohne Zuwanderungsgeschichte = Kinder, deren beider Eltern in Deutschland geboren wurden.", "<br> <br> Bildungskapital = Ressourcen, Kinder durch (kulturelle) Bildung zu fördern, und Indikator für den sozialen Status der Eltern. Erfasst wurde das Bildungskapital durch die Anzahl an Büchern im Haushalt (hoch = mehr als 100 Bücher zuhause).", "<br><br>sozialer Status = die soziale Position der Eltern. Hier wurden sozialer Status und Anforderungen der Berufe betrachtet. <br> Ab 2024 wird nur noch das Bildungskapital berichtet."),
                                                        placement = "top",
                                                        trigger = "hover"),
+                                    tags$p(
+                                      style = "font-style: italic;font-size: 12px",
+                                      "Klicken Sie in der Legende auf einen Datensatz, um diesen auszublenden."
+                                    ),
+                                    br(),
                                     tags$a(paste0("Definition der Begriffe"), icon("info-circle"), id = "def_schule_kompetenz_2"),
                                     br(),
                                     br(),
