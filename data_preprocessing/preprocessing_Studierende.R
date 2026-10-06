@@ -263,7 +263,7 @@ studierende <- data_studi_neu2 %>%
 
 
 
-usethis::use_data(studierende, overwrite = T)
+#usethis::use_data(studierende, overwrite = T)
 
 
 duplika <- janitor::get_dupes(studierende, c(region, indikator, geschlecht, jahr, region, fachbereich))
@@ -285,17 +285,25 @@ for(i in 1:length(Jahre)){
   rohe_data_df <- rbind(rohe_data_df, temporar)
 }
 
-temporar <- readxl::read_xlsx(paste0(pfad, "DES071_Brunner_Absolventinnen_Land_FG_STB_2023.xlsx"))
-temporar$jahr <- 2023
-temporar <- temporar[-(1:8),]
-rohe_data_df <- rbind(rohe_data_df, temporar)
+temporar1 <- readxl::read_xlsx(paste0(pfad, "DES071_Brunner_Absolventinnen_Land_FG_STB_2023.xlsx"))
+temporar1$jahr <- 2023
+temporar1 <- temporar1[-(1:8),]
+rohe_data_df23 <- rbind(rohe_data_df, temporar1)
 
-temporar <- readxl::read_xlsx(paste0(pfad, "DES074_Absolventinnen_Land_FG_STB_2024.xlsx"))
-temporar$jahr <- 2024
-temporar <- temporar[-(1:8),]
-rohe_data_df <- rbind(rohe_data_df, temporar)
+temporar2 <- readxl::read_xlsx(paste0(pfad, "DES074_Absolventinnen_Land_FG_STB_2024.xlsx"))
+temporar2$jahr <- 2024
+temporar2 <- temporar2[-(1:8),]
+rohe_data_df24 <- rbind(rohe_data_df23, temporar2)
 
-rm(temporar)
+temporar3 <- readxl::read_xlsx(paste0(pfad, "DES076_Brunner_Absolventinnen_Land_FG_STB_2025.xlsx"))
+temporar3 <- temporar3[, -c(14:19)]
+temporar3$jahr <- 2025
+temporar3 <- temporar3[-(1:8),]
+rohe_data_df <- rbind(rohe_data_df24, temporar3)
+
+
+
+rm(temporar, temporar1, temporar2, temporar3)
 
 
 rohe_data_df <- rohe_data_df %>% select(-c(`Statistisches Bundesamt`, `...3`, `...5`))
@@ -479,10 +487,10 @@ colnames(df_all) <- c("region", "fachbereich", "fach", "jahr", "bereich", "indik
 studierende_absolventen<- df_all
 ## Export
 
-#setwd("C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/02_data/data/")
-setwd("C:/Users/kbr/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/02_data/data/")
+#setwd("C:/Users/kbr/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/02_data/data/")
+setwd("C:/Users/mis/OneDrive - Stifterverband/Dateiablage - MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/02_data/data/")
 
-#usethis::use_data(studierende_absolventen, overwrite = T)
+
 save(studierende_absolventen, file = "studierende_absolventen.rda")
 
 ## studierende_detailliert ----
@@ -1166,16 +1174,34 @@ df_all<- df_all %>%
 studierende_detailliert <- df_all
 
 
-# in Datenbank einspielen (Stand 02.10.26 - nur studierende detailliert 25 ohne absolventen)
+# in Datenbank einspielen
+
+load("studierende_detailliert.rda")
+load("studierende_absolventen.rda")
+
+studierende_absolventen <- studierende_absolventen %>%
+  dplyr::filter(jahr == 2025)
+
+studierende_detailliert <- rbind(studierende_detailliert, studierende_absolventen)
+
+save(studierende_detailliert, file = "studierende_detailliert.rda")
+
+
 library(DBI)
 
 con <- dbConnect(duckdb::duckdb(),"data/mint_db.duckdb")
 
+con <- DBI::dbConnect(
+  duckdb::duckdb(),
+  "C:/Users/mis/OneDrive - Stifterverband/Dokumente/R/datalab/data/mint_db.duckdb"
+)
+
+
 dbWriteTable(con, "studierende_detailliert", studierende_detailliert,
-             overwrite = TRUE,append = FALSE)
+             overwrite = TRUE, append = FALSE)
 
 
-save(studierende_detailliert, file = "studierende_detailliert.rda")
+
 studierende_detailliert <- dbGetQuery(con, "SELECT * FROM studierende_detailliert")
 
 
@@ -1184,16 +1210,10 @@ dbDisconnect(con, shutdown = TRUE)
 
 
 
-load("C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/02_data/data/studierende_absolventen.rda")
+#load("C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/02_data/data/studierende_absolventen.rda")
 # studierende_absolventen aktualiseren bevor Anhängen!
 
-studierende_detailliert <- rbind(studierende_detailliert, studierende_absolventen)
 
-## Export
-
-setwd("C:/Users/kbr/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/02_data/data/")
-
-save(studierende_detailliert, file = "studierende_detailliert.rda")
 
 
 ################# BEI absolventen auch noch studierende!
