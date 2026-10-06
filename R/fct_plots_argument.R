@@ -12,7 +12,7 @@ daten_download <- function(r){
   if(fokus == FALSE){
 
   ### Daten Verlauf MINT ----
-  t <- 2017:2024
+  t <- 2017:2025
   absolut_selector <- "Anzahl"
 
   query_df <- glue::glue_sql("
@@ -216,7 +216,7 @@ daten_download <- function(r){
     query_df <- glue::glue_sql("
       SELECT region, fach, jahr, indikator, wert
       FROM studierende_detailliert
-      WHERE jahr IN (2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024)
+      WHERE jahr IN (2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025)
       AND region = {region_reserve}
       AND geschlecht = 'Gesamt'
       AND fach IN ('Mathematik, Naturwissenschaften', 'Informatik', 'Ingenieurwissenschaften (ohne Informatik)')
@@ -228,7 +228,7 @@ daten_download <- function(r){
     query_df <- glue::glue_sql("
       SELECT bundesland, fachbereich, jahr, indikator, wert
       FROM arbeitsmarkt_detail
-      WHERE jahr IN (2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024)
+      WHERE jahr IN (2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025)
       AND bundesland = {region_reserve}
       AND geschlecht = 'Gesamt'
       AND fachbereich IN ('Mathematik, Naturwissenschaften', 'Informatik', 'Technik (gesamt)')
@@ -351,7 +351,7 @@ daten_download <- function(r){
     # 1. Beschäftigte MINT
     df_beschäftigte_clean <- df_alle %>%
       dplyr::mutate(Bereich = "Beschäftigte MINT",
-             Quelle = "Statistisches Bundesamt, 2025; Bundesagentur für Arbeit, 2025, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt",
+             Quelle = "Statistisches Bundesamt, 2025; Bundesagentur für Arbeit, 2026, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt",
              Region = region_reserve)
 
     # 2. Engpassindikator
@@ -370,7 +370,7 @@ daten_download <- function(r){
     # 4. Nachwuchs (Studierende + Azubis)
     df_nachwuchs_clean <- df_nachwuchs_agg %>%
       dplyr::mutate(Bereich = "Nachwuchs MINT",
-             Quelle = "Destatis, 2025 und Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt")
+             Quelle = "Destatis, 2026 und Bundesagentur für Arbeit, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt")
 
 
     # 5. Wirkhebel (Prognosen)
@@ -1988,7 +1988,7 @@ argument_nachwuchs <- function(r){
   query_df <- glue::glue_sql("
   SELECT region, fach, jahr, indikator, wert
   FROM studierende_detailliert
-  WHERE jahr IN (2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024)
+  WHERE jahr IN (2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025)
     AND region = {regio}
     AND geschlecht = 'Gesamt'
     AND fach IN ('Mathematik, Naturwissenschaften', 'Informatik', 'Ingenieurwissenschaften (ohne Informatik)')
@@ -2000,7 +2000,7 @@ argument_nachwuchs <- function(r){
   query_df <- glue::glue_sql("
   SELECT bundesland, fachbereich, jahr, indikator, wert
   FROM arbeitsmarkt_detail
-  WHERE jahr IN (2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024)
+  WHERE jahr IN (2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025)
     AND bundesland = {regio}
     AND geschlecht = 'Gesamt'
     AND fachbereich IN ('Mathematik, Naturwissenschaften', 'Informatik', 'Technik (gesamt)')
