@@ -38,8 +38,8 @@ mod_studium_studienzahl_international_bundeslandvergleich_ui <- function(id){
                      shinyWidgets::sliderTextInput(
                        inputId = ns("international_bulas_map_y"),
                        label = NULL,
-                       choices = 2014:2024,
-                       selected = 2024
+                       choices = 2014:2025,
+                       selected = 2025
                      ),
 
                      p("Studierendengruppen:"),
@@ -71,8 +71,8 @@ mod_studium_studienzahl_international_bundeslandvergleich_ui <- function(id){
                      shinyWidgets::sliderTextInput(
                        inputId = ns("international_bulas_verlauf_y"),
                        label = NULL,
-                       choices = 2013:2024,
-                       selected = c(2017, 2024)
+                       choices = 2013:2025,
+                       selected = c(2018, 2025)
                      ),
 
                      p("Studierendengruppen:"),
@@ -143,8 +143,8 @@ mod_studium_studienzahl_international_bundeslandvergleich_ui <- function(id){
                      shinyWidgets::sliderTextInput(
                        inputId = ns("international_bulas_balken_date"),
                        label = NULL,
-                       choices = 2013:2024,
-                       selected = 2024
+                       choices = 2013:2025,
+                       selected = 2025
                      ),
                      p("Studierendengruppen:"),
                      shinyWidgets::pickerInput(

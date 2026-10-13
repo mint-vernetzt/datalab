@@ -81,7 +81,7 @@ studienzahl_mint <- function(r){
 
           titel <- paste0(testl1[1], " ", praep," ", regio, " (", testy1, ")")
 
-          quelle <- "Quelle: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+          quelle <- "Quelle: Destatis, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
           df_pie <- df_pie %>%
             dplyr::mutate(
@@ -126,7 +126,7 @@ studienzahl_mint <- function(r){
               )
             )
 
-          quelle <- "Quelle: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+          quelle <- "Quelle: Destatis, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
           p1 <- piebuilder_plotly(df_1_pie, titel,x = "fach", y = "proportion",
                                   color = c("#efe8e6", "#b16fab"), quelle = quelle)
@@ -169,7 +169,7 @@ studienzahl_mint <- function(r){
          y <- "proportion"
          group <- "fach"
          color <- c("#b16fab", "#efe8e6")
-         quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+         quelle <- "Quelle der Daten: Destatis, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
          quelle_y <- -0.20
 
 
@@ -199,7 +199,7 @@ studienzahl_mint <- function(r){
            y <- "wert"
            group <- "fach"
            color <- c("#b16fab", "#efe8e6")
-           quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+           quelle <- "Quelle der Daten: Destatis, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
            quelle_y <- -0.25
 
 
@@ -286,7 +286,7 @@ studienzahl_verlauf_single <- function(r) {
     color <- c("#b16fab", "#154194", "#66cbaf", "#fbbf24", "#AFF3E0", "#2D6BE1", "#008F68", "#8893a7", "#ee7775", "#9d7265", "#35bd97",
                "#bfc6d3", "#5f94f9", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")[1:length(unique(df$indikator))]
 
-    quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "Quelle der Daten: Destatis, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
     out <- linebuilder_plotly(df, titel, x = "jahr", y = "proportion", group = "indikator", color = color, quelle = quelle)
 
@@ -308,7 +308,7 @@ studienzahl_verlauf_single <- function(r) {
         )
       )
     format <- ",d"
-    quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt"
+    quelle <- "Quelle der Daten: Destatis, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt"
     color <- c("#b16fab", "#154194", "#66cbaf", "#fbbf24", "#AFF3E0", "#2D6BE1", "#008F68", "#8893a7", "#ee7775", "#9d7265", "#35bd97",
                "#bfc6d3", "#5f94f9", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")[1:length(unique(df$indikator))]
 
@@ -399,7 +399,7 @@ studierende_bula_mint <- function(r) {
         )
       )
     titel <- paste0("MINT-Anteil von ", label_m, " (", timerange, ")")
-    quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "Quelle der Daten: Destatis, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
     out <- mapbuilder_plotly(df, titel = titel, value_col = "proportion", quelle = quelle)
 
@@ -486,7 +486,7 @@ studierende_bula_mint <- function(r) {
         )
       color <- c("#b16fab", "#154194", "#66cbaf", "#fbbf24", "#AFF3E0", "#2D6BE1", "#008F68", "#8893a7", "#ee7775", "#9d7265", "#35bd97",
                  "#bfc6d3", "#5f94f9", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")[1:length(unique(df$region))]
-      quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt"
+      quelle <- "Quelle der Daten: Destatis, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt"
       out <- linebuilder_plotly(df, titel, x = "jahr", y = "prop", group = "region", color = color, quelle = quelle)
 
     } else if(absolut_selector=="Anzahl"){
@@ -505,7 +505,7 @@ studierende_bula_mint <- function(r) {
       format <- ",d"
       color <- c("#b16fab", "#154194", "#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
                  "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")[1:length(unique(df$region))]
-      quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt"
+      quelle <- "Quelle der Daten: Destatis, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt"
       out <- linebuilder_plotly(df, titel, x = "jahr", y = "wert", group = "region", format = format, color = color, quelle = quelle)
     }
 
@@ -627,7 +627,7 @@ studierende_bula_mint <- function(r) {
       "Thüringen" = "#A9A9A9"
     )
 
-    quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "Quelle der Daten: Destatis, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
     quelle_y <- -0.10
 
 
@@ -681,7 +681,7 @@ studierende_bula_mint <- function(r) {
       "Thüringen" = "#A9A9A9"
     )
 
-    quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "Quelle der Daten: Destatis, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
     quelle_y <- -0.10
 
 
@@ -1419,7 +1419,7 @@ plot_mint_faecher <- function(r){
         )
       )
 
-    quelle <- "Quelle: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "Quelle: Destatis, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
     if(ebene == "MINT-Fächergruppen"){
       out <- piebuilder_plotly(df, titel, x = "fach", y ="prop",
@@ -1485,7 +1485,7 @@ plot_mint_faecher <- function(r){
         )
 
 
-      quelle <- "Quelle: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      quelle <- "Quelle: Destatis, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
       p1 <- piebuilder_plotly(df=df1,
                        titel1, x = "fach", y ="prop", legend_y=-0.02, quelle_y= 1,
@@ -1619,7 +1619,7 @@ plot_mint_faecher <- function(r){
       x <- "fach"
       y <- "prop"
 
-      quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      quelle <- "Quelle der Daten: Destatis, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
       quelle_y <- -0.15
 
 
@@ -1655,7 +1655,7 @@ plot_mint_faecher <- function(r){
       x <- "fach"
       y <- "wert"
 
-      quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      quelle <- "Quelle der Daten: Destatis, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
       quelle_y <- -0.15
 
 
@@ -1817,7 +1817,7 @@ mint_anteile <- function(r) {
         )
       )
     color <- as.character(colors)
-    que <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    que <- "Quelle der Daten: Destatis, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
     out <- linebuilder_plotly(df, titel, x = "jahr", y = "prop", group = "fach", color = color, quelle=que)
 
@@ -1862,7 +1862,7 @@ mint_anteile <- function(r) {
       )
     format <- ",d"
     color <- as.character(colors)
-    quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "Quelle der Daten: Destatis, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
     out <- linebuilder_plotly(df, titel, x = "jahr", y = "wert", group = "fach", format = format, color = color, quelle = quelle)
 
@@ -1986,7 +1986,7 @@ plot_studierende_bula_faecher <- function(r){
           "Anzahl: ", display_abs
         )
       )
-    quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "Quelle der Daten: Destatis, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
     out <- mapbuilder_plotly(df,
                              titel = titel,
@@ -2103,7 +2103,7 @@ plot_studierende_bula_faecher <- function(r){
         )
       color <- c("#b16fab", "#154194", "#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#d0a9cd",
                  "#bfc6d3", "#5f94f9", "#B45309")[1:length(unique(df$region))]
-      quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      quelle <- "Quelle der Daten: Destatis, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
       out <- linebuilder_plotly(df, titel, x = "jahr", y = "prop", group = "region", color = color, quelle = quelle)
 
@@ -2149,7 +2149,7 @@ plot_studierende_bula_faecher <- function(r){
         )
       format <- ",d"
       color <- c("#b16fab", "#154194", "#66cbaf")
-      quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      quelle <- "Quelle der Daten: Destatis, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
       out <- linebuilder_plotly(df, titel, x = "jahr", y = "wert", group = "region",
                                 format = format, color = color, quelle = quelle)
@@ -2239,7 +2239,7 @@ plot_studierende_bula_faecher <- function(r){
       titel <- "Für diese Kombination aus Fächergruppe und Bundesland bzw. Bundesländer liegen keine Daten vor.
         Bitte wählen Sie eine andere Komination oder Fächergruppe aus."
 
-      quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      quelle <- "Quelle der Daten: Destatis, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
       out <- linebuilder(df, titel = titel, x = "jahr", y = "wert", group = "region", tooltip = "Anzahl: {point.display_abs}", format = "{value:, f}", quelle = quelle)
 
@@ -2297,7 +2297,7 @@ plot_studierende_bula_faecher <- function(r){
         "Thüringen" = "#A9A9A9"
       )
 
-      quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      quelle <- "Quelle der Daten: Destatis, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
       quelle_y <- -0.10
 
 
@@ -2347,7 +2347,7 @@ plot_studierende_bula_faecher <- function(r){
         "Thüringen" = "#A9A9A9"
       )
 
-      quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      quelle <- "Quelle der Daten: Destatis, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
       quelle_y <- -0.10
 
 
@@ -2712,7 +2712,7 @@ studienzahl_einstieg_gender <- function(r) {
 
           color <- c("Männer" ="#efe8e6", "Frauen" = "#154194")
 
-          quelle <- "Quelle: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+          quelle <- "Quelle: Destatis, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
           out <- piebuilder_plotly(df_p, titel, x = "geschlecht", y ="prop",
                                    color=color, quelle = quelle)
@@ -2739,7 +2739,7 @@ studienzahl_einstieg_gender <- function(r) {
                )
              color <- c("Männer" ="#efe8e6", "Frauen" = "#154194")
 
-             quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+             quelle <- "Quelle der Daten: Destatis, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
              p1g <- piebuilder_plotly(df_g, titel, x = "geschlecht", y = "prop",
                                       color=color, quelle = quelle) |>
@@ -2790,7 +2790,7 @@ studienzahl_einstieg_gender <- function(r) {
               )
             )
           color <- c("Männer" ="#efe8e6", "Frauen" = "#154194")
-          quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+          quelle <- "Quelle der Daten: Destatis, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
           p1 <- piebuilder_plotly(df_1_pie, titel1, x = "geschlecht", y = "prop",
                                   color=color, quelle = quelle)
@@ -2828,7 +2828,7 @@ studienzahl_einstieg_gender <- function(r) {
                 )
               )
 
-            quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+            quelle <- "Quelle der Daten: Destatis, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
             color <- c("Männer" ="#efe8e6", "Frauen" = "#154194")
             p1g <- piebuilder_plotly(df1_g, titel, x = "geschlecht", y = "prop",
@@ -3012,7 +3012,7 @@ studienzahl_einstieg_gender <- function(r) {
     x <- "fach_indikator"
     y <- "proportion"
     group <- "geschlecht"
-    quelle <- "Quelle der Daten: Destatis, 2025,, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "Quelle der Daten: Destatis, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
     quelle_y <- -0.15
     legend_y <- -0.06
 
@@ -3124,7 +3124,7 @@ studienzahl_verlauf_single_gender <- function(r) {
       )
     color <- c("#b16fab", "#154194", "#66cbaf", "#fcc433")[1:length(unique(df$indikator))]
 
-    quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "Quelle der Daten: Destatis, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
     out <- linebuilder_plotly(df, titel, x = "jahr", y = "wert", group = "indikator", color = color, quelle = quelle)
 
      }else if(absolut_selector=="Anzahl"){
@@ -3163,7 +3163,7 @@ studienzahl_verlauf_single_gender <- function(r) {
         )
       format <- ",d"
       color <- c("#b16fab", "#154194", "#66cbaf", "#fcc433")[1:length(unique(df$indikator))]
-      quell <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      quell <- "Quelle der Daten: Destatis, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
       out <- linebuilder_plotly(df, titel, x = "jahr", y = "wert", group = "indikator", format = format, color = color, quelle = quell)
 
     }
@@ -3321,7 +3321,7 @@ studienzahl_choice_gender <- function(r) {
                           " % ein MINT-Fach.")
 
 
-      quelle <- "Quelle: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      quelle <- "Quelle: Destatis, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
       p1 <- piebuilder_plotly(df_f, titel, x="fach", y="prop", quelle_y= -0.04, legend_y = -0.04,
                        color=color_fachbereich, subtitel = subtitel, quelle = "") |>
@@ -3391,7 +3391,7 @@ studienzahl_choice_gender <- function(r) {
             "Anzahl: ", wert
           )
         )
-      quelle <- "Quelle: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      quelle <- "Quelle: Destatis, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
       out <- piebuilder_plotly(df, titel, x = "fach", y ="prop",
                                color=color_fachbereich, subtitel = subtitel, quelle=quelle) |>
@@ -3481,7 +3481,7 @@ studienzahl_choice_gender <- function(r) {
       color <- c("#b16fab", "#154194", "#66cbaf", "#fbbf24",
                  "#AFF3E0","#2D6BE1","#008F68","#8893a7", "#ee7775", "#9d7265", "#35bd97",
                  "#bfc6d3", "#5f94f9",  "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
-      quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      quelle <- "Quelle der Daten: Destatis, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
       out <- linebuilder_plotly(df, titel, x = "jahr", y = "prop", group = "indikator",
                                 color = color, quelle = quelle, subtitel = subtitel)
@@ -3518,7 +3518,7 @@ studienzahl_choice_gender <- function(r) {
       format <- ",d"
       color <- c("#b16fab", "#154194", "#66cbaf", "#fbbf24","#AFF3E0","#2D6BE1","#008F68","#8893a7", "#ee7775", "#9d7265", "#35bd97",
                  "#bfc6d3", "#5f94f9",  "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
-      quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      quelle <- "Quelle der Daten: Destatis, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
       out <- linebuilder_plotly(df, titel, x = "jahr", y = "wert", group = "indikator",
                                 format = format, color = color, quelle = quelle,
@@ -3657,7 +3657,7 @@ plot_ranking_top_faecher <- function(r) {
     y <- "prop"
 
     color <- c("#154194")
-    quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "Quelle der Daten: Destatis, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
     quelle_y <- -0.20
 
     plot_female <- balkenbuilder_plotly(df=studierende_faecher_frauen, x=x, y=y, titel=titel, orientation = "h", group=NULL, color = color,
@@ -3689,7 +3689,7 @@ plot_ranking_top_faecher <- function(r) {
     y <- "prop"
 
     color <- c("#66cbaf")
-    quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "Quelle der Daten: Destatis, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
     quelle_y <- -0.20
 
     plot_male <- balkenbuilder_plotly(df=studierende_faecher_maenner, x=x, y=y, titel=titel, orientation = "h", group=NULL, color = color,
@@ -3741,7 +3741,7 @@ plot_ranking_top_faecher <- function(r) {
     y <- "wert"
 
     color <- c("#154194")
-    quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "Quelle der Daten: Destatis, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
     quelle_y <- -0.20
 
     plot_female <- balkenbuilder_plotly(df=studierende_faecher_frauen, x=x, y=y, titel=titel, orientation = "h", group=NULL, color = color,
@@ -3776,7 +3776,7 @@ plot_ranking_top_faecher <- function(r) {
     y <- "wert"
 
     color <- c("#66cbaf")
-    quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "Quelle der Daten: Destatis, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
     quelle_y <- -0.20
 
     plot_male <- balkenbuilder_plotly(df=studierende_faecher_maenner, x=x, y=y, titel=titel, orientation = "h", group=NULL, color = color,
@@ -4037,7 +4037,7 @@ plot_mint_faecher_frauen <- function(r){
      x <- "fach"
      y <- "prop"
 
-     quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+     quelle <- "Quelle der Daten: Destatis, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
      quelle_y <- -0.15
 
 
@@ -4238,7 +4238,7 @@ plot_auslaender_mint <- function(r){
        group <- "ausl_detect"
        color <- c("Deutsch" = "#efe8e6", "International" = "#66cbaf")
 
-       quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+       quelle <- "Quelle der Daten: Destatis, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
        quelle_y <- -0.15
        legend_y <- -0.07
 
@@ -4398,7 +4398,7 @@ plot_auslaender_mint_zeit <- function(r){
             )
           )
         color <- c("#154194", "#66cbaf")
-        quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt"
+        quelle <- "Quelle der Daten: Destatis, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt"
         out <- linebuilder_plotly(df, titel, x = "jahr", y = "wert", group = "ausl_detect", color = color, quelle = quelle)
 
 
@@ -4424,7 +4424,7 @@ plot_auslaender_mint_zeit <- function(r){
             )
           )
 
-        quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt"
+        quelle <- "Quelle der Daten: Destatis, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt"
         color <- c("#154194", "#66cbaf")
         out <- linebuilder_plotly(df, titel, x = "jahr", y = "wert", group = "ausl_detect",
                                   color = color, quelle = quelle)
@@ -4440,7 +4440,7 @@ plot_auslaender_mint_zeit <- function(r){
 
 
 
-        quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+        quelle <- "Quelle der Daten: Destatis, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
         order <- unique(df$jahr)
 
@@ -4527,7 +4527,7 @@ plot_auslaender_mint_zeit <- function(r){
           )
         format <- ",d"
         color <- c("#154194", "#66cbaf")
-        quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt"
+        quelle <- "Quelle der Daten: Destatis, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt"
         out <- linebuilder_plotly(df, titel, x = "jahr", y = "wert", group = "ausl_detect",
                                   format = format, color = color, quelle = quelle)
 
@@ -4545,7 +4545,7 @@ plot_auslaender_mint_zeit <- function(r){
         tooltip <- "{point.ausl_detect} <br> Anzahl: {point.display_abs}"
         format <- ",d"
         color <- c("#154194", "#66cbaf")
-        quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt"
+        quelle <- "Quelle der Daten: Destatis, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt"
         out <- linebuilder_plotly(df, titel, x = "jahr", y = "wert", group = "ausl_detect",
                                   format = format, color = color, quelle = quelle)      }
 
@@ -4559,7 +4559,7 @@ plot_auslaender_mint_zeit <- function(r){
         titel <- paste0("Anzahl internationaler Absolvent:innen in ", fach_help, praep, bl_select)
 
 
-        quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+        quelle <- "Quelle der Daten: Destatis, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
         order <- unique(df$jahr)
 
@@ -4592,7 +4592,7 @@ plot_auslaender_mint_zeit <- function(r){
 
 
 
-        quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+        quelle <- "Quelle der Daten: Destatis, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
         order <- unique(df$jahr)
 
@@ -4705,7 +4705,7 @@ studierende_international_bula_mint <- function(r) {
       )
     titel <- paste0("MINT-Anteil von ", label_m, " (", timerange, ")")
 
-    quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "Quelle der Daten: Destatis, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
     out <- mapbuilder_plotly(df,
                              titel = titel,
@@ -4813,7 +4813,7 @@ studierende_international_bula_mint <- function(r) {
             ": ", display_diff, " %"
           )
         )
-      quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt"
+      quelle <- "Quelle der Daten: Destatis, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt"
       color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
                  "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
 
@@ -4857,7 +4857,7 @@ studierende_international_bula_mint <- function(r) {
       format <-  ",d"
       color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
                  "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
-      quel123 <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt"
+      quel123 <- "Quelle der Daten: Destatis, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt"
 
       out <- linebuilder_plotly(df, titel, x = "jahr", y = "wert", group = "region", format = format,
                          color = color, quelle = quel123)
@@ -4978,7 +4978,7 @@ studierende_international_bula_mint <- function(r) {
       "Thüringen" = "#A9A9A9"
     )
 
-    quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "Quelle der Daten: Destatis, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
     quelle_y <- -0.10
 
 
