@@ -113,7 +113,7 @@ mod_international_start_ui <- function(id){
                                     ),
                                     shiny::mainPanel(
                                       width = 9,
-                                      shinycssloaders::withSpinner(htmlOutput(ns("plot_international_schule_map_1")),
+                                      shinycssloaders::withSpinner(plotly::plotlyOutput(ns("plot_international_schule_map_1"), height = "700px"),
                                                                    color = "#154194"),
 
                                       shinyBS::bsPopover(id="h_international_schule_1", title="",
@@ -125,6 +125,26 @@ mod_international_start_ui <- function(id){
                            ),
         # tab 2
 
+                            tabPanel("MINT-Kompetenz im Zeitverlauf", br(),
+
+                                     shiny::sidebarPanel(
+                                       width = 3,
+                                       mod_international_schule_verlauf_ui("international_schule_verlauf_1"),
+
+                                     ),
+                                     shiny::mainPanel(
+                                       width = 9,
+                                       shinycssloaders::withSpinner(plotly::plotlyOutput(ns("plot_international_schule_verlauf_1")),
+                                                                    color = "#154194"),
+
+                                       shinyBS::bsPopover(id="h_international_schule_1", title="",
+                                                          content = paste0("Regionen, die nicht als unabhängige Staaten anerkannt werden (z. B. Taiwan, Hongkong), können aus technischen Gründen nicht in den Karten dargestellt werden. Daten dieser Regionen sind in den weiteren Grafiken enthalten."),
+                                                          placement = "top",
+                                                          trigger = "hover"),
+                                       tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_schule_1")
+                                     )
+                            ),
+      # tab 3
                            tabPanel("MINT-Kompetenz von Jungen und Mädchen", br(),
 
 
@@ -138,7 +158,7 @@ mod_international_start_ui <- function(id){
                                     ),
                                     shiny::mainPanel(
                                       width = 9,
-                                      shinycssloaders::withSpinner(plotly::plotlyOutput(ns("plot_international_schule_item_1")),
+                                      shinycssloaders::withSpinner(plotly::plotlyOutput(ns("plot_international_schule_item_1"), height = "550px"),
                                                                    color = "#154194"),
 
 
@@ -149,7 +169,7 @@ mod_international_start_ui <- function(id){
                                       tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_schule_2")
                                     )
                            ),
-        # tab 3
+        # tab 4
 
                            tabPanel("MINT-Kompetenz im Gruppenvergleich", br(),
 
@@ -497,15 +517,18 @@ mod_international_start_server <- function(id, r){
 
     # tab 1
 
-    output$plot_international_schule_map_1 <- renderUI({
-      plot_list <- plot_international_schule_map(r)
+    output$plot_international_schule_map_1 <- plotly::renderPlotly({
+    plot_international_schule_map(r)
 
-
-      plot_list
     })
 
-
     # tab 2
+
+    output$plot_international_schule_verlauf_1 <- plotly::renderPlotly({
+      plot_international_schule_verlauf(r)
+    })
+
+    # tab 3
 
     output$plot_international_schule_item_1 <- plotly::renderPlotly({
       plot_international_schule_item(r)
@@ -514,7 +537,7 @@ mod_international_start_server <- function(id, r){
 
 
 
-    # tab 3
+    # tab 4
 
     output$plot_international_schule_migration_1 <- renderUI({
       plot_list <- plot_international_schule_migration(r)
