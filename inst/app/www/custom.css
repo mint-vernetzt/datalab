@@ -200,12 +200,6 @@ background-color:#FCFCFD;
 
 }
 
-/* Frauen-Fokus Boxen auf KI-Analysehilfe-Seite */
-
-.frauen_box > .box{
-   border: 1px solid #154194;
-}
-
 /* Box ohne Rahmen, wie Hintergrund */
 .clean-box{
     border-top-color: #FFFFFF;
@@ -222,14 +216,14 @@ background-color:#FCFCFD;
 
 /* buttons für KI Analysen Seite */
 .btn.rosa-button {
-    background-color: #b16fab50 !important;
-    color: black!important;
-    box-shadow: none !important;
+    background-color: #b16fab50;
+    color: black;
+    box-shadow: none ;
     border: 1px solid #b16fab;
-    border-radius: 10px !important;
+    border-radius: 10px ;
     margin-bottom: 15px;
     margin-right: 5px;
-    padding: 12px 24px !important;
+    padding: 12px 24px;
     width: 230px;
     max-width: 450px;
     text-align: center;
@@ -239,31 +233,44 @@ background-color:#FCFCFD;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: inherit !important;
+  font-size: inherit;
   font-weight: 500;
   gap: 6px;
 }
 
 #argumentationshilfe_ui_1-funktionsprompt .action-label {
-    font-size: 14px !important;
+    font-size: 14px;
 }
 
 
+/* Rosa Dropdowns auf  KI-Analysehilfe-Seite */
 
 button[data-id="argumentationshilfe_ui_1-region_argumentationshilfe"] {
-    background-color: #b16fab50 !important;
-    border: 1px solid #B16FAB !important;
-    border-radius: 10px !important;
+    background-color: #b16fab50 ;
+    border: 1px solid #B16FAB ;
+    border-radius: 10px ;
 }
 /* geöffnet */
 button[data-id="argumentationshilfe_ui_1-region_argumentationshilfe"]:focus,
 button[data-id="argumentationshilfe_ui_1-region_argumentationshilfe"]:active,
 .open > button[data-id="argumentationshilfe_ui_1-region_argumentationshilfe"] {
-    background-color: #B16FAB50 !important;
-    border: 1px solid #B16FAB !important;
+    background-color: #B16FAB50 ;
+    border: 1px solid #B16FAB ;
 }
 
 
+button[data-id="argumentationshilfe_ui_1-frauen_fokus_select"] {
+    background-color: #b16fab50 ;
+    border: 1px solid #B16FAB ;
+    border-radius: 10px ;
+}
+/* geöffnet */
+button[data-id="argumentationshilfe_ui_1-frauen_fokus_select"]:focus,
+button[data-id="argumentationshilfe_ui_1-frauen_fokus_select"]:active,
+.open > button[data-id="argumentationshilfe_ui_1-frauen_fokus_select"] {
+    background-color: #B16FAB50 ;
+    border: 1px solid #B16FAB ;
+}
 
 
 /* Slider */

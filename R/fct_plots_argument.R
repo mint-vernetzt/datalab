@@ -3,7 +3,7 @@
 
 daten_download <- function(r){
 
-  fokus <- r$frauen_fokus
+  fokus <- r$frauen_fokus_select
   regio <- r$region_argumentationshilfe
   region_reserve <- regio
 
