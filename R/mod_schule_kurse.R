@@ -410,7 +410,7 @@ mod_schule_kurse_ui <- function(id){
 
                                   )
                          ),
-                         tabPanel("Leistungsschwäche im Zeitverlauf", br(),
+                         tabPanel("Anteil leistungsschwacher Schüler:innen im Zeitverlauf", br(),
 
                                   tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
                                            .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
