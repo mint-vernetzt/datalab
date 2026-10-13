@@ -1763,7 +1763,8 @@ linebuilder_plotly <- function(
       color = as.formula(paste0("~`", group, "`")),
       colors = color,
       type = "scatter",
-      text = ~ label,
+      text = as.formula(paste0("~`", label, "`")),
+      #text = ~label,
       mode = "lines+markers+text",
       hovertext = ~tooltip,
       hovertemplate = "%{hovertext}<extra></extra>"

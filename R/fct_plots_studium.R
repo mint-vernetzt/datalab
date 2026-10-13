@@ -288,8 +288,21 @@ studienzahl_verlauf_single <- function(r) {
 
     quelle <- "Quelle der Daten: Destatis, 2026, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
-    out <- linebuilder_plotly(df, titel, x = "jahr", y = "proportion", group = "indikator", color = color, quelle = quelle)
+    df <- df %>%
+      dplyr::mutate(
+        label_prop = format(round(proportion, 1), decimal.mark = ",")
+      )
 
+    out <- linebuilder_plotly(
+      df,
+      titel,
+      x = "jahr",
+      y = "proportion",
+      group = "indikator",
+      color = color,
+      quelle = quelle,
+      label = "label_prop"
+    )
 
 
   }else if (abs_zahlen_selector == "Anzahl"){
@@ -312,8 +325,26 @@ studienzahl_verlauf_single <- function(r) {
     color <- c("#b16fab", "#154194", "#66cbaf", "#fbbf24", "#AFF3E0", "#2D6BE1", "#008F68", "#8893a7", "#ee7775", "#9d7265", "#35bd97",
                "#bfc6d3", "#5f94f9", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")[1:length(unique(df$indikator))]
 
-    out <- linebuilder_plotly(df, titel, x = "jahr", y = "wert", group = "indikator", format = format, color = color, quelle = quelle)
+    df <- df %>%
+      dplyr::mutate(
+        label_wert = prettyNum(
+          round(wert, 0),
+          big.mark = ".",
+          decimal.mark = ","
+        )
+      )
 
+    out <- linebuilder_plotly(
+      df,
+      titel,
+      x = "jahr",
+      y = "wert",
+      group = "indikator",
+      format = format,
+      color = color,
+      quelle = quelle,
+      label = "label_wert"
+    )
 
   }
 
