@@ -58,11 +58,11 @@ mod_home_start_ui <- function(id){
       shinydashboard::box(
         title = "Datenquellen",
         width = 5,
-        p("Die amtlichen Statistiken zeigen das aktuellste verfügbare Berichtsjahr 2024."), #(für Studierenden- und Berufsdaten) und 2023 (für Schuldaten).
-        p(tags$b(span("Studierendenzahlen: Destatis 2025, auf Anfrage. ")),"Daten des Berichtsjahres 2025 ca. ab September 2026 verfügbar."),
+        p("Die amtlichen Statistiken zeigen das aktuellste verfügbare Berichtsjahr 2025 für Studierenden- und Berufsdaten und 2024 für Schuldaten."),
+        p(tags$b(span("Studierendenzahlen: Destatis 2026, auf Anfrage. ")),"Daten des Berichtsjahres 2026 ca. ab September 2027 verfügbar."),
         p(tags$b(span("Schülerzahlen: KMK 2025, auf Anfrage. ")), "Daten des Berichtjahres 2025 ca. im Herbst 2026 verfügbar."),
-        p(tags$b(span("Auszubildenden- und Beschäftigtenzahlen: Bundesagentur für Arbeit 2025, auf Anfrage. ")), "Daten des Berichtsjahres
-            2025 ca. ab Juli 2026 verfügbar.")
+        p(tags$b(span("Auszubildenden- und Beschäftigtenzahlen: Bundesagentur für Arbeit 2026, auf Anfrage. ")), "Daten des Berichtsjahres
+            2026 ca. ab August 2027 verfügbar.")
         )
       ),
 

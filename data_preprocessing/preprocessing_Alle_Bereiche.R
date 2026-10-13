@@ -12,6 +12,8 @@ studierende_detailliert <- DBI::dbGetQuery(con,
                                            "SELECT * FROM studierende_detailliert")
 arbeitsmarkt_detail <- DBI::dbGetQuery(con,
                                        "SELECT * FROM arbeitsmarkt_detail")
+#zentral <- DBI::dbGetQuery(con,"SELECT * FROM zentral")
+
 #
 # Schule
 data_schule <-kurse %>%
@@ -27,6 +29,15 @@ data_schule$fachbereich[data_schule$fachbereich == "Alle Fächer"] <- "Alle"
 data_schule$fachbereich[data_schule$fachbereich == "andere Fächer"] <- "Nicht MINT"
 
 # Arbeitsmarkt
+arbeitsmarkt_detail <- arbeitsmarkt_detail %>%
+  mutate(
+    landkreis = case_when(
+      bundesland == "Bremen" &
+        landkreis == "Landkreis Bremen" ~ "alle Landkreise",
+      TRUE ~ landkreis
+    )
+  )
+
 data_arbeitsmarkt <- arbeitsmarkt_detail %>%
   filter(anforderung=="Gesamt") %>%
   mutate(across(wert, ~ as.numeric(.)))%>%

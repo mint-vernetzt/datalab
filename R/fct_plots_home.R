@@ -80,7 +80,7 @@ home_einstieg <- function(r) {
    group <- "fachbereich"
    titel <- paste0("Anteil von MINT nach Bildungsbereichen", praep, regio, " (", zeit,")")
    color <- c("#b16fab", "#efe8e6")
-   quelle <- "Quelle der Daten: Destatis, 2025; Bundesagentur für Arbeit, 2025; KMK, 2025, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+   quelle <- "Quelle der Daten: Destatis, 2026; Bundesagentur für Arbeit, 2026; KMK, 2025, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
 
    out <- balkenbuilder_plotly(df=df, x=x, y=y, titel=titel, orientation = "h", group=group, color = color,
@@ -165,8 +165,8 @@ home_einstieg_pie <- function(r,
       )
 
     daten_quelle <- ifelse(indikator_choice_1 == "Leistungskurse", "KMK, 2025",
-                           ifelse(indikator_choice_1 == "Studierende", "Destatis, 2025",
-                                  "Bundesagentur für Arbeit, 2025"))
+                           ifelse(indikator_choice_1 == "Studierende", "Destatis, 2026",
+                                  "Bundesagentur für Arbeit, 2026"))
     quelle <- paste0(daten_quelle, " auf Anfrage, eigene Berechnungen durch MINTvernetzt")
 
     out <- piebuilder_plotly(df,titel,  x = "fachbereich", y = "prop", quelle = quelle) |>
@@ -261,7 +261,7 @@ home_rest_mint_verlauf <- function(r) {
 
     color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24")
 
-    quelle <- "Quellen: Destatis, 2025; Bundesagentur für Arbeit, 2025; KMK, 2025, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "Quellen: Destatis, 2026; Bundesagentur für Arbeit, 2026; KMK, 2025, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
     out <- linebuilder_plotly(df, titel1, x="jahr", y="prop", group="indikator",
                               color = color, quelle = quelle)
@@ -298,7 +298,7 @@ home_rest_mint_verlauf <- function(r) {
 
     format <- ",d"
     color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24")
-    quelle <- "Quellen: Destatis, 2025; Bundesagentur für Arbeit, 2025; KMK, 2025, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "Quellen: Destatis, 2026; Bundesagentur für Arbeit, 2026; KMK, 2025, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
     out <- linebuilder_plotly(df, titel, x = "jahr", y="wert", group = "indikator",
                               format = format, color = color, quelle = quelle)
@@ -434,8 +434,8 @@ home_einstieg_gender <- function(r) {
     titel <- paste0(df_mint$titel_help[1], " ", praep, " ", regio, " (", zeit, ")")
     color = c("#efe8e6", "#154194")
     daten_quelle <- ifelse(indi == "Leistungskurse", "KMK, 2025",
-                           ifelse(indi == "Studierende", "Destatis, 2025",
-                                  "Bundesagentur für Arbeit, 2025"))
+                           ifelse(indi == "Studierende", "Destatis, 2026",
+                                  "Bundesagentur für Arbeit, 2026"))
     quelle <- paste0(daten_quelle, " auf Anfrage, eigene Berechnungen durch MINTvernetzt")
 
     df_mint <- df_mint %>%
@@ -460,8 +460,8 @@ home_einstieg_gender <- function(r) {
 
      titel <- paste0(df_mint$titel_help2[1], " ", praep, " ", regio, " (", zeit, ")")
      daten_quelle <- ifelse(indi == "Leistungskurse", "KMK, 2025",
-                            ifelse(indi == "Studierende", "Destatis, 2025",
-                                   "Bundesagentur für Arbeit, 2025"))
+                            ifelse(indi == "Studierende", "Destatis, 2026",
+                                   "Bundesagentur für Arbeit, 2026"))
      quelle <- paste0(daten_quelle, " auf Anfrage, eigene Berechnungen durch MINTvernetzt")
      df_rest <- df_rest %>%
        dplyr::mutate(
@@ -492,8 +492,8 @@ home_einstieg_gender <- function(r) {
     titel <- paste0(df_2_mint$titel_help[1], " ", praep, " ", regio, " (", zeit, ")")
 
     daten_quelle <- ifelse(indi[1] == "Leistungskurse", "KMK, 2025",
-                           ifelse(indi[1] == "Studierende", "Destatis, 2025",
-                                  "Bundesagentur für Arbeit, 2025"))
+                           ifelse(indi[1] == "Studierende", "Destatis, 2026",
+                                  "Bundesagentur für Arbeit, 2026"))
     quelle <- paste0(daten_quelle, " auf Anfrage, eigene Berechnungen durch MINTvernetzt")
 
     df_1_mint <- df_1_mint %>%
@@ -510,8 +510,8 @@ home_einstieg_gender <- function(r) {
                                quelle = quelle)
 
     daten_quelle <- ifelse(indi[2] == "Leistungskurse", "KMK, 2025",
-                           ifelse(indi[2] == "Studierende", "Destatis, 2025",
-                                  "Bundesagentur für Arbeit, 2025"))
+                           ifelse(indi[2] == "Studierende", "Destatis, 2026",
+                                  "Bundesagentur für Arbeit, 2026"))
     quelle <- paste0(daten_quelle, " auf Anfrage, eigene Berechnungen durch MINTvernetzt")
 
     df_2_mint <- df_2_mint %>%
@@ -535,8 +535,8 @@ home_einstieg_gender <- function(r) {
       } else if(gegenwert == "Ja"){
 
         daten_quelle <- ifelse(indi[1] == "Leistungskurse", "KMK, 2025",
-                               ifelse(indi[1] == "Studierende", "Destatis, 2025",
-                                      "Bundesagentur für Arbeit, 2025"))
+                               ifelse(indi[1] == "Studierende", "Destatis, 2026",
+                                      "Bundesagentur für Arbeit, 2026"))
         quelle <- paste0(daten_quelle, " auf Anfrage, eigene Berechnungen durch MINTvernetzt")
 
         df_1_rest <- df_1_rest %>%
@@ -555,8 +555,8 @@ home_einstieg_gender <- function(r) {
            plotly::layout(height = 400)
 
          daten_quelle <- ifelse(indi[2] == "Leistungskurse", "KMK, 2025",
-                                ifelse(indi[2] == "Studierende", "Destatis, 2025",
-                                       "Bundesagentur für Arbeit, 2025"))
+                                ifelse(indi[2] == "Studierende", "Destatis, 2026",
+                                       "Bundesagentur für Arbeit, 2026"))
          quelle <- paste0(daten_quelle, " auf Anfrage, eigene Berechnungen durch MINTvernetzt")
 
          df_2_rest <- df_2_rest %>%
@@ -611,7 +611,7 @@ home_einstieg_gender <- function(r) {
       group <- "geschlecht"
       titel <- paste0("Anteil von Frauen in MINT nach Bildungsbereichen", praep, regio, " (", zeit, ")")
       color <- c("#154194", "#efe8e6")
-      quelle <- "Quelle der Daten: Destatis, 2025; Bundesagentur für Arbeit, 2025; KMK, 2025, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      quelle <- "Quelle der Daten: Destatis, 2026; Bundesagentur für Arbeit, 2026; KMK, 2025, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
 
 
@@ -654,7 +654,7 @@ home_einstieg_gender <- function(r) {
       titel <- paste0("Anteil von Frauen in MINT nach Bildungsbereichen", praep, regio, " (", zeit, ")")
       color <- c("#154194", "#efe8e6")
       legend_y <- -0.09
-      quelle <- "Quelle der Daten: Destatis, 2025; Bundesagentur für Arbeit, 2025; KMK, 2025, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      quelle <- "Quelle der Daten: Destatis, 2026; Bundesagentur für Arbeit, 2026; KMK, 2025, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
 
 
@@ -771,7 +771,7 @@ home_comparison_line <- function(r) {
 
     color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24")
 
-    quelle <- "Quellen: Destatis, 2025; Bundesagentur für Arbeit, 2025; KMK, 2025, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "Quellen: Destatis, 2026; Bundesagentur für Arbeit, 2026; KMK, 2025, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
     out <- linebuilder_plotly(df, titel, x = "jahr", y = "prop", group="indikator",
                               color = color, quelle = quelle)
@@ -805,7 +805,7 @@ home_comparison_line <- function(r) {
     format <- ",d"
 
     color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24" )
-    quelle <- "Quellen: Destatis, 2025; Bundesagentur für Arbeit, 2025; KMK, 2025, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "Quellen: Destatis, 2026; Bundesagentur für Arbeit, 2026; KMK, 2025, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
     out <- linebuilder_plotly(df,titel,x="jahr", y="wert", group="indikator",
                        format = format, color = color, quelle = quelle)

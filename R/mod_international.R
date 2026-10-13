@@ -35,6 +35,7 @@ mod_international_server <- function(id, r){
 
   # Box 1 - Schule
   mod_international_schule_map_server("international_schule_map_1", r)
+  mod_international_schule_verlauf_server("international_schule_verlauf_1", r)
   mod_international_schule_item_server("international_schule_item_1", r)
   mod_international_schule_migration_server("international_schule_migration_1", r)
 

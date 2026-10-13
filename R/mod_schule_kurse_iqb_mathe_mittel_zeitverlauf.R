@@ -21,7 +21,39 @@ mod_schule_kurse_iqb_mathe_mittel_zeitverlauf_ui <- function(id){
                                   lib = "glyphicon"))
     ),
 
-    p("Indikator:"),
+    conditionalPanel( condition = "input.klasse_iqb_mathe_mittel_zeitverlauf == '9. Klasse'",
+      ns = ns,
+
+      p("Darstellung:"),
+
+      radioButtons(
+        inputId = ns("darstellung_iqb_mathe_mittel_zeitverlauf_9"),
+        label = NULL,
+        choices = c(
+          "Zeitverlauf - Linien",
+          "Fachvergleich - Balken"
+        ),
+        selected = "Zeitverlauf - Linien"
+      )
+
+    ),
+
+    conditionalPanel(
+      condition = "input.klasse_iqb_mathe_mittel_zeitverlauf == '9. Klasse' &&
+               input.darstellung_iqb_mathe_mittel_zeitverlauf_9 == 'Fachvergleich - Balken'",
+      ns = ns,
+
+      p("Jahr:"),
+
+      shinyWidgets::sliderTextInput(
+        inputId = ns("jahr_iqb_mathe_mittel_zeitverlauf_9"),
+        label = "",
+        choices = c("2012", "2018", "2024"),
+        selected = "2024"
+      )
+    ),
+
+    p("Indikatoren:"),
     conditionalPanel(condition = "input.klasse_iqb_mathe_mittel_zeitverlauf == '4. Klasse'",
                      ns = ns,
     shinyWidgets::pickerInput(
@@ -35,14 +67,16 @@ mod_schule_kurse_iqb_mathe_mittel_zeitverlauf_ui <- function(id){
   ),
   conditionalPanel(condition = "input.klasse_iqb_mathe_mittel_zeitverlauf == '9. Klasse'",
                    ns = ns,
-                   shinyWidgets::pickerInput(
-                     inputId = ns("indi_iqb_mathe_mittel_zeitverlauf_9"),
-                     choices = c("nach Geschlecht",
-                                 "nach Zuwanderungsgeschichte",
-                                 "nach sozialem Status"),
-                     multiple = FALSE,
-                     selected = c("nach Geschlecht")
-                   )
+  radioButtons(
+    inputId = ns("indi_iqb_mathe_mittel_zeitverlauf_9"),
+    label = NULL,
+    choices = c(
+      "nach Geschlecht",
+      "nach Zuwanderungsgeschichte",
+      "nach sozialem Status"
+    ),
+    selected = "nach Geschlecht"
+  )
   ),
 
   p("Region:"),
@@ -147,18 +181,18 @@ mod_schule_kurse_iqb_mathe_mittel_zeitverlauf_ui <- function(id){
                    )
   ),
 
-  conditionalPanel(condition = "input.klasse_iqb_mathe_mittel_zeitverlauf == '9. Klasse'",
-                   ns = ns,
-                   p("Schulfach:"),
-                   shinyWidgets::pickerInput(
-                     inputId = ns("fach_iqb_mathe_mittel_zeitverlauf"),
-                     choices = c("Mathematik",
-                                 "Biologie" = "Biologie (Fachwissen)",
-                                 "Chemie" = "Chemie (Fachwissen)",
-                                 "Physik" = "Physik (Fachwissen)"),
-                     multiple = FALSE,
-                     selected = "Mathematik"
-                   )),
+  # conditionalPanel(condition = "input.klasse_iqb_mathe_mittel_zeitverlauf == '9. Klasse'",
+  #                  ns = ns,
+  #                  p("Schulfach:"),
+  #                  shinyWidgets::pickerInput(
+  #                    inputId = ns("fach_iqb_mathe_mittel_zeitverlauf"),
+  #                    choices = c("Mathematik",
+  #                                "Biologie" = "Biologie (Fachwissen)",
+  #                                "Chemie" = "Chemie (Fachwissen)",
+  #                                "Physik" = "Physik (Fachwissen)"),
+  #                    multiple = FALSE,
+  #                    selected = "Mathematik"
+  #                  )),
 
   conditionalPanel(condition = "input.klasse_iqb_mathe_mittel_zeitverlauf == '4. Klasse' &
                    input.land_iqb_mathe_mittel_zeitverlauf_4 == 'Deutschland' &
@@ -195,6 +229,14 @@ mod_schule_kurse_iqb_mathe_mittel_zeitverlauf_server <- function(id, r){
 
     observeEvent(input$klasse_iqb_mathe_mittel_zeitverlauf, {
       r$klasse_iqb_mathe_mittel_zeitverlauf <- input$klasse_iqb_mathe_mittel_zeitverlauf
+    })
+
+    observeEvent(input$darstellung_iqb_mathe_mittel_zeitverlauf_9, {
+      r$darstellung_iqb_mathe_mittel_zeitverlauf_9 <- input$darstellung_iqb_mathe_mittel_zeitverlauf_9
+    })
+
+    observeEvent(input$jahr_iqb_mathe_mittel_zeitverlauf_9, {
+      r$jahr_iqb_mathe_mittel_zeitverlauf_9 <- input$jahr_iqb_mathe_mittel_zeitverlauf_9
     })
 
     observeEvent(input$land_iqb_mathe_mittel_zeitverlauf_4, {

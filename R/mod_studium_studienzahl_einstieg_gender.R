@@ -21,8 +21,8 @@ mod_studium_studienzahl_einstieg_gender_ui <- function(id){
     shinyWidgets::sliderTextInput(
       inputId = ns("gen_y"),
       label = NULL,
-      choices = 2013:2024,
-      selected = 2024
+      choices = 2013:2025,
+      selected = 2025
     ),
 
     conditionalPanel(condition = "input.ansicht_gen_mint == 'Einzelansicht - Kuchendiagramm'",
