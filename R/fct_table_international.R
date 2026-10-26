@@ -163,25 +163,25 @@ prep_download_data <- function(data) {
   return(out)
 }
 
-download_table <- function(table,
-                           filename = "table.png",
-                           width = 450,
-                           height = 300) {
-
-  # Save the table as a standalone HTML file
-  html_file <- tempfile(fileext = ".html")
-  htmlwidgets::saveWidget(table, file = html_file, selfcontained = TRUE)
-
-  # Capture the HTML as a PNG image
-  webshot2::webshot(url = html_file,
-                    file = filename,
-                    delay = 2,
-                    zoom = 2,
-                    vwidth = width,
-                    vheight = height)
-
-  shiny::showNotification(
-    ui = paste0("Gespeichert als '", filename, "'"),
-    type = "message",
-    id = "download_notification")
-}
+# download_table <- function(table,
+#                            filename = "table.png",
+#                            width = 450,
+#                            height = 300) {
+#
+#   # Save the table as a standalone HTML file
+#   html_file <- tempfile(fileext = ".html")
+#   htmlwidgets::saveWidget(table, file = html_file, selfcontained = TRUE)
+#
+#   # Capture the HTML as a PNG image
+#   webshot2::webshot(url = html_file,
+#                     file = filename,
+#                     delay = 2,
+#                     zoom = 2,
+#                     vwidth = width,
+#                     vheight = height)
+#
+#   shiny::showNotification(
+#     ui = paste0("Gespeichert als '", filename, "'"),
+#     type = "message",
+#     id = "download_notification")
+# }

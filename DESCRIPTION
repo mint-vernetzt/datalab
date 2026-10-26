@@ -11,7 +11,6 @@ Depends:
     DBI,
     RSQLite,
     duckdb,
-    slickR,
     shinyjs
 Imports: 
     config (>= 0.3.1),
@@ -25,7 +24,6 @@ Imports:
     readxl,
     janitor,
     naniar,
-    readxlsb,
     shinipsum,
     shiny (>= 1.7.1),
     shinydashboard,
@@ -33,14 +31,11 @@ Imports:
     stringr,
     tidyr,
     utils,
-    webshot2 (== 0.1.0),
     highcharter (>= 0.9.4),
-    ggpol,
     ggtext,
     ggpubr,
     pkgload,
     tm,
-    slickR,
     plotly
 Suggests: 
     spelling,

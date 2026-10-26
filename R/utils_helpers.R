@@ -3937,36 +3937,36 @@ get_search_data <- function(term, session) {
 #   invisible(png_path)
 # }
 
-.save_any_to_png <- function(obj, png_path, vwidth = 1200, vheight = 800, zoom = 2) {
-  html_path <- tempfile(fileext = ".html")
-  on.exit(unlink(html_path, force = TRUE), add = TRUE)
-
-  if (inherits(obj, "htmlwidget")) {
-    # htmlwidget -> saveWidget (selfcontained)
-    htmlwidgets::saveWidget(obj, file = html_path, selfcontained = TRUE)
-  } else if (inherits(obj, "shiny.tag") || inherits(obj, "shiny.tag.list") || inherits(obj, "htmlwdwtgrid")) {
-    # Shiny-Tag/Grid -> als browsable HTML speichern (inkl. Dependencies)
-    htmltools::save_html(htmltools::browsable(obj), file = html_path,
-                         background = "white")
-  } else {
-    stop("Unbekannter Grafiktyp: ", paste(class(obj), collapse = "/"))
-  }
-
-  # Screenshot machen (webshot2 -> Chrome/Chromium; sonst PhantomJS)
-  chrome_path <- tryCatch(webshot2::find_chrome(), error = function(e) NULL)
-  if (!is.null(chrome_path) && file.exists(chrome_path)) {
-    webshot2::webshot(url = html_path, file = png_path,
-                      vwidth = vwidth, vheight = vheight, zoom = zoom)
-  } else {
-    if (!requireNamespace("webshot", quietly = TRUE)) {
-      stop("Kein Chrome/Chromium gefunden und Paket 'webshot' fehlt.")
-    }
-    if (isFALSE(webshot::is_phantomjs_installed())) webshot::install_phantomjs()
-    webshot::webshot(url = html_path, file = png_path,
-                     vwidth = vwidth, vheight = vheight)
-  }
-
-  if (!file.exists(png_path)) stop("PNG wurde nicht erzeugt.")
-  invisible(png_path)
-}
+# .save_any_to_png <- function(obj, png_path, vwidth = 1200, vheight = 800, zoom = 2) {
+#   html_path <- tempfile(fileext = ".html")
+#   on.exit(unlink(html_path, force = TRUE), add = TRUE)
+#
+#   if (inherits(obj, "htmlwidget")) {
+#     # htmlwidget -> saveWidget (selfcontained)
+#     htmlwidgets::saveWidget(obj, file = html_path, selfcontained = TRUE)
+#   } else if (inherits(obj, "shiny.tag") || inherits(obj, "shiny.tag.list") || inherits(obj, "htmlwdwtgrid")) {
+#     # Shiny-Tag/Grid -> als browsable HTML speichern (inkl. Dependencies)
+#     htmltools::save_html(htmltools::browsable(obj), file = html_path,
+#                          background = "white")
+#   } else {
+#     stop("Unbekannter Grafiktyp: ", paste(class(obj), collapse = "/"))
+#   }
+#
+#   # Screenshot machen (webshot2 -> Chrome/Chromium; sonst PhantomJS)
+#   chrome_path <- tryCatch(webshot2::find_chrome(), error = function(e) NULL)
+#   if (!is.null(chrome_path) && file.exists(chrome_path)) {
+#     webshot2::webshot(url = html_path, file = png_path,
+#                       vwidth = vwidth, vheight = vheight, zoom = zoom)
+#   } else {
+#     if (!requireNamespace("webshot", quietly = TRUE)) {
+#       stop("Kein Chrome/Chromium gefunden und Paket 'webshot' fehlt.")
+#     }
+#     if (isFALSE(webshot::is_phantomjs_installed())) webshot::install_phantomjs()
+#     webshot::webshot(url = html_path, file = png_path,
+#                      vwidth = vwidth, vheight = vheight)
+#   }
+#
+#   if (!file.exists(png_path)) stop("PNG wurde nicht erzeugt.")
+#   invisible(png_path)
+# }
 

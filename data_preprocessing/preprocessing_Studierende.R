@@ -1191,10 +1191,10 @@ library(DBI)
 
 con <- dbConnect(duckdb::duckdb(),"data/mint_db.duckdb")
 
-con <- DBI::dbConnect(
-  duckdb::duckdb(),
-  "C:/Users/mis/OneDrive - Stifterverband/Dokumente/R/datalab/data/mint_db.duckdb"
-)
+# con <- DBI::dbConnect(
+#   duckdb::duckdb(),
+#   "C:/Users/mis/OneDrive - Stifterverband/Dokumente/R/datalab/data/mint_db.duckdb"
+# )
 
 
 dbWriteTable(con, "studierende_detailliert", studierende_detailliert,
