@@ -3431,6 +3431,13 @@ mapbuilder_plotly <- function(
     p <- p |>
     plotly::config(
       displaylogo = FALSE,
+      toImageButtonOptions = list(
+        format = "png",
+        filename = "karte",
+        width = 1600,
+        height = 1200,
+        scale = 4
+      ),
       modeBarButtonsToRemove = c(
         "zoom2d", "pan2d", "select2d", "lasso2d",
         "hoverClosestCartesian", "hoverCompareCartesian",

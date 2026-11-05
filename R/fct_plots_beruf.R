@@ -3571,25 +3571,25 @@ arbeitsmarkt_lk_detail_map <- function(r) {
 
 
 
-  # Top 3 Landkreise in Konsole ausgeben
-  top3 <- df1_map %>%
-    dplyr::arrange(dplyr::desc(prob)) %>%
-    dplyr::slice_head(n = 3)
-
-  cat("\n========================\n")
-  cat(states, "-", timerange, "\n")
-  cat("========================\n")
-
-  for(i in seq_len(nrow(top3))) {
-    cat(
-      i, ". ",
-      top3$landkreis[i], ": ",
-      round(top3$prob[i], 1), "% (",
-      prettyNum(top3$wert[i], big.mark = ".", decimal.mark = ","),
-      ")\n",
-      sep = ""
-    )
-  }
+  # # Top 3 Landkreise in Konsole ausgeben
+  # top3 <- df1_map %>%
+  #   dplyr::arrange(dplyr::desc(prob)) %>%
+  #   dplyr::slice_head(n = 3)
+  #
+  # cat("\n========================\n")
+  # cat(states, "-", timerange, "\n")
+  # cat("========================\n")
+  #
+  # for(i in seq_len(nrow(top3))) {
+  #   cat(
+  #     i, ". ",
+  #     top3$landkreis[i], ": ",
+  #     round(top3$prob[i], 1), "% (",
+  #     prettyNum(top3$wert[i], big.mark = ".", decimal.mark = ","),
+  #     ")\n",
+  #     sep = ""
+  #   )
+  # }
 
 
   # hilfe für Hover-Text
