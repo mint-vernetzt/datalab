@@ -3067,7 +3067,7 @@ plot_international_map_arb <- function(r) {
       # plot
       titel <- paste0("Anteil von ", title_eu, " in Europa")
       map <-  "europe_choropleth.rds"
-      quell <- "Quelle: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt."
+      quell <- "Quelle: Eurostat, 2026; freier Download, eigene Berechnungen durch MINTvernetzt."
       out1 <- mapbuilder_plotly(data_map,
                                 value_col = "wert",
                                 regio_col = "land",
@@ -3392,7 +3392,7 @@ plot_international_map_arb_gender <- function(r) {
           )
         )
       titel <- paste0("Anteil von Frauen an allen ", title_eu, " in Europa")
-      quelle <- "Quelle der Daten: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt."
+      quelle <- "Quelle der Daten: Eurostat, 2026; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt."
 
       out1 <- mapbuilder_plotly(df,
                                 value_col = "wert",
@@ -4170,7 +4170,7 @@ title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von ", inpp, "n 
   y <- "wert"
 
   color <- c("#b16fab")
-  quelle <- paste0("Quelle der Daten: Eurostat, 2023; OECD, 2023, freier Download, eigene Berechnungen durch MINTvernetzt.")
+  quelle <- paste0("Quelle der Daten: Eurostat, 2026; freier Download, eigene Berechnungen durch MINTvernetzt.")
 
 
   plot_top <- balkenbuilder_plotly(df=df_top, x=x, y=y, titel=title_top, orientation = "h", wrap_width = 40,
@@ -4776,7 +4776,7 @@ plot_international_top10_mint_arb_gender <- function(r) {
 
 
 
-   quelle <- paste0("Quelle der Daten: Eurostat, 2023, OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.")
+   quelle <- paste0("Quelle der Daten: Eurostat, 2026; freier Download, eigene Berechnungen durch MINTvernetzt.")
 
 
 

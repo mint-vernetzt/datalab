@@ -1616,8 +1616,136 @@ save(arbeitsmarkt_beschaeftigte_eu, file = "arbeitsmarkt_beschaeftigte_eu.rda")
 usethis::use_data(arbeitsmarkt_beschaeftigte_eu , overwrite = T)
 
 
+##### 2025 -----------
 
 
+eurostatdata25 <- read.csv(paste0(pfad, "EUROSTAT008_hrst_st_nsecsex2__custom_24172999_linear_2_0.csv"),
+                header = TRUE, sep = ",", dec = ".")
+
+
+
+eurostatdata25 <- eurostatdata25 %>%
+  dplyr::select(category, sex, Geopolitical.entity..reporting., TIME_PERIOD, unit, OBS_VALUE, age, nace_r2) %>%
+  dplyr::rename(land = Geopolitical.entity..reporting.,
+                indikator = category,
+                jahr = TIME_PERIOD,
+                variable = unit,
+                geschlecht = sex,
+                wert = OBS_VALUE,
+                ) %>%
+  dplyr::filter(
+    nace_r2 == "C",
+    age == "Y15-74"
+  )
+
+# Land übersetzen
+eurostat_laender_de <- c(
+  "Austria" = "Österreich",
+  "Bosnia and Herzegovina" = "Bosnien und Herzegowina",
+  "Belgium" = "Belgien",
+  "Bulgaria" = "Bulgarien",
+  "Switzerland" = "Schweiz",
+  "Cyprus" = "Zypern",
+  "Czechia" = "Tschechische Republik",
+  "Germany" = "Deutschland",
+  "Denmark" = "Dänemark",
+  "Euro area - 21 countries (from 2026)" = "Eurozone",
+  "Estonia" = "Estland",
+  "Greece" = "Griechenland",
+  "Spain" = "Spanien",
+  "European Union - 27 countries (from 2020)" = "Europäische Union",
+  "Finland" = "Finnland",
+  "France" = "Frankreich",
+  "Croatia" = "Kroatien",
+  "Hungary" = "Ungarn",
+  "Ireland" = "Irland",
+  "Iceland" = "Island",
+  "Italy" = "Italien",
+  "Lithuania" = "Litauen",
+  "Luxembourg" = "Luxemburg",
+  "Latvia" = "Lettland",
+  "North Macedonia" = "Nordmazedonien",
+  "Malta" = "Malta",
+  "Netherlands" = "Niederlande",
+  "Norway" = "Norwegen",
+  "Poland" = "Polen",
+  "Portugal" = "Portugal",
+  "Romania" = "Rumänien",
+  "Serbia" = "Serbien",
+  "Sweden" = "Schweden",
+  "Slovenia" = "Slowenien",
+  "Slovakia" = "Slowakei",
+  "Türkiye" = "Türkei"
+)
+
+eurostatdata25 <- eurostatdata25 |>
+  dplyr::mutate(
+    land = dplyr::coalesce(unname(eurostat_laender_de[land]), land)
+  )
+
+eurostatdata25 <- eurostatdata25 |>
+  dplyr::mutate(
+    land = dplyr::if_else(
+      startsWith(trimws(land), "Euro area"),
+      "Eurozone",
+      land
+    )
+  )
+
+# Indikator & Einheit zuweisen
+eurostatdata25 <- eurostatdata25 |>
+  dplyr::mutate(
+    indikator = dplyr::case_when(
+      indikator ==  "HRST" ~ "Ausgebildete und/oder Beschäftigte",
+      indikator ==  "HRSTE" ~ "Ausgebildete",
+      indikator ==  "HRSTO" ~ "Beschäftigte",
+      indikator ==  "HRSTC" ~ "Ausgebildet und Beschäftigte",
+      indikator ==  "SE" ~ "Naturwissenschaftler*innen und Ingenieur*innen",
+      T ~ indikator
+    ),
+    variable = dplyr::case_when(
+      variable == "THS_PER" ~ "Anzahl in Tsd.",
+      variable == "PC_EMP" ~ "Anteil an Gesamtbevölkerung",
+      variable == "PC_ACT" ~ "Anteil an arbeitender Bevölkerung"
+    ),
+    geschlecht = dplyr::case_when(
+      geschlecht == "F" ~ "Frauen",
+      geschlecht == "M" ~ "Männer",
+      geschlecht == "T" ~ "Gesamt"
+    )
+  )
+
+eurostatdata25 <- eurostatdata25 |>
+  dplyr::filter(jahr == 2025)
+
+
+
+# bereich ergänze und in Reihenfolge bringen
+eurostatdata25$bereich <- "Arbeitsmarkt"
+eurostatdata25$anforderung <- "Gesamt"
+eurostatdata25$fachbereich <- "MINT"
+eurostatdata25$quelle <- "EUROSTAT"
+eurostatdata25$population <- "EU"
+eurostatdata25$typ <- ifelse(grepl("Anzah", eurostatdata25$variable), "Anzahl", "In Prozent")
+
+# Spalten in logische Reihenfolge bringen
+eurostatdata25 <- eurostatdata25[,c("bereich", "quelle", "variable", "typ", "indikator", "fachbereich",
+             "geschlecht", "population", "land", "jahr", "anforderung", "wert")]
+
+
+# anhängen
+library(DBI)
+con <- DBI::dbConnect(duckdb::duckdb(), "data/mint_db.duckdb")
+
+arbeitsmarkt_beschaeftigte_eu <- dbGetQuery(con, "SELECT * FROM arbeitsmarkt_beschaeftigte_eu")
+
+arbeitsmarkt_beschaeftigte_eu <- rbind(arbeitsmarkt_beschaeftigte_eu, eurostatdata25)
+
+save(arbeitsmarkt_beschaeftigte_eu, file = "arbeitsmarkt_beschaeftigte_eu.rda")
+
+dbWriteTable(con, "arbeitsmarkt_beschaeftigte_eu", arbeitsmarkt_beschaeftigte_eu, append = FALSE, overwrite = TRUE)
+
+dbDisconnect(con, shutdown= TRUE)
 
 
 
