@@ -346,7 +346,394 @@ pisa <- bind_rows(pisa1, pisa2)%>%
 
 
 
-usethis::use_data(pisa, overwrite = T)
+#usethis::use_data(pisa, overwrite = T)
+
+schule_pisa_22 <- dbGetQuery(con, "SELECT * FROM schule_pisa")
+### PISA 2025 -----------
+# M N performance
+# Geschlechterunterschied nur für N
+# kein Bildungskapital, kein Mathe Geschlecht
+
+pfad <- paste0("C:/Users/mis/OneDrive - Stifterverband/Dateiablage - MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
+
+data_science <- readxl::read_excel(paste0(pfad, "PISA009_MNperformance_25.xlsx"),
+                           sheet = "Table I.B1.2a.1", col_names = F, range = "A7:E104")
+
+data_science <- data_science |>
+  dplyr::select(-`...4`, -`...5`) |>
+  dplyr::rename(land = `...1`, wert = `...2`, Standardfehler = `...3`)
+
+data_science <- data_science |>
+  dplyr::mutate(
+    jahr      = "2025",
+    fach      = "Naturwissenschaften",
+    bereich   = "Ländermittel",
+    indikator = "Insgesamt",
+    alter_n   = "15 Jahre",
+    typ       = "Durchschnitt"
+  )
+data_science <- data_science |>
+  dplyr::select(jahr, land, fach, bereich, indikator, alter_n, wert, Standardfehler, typ)
+data_science <- data_science |>
+  dplyr::slice(-c(1, 2, 3, 5, 6, 7))
+
+
+data_science <- data_science|>
+  dplyr::mutate(land = stringr::str_remove_all(land, "\\*")) |>
+  dplyr::filter(land %in% c(
+    "OECD average", "Australia", "Austria", "Belgium", "Canada", "Chile",
+    "Colombia", "Czechia", "Denmark", "Estonia", "Finland", "France",
+    "Germany", "Greece", "Hungary", "Iceland", "Ireland", "Israel", "Italy",
+    "Japan", "Korea", "Latvia", "Lithuania", "Luxembourg", "Mexico",
+    "Netherlands", "New Zealand", "Norway", "Poland", "Portugal",
+    "Slovak Republic", "Slovenia", "Spain", "Sweden", "Switzerland",
+    "Türkiye", "United Kingdom", "United States", "Costa Rica"
+  ))
+
+laender_de <- c(
+  "OECD average"     = "OECD Durchschnitt",
+  "Australia"        = "Australien",
+  "Austria"          = "Österreich",
+  "Belgium"          = "Belgien",
+  "Canada"           = "Kanada",
+  "Chile"            = "Chile",
+  "Colombia"         = "Kolumbien",
+  "Czechia"          = "Tschechische Republik",
+  "Denmark"          = "Dänemark",
+  "Estonia"          = "Estland",
+  "Finland"          = "Finnland",
+  "France"           = "Frankreich",
+  "Germany"          = "Deutschland",
+  "Greece"           = "Griechenland",
+  "Hungary"          = "Ungarn",
+  "Iceland"          = "Island",
+  "Ireland"          = "Irland",
+  "Israel"           = "Israel",
+  "Italy"            = "Italien",
+  "Japan"            = "Japan",
+  "Korea"            = "Korea, Republik von",
+  "Latvia"           = "Lettland",
+  "Lithuania"        = "Litauen",
+  "Luxembourg"       = "Luxemburg",
+  "Mexico"           = "Mexiko",
+  "Netherlands"      = "Niederlande",
+  "New Zealand"      = "Neuseeland",
+  "Norway"           = "Norwegen",
+  "Poland"           = "Polen",
+  "Portugal"         = "Portugal",
+  "Slovak Republic"  = "Slowakei",
+  "Slovenia"         = "Slowenien",
+  "Spain"            = "Spanien",
+  "Sweden"           = "Schweden",
+  "Switzerland"      = "Schweiz",
+  "Türkiye"          = "Türkei",
+  "United Kingdom"   = "Großbritannien",
+  "United States"    = "Vereinigte Staaten",
+  "Costa Rica"       = "Costa Rica"
+)
+
+data_science <- data_science |>
+  dplyr::mutate(land = unname(laender_de[land]))
+
+data_science <- data_science |>
+  dplyr::mutate(
+    wert = round(as.numeric(wert), 2),
+    Standardfehler = round(as.numeric(Standardfehler), 2)
+  )
+
+
+data_mathe <- readxl::read_excel(
+  paste0(pfad, "PISA009_MNperformance_25.xlsx"),
+  sheet = "Table I.B1.2a.3", col_names = F, range = "A7:E104"
+)
+
+data_mathe <- data_mathe |>
+  dplyr::select(-`...4`, -`...5`) |>
+  dplyr::rename(land = `...1`, wert = `...2`, Standardfehler = `...3`)
+
+data_mathe <- data_mathe |>
+  dplyr::mutate(
+    jahr      = "2025",
+    fach      = "Mathematik",
+    bereich   = "Ländermittel",
+    indikator = "Insgesamt",
+    alter_n   = "15 Jahre",
+    typ       = "Durchschnitt"
+  )
+
+data_mathe <- data_mathe |>
+  dplyr::select(jahr, land, fach, bereich, indikator, alter_n, wert, Standardfehler, typ)
+
+data_mathe <- data_mathe |>
+  dplyr::slice(-c(1, 2, 3, 5, 6, 7))
+
+data_mathe <- data_mathe |>
+  dplyr::mutate(land = stringr::str_remove_all(land, "\\*")) |>
+  dplyr::filter(land %in% c(
+    "OECD average", "Australia", "Austria", "Belgium", "Canada", "Chile",
+    "Colombia", "Czechia", "Denmark", "Estonia", "Finland", "France",
+    "Germany", "Greece", "Hungary", "Iceland", "Ireland", "Israel", "Italy",
+    "Japan", "Korea", "Latvia", "Lithuania", "Luxembourg", "Mexico",
+    "Netherlands", "New Zealand", "Norway", "Poland", "Portugal",
+    "Slovak Republic", "Slovenia", "Spain", "Sweden", "Switzerland",
+    "Türkiye", "United Kingdom", "United States", "Costa Rica"
+  ))
+
+
+data_mathe <- data_mathe |>
+  dplyr::mutate(land = unname(laender_de[land]))
+
+data_mathe <- data_mathe |>
+  dplyr::mutate(
+    wert = round(as.numeric(wert), 2),
+    Standardfehler = round(as.numeric(Standardfehler), 2)
+  )
+
+# mingrationshintergrund Naturwissenschaften
+
+data_migra_s <- readxl::read_excel(paste0(pfad, "PISA010_migrationshintergrund_25.xlsx"),
+                                   sheet = "Table I.B1.2d.7", col_names = F, range = "BA6:BM102")
+
+data_migra_s <- data_migra_s |>
+  dplyr::select(-`...1`, -`...2`, -`...5`, -`...8`, -`...11`)
+
+laender <- readxl::read_excel(paste0(pfad, "PISA010_migrationshintergrund_25.xlsx"),
+                              sheet = "Table I.B1.2d.7", col_names = FALSE, range = "A6:A104")
+
+laender <- laender |>
+  dplyr::slice(-c(98, 99))
+
+data_migra_s <- dplyr::bind_cols(
+  land = laender[[1]],
+  data_migra_s
+)
+
+data_migra_s <- data_migra_s |>
+  dplyr::rename(wert_keiner = `...2`, SE_keiner = `...3`, wert_migraGES = `...4`,
+                SE_migraGES = `...5`, wert_migra2 = `...6`, SE_migra2 = `...7`,
+                wert_migra1 = `...8`, SE_migra1 = `...9`)|>
+  dplyr::slice(-c(1, 2, 3, 4))
+
+data_migra_s <- data_migra_s |>
+  dplyr::select(
+    land,
+    wert_keiner, SE_keiner,
+    wert_migra2, SE_migra2,
+    wert_migra1, SE_migra1
+  ) |>
+  tidyr::pivot_longer(
+    cols = -land,
+    names_to = c(".value", "indikator"),
+    names_sep = "_"
+  ) |>
+  dplyr::rename(Standardfehler = SE) |>
+  dplyr::mutate(
+    indikator = dplyr::recode(
+      indikator,
+      "keiner" = "Keiner",
+      "migra2" = "Zweite Generation",
+      "migra1" = "Erste Generation"
+    )
+  )
+
+data_migra_s <- data_migra_s |>
+  dplyr::mutate(
+    jahr      = "2025",
+    fach      = "Naturwissenschaften",
+    bereich   = "Migrationshintergrund",
+    alter_n   = "15 Jahre",
+    typ       = "Durchschnitt"
+  ) |>
+  dplyr::select(jahr, land, fach, bereich, indikator, alter_n, wert, Standardfehler, typ)  |>
+  dplyr::mutate(
+    wert = round(as.numeric(wert), 2),
+    Standardfehler = round(as.numeric(Standardfehler), 2)
+  )
+
+data_migra_s <- data_migra_s |>
+  dplyr::mutate(land = stringr::str_remove_all(land, "\\*")) |>
+  dplyr::filter(land %in% c(
+    "OECD average", "Australia", "Austria", "Belgium", "Canada", "Chile",
+    "Colombia", "Czechia", "Denmark", "Estonia", "Finland", "France",
+    "Germany", "Greece", "Hungary", "Iceland", "Ireland", "Israel", "Italy",
+    "Japan", "Korea", "Latvia", "Lithuania", "Luxembourg", "Mexico",
+    "Netherlands", "New Zealand", "Norway", "Poland", "Portugal",
+    "Slovak Republic", "Slovenia", "Spain", "Sweden", "Switzerland",
+    "Türkiye", "United Kingdom", "United States", "Costa Rica"
+  )) |>
+  dplyr::mutate(land = unname(laender_de[land]))
+
+# Migrationshintergrund Mathe
+
+data_migra_m <- readxl::read_excel(
+  paste0(pfad, "PISA010_migrationshintergrund_25.xlsx"),
+  sheet = "Table I.B1.2d.9",
+  col_names = F,
+  range = "BA6:BM102"
+)
+
+data_migra_m <- data_migra_m |>
+  dplyr::select(-`...1`, -`...2`, -`...5`, -`...8`, -`...11`)
+
+laender <- readxl::read_excel(
+  paste0(pfad, "PISA010_migrationshintergrund_25.xlsx"), sheet = "Table I.B1.2d.9",
+  col_names = FALSE, range = "A6:A102")
+
+
+data_migra_m <- dplyr::bind_cols( land = laender[[1]], data_migra_m)
+
+data_migra_m <- data_migra_m |>
+  dplyr::rename( wert_keiner = `...2`, SE_keiner = `...3`,
+    wert_migraGES = `...4`,SE_migraGES = `...5`, wert_migra2 = `...6`,
+    SE_migra2 = `...7`, wert_migra1 = `...8`,SE_migra1 = `...9`  ) |>
+  dplyr::slice(-c(1, 2, 3, 4))
+
+data_migra_m <- data_migra_m |>
+  dplyr::select(
+    land, wert_keiner, SE_keiner, wert_migra2, SE_migra2, wert_migra1, SE_migra1) |>
+  tidyr::pivot_longer(
+    cols = -land,names_to = c(".value", "indikator"),names_sep = "_" ) |>
+  dplyr::rename(Standardfehler = SE) |>
+  dplyr::mutate(
+    indikator = dplyr::recode(
+      indikator,
+      "keiner" = "Keiner",
+      "migra2" = "Zweite Generation",
+      "migra1" = "Erste Generation"
+    ))
+
+data_migra_m <- data_migra_m |>
+  dplyr::mutate(
+    jahr      = "2025",
+    fach      = "Mathematik",
+    bereich   = "Migrationshintergrund",
+    alter_n   = "15 Jahre",
+    typ       = "Durchschnitt"
+  ) |>
+  dplyr::select(
+    jahr, land, fach, bereich, indikator,
+    alter_n, wert, Standardfehler, typ
+  ) |>
+  dplyr::mutate(
+    wert = round(as.numeric(wert), 2),
+    Standardfehler = round(as.numeric(Standardfehler), 2)
+  )
+
+data_migra_m <- data_migra_m |>
+  dplyr::mutate(land = stringr::str_remove_all(land, "\\*")) |>
+  dplyr::filter(land %in% c(
+    "OECD average", "Australia", "Austria", "Belgium", "Canada", "Chile",
+    "Colombia", "Czechia", "Denmark", "Estonia", "Finland", "France",
+    "Germany", "Greece", "Hungary", "Iceland", "Ireland", "Israel", "Italy",
+    "Japan", "Korea", "Latvia", "Lithuania", "Luxembourg", "Mexico",
+    "Netherlands", "New Zealand", "Norway", "Poland", "Portugal",
+    "Slovak Republic", "Slovenia", "Spain", "Sweden", "Switzerland",
+    "Türkiye", "United Kingdom", "United States", "Costa Rica"
+  )) |>
+  dplyr::mutate(land = unname(laender_de[land]))
+
+# Geschlecht Naturwissenschaften
+
+data_gender_s <- readxl::read_excel(paste0(pfad, "PISA011_gender25.xlsx"),
+  sheet = "Table I.2.12", col_names = F, range = "A11:C87")
+
+data_gender_s <- data_gender_s %>%
+  dplyr::rename(land = `...1`, Mädchen = `...2`, Jungen = `...3`)
+
+data_gender_s <- data_gender_s %>%
+  dplyr::mutate(land = stringr::str_remove_all(land, "\\*")) |>
+  dplyr::filter(land %in% c(
+    "OECD average", "Australia", "Austria", "Belgium", "Canada", "Chile",
+    "Colombia", "Czechia", "Denmark", "Estonia", "Finland", "France",
+    "Germany", "Greece", "Hungary", "Iceland", "Ireland", "Israel", "Italy",
+    "Japan", "Korea", "Latvia", "Lithuania", "Luxembourg", "Mexico",
+    "Netherlands", "New Zealand", "Norway", "Poland", "Portugal",
+    "Slovak Republic", "Slovenia", "Spain", "Sweden", "Switzerland",
+    "Türkiye", "United Kingdom", "United States", "Costa Rica"
+  )) |>
+  dplyr::mutate(land = unname(laender_de[land]))
+
+gender_change_s <- data_gender_s |>
+  tidyr::pivot_longer(
+    cols = c(Mädchen, Jungen),
+    names_to = "indikator",
+    values_to = "change"
+  )
+
+gender_2022_s <- schule_pisa_22 |>
+  dplyr::filter(
+    jahr == "2022",
+    fach == "Naturwissenschaften",
+    bereich == "Ländermittel",
+    indikator %in% c("Mädchen", "Jungen")
+  ) |>
+  dplyr::select(land, indikator, wert)
+
+data_gender25S <- gender_change_s |>
+  dplyr::left_join(gender_2022_s, by = c("land", "indikator"))
+
+data_gender25S <- data_gender25S %>%
+  dplyr::mutate(wert25 = round(as.numeric(wert) + as.numeric(change), 2))
+
+data_gender25S <- data_gender25S %>%
+  dplyr::mutate(
+    jahr = "2025",
+    fach = "Naturwissenschaften",
+    bereich = "Ländermittel",
+    alter_n = "15 Jahre",
+    Standardfehler = NA_real_,
+    typ = "Durchschnitt"
+  ) |>
+  dplyr::select(
+    jahr, land, fach, bereich, indikator,
+    alter_n, wert25, Standardfehler, typ
+  ) %>%
+  dplyr::rename(wert = `wert25`)
+
+durchschnitt_ma <- data_gender25S |>
+  dplyr::filter(indikator == "Mädchen") |>
+  dplyr::summarise(
+    durchschnitt = round(mean(wert, na.rm = TRUE), 2)
+  )
+
+durchschnitt_ju <- data_gender25S |>
+  dplyr::filter(indikator == "Jungen") |>
+  dplyr::summarise(
+    durchschnitt = round(mean(wert, na.rm = TRUE), 2)
+  )
+
+data_gender <- data_gender |>
+  dplyr::mutate(
+    wert = dplyr::case_when(
+      jahr == "2025" & land == "OECD Durchschnitt" &
+        fach == "Naturwissenschaften" & bereich == "Ländermittel" &
+        indikator == "Mädchen" ~ durchschnitt_ma$durchschnitt,
+
+      jahr == "2025" & land == "OECD Durchschnitt" &
+        fach == "Naturwissenschaften" & bereich == "Ländermittel" &
+        indikator == "Jungen" ~ durchschnitt_ju$durchschnitt,
+
+      TRUE ~ wert
+    )
+  )
+
+
+data_gender <- rbind(data_gender25S, durchschnitt, durchschnitt_m)
+
+pisa25 <- rbind(data_science, data_mathe, data_migra_m, data_migra_s, data_gender)
+
+schule_pisa <- dbGetQuery(con, "SELECT * FROM schule_pisa")
+schule_pisa <- rbind(schule_pisa, pisa25)
+
+save(schule_pisa, file = "schule_pisa.rda")
+
+dbWriteTable(con, "schule_pisa", schule_pisa, append = FALSE, overwrite = TRUE)
+
+dbDisconnect(con, shutdown= TRUE)
+
+
+
+
 
 
 # Erstellt schule_timss ----

@@ -1445,7 +1445,7 @@ plot_international_schule_map <- function(r) {
   dfs$display_wert <- prettyNum(round(dfs$wert, 1),
                                 big.mark = ".",
                                 decimal.mark = ",")
-  quelle <- paste0("Quelle der Daten: IEA, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.")
+  quelle <- paste0("Quelle der Daten: IEA, 2023; OECD, 2026; freier Download, eigene Berechnungen durch MINTvernetzt.")
 
 
   if (leistungsindikator_m == "Test-Punktzahl") {
@@ -1534,7 +1534,7 @@ plot_international_schule_map <- function(r) {
     dplyr::inner_join(countries_names, by = "land") %>%
     dplyr::mutate(alpha2 = toupper(alpha2))
 
-  quelle <- paste0("Quelle der Daten: IEA, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.")
+  quelle <- paste0("Quelle der Daten: IEA, 2023; OECD, 2026; freier Download, eigene Berechnungen durch MINTvernetzt.")
   map <- mapbuilder_plotly(df = data_map_1,
                             value_col = "wert",
                            regio_col = "land",
@@ -2544,7 +2544,7 @@ plot_international_schule_migration <- function(r) {
       paste0( "Mittlere erreichte Punktezahlen im PISA-", fach_m,"-Test der 15-jährigen (ca. 9. Klassen) nach Geschlecht (", timerange,")" ),
       width = 70)
 
-    quelle <- "Quelle der Daten: OECD, 2023, freier Download, eigene Berechnungen durch MINTvernetzt"
+    quelle <- "Quelle der Daten: OECD, 2026, freier Download, eigene Berechnungen durch MINTvernetzt"
 
     gruppen_info <- paste(
       "basis_wert = Jungen",
@@ -2640,7 +2640,7 @@ plot_international_schule_migration <- function(r) {
       paste0( "Mittlere erreichte Punktezahlen im PISA-", fach_m,"-Test der 15-jährigen (ca. 9. Klassen) nach Zuwanderungsgeschichte (", timerange,")" ),
       width = 70)
 
-    quelle <- "Quelle der Daten: OECD, 2023, freier Download, eigene Berechnungen durch MINTvernetzt"
+    quelle <- "Quelle der Daten: OECD, 2026, freier Download, eigene Berechnungen durch MINTvernetzt"
 
 
    gruppen_info <- paste(
