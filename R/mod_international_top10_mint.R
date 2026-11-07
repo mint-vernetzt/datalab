@@ -30,7 +30,7 @@ mod_international_top10_mint_ui <- function(id){
                        inputId = ns("map_y_eu_int_top10"),
                        label = NULL,
                        choices = international_ui_years(region = "EU"),
-                       selected = "2023"
+                       selected = "2025"
                      ),
 
                      p("Fachbereich:"),

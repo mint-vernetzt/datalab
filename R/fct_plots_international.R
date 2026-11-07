@@ -336,7 +336,7 @@ plot_international_map <- function(r) {
   }
 
 
-  quelle <- "Quelle: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt."
+  quelle <- "Quelle: Eurostat, 2026; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt."
 
   out1 <- mapbuilder_plotly(df7,
                             value_col = "wert",
@@ -630,7 +630,7 @@ plot_international_map_fem <- function(r){
 
       mincolor <- "#f4f5f6"
       maxcolor <- "#154194"
-      quelle <- "Quelle der Daten: Eurostat, 2023; OECD, 2023, freier Download, eigene Berechnungen durch MINTvernetzt."
+      quelle <- "Quelle der Daten: Eurostat, 2026; OECD, 2023, freier Download, eigene Berechnungen durch MINTvernetzt."
       out1 <- mapbuilder_plotly(map_data_1,
                          titel = title_dyn,
                          value_col = "wert",
@@ -767,7 +767,7 @@ df <- df %>%
   quelle <- dplyr::case_when(
     label_m == "Weltweit" ~ "Quelle der Daten: UNESCO, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
     label_m == "OECD" ~ "Quelle der Daten: OECD, 2025, eigene Berechnungen durch MINTvernetzt.",
-    label_m == "EU" ~ "Quelle der Daten: Eurostat, 2025, eigene Berechnungen durch MINTvernetzt.",
+    label_m == "EU" ~ "Quelle der Daten: Eurostat, 2026, eigene Berechnungen durch MINTvernetzt.",
     TRUE ~ "Quelle der Daten: eigene Berechnungen durch MINTvernetzt."
   )
 
@@ -1090,7 +1090,7 @@ plot_international_top10_gender <- function(r) {
   }
 
   if (label_m == "EU") {
-   quelle <- paste0("Quelle der Daten: Eurostat, 2025, eigene Berechnungen durch MINTvernetzt.")
+   quelle <- paste0("Quelle der Daten: Eurostat, 2026, eigene Berechnungen durch MINTvernetzt.")
   } else {
     quelle <- paste0("Quelle der Daten: OECD, 2025, eigene Berechnungen durch MINTvernetzt.")
 
