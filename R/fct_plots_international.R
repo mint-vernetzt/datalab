@@ -2434,7 +2434,11 @@ plot_international_schule_migration <- function(r) {
   )
 
 # Nach der ersten Gruppe sortieren
-  sortier_spalte <- spalten[1]
+  sortier_spalte <- if (label_m == "PISA" && leistungsindikator_m == "nach Zuwanderungsgeschichte") {
+    "wert"  # Erste Generation
+  } else {
+    spalten[1]
+  }
 
   land_reihenfolge <- plot_data |>
     dplyr::arrange(
@@ -2501,7 +2505,7 @@ plot_international_schule_migration <- function(r) {
         formatC(
           plot_data[[spalte]],
           format = "f",
-          digits = 2,
+          digits = if (label_m == "TIMSS") 0 else 2,
           decimal.mark = ","
         ),
         " Punkte",
@@ -2514,6 +2518,7 @@ plot_international_schule_migration <- function(r) {
         x = stats::as.formula(paste0("~", spalte)),
         y = ~land,
         name = gruppen_anzeige[i],
+        cliponaxis = FALSE,
         marker = list(
           size = 10,
           color = farben[i]
@@ -2523,14 +2528,40 @@ plot_international_schule_migration <- function(r) {
       )
   }
 
+# Hervorgehobene Länder
+
+  highlight_laender <- c(
+    "Deutschland",
+    "OECD Durchschnitt",
+    "Interantionaler Durchschnitt"
+  )
+
+  highlight_pos <- match(highlight_laender, land_reihenfolge) - 1
+  highlight_pos <- highlight_pos[!is.na(highlight_pos)]
+
+  highlight_shapes <- lapply(highlight_pos, function(pos) {
+    list(
+      type = "rect",
+      xref = "paper",
+      yref = "y",
+      x0 = 0,
+      x1 = 1,
+      y0 = pos - 0.4,
+      y1 = pos + 0.4,
+      fillcolor = "rgba(21, 65, 148, 0.08)",
+      line = list(width = 0),
+      layer = "below"
+    )
+  })
+
 
 # Gemeinsames Layout
 
   p <- p |>
     plotly::layout(
-      height = 800,
+      height = 1000,
       font = list(family = "Calibri Regular"),
-      title = list(
+      title = list( x = 0.5, y=0.98,
         text = titel,
         font = list(
           family = "Calibri Regular",
@@ -2542,9 +2573,12 @@ plot_international_schule_migration <- function(r) {
       yaxis = list(
         title = "",
         categoryorder = "array",
-        categoryarray = land_reihenfolge
+        categoryarray = land_reihenfolge,
+        range = c(0, length(land_reihenfolge) - 1),
+        automargin = TRUE
       ),
-      margin = list(l = 100, r = 50, t = 50, b = 100),
+      margin = list(t = 80, b = 100),
+      shapes = highlight_shapes,
       hoverlabel = list(
         bgcolor = "white",
         font = list(family = "Calibri", size = 12)
@@ -2552,7 +2586,7 @@ plot_international_schule_migration <- function(r) {
       legend = list(
         orientation = "h",
         x = 0.5,
-        y = -0.04,
+        y = -0.02,
         xanchor = "center",
         yanchor = "top"
       ),
@@ -2560,7 +2594,7 @@ plot_international_schule_migration <- function(r) {
         list(
           text = quelle,
           x = 0,
-          y = -0.11,
+          y = -0.08,
           xref = "paper",
           yref = "paper",
           showarrow = FALSE,

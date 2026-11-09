@@ -182,7 +182,7 @@ mod_international_start_ui <- function(id){
                                     ),
                                     shiny::mainPanel(
                                       width = 9,
-                                      shinycssloaders::withSpinner(htmlOutput(ns("plot_international_schule_migration_1"), height = "900px"),
+                                      shinycssloaders::withSpinner(htmlOutput(ns("plot_international_schule_migration_1"), height = "1000px"),
                                                                    color = "#154194"),
 
 

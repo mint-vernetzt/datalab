@@ -62,18 +62,7 @@ mod_international_schule_migration_ui <- function(id){
                        multiple = FALSE
                      ),
 
-                     p("Länder:"),
-                     shinyWidgets::pickerInput(
-                       inputId = ns("regio_int_schule_timss"),
-                       label = NULL,
-                       choices = int_schule_ui_country("TIMSS"),
-                       multiple = TRUE,
-                       options =  list(
-                         "max-options" = 10,
-                         "max-options-text" = "<span style='color: red;'>Maximal 10 Länder auswählen</span>"),
-                       selected = c("Interantionaler Durchschnitt", "Deutschland","Schweden", "Italien", "Türkei","Vereinigte Staaten" )
-                     )
-                     ),
+                    ),
 
     conditionalPanel(condition = "input.line_l_int_schule == 'PISA'",
                      ns = ns,
@@ -102,56 +91,6 @@ mod_international_schule_migration_ui <- function(id){
                        selected = c("nach Bildungskapital"),
                        multiple = FALSE
                      )),
-#
-#                      p("Länder:"),
-#                      shinyWidgets::pickerInput(
-#                        inputId = ns("regio_int_schule_pisa"),
-#                        label = NULL,
-#                        choices = int_pisa_ui_country("PISA"),
-#                        multiple = TRUE,
-#                        options =  list(
-#                          "max-options" = 10,
-#                          "max-options-text" = "<span style='color: red;'>Maximal 10 Länder auswählen</span>"),
-#                        selected = c("OECD Durchschnitt", "Deutschland","Schweden", "Italien", "Türkei","Vereinigte Staaten" )
-#                      )
-
-
-# # Länder: Jahr == 2022
-# conditionalPanel(
-#   condition = "input.line_l_int_schule == 'PISA' && input.line_y_pisa_int_schule == '2022'",
-#   ns = ns,
-#   p("Länder:"),
-#   shinyWidgets::pickerInput(
-#     inputId = ns("regio_int_schule_pisa"),
-#     label = NULL,
-#     choices = int_pisa_ui_country("PISA", 2023),
-#     multiple = TRUE,
-#     options = list(
-#       "max-options" = 10,
-#       "max-options-text" = "<span style='color: red;'>Maximal 10 Länder auswählen</span>"
-#     ),
-#     selected = c("OECD Durchschnitt", "Deutschland", "Schweden", "Italien", "Türkei", "Vereinigte Staaten")
-#   )
-# ),
-#
-# # Länder: Jahr ≠ 2022
-# conditionalPanel(
-#   condition = "input.line_l_int_schule == 'PISA' && input.line_y_pisa_int_schule != '2022'",
-#   ns = ns,
-#   p("Länder:"),
-#   shinyWidgets::pickerInput(
-#     inputId = ns("regio_int_schule_pisa"),
-#     label = NULL,
-#     choices = int_pisa_ui_country("PISA"),
-#     multiple = TRUE,
-#     options = list(
-#       "max-options" = 10,
-#       "max-options-text" = "<span style='color: red;'>Maximal 10 Länder auswählen</span>"
-#     ),
-#     selected = c("OECD Durchschnitt", "Deutschland", "Schweden", "Italien", "Türkei", "Vereinigte Staaten")
-#   )
-# ),
-#
 
 
     # TODO extract into own module, since this is repeated on a lot of modules
@@ -184,6 +123,8 @@ mod_international_schule_migration_server <- function(id, r){
     "Costa Rica"
   )
 
+  timss_laender <- DBI::dbGetQuery(con, "SELECT DISTINCT land FROM schule_timss ORDER BY land")$land
+
   # logger::log_debug("start mod_international_schule_migration_server")
 
   moduleServer( id, function(input, output, session){
@@ -197,7 +138,9 @@ mod_international_schule_migration_server <- function(id, r){
         r$line_y_int_schule <- input$line_y_timss_int_schule
         r$line_f_int_schule <- input$line_f_timss_int_schule
         r$line_li_int_schule <- input$line_li_timss_int_schule
-        r$regio_int_schule_timss  <- input$regio_int_schule_timss
+
+        # immer alle timss länder
+        r$regio_int_schule_timss  <- timss_laender
       }
       if (input$line_l_int_schule == "PISA") {
         r$line_y_int_schule <- input$line_y_pisa_int_schule
@@ -206,7 +149,7 @@ mod_international_schule_migration_server <- function(id, r){
 
         # Immer alle OECD-Länder
         r$regio_int_schule_pisa <- oecd_laender
-        #r$regio_int_schule_pisa <- input$regio_int_schule_pisa
+
       }
     })
 
@@ -236,19 +179,8 @@ mod_international_schule_migration_server <- function(id, r){
       r$line_li_int_schule <- input$line_li_timss_int_schule
     })
 
-    # observeEvent(input$regio_int_schule, {
-    #   r$regio_int_schule <- input$regio_int_schule
-    # })
-
-    observeEvent(input$regio_int_schule_timss, {
-      r$regio_int_schule_timss <- input$regio_int_schule_timss
-    })
 
 
-
-    # observeEvent(input$regio_int_schule_pisa, {
-    #   r$regio_int_schule_pisa <- input$regio_int_schule_pisa
-    # })
 
 
   })

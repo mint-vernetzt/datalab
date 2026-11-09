@@ -35,9 +35,18 @@ mod_international_schule_verlauf_ui <- function(id){
     ),
     p("Länder:"),
     shinyWidgets::pickerInput(
-      inputId = ns("verlauf_land_int_schule"),
-      choices = c()
-  )),
+      inputId = ns("verlauf_land_timss_int_schule"),
+      choices = DBI::dbGetQuery(
+        con,
+        "SELECT DISTINCT land FROM schule_timss ORDER BY land"
+      )$land,
+      selected = c("Deutschland", "Japan", "Frankreich"),
+      multiple = TRUE,
+      options = list(
+        `actions-box` = TRUE,
+        `max-options` = 7
+      )
+    )),
 
   conditionalPanel(
     condition = "input.verlauf_l_int_schule == 'PISA'",
@@ -112,13 +121,34 @@ mod_international_schule_verlauf_server <- function(id, r){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
+    # observe({
+    #   timss_laender <- DBI::dbGetQuery(
+    #     con,
+    #     "SELECT DISTINCT land FROM schule_timss ORDER BY land"
+    #   )$land
+    #
+    #   shinyWidgets::updatePickerInput(
+    #     session,
+    #     inputId = "verlauf_land_timss_int_schule",
+    #     choices = timss_laender,
+    #     selected = intersect(
+    #       c("Deutschland", "Interantionaler Durchschnitt"),
+    #       timss_laender
+    #     )
+    #   )
+    # })
 
     observe({
 
       req(input$verlauf_l_int_schule)
 
       r$verlauf_l_int_schule  <- input$verlauf_l_int_schule
-      r$verlauf_land_int_schule <- input$verlauf_land_int_schule
+
+      r$verlauf_land_int_schule <- if (input$verlauf_l_int_schule == "TIMSS") {
+        input$verlauf_land_timss_int_schule
+      } else {
+        input$verlauf_land_int_schule
+      }
 
       if (input$verlauf_l_int_schule == "TIMSS") {
 
