@@ -2179,7 +2179,6 @@ plot_international_schule_migration <- function(r) {
   label_m <- r$line_l_int_schule
   fach_m <- r$line_f_int_schule
   leistungsindikator_m <- r$line_li_int_schule
-   # lander <- r$regio_int_schule
 
   if (is.null(fach_m)) { fach_m <- ""}
 
@@ -2227,14 +2226,8 @@ plot_international_schule_migration <- function(r) {
   if (label_m == "PISA") {
 
 
-
     lander <- r$regio_int_schule_pisa
-    if(is.null(lander)){
-
-
-      lander <- c("Deutschland", "Türkei", "Schweden", "Italien", "Vereinigte Staaten", "OECD Durchschnitt")
-
-    }
+    shiny::req(lander)
 
     this_bereich <- switch(
       leistungsindikator_m,
@@ -2311,573 +2304,279 @@ plot_international_schule_migration <- function(r) {
       values_from = wert
     )
 
-  #plot_data$land[plot_data$land == "Interantionaler Durchschnitt"] <- "Internationaler Durchschnitt"
+
+# Titel, Quelle und Gruppen festlegen
+
+  if (label_m == "TIMSS" && leistungsindikator_m == "nach sozialem Status") {
+
+    gruppen <- c(
+      "niedriger sozialer Status",
+      "mittlerer sozialer Status",
+      "hoher sozialer Status"
+    )
+
+    gruppen_anzeige <- c(
+      "Niedriger Status",
+      "Mittlerer Status",
+      "Hoher Status"
+    )
+
+    spalten <- c("basis_wert", "mittel_wert", "wert")
+    titel_zusatz <- "nach sozialem Status"
+    quelle <- paste0( "Quelle der Daten: IEA, 2023, freier Download, eigene Berechnungen durch MINTvernetzt")
+
+  } else if (label_m == "TIMSS" && leistungsindikator_m == "nach Geschlecht") {
+
+    gruppen <- c("Jungen", "Mädchen")
+    gruppen_anzeige <- c("Jungen", "Mädchen")
+    spalten <- c("basis_wert", "wert")
+    titel_zusatz <- "nach Geschlecht"
+    quelle <- paste0( "Quelle der Daten: IEA, 2023, freier Download, eigene Berechnungen durch MINTvernetzt")
 
 
+  } else if (label_m == "PISA" && leistungsindikator_m == "nach Geschlecht") {
 
-    if (label_m == "TIMSS" && leistungsindikator_m == "nach sozialem Status") {
+    gruppen <- c("Jungen", "Mädchen")
+    gruppen_anzeige <- c("Jungen", "Mädchen")
+    spalten <- c("basis_wert", "wert")
+    titel_zusatz <- "nach Geschlecht"
+    quelle <- paste0( "Quelle der Daten: OECD, 2026, freier Download, eigene Berechnungen durch MINTvernetzt")
+
+  } else if ( label_m == "PISA" && leistungsindikator_m == "nach Zuwanderungsgeschichte" ) {
+
+    gruppen <- c(
+      "ohne Zuwanderungsgeschichte",
+      "nur Eltern zugewandert",
+      "Kind selbst zugewandert"
+    )
+
+    gruppen_anzeige <- c(
+      "Ohne Zuwanderungsgeschichte",
+      "Zweite Generation",
+      "Erste Generation"
+    )
+
+    spalten <- c("basis_wert", "mittel_wert", "wert")
+    titel_zusatz <- "nach Zuwanderungsgeschichte"
+    quelle <- paste0( "Quelle der Daten: OECD, 2026, freier Download, eigene Berechnungen durch MINTvernetzt")
 
 
-      titel <- stringr::str_wrap(
-        paste0( "Mittlere erreichte Punktezahlen im TIMSS-", fach_m,"-Test der 15-jährigen (ca. 9. Klassen) nach sozialem Status (", timerange,")" ),
-        width = 70)
+  } else if (label_m == "PISA" && leistungsindikator_m == "nach Bildungskapital" ) {
 
-      quelle <- "Quelle der Daten: IEA, 2023, freier Download, eigene Berechnungen durch MINTvernetzt"
+    gruppen <- c(
+      "sehr niedriges Bildungskapital (bis zu 10 Bücher zuhause)",
+      "niedriges Bildungskapital (bis zu 100 Bücher zuhause)",
+      "hohes Bildungskapital (über 500 Bücher zuhause)"
+    )
 
-      gruppen_info <- paste(
-        "basis_wert = niedriger sozialer Status",
-        "mittel_wert = mittlerer sozialer Status",
-        "wert = hoher sozialer Status"
+    gruppen_anzeige <- c(
+      "Sehr niedriges Bildungskapital (bis zu 10 Bücher zuhause)",
+      "Niedriges Bildungskapital (bis zu 100 Bücher zuhause)",
+      "Hohes Bildungskapital (über 500 Bücher zuhause)"
+    )
+
+    spalten <- c("sehr_niedrig", "niedrig", "hoch")
+    titel_zusatz <- "nach Bildungskapital"
+    quelle <- paste0( "Quelle der Daten: OECD, 2026, freier Download, eigene Berechnungen durch MINTvernetzt")
+
+
+  } else {
+    stop("Für diese Auswahl gibt es noch keine Plot-Konfiguration.")
+  }
+
+  titel <- stringr::str_wrap(
+    paste0(
+      "Mittlere erreichte Punktezahlen im ", label_m, "-", fach_m,
+      "-Test der 15-jährigen (ca. 9. Klassen) ",
+      titel_zusatz, " (", timerange, ")"
+    ),
+    width = 70
+  )
+
+# Wird später für den TXT-Download verwendet
+  gruppen_info <- paste(
+    paste0(spalten, " = ", gruppen_anzeige),
+    collapse = "\n"
+  )
+
+
+# Plot-Daten vorbereiten
+
+# Fehlende Gruppenspalten ergänzen, damit rename/select nicht scheitert
+  for (gruppe in gruppen) {
+    if (!gruppe %in% names(plot_data)) {
+      plot_data[[gruppe]] <- NA_real_
+    }
+  }
+
+  plot_data <- plot_data |>
+    dplyr::select(land, dplyr::all_of(gruppen))
+
+  names(plot_data) <- c("land", spalten)
+
+  plot_data <- plot_data |>
+    dplyr::filter(
+      land %in% lander,
+      dplyr::if_any(dplyr::all_of(spalten), ~ !is.na(.x))
+    )
+
+# Bisherige Sortierung aus deinem TIMSS-Block beibehalten
+  if (label_m == "TIMSS" && leistungsindikator_m == "nach sozialem Status") {
+    plot_data <- plot_data |>
+      dplyr::arrange(dplyr::desc(basis_wert))
+  }
+
+  shiny::validate(
+    shiny::need(
+      nrow(plot_data) > 0,
+      "Für diese Auswahl sind keine Daten verfügbar."
+    )
+  )
+
+# Nach der ersten Gruppe sortieren
+  sortier_spalte <- spalten[1]
+
+  land_reihenfolge <- plot_data |>
+    dplyr::arrange(
+      dplyr::desc(is.na(.data[[sortier_spalte]])),
+      .data[[sortier_spalte]],
+      land
+    ) |>
+    dplyr::pull(land)
+
+
+# Gemeinsamer Plot
+
+  farben <- if (length(spalten) == 2) {
+    c("#D0A9CD","#154194")
+  } else {
+    c("#154194", "#B16FAB", "#D0A9CD")
+  }
+
+  p <- plotly::plot_ly(
+    data = plot_data,
+    color = I("gray80")
+  )
+
+# Verbindungslinien zwischen benachbarten Gruppen
+  for (i in seq_len(length(spalten) - 1)) {
+
+    spalte_1 <- spalten[i]
+    spalte_2 <- spalten[i + 1]
+
+    hover_linie <- ifelse(
+      is.na(plot_data[[spalte_1]]) | is.na(plot_data[[spalte_2]]),
+      NA_character_,
+      paste0(
+        gruppen_anzeige[i], ": ", plot_data[[spalte_1]],
+        "<br>",
+        gruppen_anzeige[i + 1], ": ", plot_data[[spalte_2]]
       )
-
-
-
-      plot_data <- plot_data %>%
-        dplyr::rename(
-          basis_wert = `niedriger sozialer Status`,
-          mittel_wert = `mittlerer sozialer Status`,
-          wert = `hoher sozialer Status`
-        )
-
-      plot_data <- plot_data %>%
-        dplyr::filter(!is.na(mittel_wert) | !is.na(wert) | !is.na(basis_wert))
-
-      plot_data <- plot_data %>%
-        dplyr::filter(land %in% lander)
-
-      plot_data <- plot_data %>%
-        dplyr::arrange(desc(basis_wert))  # Sortieren absteigend nach `basis_wert`
-
-
-      ####
-      p <- plotly::plot_ly(data = plot_data, color = I("gray80")) %>%
-        plotly::add_segments(
-          x = ~basis_wert,
-          xend = ~mittel_wert,
-          y = ~land,
-          yend = ~land,
-          showlegend = FALSE,
-          text = ~ifelse(is.na(basis_wert) | is.na(mittel_wert), NA,
-                         paste0("Basis: ", basis_wert, "<br>Mittel: ", mittel_wert)),
-          hoverinfo = "text"
-        ) %>%
-        plotly::add_segments(
-          x = ~mittel_wert,
-          xend = ~wert,
-          y = ~land,
-          yend = ~land,
-          showlegend = FALSE,
-          text = ~ifelse(is.na(mittel_wert) | is.na(wert), NA,
-                         paste0("Mittel: ", mittel_wert, "<br>Positiv: ", wert)),
-          hoverinfo = "text"
-        ) %>%
-        plotly::add_markers(
-          x = ~basis_wert,
-          y = ~land,
-          name = "Niedriger Status",
-          marker = list(
-            size = 12,
-            color = "#D0A9CD"
-          ),
-          text = ~ifelse(is.na(basis_wert), NA, paste0("Niedriger Status: ", basis_wert)),
-          hoverinfo = "text"
-        ) %>%
-        plotly::add_markers(
-          x = ~mittel_wert,
-          y = ~land,
-          name = "Mittlerer Status",
-          marker = list(
-            size = 12,
-            color = "#66cbaf"
-          ),
-          text = ~ifelse(is.na(mittel_wert), NA, paste0("Mittlerer Status: ", mittel_wert)),
-          hoverinfo = "text"
-        ) %>%
-        plotly::add_markers(
-          x = ~wert,
-          y = ~land,
-          name = "Hoher Status",
-          marker = list(
-            size = 12,
-            color = "#b16fab"
-          ),
-          text = ~ifelse(is.na(wert), NA, paste0("Hoher Status: ", wert)),
-          hoverinfo = "text"
-        ) %>%
-        # Layout anpassen
-        plotly::layout(
-          height = 550,
-          font = list(family = "Calibri Regular"),
-          title = list(
-              text = titel,
-              font = list(
-                family = "Calibri Regular",size = 20, color = "black")
-            ),
-          xaxis = list(title = ""),
-          yaxis = list(title = ""),
-          margin = list(l = 100, r = 50, t = 50, b = 100),
-          hoverlabel = list(bgcolor = "white", font = list(family = "Calibri", size = 15)),
-          legend = list(
-            orientation = "h",
-            x = 0.5,
-            y = -0.05,
-            xanchor = "center",
-            yanchor = "top"
-          ),
-          annotations = list(
-            list(
-              text = quelle,
-              x = 0,
-              y = -0.14,  # passt die vertikale Position (ggf. justieren!)
-              xref = "paper",
-              yref = "paper",
-              showarrow = FALSE,
-              xanchor = "left",
-              yanchor = "top",
-              font = list(size = 11, color = "gray", family = "Calibri Regular")
-            )
-          )
-        )
-
-    }
-  else if (label_m == "TIMSS" && leistungsindikator_m == "nach Geschlecht") {
-
-    titel <- stringr::str_wrap(
-      paste0( "Mittlere erreichte Punktezahlen im TIMSS-", fach_m,"-Test der 15-jährigen (ca. 9. Klassen) nach Geschlecht (", timerange,")" ),
-      width = 70)
-
-    quelle <- "Quelle der Daten: IEA, 2023, freier Download, eigene Berechnungen durch MINTvernetzt"
-
-
-
-    gruppen_info <- paste(
-      "basis_wert = Jungen",
-      "wert = Mädchen"
     )
 
+    p <- p |>
+      plotly::add_segments(
+        x = stats::as.formula(paste0("~", spalte_1)),
+        xend = stats::as.formula(paste0("~", spalte_2)),
+        y = ~land,
+        yend = ~land,
+        showlegend = FALSE,
+        text = hover_linie,
+        hoverinfo = "text"
+      )
+  }
 
-    plot_data <- plot_data %>%
-        dplyr::rename(
-          basis_wert = Jungen,
-          wert = Mädchen
-        )
+# Punkte für die einzelnen Gruppen
+  for (i in seq_along(spalten)) {
 
-      plot_data <- plot_data %>%
-        dplyr::filter(!is.na(wert) | !is.na(basis_wert))
+    spalte <- spalten[i]
 
-      plot_data <- plot_data %>%
-        dplyr::filter(land %in% lander)
-
-      p <- plotly::plot_ly(data = plot_data, color = I("gray80")) %>%
-        plotly::add_segments(
-          x = ~basis_wert,
-          xend = ~wert,
-          y = ~land,
-          yend = ~land,
-          showlegend = FALSE,
-          text = ~ifelse(is.na(basis_wert) | is.na(wert), NA,
-                         paste0("Jungen: ", basis_wert, "<br>Mädchen: ", wert)),
-          hoverinfo = "text"
-        ) %>%
-        plotly::add_markers(
-          x = ~basis_wert,
-          y = ~land,
-          name = "Jungen",
-          marker = list(
-            size = 12,
-            color = "#D0A9CD"
-          ),
-          text = ~ifelse(is.na(basis_wert), NA, paste0("Jungen: ", basis_wert)),
-          hoverinfo = "text"
-        ) %>%
-        plotly::add_markers(
-          x = ~wert,
-          y = ~land,
-          name = "Mädchen",
-          marker = list(
-            size = 12,
-            color = "#b16fab"
-          ),
-          text = ~ifelse(is.na(wert), NA, paste0("Mädchen: ", wert)),
-          hoverinfo = "text"
-        ) %>%
-        plotly::layout(
-          height = 550,
-          font = list(family = "Calibri Regular"),
-          title = list(
-            text = titel,
-            font = list(
-              family = "Calibri Regular",size = 20, color = "black")
-          ),
-          xaxis = list(title = ""),
-          yaxis = list(title = ""),
-          margin = list(l = 100, r = 50, t = 50, b = 100),
-          hoverlabel = list(bgcolor = "white", font = list(family = "Calibri", size = 15)),
-          legend = list(
-            orientation = "h",
-            x = 0.5,
-            y = -0.05,
-            xanchor = "center",
-            yanchor = "top"
-          ),
-          annotations = list(
-            list(
-              text = quelle,
-              x = 0,
-              y = -0.14,  # passt die vertikale Position (ggf. justieren!)
-              xref = "paper",
-              yref = "paper",
-              showarrow = FALSE,
-              xanchor = "left",
-              yanchor = "top",
-              font = list(size = 11, color = "gray", family = "Calibri Regular")
-            )
-          )
-        )
-
-
-    }
-  else if (label_m == "PISA" && leistungsindikator_m == "nach Geschlecht") {
-
-
-    titel <- stringr::str_wrap(
-      paste0( "Mittlere erreichte Punktezahlen im PISA-", fach_m,"-Test der 15-jährigen (ca. 9. Klassen) nach Geschlecht (", timerange,")" ),
-      width = 70)
-
-    quelle <- "Quelle der Daten: OECD, 2026, freier Download, eigene Berechnungen durch MINTvernetzt"
-
-    gruppen_info <- paste(
-      "basis_wert = Jungen",
-      "wert = Mädchen"
+    hover_punkt <- ifelse(
+      is.na(plot_data[[spalte]]),
+      NA_character_,
+      paste0(
+        "<span style='font-size:14px;'>",
+        plot_data$land, "<br>",
+        gruppen_anzeige[i], "<br>",
+        formatC(
+          plot_data[[spalte]],
+          format = "f",
+          digits = 2,
+          decimal.mark = ","
+        ),
+        " Punkte",
+        "</span>"
+      )
     )
 
+    p <- p |>
+      plotly::add_markers(
+        x = stats::as.formula(paste0("~", spalte)),
+        y = ~land,
+        name = gruppen_anzeige[i],
+        marker = list(
+          size = 10,
+          color = farben[i]
+        ),
+        text = hover_punkt,
+        hoverinfo = "text"
+      )
+  }
 
-    plot_data <- plot_data %>%
-        dplyr::rename(
-          basis_wert = Jungen,
-          wert = Mädchen
+
+# Gemeinsames Layout
+
+  p <- p |>
+    plotly::layout(
+      height = 800,
+      font = list(family = "Calibri Regular"),
+      title = list(
+        text = titel,
+        font = list(
+          family = "Calibri Regular",
+          size = 20,
+          color = "black"
         )
-
-      plot_data <- plot_data %>%
-        dplyr::filter(!is.na(wert) | !is.na(basis_wert))
-
-      plot_data <- plot_data %>%
-        dplyr::filter(land %in% lander)
-
-      p <- plotly::plot_ly(data = plot_data, color = I("gray80")) %>%
-        plotly::add_segments(
-          x = ~basis_wert,
-          xend = ~wert,
-          y = ~land,
-          yend = ~land,
-          showlegend = FALSE,
-          text = ~ifelse(is.na(basis_wert) | is.na(wert), NA,
-                         paste0("Jungen: ", basis_wert, "<br>Mädchen: ", wert)),
-          hoverinfo = "text"
-        ) %>%
-        plotly::add_markers(
-          x = ~basis_wert,
-          y = ~land,
-          name = "Jungen",
-          marker = list(
-            size = 12,
-            color = "#D0A9CD"
-          ),
-          text = ~ifelse(is.na(basis_wert), NA, paste0("Jungen: ", basis_wert)),
-          hoverinfo = "text"
-        ) %>%
-        plotly::add_markers(
-          x = ~wert,
-          y = ~land,
-          name = "Mädchen",
-          marker = list(
-            size = 12,
-            color = "#b16fab"
-          ),
-          text = ~ifelse(is.na(wert), NA, paste0("Mädchen: ", wert)),
-          hoverinfo = "text"
-        ) %>%
-        # Layout anpassen
-        plotly::layout(
-          height = 550,
-          font = list(family = "Calibri Regular"),
-          title = list(
-            text = titel,
-            font = list(
-              family = "Calibri Regular",size = 20, color = "black")
-          ),
-          xaxis = list(title = ""),
-          yaxis = list(title = ""),
-          margin = list(l = 100, r = 50, t = 50, b = 100),
-          hoverlabel = list(bgcolor = "white", font = list(family = "Calibri", size = 15)),
-          legend = list(
-            orientation = "h",
-            x = 0.5,
-            y = -0.05,
-            xanchor = "center",
-            yanchor = "top"
-          ),
-          annotations = list(
-            list(
-              text = quelle,
-              x = 0,
-              y = -0.14,  # passt die vertikale Position (ggf. justieren!)
-              xref = "paper",
-              yref = "paper",
-              showarrow = FALSE,
-              xanchor = "left",
-              yanchor = "top",
-              font = list(size = 11, color = "gray", family = "Calibri Regular")
-            )
+      ),
+      xaxis = list(title = ""),
+      yaxis = list(
+        title = "",
+        categoryorder = "array",
+        categoryarray = land_reihenfolge
+      ),
+      margin = list(l = 100, r = 50, t = 50, b = 100),
+      hoverlabel = list(
+        bgcolor = "white",
+        font = list(family = "Calibri", size = 12)
+      ),
+      legend = list(
+        orientation = "h",
+        x = 0.5,
+        y = -0.04,
+        xanchor = "center",
+        yanchor = "top"
+      ),
+      annotations = list(
+        list(
+          text = quelle,
+          x = 0,
+          y = -0.11,
+          xref = "paper",
+          yref = "paper",
+          showarrow = FALSE,
+          xanchor = "left",
+          yanchor = "top",
+          font = list(
+            size = 11,
+            color = "gray",
+            family = "Calibri Regular"
           )
         )
-
-    }
-  else if (label_m == "PISA" && leistungsindikator_m == "nach Zuwanderungsgeschichte") {
-
-
-    titel <- stringr::str_wrap(
-      paste0( "Mittlere erreichte Punktezahlen im PISA-", fach_m,"-Test der 15-jährigen (ca. 9. Klassen) nach Zuwanderungsgeschichte (", timerange,")" ),
-      width = 70)
-
-    quelle <- "Quelle der Daten: OECD, 2026, freier Download, eigene Berechnungen durch MINTvernetzt"
-
-
-   gruppen_info <- paste(
-    "basis_wert = ohne Zuwanderungsgeschichte",
-    "mittel_wert = nur Eltern zugewandert",
-    "wert = Kind selbst zugewandert"
+      )
     )
 
 
 
-    plot_data <- plot_data %>%
-        dplyr::rename(
-          basis_wert = `ohne Zuwanderungsgeschichte`,
-          mittel_wert = `nur Eltern zugewandert`,
-          wert = `Kind selbst zugewandert`
-        )
-
-
-      plot_data <- plot_data %>%
-        dplyr::filter(!is.na(mittel_wert) | !is.na(wert) | !is.na(basis_wert))
-
-      plot_data <- plot_data %>%
-        dplyr::filter(land %in% lander)
-
-      p <- plotly::plot_ly(data = plot_data, color = I("gray80")) %>%
-        plotly::add_segments(
-          x = ~basis_wert,
-          xend = ~mittel_wert,
-          y = ~land,
-          yend = ~land,
-          showlegend = FALSE,
-          text = ~ifelse(is.na(basis_wert) | is.na(mittel_wert), NA,
-                         paste0("Ohne Zuwanderungsgeschichte: ", basis_wert, "<br>Erste Generation: ", mittel_wert)),
-          hoverinfo = "text"
-        ) %>%
-        plotly::add_segments(
-          x = ~mittel_wert,
-          xend = ~wert,
-          y = ~land,
-          yend = ~land,
-          showlegend = FALSE,
-          text = ~ifelse(is.na(mittel_wert) | is.na(wert), NA,
-                         paste0("Erste Generation: ", mittel_wert, "<br>Zweite Generation: ", wert)),
-          hoverinfo = "text"
-        ) %>%
-        plotly::add_markers(
-          x = ~basis_wert,
-          y = ~land,
-          name = "Ohne Zuwanderungsgeschichte",
-          marker = list(
-            size = 12,
-            color = "#D0A9CD"
-          ),
-          text = ~ifelse(is.na(basis_wert), NA, paste0("Ohne Zuwanderungsgeschichte: ", basis_wert)),
-          hoverinfo = "text"
-        ) %>%
-        plotly::add_markers(
-          x = ~mittel_wert,
-          y = ~land,
-          name = "Erste Generation",
-          marker = list(
-            size = 12,
-            color = "#66cbaf"
-          ),
-          text = ~ifelse(is.na(mittel_wert), NA, paste0("Erste Generation: ", mittel_wert)),
-          hoverinfo = "text"
-        ) %>%
-        plotly::add_markers(
-          x = ~wert,
-          y = ~land,
-          name = "Zweite Generation",
-          marker = list(
-            size = 12,
-            color = "#b16fab"
-          ),
-          text = ~ifelse(is.na(wert), NA, paste0("Zweite Generation: ", wert)),
-          hoverinfo = "text"
-        ) %>%
-        # Layout anpassen
-        plotly::layout(
-          height = 550,
-          font = list(family = "Calibri Regular"),
-          title = list(
-            text = titel,
-            font = list(
-              family = "Calibri Regular",size = 20, color = "black")
-          ),
-          xaxis = list(title = ""),
-          yaxis = list(title = ""),
-          margin = list(l = 100, r = 50, t = 50, b = 100),
-          hoverlabel = list(bgcolor = "white", font = list(family = "Calibri", size = 15)),
-          legend = list(
-            orientation = "h",
-            x = 0.5,
-            y = -0.05,
-            xanchor = "center",
-            yanchor = "top"
-          ),
-          annotations = list(
-            list(
-              text = quelle,
-              x = 0,
-              y = -0.14,  # passt die vertikale Position (ggf. justieren!)
-              xref = "paper",
-              yref = "paper",
-              showarrow = FALSE,
-              xanchor = "left",
-              yanchor = "top",
-              font = list(size = 11, color = "gray", family = "Calibri Regular")
-            )
-          )
-        )
-
-
-    }
-  else if (label_m == "PISA" && leistungsindikator_m == "nach Bildungskapital") {
-
-   titel <- stringr::str_wrap(
-      paste0( "Mittlere erreichte Punktezahlen im PISA-", fach_m,"-Test der 15-jährigen (ca. 9. Klassen) nach Bildungskapital (", timerange,")" ),
-      width = 70)
-
-    quelle <- "Quelle der Daten: OECD, 2023, freier Download, eigene Berechnungen durch MINTvernetzt"
-
-    gruppen_info <- paste(
-      "sehr_niedrig = sehr niedriges Bildungskapital (bis zu 10 Bücher zuhause)\n",
-      "niedrig = niedriges Bildungskapital (bis zu 100 Bücher zuhause)\n",
-      "hoch = hohes Bildungskapital (über 500 Bücher zuhause)"
-    )
-
-
-     plot_data <- plot_data %>%
-        dplyr::rename(
-          sehr_niedrig = `sehr niedriges Bildungskapital (bis zu 10 Bücher zuhause)`,
-          niedrig = `niedriges Bildungskapital (bis zu 100 Bücher zuhause)`,
-          hoch = `hohes Bildungskapital (über 500 Bücher zuhause)`
-        )
-
-      plot_data <- plot_data %>%
-        dplyr::filter(!is.na(niedrig) | !is.na(hoch) | !is.na(sehr_niedrig))
-
-      plot_data <- plot_data %>%
-        dplyr::filter(land %in% lander)
-
-      p <- plotly::plot_ly(data = plot_data, color = I("gray80")) %>%
-        plotly::add_segments(
-          x = ~sehr_niedrig,
-          xend = ~niedrig,
-          y = ~land,
-          yend = ~land,
-          showlegend = FALSE,
-          text = ~ifelse(is.na(sehr_niedrig) | is.na(niedrig), NA,
-                         paste0("Sehr niedriges Bildungskapital: ", sehr_niedrig, "<br>Sehr niedriges Bildungskapital: ", sehr_niedrig)),
-          hoverinfo = "text"
-        ) %>%
-        plotly::add_segments(
-          x = ~niedrig,
-          xend = ~hoch,
-          y = ~land,
-          yend = ~land,
-          showlegend = FALSE,
-          text = ~ifelse(is.na(niedrig) | is.na(hoch), NA,
-                         paste0("Niedriges Bildungskapital: ", niedrig, "<br>Hohes Bildungskapital: ", hoch)),
-          hoverinfo = "text"
-        ) %>%
-        plotly::add_markers(
-          x = ~sehr_niedrig,
-          y = ~land,
-          name = "Sehr niedriges Bildungskapital (bis zu 10 Bücher zuhause)",
-          marker = list(
-            size = 12,
-            color = "#D0A9CD"
-          ),
-          text = ~ifelse(is.na(sehr_niedrig), NA, paste0("Sehr niedriges Bildungskapital: ", sehr_niedrig)),
-          hoverinfo = "text"
-        ) %>%
-        plotly::add_markers(
-          x = ~niedrig,
-          y = ~land,
-          name = "Niedriges Bildungskapital (bis zu 100 Bücher zuhause)",
-          marker = list(
-            size = 12,
-            color = "#66cbaf"
-          ),
-          text = ~ifelse(is.na(niedrig), NA, paste0("Niedriges Bildungskapital: ", niedrig)),
-          hoverinfo = "text"
-        ) %>%
-        plotly::add_markers(
-          x = ~hoch,
-          y = ~land,
-          name = "Hohes Bildungskapital (über 500 Bücher zuhause)",
-          marker = list(
-            size = 12,
-            color = "#b16fab"
-          ),
-          text = ~ifelse(is.na(hoch), NA, paste0("Hohes Bildungskapital: ", hoch)),
-          hoverinfo = "text"
-        ) %>%
-        # Layout anpassen
-        plotly::layout(
-          height = 550,
-          font = list(family = "Calibri Regular"),
-          title = list(
-            text = titel,
-            font = list(
-              family = "Calibri Regular",size = 20, color = "black")
-          ),
-          xaxis = list(title = ""),
-          yaxis = list(title = ""),
-          margin = list(l = 100, r = 50, t = 50, b = 100),
-          hoverlabel = list(bgcolor = "white", font = list(family = "Calibri", size = 15)),
-          legend = list(
-            orientation = "h",
-            x = 0.5,
-            y = -0.05,
-            xanchor = "center",
-            yanchor = "top"
-          ),
-          annotations = list(
-            list(
-              text = quelle,
-              x = 0,
-              y = -0.14,  # passt die vertikale Position (ggf. justieren!)
-              xref = "paper",
-              yref = "paper",
-              showarrow = FALSE,
-              xanchor = "left",
-              yanchor = "top",
-              font = list(size = 11, color = "gray", family = "Calibri Regular")
-            )
-          )
-        )
-
-
-    } else {
-
-
-    }
 
   df_json <- jsonlite::toJSON( plot_data, dataframe = "rows",auto_unbox = TRUE, na = "null")
 

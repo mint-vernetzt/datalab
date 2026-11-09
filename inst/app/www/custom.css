@@ -55,6 +55,10 @@ a {
 #mod_international_start_ui_1-plot_international_schule_map_1 {
   height: 900px !important;
 }
+#mod_international_start_ui_1-plot_international_schule_migration_1 {
+  height: 900px !important;
+}
+
 div.plotly.html-widget.js-plotly-plot {
   height: 650px !important;
 }
