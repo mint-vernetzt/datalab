@@ -2106,9 +2106,10 @@ argument_nachwuchs <- function(r){
   quelle <- "Destatis, 2025 und Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
 
-  out <- linebuilder_plotly(df_nachwuchs_agg, titel = titel, subtitel = "Studierenden- und Auszubildendenzahlen werden aggregiert betrachtet.",
+  out <- linebuilder_plotly(df_nachwuchs_agg, titel = titel,
+                            #subtitel = "Studierenden- und Auszubildendenzahlen werden aggregiert betrachtet.",
                             x = "jahr", y = "wert", group = "fach", format = format, color = colors,
-                            quelle = quelle, label = TRUE)
+                            quelle = quelle, label = "label")
 
   return(out)
 
