@@ -2648,7 +2648,7 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
               )
           )
 
-        quelle_y <- -0.22
+        quelle_y <- -0.23
 
 
       } else if (indikator_select == "nach Zuwanderungsgeschichte") {
@@ -2690,7 +2690,7 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
               )
           )
 
-        quelle_y <- -0.28
+        quelle_y <- -0.32
 
 
       } else if (indikator_select == "nach sozialem Status") {
@@ -2731,7 +2731,7 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
               )
           )
 
-        quelle_y <- -0.28
+        quelle_y <- -0.32
 
       }
 
@@ -2865,7 +2865,7 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
 
 
   titel <- paste0(
-    "Durchschnittliche Leistung (erreichte Punktzahl) der 9.Klässler:innen in MINT-Kompetenztests ", jahr_select," ",
+    "Durchschnittliche Leistung (erreichte Punktzahl) der 9.Klässler:innen in MINT-Kompetenztests (", jahr_select,") ",
     indikator_select,
     praep,
     bl_select

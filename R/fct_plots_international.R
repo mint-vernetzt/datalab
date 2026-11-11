@@ -1551,8 +1551,6 @@ plot_international_schule_verlauf <- function(r) {
 
 
   label_v <-r$verlauf_l_int_schule
-  #fach_v <- r$verlauf_f_pisa_int_schule
-
 
 
   if (label_v == "TIMSS") {
@@ -1608,7 +1606,13 @@ plot_international_schule_verlauf <- function(r) {
     )
 
 
-  laender_v <- r$verlauf_land_int_schule
+  if (label_v == "PISA") {
+    laender_v <- r$verlauf_land_pisa_int_schule
+  }
+
+  if (label_v == "TIMSS") {
+    laender_v <- r$verlauf_land_timss_int_schule
+  }
 
   if (!is.null(laender_v)) {
 
@@ -1648,6 +1652,7 @@ plot_international_schule_verlauf <- function(r) {
     x = "jahr",
     y = "wert",
     group = "land",
+    color = color,
     quelle = quelle
   )
 
@@ -1812,6 +1817,22 @@ plot_international_schule_item <- function(r) {
           land %in% laender_labels
         )
 
+      # download vorbereiten
+      df_json <- jsonlite::toJSON(
+        plot_data,
+        dataframe = "rows",
+        auto_unbox = TRUE,
+        na = "null"
+      )
+
+      titel_js  <- gsub("'", "\\\\'", stringr::str_squish(titel_wrapped))
+      quelle_js <- gsub("'", "\\\\'", quelle)
+
+      x_js <- "Mittlere Test-Punktzahl"
+      y_js <- "Differenz Jungen - Mädchen"
+      group_js <- "Signifikanzgruppe"
+
+
 
       p <- plotly::plot_ly(
         data = plot_data,
@@ -1819,16 +1840,24 @@ plot_international_schule_item <- function(r) {
         y = ~differenz,
         type = "scatter",
         mode = "markers",
-        hovertemplate = paste( "%{text}<extra></extra>" ),
         text = ~tooltip,
+        hovertemplate = "%{text}<extra></extra>",
         color = ~group,
         colors = c(
           "kein signifikanter Unterschied" = "#66cbaf",
           "Jungen signifikant besser" = "#D0A9CD",
           "Mädchen signifikant besser" = "#154194"
         ),
-        marker = list(size = 10)
+        marker = list(size = 10),
+        hoverlabel = list(
+          bgcolor = "white",
+          bordercolor = "black",
+          font = list(
+            color = "black"
+          )
+        )
       )
+
 
 
       # horizontale Referenzlinie
@@ -1936,6 +1965,76 @@ plot_international_schule_item <- function(r) {
           )
 
       }
+
+      p <- p %>%
+        plotly::config(
+          displaylogo = FALSE,
+          modeBarButtonsToRemove = c(
+            "pan2d",
+            "select2d",
+            "lasso2d",
+            "autoScale2d",
+            "resetScale2d",
+            "hoverClosestCartesian",
+            "hoverCompareCartesian",
+            "toggleSpikelines"
+          ),
+          modeBarButtonsToAdd = list(
+            list(
+              name = "Download Daten für KI als txt",
+              icon = list(
+                path = "M14,2H6C4.9,2,4,2.9,4,4v16c0,1.1,0.9,2,2,2h12c1.1,0,2-0.9,2-2V8L14,2z M14,4.5L17.5,8H14V4.5z M18,20H6V4h6v6h6V20z",
+                width = 24,
+                height = 24
+              ),
+              click = htmlwidgets::JS(sprintf("
+          function(gd) {
+
+            var rows = %s;
+
+            var filename = 'IQB_Gruppenvergleich.txt';
+
+            var text = '';
+
+            text += 'Titel: %s\\n';
+            text += 'X-Achse: %s\\n';
+            text += 'Y-Achse: %s\\n';
+            text += 'Gruppierung: %s\\n';
+            text += 'Quelle: %s\\n\\n';
+
+            var cols = Object.keys(rows[0]);
+
+            text += cols.join('\\t') + '\\n';
+
+            rows.forEach(function(row) {
+              var vals = cols.map(function(col) {
+                return row[col] == null ? '' : row[col];
+              });
+
+              text += vals.join('\\t') + '\\n';
+            });
+
+            var blob = new Blob(
+              [text],
+              {type: 'text/plain;charset=utf-8;'}
+            );
+
+            var link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = filename;
+            link.click();
+          }
+        ",
+                                              df_json,
+                                              titel_js,
+                                              x_js,
+                                              y_js,
+                                              group_js,
+                                              quelle_js
+              ))
+            )
+          )
+        )
 
 
       return(p)
