@@ -110,20 +110,6 @@ mod_international_schule_migration_ui <- function(id){
 #' @noRd
 mod_international_schule_migration_server <- function(id, r){
 
-  oecd_laender <- c(
-    "OECD Durchschnitt",
-    "Australien", "Österreich", "Belgien", "Kanada", "Chile",
-    "Kolumbien", "Tschechische Republik", "Dänemark", "Estland",
-    "Finnland", "Frankreich", "Deutschland", "Griechenland",
-    "Ungarn", "Island", "Irland", "Israel", "Italien", "Japan",
-    "Korea, Republik von", "Lettland", "Litauen", "Luxemburg",
-    "Mexiko", "Niederlande", "Neuseeland", "Norwegen", "Polen",
-    "Portugal", "Slowakei", "Slowenien", "Spanien", "Schweden",
-    "Schweiz", "Türkei", "Großbritannien", "Vereinigte Staaten",
-    "Costa Rica"
-  )
-
-  timss_laender <- DBI::dbGetQuery(con, "SELECT DISTINCT land FROM schule_timss ORDER BY land")$land
 
   # logger::log_debug("start mod_international_schule_migration_server")
 
@@ -138,17 +124,11 @@ mod_international_schule_migration_server <- function(id, r){
         r$line_y_int_schule <- input$line_y_timss_int_schule
         r$line_f_int_schule <- input$line_f_timss_int_schule
         r$line_li_int_schule <- input$line_li_timss_int_schule
-
-        # immer alle timss länder
-        r$regio_int_schule_timss  <- timss_laender
       }
       if (input$line_l_int_schule == "PISA") {
         r$line_y_int_schule <- input$line_y_pisa_int_schule
         r$line_f_int_schule <- input$line_f_pisa_int_schule
         r$line_li_int_schule <- input$line_li_pisa_int_schule
-
-        # Immer alle OECD-Länder
-        r$regio_int_schule_pisa <- oecd_laender
 
       }
     })
@@ -178,9 +158,6 @@ mod_international_schule_migration_server <- function(id, r){
     observeEvent(input$line_li_timss_int_schule, {
       r$line_li_int_schule <- input$line_li_timss_int_schule
     })
-
-
-
 
 
   })

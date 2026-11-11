@@ -2178,7 +2178,9 @@ plot_international_schule_migration <- function(r) {
   if (is.null(fach_m)) { fach_m <- ""}
 
   if (label_m == "TIMSS") {
-    lander <- r$regio_int_schule_timss
+
+    lander <- DBI::dbGetQuery(con, "SELECT DISTINCT land FROM schule_timss ORDER BY land")$land
+
     this_ordnung <- switch(
       leistungsindikator_m,
       "nach Geschlecht" = "Gender",
@@ -2220,8 +2222,19 @@ plot_international_schule_migration <- function(r) {
   }
   if (label_m == "PISA") {
 
+    lander <- c(
+      "OECD Durchschnitt",
+      "Australien", "Österreich", "Belgien", "Kanada", "Chile",
+      "Kolumbien", "Tschechische Republik", "Dänemark", "Estland",
+      "Finnland", "Frankreich", "Deutschland", "Griechenland",
+      "Ungarn", "Island", "Irland", "Israel", "Italien", "Japan",
+      "Korea, Republik von", "Lettland", "Litauen", "Luxemburg",
+      "Mexiko", "Niederlande", "Neuseeland", "Norwegen", "Polen",
+      "Portugal", "Slowakei", "Slowenien", "Spanien", "Schweden",
+      "Schweiz", "Türkei", "Großbritannien", "Vereinigte Staaten",
+      "Costa Rica"
+    )
 
-    lander <- r$regio_int_schule_pisa
     shiny::req(lander)
 
     this_bereich <- switch(
