@@ -1652,7 +1652,6 @@ plot_international_schule_verlauf <- function(r) {
     x = "jahr",
     y = "wert",
     group = "land",
-    color = color,
     quelle = quelle
   )
 
