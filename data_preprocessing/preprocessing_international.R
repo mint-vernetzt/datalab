@@ -346,7 +346,394 @@ pisa <- bind_rows(pisa1, pisa2)%>%
 
 
 
-usethis::use_data(pisa, overwrite = T)
+#usethis::use_data(pisa, overwrite = T)
+
+schule_pisa_22 <- dbGetQuery(con, "SELECT * FROM schule_pisa")
+### PISA 2025 -----------
+# M N performance
+# Geschlechterunterschied nur für N
+# kein Bildungskapital, kein Mathe Geschlecht
+
+pfad <- paste0("C:/Users/mis/OneDrive - Stifterverband/Dateiablage - MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
+
+data_science <- readxl::read_excel(paste0(pfad, "PISA009_MNperformance_25.xlsx"),
+                           sheet = "Table I.B1.2a.1", col_names = F, range = "A7:E104")
+
+data_science <- data_science |>
+  dplyr::select(-`...4`, -`...5`) |>
+  dplyr::rename(land = `...1`, wert = `...2`, Standardfehler = `...3`)
+
+data_science <- data_science |>
+  dplyr::mutate(
+    jahr      = "2025",
+    fach      = "Naturwissenschaften",
+    bereich   = "Ländermittel",
+    indikator = "Insgesamt",
+    alter_n   = "15 Jahre",
+    typ       = "Durchschnitt"
+  )
+data_science <- data_science |>
+  dplyr::select(jahr, land, fach, bereich, indikator, alter_n, wert, Standardfehler, typ)
+data_science <- data_science |>
+  dplyr::slice(-c(1, 2, 3, 5, 6, 7))
+
+
+data_science <- data_science|>
+  dplyr::mutate(land = stringr::str_remove_all(land, "\\*")) |>
+  dplyr::filter(land %in% c(
+    "OECD average", "Australia", "Austria", "Belgium", "Canada", "Chile",
+    "Colombia", "Czechia", "Denmark", "Estonia", "Finland", "France",
+    "Germany", "Greece", "Hungary", "Iceland", "Ireland", "Israel", "Italy",
+    "Japan", "Korea", "Latvia", "Lithuania", "Luxembourg", "Mexico",
+    "Netherlands", "New Zealand", "Norway", "Poland", "Portugal",
+    "Slovak Republic", "Slovenia", "Spain", "Sweden", "Switzerland",
+    "Türkiye", "United Kingdom", "United States", "Costa Rica"
+  ))
+
+laender_de <- c(
+  "OECD average"     = "OECD Durchschnitt",
+  "Australia"        = "Australien",
+  "Austria"          = "Österreich",
+  "Belgium"          = "Belgien",
+  "Canada"           = "Kanada",
+  "Chile"            = "Chile",
+  "Colombia"         = "Kolumbien",
+  "Czechia"          = "Tschechische Republik",
+  "Denmark"          = "Dänemark",
+  "Estonia"          = "Estland",
+  "Finland"          = "Finnland",
+  "France"           = "Frankreich",
+  "Germany"          = "Deutschland",
+  "Greece"           = "Griechenland",
+  "Hungary"          = "Ungarn",
+  "Iceland"          = "Island",
+  "Ireland"          = "Irland",
+  "Israel"           = "Israel",
+  "Italy"            = "Italien",
+  "Japan"            = "Japan",
+  "Korea"            = "Korea, Republik von",
+  "Latvia"           = "Lettland",
+  "Lithuania"        = "Litauen",
+  "Luxembourg"       = "Luxemburg",
+  "Mexico"           = "Mexiko",
+  "Netherlands"      = "Niederlande",
+  "New Zealand"      = "Neuseeland",
+  "Norway"           = "Norwegen",
+  "Poland"           = "Polen",
+  "Portugal"         = "Portugal",
+  "Slovak Republic"  = "Slowakei",
+  "Slovenia"         = "Slowenien",
+  "Spain"            = "Spanien",
+  "Sweden"           = "Schweden",
+  "Switzerland"      = "Schweiz",
+  "Türkiye"          = "Türkei",
+  "United Kingdom"   = "Großbritannien",
+  "United States"    = "Vereinigte Staaten",
+  "Costa Rica"       = "Costa Rica"
+)
+
+data_science <- data_science |>
+  dplyr::mutate(land = unname(laender_de[land]))
+
+data_science <- data_science |>
+  dplyr::mutate(
+    wert = round(as.numeric(wert), 2),
+    Standardfehler = round(as.numeric(Standardfehler), 2)
+  )
+
+
+data_mathe <- readxl::read_excel(
+  paste0(pfad, "PISA009_MNperformance_25.xlsx"),
+  sheet = "Table I.B1.2a.3", col_names = F, range = "A7:E104"
+)
+
+data_mathe <- data_mathe |>
+  dplyr::select(-`...4`, -`...5`) |>
+  dplyr::rename(land = `...1`, wert = `...2`, Standardfehler = `...3`)
+
+data_mathe <- data_mathe |>
+  dplyr::mutate(
+    jahr      = "2025",
+    fach      = "Mathematik",
+    bereich   = "Ländermittel",
+    indikator = "Insgesamt",
+    alter_n   = "15 Jahre",
+    typ       = "Durchschnitt"
+  )
+
+data_mathe <- data_mathe |>
+  dplyr::select(jahr, land, fach, bereich, indikator, alter_n, wert, Standardfehler, typ)
+
+data_mathe <- data_mathe |>
+  dplyr::slice(-c(1, 2, 3, 5, 6, 7))
+
+data_mathe <- data_mathe |>
+  dplyr::mutate(land = stringr::str_remove_all(land, "\\*")) |>
+  dplyr::filter(land %in% c(
+    "OECD average", "Australia", "Austria", "Belgium", "Canada", "Chile",
+    "Colombia", "Czechia", "Denmark", "Estonia", "Finland", "France",
+    "Germany", "Greece", "Hungary", "Iceland", "Ireland", "Israel", "Italy",
+    "Japan", "Korea", "Latvia", "Lithuania", "Luxembourg", "Mexico",
+    "Netherlands", "New Zealand", "Norway", "Poland", "Portugal",
+    "Slovak Republic", "Slovenia", "Spain", "Sweden", "Switzerland",
+    "Türkiye", "United Kingdom", "United States", "Costa Rica"
+  ))
+
+
+data_mathe <- data_mathe |>
+  dplyr::mutate(land = unname(laender_de[land]))
+
+data_mathe <- data_mathe |>
+  dplyr::mutate(
+    wert = round(as.numeric(wert), 2),
+    Standardfehler = round(as.numeric(Standardfehler), 2)
+  )
+
+# mingrationshintergrund Naturwissenschaften
+
+data_migra_s <- readxl::read_excel(paste0(pfad, "PISA010_migrationshintergrund_25.xlsx"),
+                                   sheet = "Table I.B1.2d.7", col_names = F, range = "BA6:BM102")
+
+data_migra_s <- data_migra_s |>
+  dplyr::select(-`...1`, -`...2`, -`...5`, -`...8`, -`...11`)
+
+laender <- readxl::read_excel(paste0(pfad, "PISA010_migrationshintergrund_25.xlsx"),
+                              sheet = "Table I.B1.2d.7", col_names = FALSE, range = "A6:A104")
+
+laender <- laender |>
+  dplyr::slice(-c(98, 99))
+
+data_migra_s <- dplyr::bind_cols(
+  land = laender[[1]],
+  data_migra_s
+)
+
+data_migra_s <- data_migra_s |>
+  dplyr::rename(wert_keiner = `...2`, SE_keiner = `...3`, wert_migraGES = `...4`,
+                SE_migraGES = `...5`, wert_migra2 = `...6`, SE_migra2 = `...7`,
+                wert_migra1 = `...8`, SE_migra1 = `...9`)|>
+  dplyr::slice(-c(1, 2, 3, 4))
+
+data_migra_s <- data_migra_s |>
+  dplyr::select(
+    land,
+    wert_keiner, SE_keiner,
+    wert_migra2, SE_migra2,
+    wert_migra1, SE_migra1
+  ) |>
+  tidyr::pivot_longer(
+    cols = -land,
+    names_to = c(".value", "indikator"),
+    names_sep = "_"
+  ) |>
+  dplyr::rename(Standardfehler = SE) |>
+  dplyr::mutate(
+    indikator = dplyr::recode(
+      indikator,
+      "keiner" = "Keiner",
+      "migra2" = "Zweite Generation",
+      "migra1" = "Erste Generation"
+    )
+  )
+
+data_migra_s <- data_migra_s |>
+  dplyr::mutate(
+    jahr      = "2025",
+    fach      = "Naturwissenschaften",
+    bereich   = "Migrationshintergrund",
+    alter_n   = "15 Jahre",
+    typ       = "Durchschnitt"
+  ) |>
+  dplyr::select(jahr, land, fach, bereich, indikator, alter_n, wert, Standardfehler, typ)  |>
+  dplyr::mutate(
+    wert = round(as.numeric(wert), 2),
+    Standardfehler = round(as.numeric(Standardfehler), 2)
+  )
+
+data_migra_s <- data_migra_s |>
+  dplyr::mutate(land = stringr::str_remove_all(land, "\\*")) |>
+  dplyr::filter(land %in% c(
+    "OECD average", "Australia", "Austria", "Belgium", "Canada", "Chile",
+    "Colombia", "Czechia", "Denmark", "Estonia", "Finland", "France",
+    "Germany", "Greece", "Hungary", "Iceland", "Ireland", "Israel", "Italy",
+    "Japan", "Korea", "Latvia", "Lithuania", "Luxembourg", "Mexico",
+    "Netherlands", "New Zealand", "Norway", "Poland", "Portugal",
+    "Slovak Republic", "Slovenia", "Spain", "Sweden", "Switzerland",
+    "Türkiye", "United Kingdom", "United States", "Costa Rica"
+  )) |>
+  dplyr::mutate(land = unname(laender_de[land]))
+
+# Migrationshintergrund Mathe
+
+data_migra_m <- readxl::read_excel(
+  paste0(pfad, "PISA010_migrationshintergrund_25.xlsx"),
+  sheet = "Table I.B1.2d.9",
+  col_names = F,
+  range = "BA6:BM102"
+)
+
+data_migra_m <- data_migra_m |>
+  dplyr::select(-`...1`, -`...2`, -`...5`, -`...8`, -`...11`)
+
+laender <- readxl::read_excel(
+  paste0(pfad, "PISA010_migrationshintergrund_25.xlsx"), sheet = "Table I.B1.2d.9",
+  col_names = FALSE, range = "A6:A102")
+
+
+data_migra_m <- dplyr::bind_cols( land = laender[[1]], data_migra_m)
+
+data_migra_m <- data_migra_m |>
+  dplyr::rename( wert_keiner = `...2`, SE_keiner = `...3`,
+    wert_migraGES = `...4`,SE_migraGES = `...5`, wert_migra2 = `...6`,
+    SE_migra2 = `...7`, wert_migra1 = `...8`,SE_migra1 = `...9`  ) |>
+  dplyr::slice(-c(1, 2, 3, 4))
+
+data_migra_m <- data_migra_m |>
+  dplyr::select(
+    land, wert_keiner, SE_keiner, wert_migra2, SE_migra2, wert_migra1, SE_migra1) |>
+  tidyr::pivot_longer(
+    cols = -land,names_to = c(".value", "indikator"),names_sep = "_" ) |>
+  dplyr::rename(Standardfehler = SE) |>
+  dplyr::mutate(
+    indikator = dplyr::recode(
+      indikator,
+      "keiner" = "Keiner",
+      "migra2" = "Zweite Generation",
+      "migra1" = "Erste Generation"
+    ))
+
+data_migra_m <- data_migra_m |>
+  dplyr::mutate(
+    jahr      = "2025",
+    fach      = "Mathematik",
+    bereich   = "Migrationshintergrund",
+    alter_n   = "15 Jahre",
+    typ       = "Durchschnitt"
+  ) |>
+  dplyr::select(
+    jahr, land, fach, bereich, indikator,
+    alter_n, wert, Standardfehler, typ
+  ) |>
+  dplyr::mutate(
+    wert = round(as.numeric(wert), 2),
+    Standardfehler = round(as.numeric(Standardfehler), 2)
+  )
+
+data_migra_m <- data_migra_m |>
+  dplyr::mutate(land = stringr::str_remove_all(land, "\\*")) |>
+  dplyr::filter(land %in% c(
+    "OECD average", "Australia", "Austria", "Belgium", "Canada", "Chile",
+    "Colombia", "Czechia", "Denmark", "Estonia", "Finland", "France",
+    "Germany", "Greece", "Hungary", "Iceland", "Ireland", "Israel", "Italy",
+    "Japan", "Korea", "Latvia", "Lithuania", "Luxembourg", "Mexico",
+    "Netherlands", "New Zealand", "Norway", "Poland", "Portugal",
+    "Slovak Republic", "Slovenia", "Spain", "Sweden", "Switzerland",
+    "Türkiye", "United Kingdom", "United States", "Costa Rica"
+  )) |>
+  dplyr::mutate(land = unname(laender_de[land]))
+
+# Geschlecht Naturwissenschaften
+
+data_gender_s <- readxl::read_excel(paste0(pfad, "PISA011_gender25.xlsx"),
+  sheet = "Table I.2.12", col_names = F, range = "A11:C87")
+
+data_gender_s <- data_gender_s %>%
+  dplyr::rename(land = `...1`, Mädchen = `...2`, Jungen = `...3`)
+
+data_gender_s <- data_gender_s %>%
+  dplyr::mutate(land = stringr::str_remove_all(land, "\\*")) |>
+  dplyr::filter(land %in% c(
+    "OECD average", "Australia", "Austria", "Belgium", "Canada", "Chile",
+    "Colombia", "Czechia", "Denmark", "Estonia", "Finland", "France",
+    "Germany", "Greece", "Hungary", "Iceland", "Ireland", "Israel", "Italy",
+    "Japan", "Korea", "Latvia", "Lithuania", "Luxembourg", "Mexico",
+    "Netherlands", "New Zealand", "Norway", "Poland", "Portugal",
+    "Slovak Republic", "Slovenia", "Spain", "Sweden", "Switzerland",
+    "Türkiye", "United Kingdom", "United States", "Costa Rica"
+  )) |>
+  dplyr::mutate(land = unname(laender_de[land]))
+
+gender_change_s <- data_gender_s |>
+  tidyr::pivot_longer(
+    cols = c(Mädchen, Jungen),
+    names_to = "indikator",
+    values_to = "change"
+  )
+
+gender_2022_s <- schule_pisa_22 |>
+  dplyr::filter(
+    jahr == "2022",
+    fach == "Naturwissenschaften",
+    bereich == "Ländermittel",
+    indikator %in% c("Mädchen", "Jungen")
+  ) |>
+  dplyr::select(land, indikator, wert)
+
+data_gender25S <- gender_change_s |>
+  dplyr::left_join(gender_2022_s, by = c("land", "indikator"))
+
+data_gender25S <- data_gender25S %>%
+  dplyr::mutate(wert25 = round(as.numeric(wert) + as.numeric(change), 2))
+
+data_gender25S <- data_gender25S %>%
+  dplyr::mutate(
+    jahr = "2025",
+    fach = "Naturwissenschaften",
+    bereich = "Ländermittel",
+    alter_n = "15 Jahre",
+    Standardfehler = NA_real_,
+    typ = "Durchschnitt"
+  ) |>
+  dplyr::select(
+    jahr, land, fach, bereich, indikator,
+    alter_n, wert25, Standardfehler, typ
+  ) %>%
+  dplyr::rename(wert = `wert25`)
+
+durchschnitt_ma <- data_gender25S |>
+  dplyr::filter(indikator == "Mädchen") |>
+  dplyr::summarise(
+    durchschnitt = round(mean(wert, na.rm = TRUE), 2)
+  )
+
+durchschnitt_ju <- data_gender25S |>
+  dplyr::filter(indikator == "Jungen") |>
+  dplyr::summarise(
+    durchschnitt = round(mean(wert, na.rm = TRUE), 2)
+  )
+
+data_gender <- data_gender |>
+  dplyr::mutate(
+    wert = dplyr::case_when(
+      jahr == "2025" & land == "OECD Durchschnitt" &
+        fach == "Naturwissenschaften" & bereich == "Ländermittel" &
+        indikator == "Mädchen" ~ durchschnitt_ma$durchschnitt,
+
+      jahr == "2025" & land == "OECD Durchschnitt" &
+        fach == "Naturwissenschaften" & bereich == "Ländermittel" &
+        indikator == "Jungen" ~ durchschnitt_ju$durchschnitt,
+
+      TRUE ~ wert
+    )
+  )
+
+
+data_gender <- rbind(data_gender25S, durchschnitt, durchschnitt_m)
+
+pisa25 <- rbind(data_science, data_mathe, data_migra_m, data_migra_s, data_gender)
+
+schule_pisa <- dbGetQuery(con, "SELECT * FROM schule_pisa")
+schule_pisa <- rbind(schule_pisa, pisa25)
+
+save(schule_pisa, file = "schule_pisa.rda")
+
+dbWriteTable(con, "schule_pisa", schule_pisa, append = FALSE, overwrite = TRUE)
+
+dbDisconnect(con, shutdown= TRUE)
+
+
+
+
 
 
 # Erstellt schule_timss ----
@@ -1149,7 +1536,7 @@ save(timss, file = "schule_timss.rda")
 
 ### Eurostat ------
 
-#### Erstellt arbeitsmarkt_beschaeftigte_eu ------------
+#### arbeitsmarkt_beschaeftigte_eu ------------
 
 ##### Rohdaten einlesen -----
 # akro <- "kbr"
@@ -1229,29 +1616,147 @@ save(arbeitsmarkt_beschaeftigte_eu, file = "arbeitsmarkt_beschaeftigte_eu.rda")
 usethis::use_data(arbeitsmarkt_beschaeftigte_eu , overwrite = T)
 
 
+##### 2025 -----------
+
+
+eurostatdata25 <- read.csv(paste0(pfad, "EUROSTAT008_hrst_st_nsecsex2__custom_24172999_linear_2_0.csv"),
+                header = TRUE, sep = ",", dec = ".")
 
 
 
+eurostatdata25 <- eurostatdata25 %>%
+  dplyr::select(category, sex, Geopolitical.entity..reporting., TIME_PERIOD, unit, OBS_VALUE, age, nace_r2) %>%
+  dplyr::rename(land = Geopolitical.entity..reporting.,
+                indikator = category,
+                jahr = TIME_PERIOD,
+                variable = unit,
+                geschlecht = sex,
+                wert = OBS_VALUE,
+                ) %>%
+  dplyr::filter(
+    nace_r2 == "C",
+    age == "Y15-74"
+  )
+
+# Land übersetzen
+eurostat_laender_de <- c(
+  "Austria" = "Österreich",
+  "Bosnia and Herzegovina" = "Bosnien und Herzegowina",
+  "Belgium" = "Belgien",
+  "Bulgaria" = "Bulgarien",
+  "Switzerland" = "Schweiz",
+  "Cyprus" = "Zypern",
+  "Czechia" = "Tschechische Republik",
+  "Germany" = "Deutschland",
+  "Denmark" = "Dänemark",
+  "Euro area - 21 countries (from 2026)" = "Eurozone",
+  "Estonia" = "Estland",
+  "Greece" = "Griechenland",
+  "Spain" = "Spanien",
+  "European Union - 27 countries (from 2020)" = "Europäische Union",
+  "Finland" = "Finnland",
+  "France" = "Frankreich",
+  "Croatia" = "Kroatien",
+  "Hungary" = "Ungarn",
+  "Ireland" = "Irland",
+  "Iceland" = "Island",
+  "Italy" = "Italien",
+  "Lithuania" = "Litauen",
+  "Luxembourg" = "Luxemburg",
+  "Latvia" = "Lettland",
+  "North Macedonia" = "Nordmazedonien",
+  "Malta" = "Malta",
+  "Netherlands" = "Niederlande",
+  "Norway" = "Norwegen",
+  "Poland" = "Polen",
+  "Portugal" = "Portugal",
+  "Romania" = "Rumänien",
+  "Serbia" = "Serbien",
+  "Sweden" = "Schweden",
+  "Slovenia" = "Slowenien",
+  "Slovakia" = "Slowakei",
+  "Türkiye" = "Türkei"
+)
+
+eurostatdata25 <- eurostatdata25 |>
+  dplyr::mutate(
+    land = dplyr::coalesce(unname(eurostat_laender_de[land]), land)
+  )
+
+eurostatdata25 <- eurostatdata25 |>
+  dplyr::mutate(
+    land = dplyr::if_else(
+      startsWith(trimws(land), "Euro area"),
+      "Eurozone",
+      land
+    )
+  )
+
+# Indikator & Einheit zuweisen
+eurostatdata25 <- eurostatdata25 |>
+  dplyr::mutate(
+    indikator = dplyr::case_when(
+      indikator ==  "HRST" ~ "Ausgebildete und/oder Beschäftigte",
+      indikator ==  "HRSTE" ~ "Ausgebildete",
+      indikator ==  "HRSTO" ~ "Beschäftigte",
+      indikator ==  "HRSTC" ~ "Ausgebildet und Beschäftigte",
+      indikator ==  "SE" ~ "Naturwissenschaftler*innen und Ingenieur*innen",
+      T ~ indikator
+    ),
+    variable = dplyr::case_when(
+      variable == "THS_PER" ~ "Anzahl in Tsd.",
+      variable == "PC_EMP" ~ "Anteil an Gesamtbevölkerung",
+      variable == "PC_ACT" ~ "Anteil an arbeitender Bevölkerung"
+    ),
+    geschlecht = dplyr::case_when(
+      geschlecht == "F" ~ "Frauen",
+      geschlecht == "M" ~ "Männer",
+      geschlecht == "T" ~ "Gesamt"
+    )
+  )
+
+eurostatdata25 <- eurostatdata25 |>
+  dplyr::filter(jahr == 2025)
 
 
-#### Erstellt studierende_europa ------------
 
-#
-# dat <- readr::read_csv(paste0(pfad, "EUROSTAT001_custom_Studi_Fach_Gender_original.csv.gz"))
-#
-# dat1 <- dat %>%
-#   dplyr::select("iscedf13", "sex", "geo",
-#                 "TIME_PERIOD", "OBS_VALUE")%>%
-#   dplyr::rename(fach = iscedf13, geschlecht = sex, land = geo, jahr= TIME_PERIOD, wert = OBS_VALUE)%>%
-#   dplyr::mutate(indikator = "Studierende",
-#                 typ= "In Prozent")
+# bereich ergänze und in Reihenfolge bringen
+eurostatdata25$bereich <- "Arbeitsmarkt"
+eurostatdata25$anforderung <- "Gesamt"
+eurostatdata25$fachbereich <- "MINT"
+eurostatdata25$quelle <- "EUROSTAT"
+eurostatdata25$population <- "EU"
+eurostatdata25$typ <- ifelse(grepl("Anzah", eurostatdata25$variable), "Anzahl", "In Prozent")
+
+# Spalten in logische Reihenfolge bringen
+eurostatdata25 <- eurostatdata25[,c("bereich", "quelle", "variable", "typ", "indikator", "fachbereich",
+             "geschlecht", "population", "land", "jahr", "anforderung", "wert")]
+
+
+# anhängen
+library(DBI)
+con <- DBI::dbConnect(duckdb::duckdb(), "data/mint_db.duckdb")
+
+arbeitsmarkt_beschaeftigte_eu <- dbGetQuery(con, "SELECT * FROM arbeitsmarkt_beschaeftigte_eu")
+
+arbeitsmarkt_beschaeftigte_eu <- rbind(arbeitsmarkt_beschaeftigte_eu, eurostatdata25)
+
+save(arbeitsmarkt_beschaeftigte_eu, file = "arbeitsmarkt_beschaeftigte_eu.rda")
+
+dbWriteTable(con, "arbeitsmarkt_beschaeftigte_eu", arbeitsmarkt_beschaeftigte_eu, append = FALSE, overwrite = TRUE)
+
+dbDisconnect(con, shutdown= TRUE)
+
+
+
+#### studierende_europa ------------
 
 
 dat007 <- readr::read_csv(paste0(pfad, "EUROSTAT007_educ_uoe_enrt04__custom_17956503_linear_2_0.csv"))
 
 dat007 <- dat007 %>%
-  select("iscedf13", "sex", "geo", "TIME_PERIOD", "OBS_VALUE", "isced11") %>%
-  rename(
+  dplyr::select("iscedf13", "sex", "geo", "TIME_PERIOD", "OBS_VALUE", "isced11") %>%
+  dplyr::rename(
     fach       = iscedf13,
     geschlecht = sex,
     land       = geo,
@@ -1259,11 +1764,11 @@ dat007 <- dat007 %>%
     wert       = OBS_VALUE,
     ebene      = isced11
   ) %>%
-  filter(
+  dplyr::filter(
     ebene == "ED5-8"
   ) %>%
-  mutate(indikator = "Studierende", typ = "In Prozent") %>%
-  select(-ebene)
+  dplyr::mutate(indikator = "Studierende", typ = "In Prozent") %>%
+  dplyr::select(-ebene)
 
 
 # dat_all <- bind_rows(dat1, dat007)
@@ -1430,8 +1935,8 @@ Mathematik und Statistik","Ingenieurwesen und Technische Berufe",
 # Anteil nach Geschlecht berechnen
 ## ausfilter, da wo es kein "Gesamt" zur berechnung gibt
 f <- dat4 %>%
-  group_by(fach, land, jahr) %>%
-  count()
+  dplyr::group_by(fach, land, jahr) %>%
+  dplyr::count()
 
 ### filtern über left_join und alle mit 2 raus
 eu_gat_e1 <- dat4
@@ -1500,8 +2005,253 @@ studierende_europa$mint_select <- ifelse(studierende_europa$fachbereich == "Alle
 save(studierende_europa, file = "studierende_europa.rda")
 usethis::use_data(studierende_europa, overwrite = T)
 
+##### 2024+2025 ------------
+# für 2025 fehlen über die Hälfte der Länder (Stand: 07.11.2026)
 
-#### Erstellt  studierende_mobil_eu_absolut ---------
+studierende_europa_24 <- DBI::dbGetQuery(con, "SELECT * FROM studierende_europa")
+
+
+eurostudis <- readr::read_csv(paste0(pfad, "EUROSTAT009_educ_uoe_enrt04__custom_24205053_linear_2_0.csv"))
+
+eurostudis <- eurostudis %>%
+  dplyr::select("iscedf13", "sex", "Geopolitical entity (reporting)", "TIME_PERIOD", "OBS_VALUE", "isced11") %>%
+  dplyr::rename(
+    fach       = iscedf13,
+    geschlecht = sex,
+    land       = `Geopolitical entity (reporting)`,
+    jahr       = TIME_PERIOD,
+    wert       = OBS_VALUE,
+    ebene      = isced11
+  ) %>%
+  dplyr::filter(
+    ebene == "ED5-8"
+  ) %>%
+  dplyr::mutate(indikator = "Studierende", typ = "In Prozent") %>%
+  dplyr::select(-ebene)
+
+
+eurostudis <- unique(eurostudis)
+
+eurostudis <- eurostudis |>
+  dplyr::mutate(
+    land = dplyr::coalesce(unname(eurostat_laender_de[land]), land)
+  )
+
+eurostudis <- eurostudis |>
+  dplyr::mutate(
+    land = dplyr::recode(land, "Albania" = "Albanien")
+  )
+
+
+eurostudis <- eurostudis |>
+  dplyr::mutate(geschlecht= dplyr::case_when(
+    geschlecht == "F" ~ "Frauen",
+    geschlecht == "M" ~ "Männer",
+    T ~ "Gesamt"))%>%
+  dplyr::mutate(fachbereich = dplyr::case_when(
+    stringr::str_ends("F00", .$fach) ~ "Allgemeine Bildungsgänge und Qualifikationen",
+    stringr::str_ends("F01", .$fach) ~ "Pädagogik",
+    stringr::str_ends("F02", .$fach) ~ "Geisteswissenschaften und Künste",
+    stringr::str_ends("F03", .$fach) ~ "Sozialwissenschaften, Journalismus und Informationswesen",
+    stringr::str_ends("F04", .$fach) ~ "Wirtschaft, Verwaltung und Recht",
+    stringr::str_ends("F05", .$fach) ~ "Naturwissenschaften, Mathematik und Statistik",
+    stringr::str_ends("F06", .$fach) ~ "Informatik & Kommunikationstechnologie",
+    stringr::str_ends("F07", .$fach) ~ "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
+    stringr::str_ends("F08", .$fach) ~ "Landwirtschaft, Forstwirtschaft, Fischerei und Tiermedizin",
+    stringr::str_ends("F09", .$fach) ~ "Gesundheit, Medizin und Sozialwesen",
+    stringr::str_ends("F10", .$fach) ~ "Dienstleistungen",
+    stringr::str_detect("Total", .$fach) ~ "Insgesamt",
+    stringr::str_ends("UNK", .$fach) ~ "Unbekannt"))%>%
+  dplyr::mutate(fach = dplyr::case_when(
+    stringr::str_ends("F00", .$fach)~ "Allgemeine Bildungsgänge und Qualifikationen",
+    stringr::str_ends("F01", .$fach)~ "Pädagogik",
+    stringr::str_ends("F02", .$fach) ~ "Geisteswissenschaften und Künste",
+    stringr::str_ends("F03", .$fach) ~ "Sozialwissenschaften, Journalismus und Informationswesen",
+    stringr::str_ends("F04", .$fach) ~ "Wirtschaft, Verwaltung und Recht",
+    stringr::str_ends("F05", .$fach) ~ "Naturwissenschaften, Mathematik und Statistik",
+    stringr::str_ends("F06", .$fach) ~ "Informatik & Kommunikationstechnologie",
+    stringr::str_ends("F061", .$fach) ~ "Informatik & Kommunikationstechnologie allgemein",
+    stringr::str_ends("F068", .$fach) ~ "Interdisziplinäre Programme mit Schwerpunkt Informatik & Kommunikationstechnologie",
+    stringr::str_ends("F07", .$fach) ~ "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
+    stringr::str_ends("F08", .$fach) ~ "Landwirtschaft, Forstwirtschaft, Fischerei und Tiermedizin",
+    stringr::str_ends("F09", .$fach) ~ "Gesundheit, Medizin und Sozialwesen",
+    stringr::str_ends("F10", .$fach) ~ "Dienstleistungen",
+    #stringr::str_ends("F050", .$fach) ~ "Naturwissenschaften, Mathematik und Statistik nicht näher definiert",
+    stringr::str_ends("F051", .$fach) ~ "Biologie und verwandte Wissenschaften",
+    stringr::str_ends("F052", .$fach) ~ "Umwelt",
+    stringr::str_ends("F053", .$fach) ~ "Exakte Naturwissenschaften",
+    stringr::str_ends("F054", .$fach) ~ "Mathematik und Statistik",
+    stringr::str_ends("F058", .$fach) ~ "Interdisziplinäre Programme und Qualifikationen mit dem Schwerpunkt Naturwissenschaften,
+Mathematik und Statistik",
+    stringr::str_ends("F059", .$fach) ~ "Naturwissenschaften, Mathematik und Statistik nicht andernorts klassifiziert",
+    stringr::str_ends("F070", .$fach) ~ "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe nicht näher definiert",
+    stringr::str_ends("F071", .$fach) ~ "Ingenieurwesen und Technische Berufe",
+    stringr::str_ends("F072", .$fach) ~ "Verarbeitendes Gewerbe und Bergbau",
+    stringr::str_ends("F073", .$fach) ~ "Architektur und Baugewerbe",
+    stringr::str_ends("F078", .$fach) ~ "Interdisziplinäre Programme und Qualifikationen mit dem Schwerpunkt Ingenieurwesen,
+ verarbeitendes Gewerbe und Baugewerbe",
+    stringr::str_ends("F079", .$fach) ~ "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe nicht andernorts klassifiziert",
+    stringr::str_detect("TOTAL", .$fach) ~ "Insgesamt",
+    stringr::str_ends("UNK", .$fach) ~ "Unbekannt",
+    T~.$fach
+  ))%>%
+  dplyr::select(-fachbereich)
+
+
+
+eurostudis <- eurostudis |>
+  tidyr::pivot_wider(names_from = fach, values_from = wert)%>%
+  dplyr::mutate(
+    "Weitere Ingenieurwesen, verarbeitendes Gewerbe, Baugewerbe" = `Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe nicht andernorts klassifiziert`+
+      `Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe nicht näher definiert`,
+    "Weitere Naturwissenschaften, Mathematik und Statistik"= `Naturwissenschaften, Mathematik und Statistik nicht andernorts klassifiziert`) %>%
+  dplyr::mutate("Alle MINT-Fächer" = rowSums(
+    dplyr::select(.,c(`Naturwissenschaften, Mathematik und Statistik`,
+                      `Informatik & Kommunikationstechnologie`,
+                      `Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe`)), na.rm = T )) %>%
+  dplyr::mutate("Alle Nicht MINT-Fächer" = Insgesamt - `Alle MINT-Fächer`) %>%
+  dplyr::select(-c( "Naturwissenschaften, Mathematik und Statistik nicht andernorts klassifiziert",
+                   "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe nicht näher definiert",
+                   "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe nicht andernorts klassifiziert"))%>%
+  tidyr::pivot_longer(c("Allgemeine Bildungsgänge und Qualifikationen":ncol(.)), values_to = "wert", names_to="fach")
+
+
+eurostudis <- eurostudis |>
+  dplyr::mutate(bereich = "Studium",
+                quelle = "Eurostat",
+  )%>%
+  dplyr::mutate(mint_select= dplyr::case_when(fach %in% c("Naturwissenschaften, Mathematik und Statistik",
+                                                          "Informatik & Kommunikationstechnologie",
+                                                          "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
+                                                          "Weitere Ingenieurwesen, verarbeitendes Gewerbe, Baugewerbe",
+                                                          "Weitere Naturwissenschaften, Mathematik und Statistik",
+                                                          "Biologie und verwandte Wissenschaften",
+                                                          "Umwelt",
+                                                          "Exakte Naturwissenschaften",
+                                                          "Mathematik und Statistik",
+                                                          "Interdisziplinäre Programme und Qualifikationen mit dem Schwerpunkt Naturwissenschaften,
+Mathematik und Statistik","Ingenieurwesen und Technische Berufe",
+                                                          "Verarbeitendes Gewerbe und Bergbau",
+                                                          "Architektur und Baugewerbe",
+                                                          "Interdisziplinäre Programme und Qualifikationen mit dem Schwerpunkt Ingenieurwesen,
+ verarbeitendes Gewerbe und Baugewerbe")~ "mint",
+                                              T ~ "nicht mint"
+  ))%>%
+  dplyr::mutate(ebene= dplyr::case_when(fach %in% c("Allgemeine Bildungsgänge und Qualifikationen",
+                                                    "Pädagogik",
+                                                    "Geisteswissenschaften und Künste",
+                                                    "Sozialwissenschaften, Journalismus und Informationswesen",
+                                                    "Wirtschaft, Verwaltung und Recht",
+                                                    "Naturwissenschaften, Mathematik und Statistik",
+                                                    "Informatik & Kommunikationstechnologie",
+                                                    "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
+                                                    "Landwirtschaft, Forstwirtschaft, Fischerei und Tiermedizin",
+                                                    "Gesundheit, Medizin und Sozialwesen",
+                                                    "Dienstleistungen",
+                                                    "Insgesamt",
+                                                    "Unbekannt",
+                                                    "Alle MINT-Fächer",
+                                                    "Alle Nicht MINT-Fächer")~ "1",
+                                        T~"2"))%>%
+  dplyr::mutate(fachbereich = dplyr::case_when(fach %in% c("Allgemeine Bildungsgänge und Qualifikationen",
+                                                           "Pädagogik",
+                                                           "Geisteswissenschaften und Künste",
+                                                           "Sozialwissenschaften, Journalismus und Informationswesen",
+                                                           "Wirtschaft, Verwaltung und Recht",
+                                                           "Naturwissenschaften, Mathematik und Statistik",
+                                                           "Informatik & Kommunikationstechnologie",
+                                                           "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
+                                                           "Landwirtschaft, Forstwirtschaft, Fischerei und Tiermedizin",
+                                                           "Gesundheit, Medizin und Sozialwesen",
+                                                           "Dienstleistungen",
+                                                           "Insgesamt",
+                                                           "Unbekannt",
+                                                           "Alle MINT-Fächer",
+                                                           "Alle Nicht MINT-Fächer")~.$fach,
+                                               fach == "Architektur und Baugewerbe" ~ "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
+                                               fach == "Biologie und verwandte Wissenschaften" ~ "Naturwissenschaften, Mathematik und Statistik",
+                                               fach == "Exakte Naturwissenschaften" ~ "Naturwissenschaften, Mathematik und Statistik",
+                                               fach == "Ingenieurwesen und Technische Berufe" ~ "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
+                                               fach == "Interdisziplinäre Programme und Qualifikationen mit dem Schwerpunkt Ingenieurwesen,\n verarbeitendes Gewerbe und Baugewerbe" ~ "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
+                                               fach == "Interdisziplinäre Programme und Qualifikationen mit dem Schwerpunkt Naturwissenschaften,\nMathematik und Statistik" ~ "Naturwissenschaften, Mathematik und Statistik",
+                                               fach == "Mathematik und Statistik" ~ "Naturwissenschaften, Mathematik und Statistik",
+                                               fach == "Umwelt" ~ "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
+                                               fach == "Verarbeitendes Gewerbe und Bergbau" ~ "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
+                                               fach == "Weitere Ingenieurwesen, verarbeitendes Gewerbe, Baugewerbe" ~ "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
+                                               fach == "Weitere Naturwissenschaften, Mathematik und Statistik" ~ "Naturwissenschaften, Mathematik und Statistik"))%>%
+  dplyr::mutate(population = "Europäische Union+")
+
+# Anteil nach Geschlecht berechnen
+
+geschlechteranteil <- eurostudis |>
+  dplyr::group_by(land, jahr, fach) |>
+  dplyr::filter(
+    dplyr::n() == 3,
+    sum(geschlecht == "Frauen", na.rm = TRUE) == 1,
+    sum(geschlecht == "Männer", na.rm = TRUE) == 1,
+    sum(geschlecht == "Gesamt", na.rm = TRUE) == 1
+  ) |>
+  dplyr::mutate(
+    gesamtwert = wert[geschlecht == "Gesamt"][1],
+    wert = dplyr::if_else(
+      !is.na(gesamtwert) & gesamtwert != 0,
+      round(wert / gesamtwert * 100, 2),
+      NA_real_
+    )
+  ) |>
+  dplyr::ungroup() |>
+  dplyr::mutate(indikator = "Frauen-/Männeranteil") |>
+  dplyr::select(-gesamtwert)
+
+# Fächerwahl nach Geschlecht
+faecherwahl <- eurostudis |>
+  dplyr::group_by(land, jahr, geschlecht) |>
+  dplyr::mutate(
+    gesamtwert = if (sum(fach == "Insgesamt", na.rm = TRUE) == 1) {
+      wert[which(fach == "Insgesamt")]
+    } else {
+      NA_real_
+    },
+    wert = dplyr::if_else(
+      !is.na(gesamtwert) & gesamtwert != 0,
+      round(wert / gesamtwert * 100, 2),
+      NA_real_
+    )
+  ) |>
+  dplyr::ungroup() |>
+  dplyr::mutate(indikator = "Fächerwahl") |>
+  dplyr::select(-gesamtwert)
+
+# Zusammenfassen
+
+studierende_europa_neu <- rbind(faecherwahl, geschlechteranteil)
+
+# ordnen
+studierende_europa_neu <- studierende_europa_neu[,c("bereich", "quelle", "population", "typ",
+                                            "indikator", "ebene", "mint_select", "fachbereich", "fach",
+                                            "geschlecht", "land", "jahr", "wert")]
+
+# Anpassung mint_select
+studierende_europa_neu$mint_select <- ifelse(studierende_europa_neu$fachbereich == "Alle MINT-Fächer", "mint", studierende_europa_neu$mint_select)
+
+studierende_europa <- rbind(studierende_europa_24, studierende_europa_neu)
+
+
+# in Datenbank einspielen
+
+library(DBI)
+con <- DBI::dbConnect(duckdb::duckdb(), "data/mint_db.duckdb")
+
+save(studierende_europa, file = "studierende_europa.rda")
+
+dbWriteTable(con, "studierende_europa", studierende_europa, append = FALSE, overwrite = TRUE)
+
+dbDisconnect(con, shutdown= TRUE)
+
+
+
+
+#### studierende_mobil_eu_absolut ---------
 library(rio)
 library(dplyr)
 library(tidyr)
@@ -1622,7 +2372,7 @@ usethis::use_data(studierende_mobil_eu_absolut, overwrite = T)
 
 
 # DAS WIRD AKTUELL NICHT VERWENDET und wird vermutlich auslaufen ~~~ Turan
-#### Erstellt  studierende_mobil_eu_share -------
+##### studierende_mobil_eu_share -------
 
 dat_euro4 <- readr::read_csv(paste0(pfad, "EUROSTAT004_educ_uoe_mobs04__custom_8027463_linear.csv.gz"))
 
@@ -1759,7 +2509,7 @@ Mathematik und Statistik",
 
 ### OECD ----
 
-#### Erstellt arbeitsmarkt_anzahl_azubis_oecd -------------
+#### arbeitsmarkt_anzahl_azubis_oecd -------------
 #
 #dat <- read.csv(paste0(pfad,"OECD005_Anzahl_Studi_Azubi_nach_Fach_Sex.csv"),
 #                header = TRUE, sep = ",", dec = ".")
@@ -1899,7 +2649,7 @@ usethis::use_data(arbeitsmarkt_anzahl_azubis_oecd, overwrite = T)
 
 
 
-#### Erstellt studierende_anzahl_oecd ---------
+#### studierende_anzahl_oecd ---------
 
 
 
@@ -2216,7 +2966,7 @@ iscedf13_transform_kurz <- function(dat) {
 
 
 
-#### Erstelle arbeitsmarkt_anfaenger_absolv_oecd -------------
+#### arbeitsmarkt_anfaenger_absolv_oecd -------------
 
 pfad <- "C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/"
 

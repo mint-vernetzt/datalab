@@ -50,13 +50,17 @@ a {
 
 
 #mod_beruf_arbeitsmarkt_ui_1-plot_arbeitsmarkt_detail_vergleich.plotly.html-widget.js-plotly-plot{
-  height: 1600px !important;
+  height: 1600px;
 }
 #mod_international_start_ui_1-plot_international_schule_map_1 {
-  height: 900px !important;
+  height: 900px;
 }
+#mod_international_start_ui_1-plot_international_schule_migration_1 {
+  height: 1000px;
+}
+
 div.plotly.html-widget.js-plotly-plot {
-  height: 650px !important;
+  height: 650px;
 }
 
 
@@ -72,7 +76,7 @@ p {
 
 /* Sidebar und Hintergrundfarben definieren */
 
-.irs-bar {border-color: transparent !important; background: transparent !important}
+.irs-bar {border-color: transparent; background: transparent}
 
 
   /* logo */
@@ -186,7 +190,7 @@ background-color:#FCFCFD;
   .right-side,
   .main-footer,
   .main-header .navbar {
-    margin-left: 0 !important;
+    margin-left: 0;
   }
 }
 
@@ -221,9 +225,9 @@ background-color:#FCFCFD;
 .btn.rosa-button {
     background-color: #b16fab50;
     color: black;
-    box-shadow: none ;
+    box-shadow: none;
     border: 1px solid #b16fab;
-    border-radius: 10px ;
+    border-radius: 10px;
     margin-bottom: 15px;
     margin-right: 5px;
     padding: 12px 24px;
@@ -249,16 +253,16 @@ background-color:#FCFCFD;
 /* Rosa Dropdowns auf  KI-Analysehilfe-Seite */
 
 button[data-id="argumentationshilfe_ui_1-region_argumentationshilfe"] {
-    background-color: #b16fab50 ;
-    border: 1px solid #B16FAB ;
-    border-radius: 10px ;
+    background-color: #b16fab50;
+    border: 1px solid #B16FAB;
+    border-radius: 10px;
 }
 /* geöffnet */
 button[data-id="argumentationshilfe_ui_1-region_argumentationshilfe"]:focus,
 button[data-id="argumentationshilfe_ui_1-region_argumentationshilfe"]:active,
 .open > button[data-id="argumentationshilfe_ui_1-region_argumentationshilfe"] {
     background-color: #B16FAB50 ;
-    border: 1px solid #B16FAB ;
+    border: 1px solid #B16FAB;
 }
 
 
@@ -304,8 +308,8 @@ button[data-id="argumentationshilfe_ui_1-frauen_fokus_select"]:active,
 }
 
 .content-box > .inner-box{
-  width: 75% !important;
-  display: inline-block !important;
+  width: 75%;
+  display: inline-block;
 }
 
 /*Box für Weiterleitungen*/
@@ -332,8 +336,8 @@ button[data-id="argumentationshilfe_ui_1-frauen_fokus_select"]:active,
 }
 
 .reference-box > .inner-box{
-  width: 75% !important;
-  display: inline-block !important;
+  width: 75%;
+  display: inline-block;
   text-align: center;
 }
 

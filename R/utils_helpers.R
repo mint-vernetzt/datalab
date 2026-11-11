@@ -1763,7 +1763,8 @@ linebuilder_plotly <- function(
       color = as.formula(paste0("~`", group, "`")),
       colors = color,
       type = "scatter",
-      text = ~ label,
+      text = as.formula(paste0("~`", label, "`")),
+      #text = ~label,
       mode = "lines+markers+text",
       hovertext = ~tooltip,
       hovertemplate = "%{hovertext}<extra></extra>"
@@ -2177,6 +2178,14 @@ balkenbuilder_plotly <- function(df, titel, x, y, yaxis_size = 11, orientation =
 
   if (!is.null(order)) {
     df[[x]] <- factor(df[[x]], levels = order)
+  }
+
+  if (!(".tooltip" %in% colnames(df))) {
+    if("tooltip" %in% colnames(df)){
+      df <- df %>% dplyr::rename(".tooltip" = "tooltip")
+    }else{
+      df$`.tooltip` <- "kein Hover-Text verfügbar"
+    }
   }
 
   if (orientation == "h") {
@@ -3430,6 +3439,13 @@ mapbuilder_plotly <- function(
     p <- p |>
     plotly::config(
       displaylogo = FALSE,
+      toImageButtonOptions = list(
+        format = "png",
+        filename = "karte",
+        width = 1600,
+        height = 1200,
+        scale = 4
+      ),
       modeBarButtonsToRemove = c(
         "zoom2d", "pan2d", "select2d", "lasso2d",
         "hoverClosestCartesian", "hoverCompareCartesian",

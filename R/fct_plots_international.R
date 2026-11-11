@@ -336,7 +336,7 @@ plot_international_map <- function(r) {
   }
 
 
-  quelle <- "Quelle: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt."
+  quelle <- "Quelle: Eurostat, 2026; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt."
 
   out1 <- mapbuilder_plotly(df7,
                             value_col = "wert",
@@ -630,7 +630,7 @@ plot_international_map_fem <- function(r){
 
       mincolor <- "#f4f5f6"
       maxcolor <- "#154194"
-      quelle <- "Quelle der Daten: Eurostat, 2023; OECD, 2023, freier Download, eigene Berechnungen durch MINTvernetzt."
+      quelle <- "Quelle der Daten: Eurostat, 2026; OECD, 2023, freier Download, eigene Berechnungen durch MINTvernetzt."
       out1 <- mapbuilder_plotly(map_data_1,
                          titel = title_dyn,
                          value_col = "wert",
@@ -767,7 +767,7 @@ df <- df %>%
   quelle <- dplyr::case_when(
     label_m == "Weltweit" ~ "Quelle der Daten: UNESCO, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
     label_m == "OECD" ~ "Quelle der Daten: OECD, 2025, eigene Berechnungen durch MINTvernetzt.",
-    label_m == "EU" ~ "Quelle der Daten: Eurostat, 2025, eigene Berechnungen durch MINTvernetzt.",
+    label_m == "EU" ~ "Quelle der Daten: Eurostat, 2026, eigene Berechnungen durch MINTvernetzt.",
     TRUE ~ "Quelle der Daten: eigene Berechnungen durch MINTvernetzt."
   )
 
@@ -1090,7 +1090,7 @@ plot_international_top10_gender <- function(r) {
   }
 
   if (label_m == "EU") {
-   quelle <- paste0("Quelle der Daten: Eurostat, 2025, eigene Berechnungen durch MINTvernetzt.")
+   quelle <- paste0("Quelle der Daten: Eurostat, 2026, eigene Berechnungen durch MINTvernetzt.")
   } else {
     quelle <- paste0("Quelle der Daten: OECD, 2025, eigene Berechnungen durch MINTvernetzt.")
 
@@ -1227,7 +1227,6 @@ plot_international_top10_gender <- function(r) {
 
 
 plot_international_mint_top_10 <- function(r){
-
 
 # ui inputs laden
 avg_line <- r$show_avg_ti
@@ -1445,14 +1444,14 @@ plot_international_schule_map <- function(r) {
   dfs$display_wert <- prettyNum(round(dfs$wert, 1),
                                 big.mark = ".",
                                 decimal.mark = ",")
-  quelle <- paste0("Quelle der Daten: IEA, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.")
+  quelle <- paste0("Quelle der Daten: IEA, 2023; OECD, 2026; freier Download, eigene Berechnungen durch MINTvernetzt.")
 
 
   if (leistungsindikator_m == "Test-Punktzahl") {
 
     dfs <- dfs %>%
       dplyr::mutate(
-        .tooltip = paste0(
+        tooltip = paste0(
           "<b>", land, "</b><br>",
           "Punktzahl: ",formatC(wert, format = "f", digits = 1, decimal.mark = ",")
         )
@@ -1463,7 +1462,7 @@ plot_international_schule_map <- function(r) {
 
     dfs <- dfs %>%
       dplyr::mutate(
-        .tooltip = paste0(
+        tooltip = paste0(
           "<b>", land, "</b><br>",
           "Anteil: ", display_wert, " %"
         )
@@ -1534,7 +1533,7 @@ plot_international_schule_map <- function(r) {
     dplyr::inner_join(countries_names, by = "land") %>%
     dplyr::mutate(alpha2 = toupper(alpha2))
 
-  quelle <- paste0("Quelle der Daten: IEA, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.")
+  quelle <- paste0("Quelle der Daten: IEA, 2023; OECD, 2026; freier Download, eigene Berechnungen durch MINTvernetzt.")
   map <- mapbuilder_plotly(df = data_map_1,
                             value_col = "wert",
                            regio_col = "land",
@@ -1549,7 +1548,7 @@ plot_international_schule_map <- function(r) {
 
 
 plot_international_schule_verlauf <- function(r) {
-#browser()
+
 
   label_v <-r$verlauf_l_int_schule
 
@@ -1646,12 +1645,6 @@ plot_international_schule_verlauf <- function(r) {
     ")"
   )
 
-  color <- c("#b16fab", "#154194", "#66cbaf", "#fbbf24", "#AFF3E0",
-             "#2D6BE1", "#008F68", "#8893a7", "#ee7775", "#9d7265", "#35bd97",
-             "#bfc6d3", "#5f94f9", "#007655", "#fde68a", "#dc2626", "#d4c1bb",
-             "#d0a9cd", "#fca5a5")
-
-
 
   p <- linebuilder_plotly(
     df = dfs,
@@ -1670,13 +1663,8 @@ plot_international_schule_verlauf <- function(r) {
 
 
 
-
-
-
-
 plot_international_schule_item <- function(r) {
 
-  laender_labels <- r$label_laender_timss
   darstellung <- r$darstellung_timss_int_schule
   timerange <- r$item_y_int_schule
   label_m <- "TIMSS"
@@ -1751,6 +1739,7 @@ plot_international_schule_item <- function(r) {
     )) %>%
     dplyr::filter(!is.na(count))
 
+
   plot_data <- plot_data %>%
     dplyr::mutate(
       tooltip = paste0(
@@ -1762,9 +1751,6 @@ plot_international_schule_item <- function(r) {
       )
     )
 
-  plot_data <- plot_data %>%
-  dplyr::inner_join(countries_names, by = "land") %>%
-    dplyr::mutate(alpha2 = toupper(alpha2))
 
   plot_data <- plot_data %>%
     dplyr::mutate(wert = dplyr::case_when(
@@ -1797,12 +1783,12 @@ plot_international_schule_item <- function(r) {
 
   if (darstellung == "Scatterplot") {
 
+    laender_labels <- r$label_laender_timss
 
     plot_data <- plot_data %>%
       dplyr::mutate(
         mittelwert = (wert_Mädchen + wert_Jungen) / 2,
         differenz = wert_Jungen - wert_Mädchen,
-
         tooltip = paste0(
           "<span style='font-size:15px;'>",
           "<b>", land, "</b><br>",
@@ -1828,8 +1814,7 @@ plot_international_schule_item <- function(r) {
       # optional: Länder beschriften
       plot_data_labels <- plot_data %>%
         dplyr::filter(
-          land == "Deutschland" |
-            land %in% laender_labels
+          land %in% laender_labels
         )
 
       # download vorbereiten
@@ -1892,6 +1877,8 @@ plot_international_schule_item <- function(r) {
 
       p <- p %>%
         plotly::layout(
+          hoverlabel = list(bgcolor = "white",
+                            font = list(size = 12)),
           font = list(
             family = "Calibri, sans-serif"
           ),
@@ -2058,9 +2045,12 @@ plot_international_schule_item <- function(r) {
   } else if (darstellung == "Karte") {
 
 
-
   # Geodaten mit df verbinden
   geodata <- readRDS(paste0("data/", "world_choropleth.rds"))
+
+  plot_data <- plot_data %>%
+    dplyr::inner_join(countries_names, by = "land") %>%
+    dplyr::mutate(alpha2 = toupper(alpha2))
 
     map_data <-
       sf::st_as_sf(dplyr::left_join(
@@ -2271,10 +2261,8 @@ plot_international_schule_item <- function(r) {
       )
 
   return(p)
+  }
 }
-}
-
-
 
 
 
@@ -2285,12 +2273,13 @@ plot_international_schule_migration <- function(r) {
   label_m <- r$line_l_int_schule
   fach_m <- r$line_f_int_schule
   leistungsindikator_m <- r$line_li_int_schule
-   # lander <- r$regio_int_schule
 
   if (is.null(fach_m)) { fach_m <- ""}
 
   if (label_m == "TIMSS") {
-    lander <- r$regio_int_schule_timss
+
+    lander <- DBI::dbGetQuery(con, "SELECT DISTINCT land FROM schule_timss ORDER BY land")$land
+
     this_ordnung <- switch(
       leistungsindikator_m,
       "nach Geschlecht" = "Gender",
@@ -2332,15 +2321,20 @@ plot_international_schule_migration <- function(r) {
   }
   if (label_m == "PISA") {
 
+    lander <- c(
+      "OECD Durchschnitt",
+      "Australien", "Österreich", "Belgien", "Kanada", "Chile",
+      "Kolumbien", "Tschechische Republik", "Dänemark", "Estland",
+      "Finnland", "Frankreich", "Deutschland", "Griechenland",
+      "Ungarn", "Island", "Irland", "Israel", "Italien", "Japan",
+      "Korea, Republik von", "Lettland", "Litauen", "Luxemburg",
+      "Mexiko", "Niederlande", "Neuseeland", "Norwegen", "Polen",
+      "Portugal", "Slowakei", "Slowenien", "Spanien", "Schweden",
+      "Schweiz", "Türkei", "Großbritannien", "Vereinigte Staaten",
+      "Costa Rica"
+    )
 
-
-    lander <- r$regio_int_schule_pisa
-    if(is.null(lander)){
-
-
-      lander <- c("Deutschland", "Türkei", "Schweden", "Italien", "Vereinigte Staaten", "OECD Durchschnitt")
-
-    }
+    shiny::req(lander)
 
     this_bereich <- switch(
       leistungsindikator_m,
@@ -2417,573 +2411,317 @@ plot_international_schule_migration <- function(r) {
       values_from = wert
     )
 
-  #plot_data$land[plot_data$land == "Interantionaler Durchschnitt"] <- "Internationaler Durchschnitt"
+
+# Titel, Quelle und Gruppen festlegen
+
+  if (label_m == "TIMSS" && leistungsindikator_m == "nach sozialem Status") {
+
+    gruppen <- c(
+      "niedriger sozialer Status",
+      "mittlerer sozialer Status",
+      "hoher sozialer Status"
+    )
+
+    gruppen_anzeige <- c(
+      "Niedriger Status",
+      "Mittlerer Status",
+      "Hoher Status"
+    )
+
+    spalten <- c("basis_wert", "mittel_wert", "wert")
+    titel_zusatz <- "nach sozialem Status"
+    quelle <- paste0( "Quelle der Daten: IEA, 2023, freier Download, eigene Berechnungen durch MINTvernetzt")
+
+  } else if (label_m == "TIMSS" && leistungsindikator_m == "nach Geschlecht") {
+
+    gruppen <- c("Jungen", "Mädchen")
+    gruppen_anzeige <- c("Jungen", "Mädchen")
+    spalten <- c("basis_wert", "wert")
+    titel_zusatz <- "nach Geschlecht"
+    quelle <- paste0( "Quelle der Daten: IEA, 2023, freier Download, eigene Berechnungen durch MINTvernetzt")
 
 
+  } else if (label_m == "PISA" && leistungsindikator_m == "nach Geschlecht") {
 
-    if (label_m == "TIMSS" && leistungsindikator_m == "nach sozialem Status") {
+    gruppen <- c("Jungen", "Mädchen")
+    gruppen_anzeige <- c("Jungen", "Mädchen")
+    spalten <- c("basis_wert", "wert")
+    titel_zusatz <- "nach Geschlecht"
+    quelle <- paste0( "Quelle der Daten: OECD, 2026, freier Download, eigene Berechnungen durch MINTvernetzt")
+
+  } else if ( label_m == "PISA" && leistungsindikator_m == "nach Zuwanderungsgeschichte" ) {
+
+    gruppen <- c(
+      "ohne Zuwanderungsgeschichte",
+      "nur Eltern zugewandert",
+      "Kind selbst zugewandert"
+    )
+
+    gruppen_anzeige <- c(
+      "Ohne Zuwanderungsgeschichte",
+      "Zweite Generation",
+      "Erste Generation"
+    )
+
+    spalten <- c("basis_wert", "mittel_wert", "wert")
+    titel_zusatz <- "nach Zuwanderungsgeschichte"
+    quelle <- paste0( "Quelle der Daten: OECD, 2026, freier Download, eigene Berechnungen durch MINTvernetzt")
 
 
-      titel <- stringr::str_wrap(
-        paste0( "Mittlere erreichte Punktezahlen im TIMSS-", fach_m,"-Test der 15-jährigen (ca. 9. Klassen) nach sozialem Status (", timerange,")" ),
-        width = 70)
+  } else if (label_m == "PISA" && leistungsindikator_m == "nach Bildungskapital" ) {
 
-      quelle <- "Quelle der Daten: IEA, 2023, freier Download, eigene Berechnungen durch MINTvernetzt"
+    gruppen <- c(
+      "sehr niedriges Bildungskapital (bis zu 10 Bücher zuhause)",
+      "niedriges Bildungskapital (bis zu 100 Bücher zuhause)",
+      "hohes Bildungskapital (über 500 Bücher zuhause)"
+    )
 
-      gruppen_info <- paste(
-        "basis_wert = niedriger sozialer Status",
-        "mittel_wert = mittlerer sozialer Status",
-        "wert = hoher sozialer Status"
+    gruppen_anzeige <- c(
+      "Sehr niedriges Bildungskapital (bis zu 10 Bücher zuhause)",
+      "Niedriges Bildungskapital (bis zu 100 Bücher zuhause)",
+      "Hohes Bildungskapital (über 500 Bücher zuhause)"
+    )
+
+    spalten <- c("sehr_niedrig", "niedrig", "hoch")
+    titel_zusatz <- "nach Bildungskapital"
+    quelle <- paste0( "Quelle der Daten: OECD, 2026, freier Download, eigene Berechnungen durch MINTvernetzt")
+
+
+  } else {
+    stop("Für diese Auswahl gibt es noch keine Plot-Konfiguration.")
+  }
+
+  titel <- stringr::str_wrap(
+    paste0(
+      "Mittlere erreichte Punktezahlen im ", label_m, "-", fach_m,
+      "-Test der 15-jährigen (ca. 9. Klassen) ",
+      titel_zusatz, " (", timerange, ")"
+    ),
+    width = 70
+  )
+
+# Wird später für den TXT-Download verwendet
+  gruppen_info <- paste(
+    paste0(spalten, " = ", gruppen_anzeige),
+    collapse = "\n"
+  )
+
+
+# Plot-Daten vorbereiten
+
+# Fehlende Gruppenspalten ergänzen, damit rename/select nicht scheitert
+  for (gruppe in gruppen) {
+    if (!gruppe %in% names(plot_data)) {
+      plot_data[[gruppe]] <- NA_real_
+    }
+  }
+
+  plot_data <- plot_data |>
+    dplyr::select(land, dplyr::all_of(gruppen))
+
+  names(plot_data) <- c("land", spalten)
+
+  plot_data <- plot_data |>
+    dplyr::filter(
+      land %in% lander,
+      dplyr::if_any(dplyr::all_of(spalten), ~ !is.na(.x))
+    )
+
+# Bisherige Sortierung aus deinem TIMSS-Block beibehalten
+  if (label_m == "TIMSS" && leistungsindikator_m == "nach sozialem Status") {
+    plot_data <- plot_data |>
+      dplyr::arrange(dplyr::desc(basis_wert))
+  }
+
+  shiny::validate(
+    shiny::need(
+      nrow(plot_data) > 0,
+      "Für diese Auswahl sind keine Daten verfügbar. Nutzen Sie eine andere Filter-Kombination,
+      z. B. ein anderes Fach oder einen anderen Indikator."
+    )
+  )
+
+
+# Nach der ersten Gruppe sortieren
+  sortier_spalte <- if (label_m == "PISA" && leistungsindikator_m == "nach Zuwanderungsgeschichte") {
+    "wert"  # Erste Generation
+  } else {
+    if(leistungsindikator_m == "nach Geschlecht"){
+      "wert" # für Mädchen als Sortier-Reverenz
+    } else{
+      spalten[1]
+    }
+  }
+
+  land_reihenfolge <- plot_data |>
+    dplyr::arrange(
+      dplyr::desc(is.na(.data[[sortier_spalte]])),
+      .data[[sortier_spalte]],
+      land
+    ) |>
+    dplyr::pull(land)
+
+
+# Gemeinsamer Plot
+
+  farben <- if (length(spalten) == 2) {
+    c("#D0A9CD","#154194")
+  } else {
+    c("#154194", "#B16FAB", "#D0A9CD")
+  }
+
+  p <- plotly::plot_ly(
+    data = plot_data,
+    color = I("gray80")
+  )
+
+# Verbindungslinien zwischen benachbarten Gruppen
+  for (i in seq_len(length(spalten) - 1)) {
+
+    spalte_1 <- spalten[i]
+    spalte_2 <- spalten[i + 1]
+
+    hover_linie <- ifelse(
+      is.na(plot_data[[spalte_1]]) | is.na(plot_data[[spalte_2]]),
+      NA_character_,
+      paste0(
+        gruppen_anzeige[i], ": ", plot_data[[spalte_1]],
+        "<br>",
+        gruppen_anzeige[i + 1], ": ", plot_data[[spalte_2]]
       )
+    )
+
+    p <- p |>
+      plotly::add_segments(
+        x = stats::as.formula(paste0("~", spalte_1)),
+        xend = stats::as.formula(paste0("~", spalte_2)),
+        y = ~land,
+        yend = ~land,
+        showlegend = FALSE,
+        text = hover_linie,
+        hoverinfo = "text"
+      )
+  }
+
+# Punkte für die einzelnen Gruppen
+  for (i in seq_along(spalten)) {
+
+    spalte <- spalten[i]
+
+    hover_punkt <- ifelse(
+      is.na(plot_data[[spalte]]),
+      NA_character_,
+      paste0(
+        "<span style='font-size:14px;'>",
+        plot_data$land, "<br>",
+        gruppen_anzeige[i], "<br>",
+        formatC(
+          plot_data[[spalte]],
+          format = "f",
+          digits = if (label_m == "TIMSS") 0 else 2,
+          decimal.mark = ","
+        ),
+        " Punkte",
+        "</span>"
+      )
+    )
+
+    p <- p |>
+      plotly::add_markers(
+        x = stats::as.formula(paste0("~", spalte)),
+        y = ~land,
+        name = gruppen_anzeige[i],
+        cliponaxis = FALSE,
+        marker = list(
+          size = 10,
+          color = farben[i]
+        ),
+        text = hover_punkt,
+        hoverinfo = "text"
+      )
+  }
+
+# Hervorgehobene Länder
+
+  highlight_laender <- c(
+    "Deutschland",
+    "OECD Durchschnitt",
+    "Interantionaler Durchschnitt"
+  )
+
+  highlight_pos <- match(highlight_laender, land_reihenfolge) - 1
+  highlight_pos <- highlight_pos[!is.na(highlight_pos)]
+
+  highlight_shapes <- lapply(highlight_pos, function(pos) {
+    list(
+      type = "rect",
+      xref = "paper",
+      yref = "y",
+      x0 = 0,
+      x1 = 1,
+      y0 = pos - 0.4,
+      y1 = pos + 0.4,
+      fillcolor = "rgba(21, 65, 148, 0.08)",
+      line = list(width = 0),
+      layer = "below"
+    )
+  })
 
 
+# Gemeinsames Layout
 
-      plot_data <- plot_data %>%
-        dplyr::rename(
-          basis_wert = `niedriger sozialer Status`,
-          mittel_wert = `mittlerer sozialer Status`,
-          wert = `hoher sozialer Status`
+  p <- p |>
+    plotly::layout(
+      font = list(family = "Calibri Regular"),
+      title = list( x = 0.5, y=0.98,
+        text = titel,
+        font = list(
+          family = "Calibri Regular",
+          size = 20,
+          color = "black"
         )
-
-      plot_data <- plot_data %>%
-        dplyr::filter(!is.na(mittel_wert) | !is.na(wert) | !is.na(basis_wert))
-
-      plot_data <- plot_data %>%
-        dplyr::filter(land %in% lander)
-
-      plot_data <- plot_data %>%
-        dplyr::arrange(desc(basis_wert))  # Sortieren absteigend nach `basis_wert`
-
-
-      ####
-      p <- plotly::plot_ly(data = plot_data, color = I("gray80")) %>%
-        plotly::add_segments(
-          x = ~basis_wert,
-          xend = ~mittel_wert,
-          y = ~land,
-          yend = ~land,
-          showlegend = FALSE,
-          text = ~ifelse(is.na(basis_wert) | is.na(mittel_wert), NA,
-                         paste0("Basis: ", basis_wert, "<br>Mittel: ", mittel_wert)),
-          hoverinfo = "text"
-        ) %>%
-        plotly::add_segments(
-          x = ~mittel_wert,
-          xend = ~wert,
-          y = ~land,
-          yend = ~land,
-          showlegend = FALSE,
-          text = ~ifelse(is.na(mittel_wert) | is.na(wert), NA,
-                         paste0("Mittel: ", mittel_wert, "<br>Positiv: ", wert)),
-          hoverinfo = "text"
-        ) %>%
-        plotly::add_markers(
-          x = ~basis_wert,
-          y = ~land,
-          name = "Niedriger Status",
-          marker = list(
-            size = 12,
-            color = "#D0A9CD"
-          ),
-          text = ~ifelse(is.na(basis_wert), NA, paste0("Niedriger Status: ", basis_wert)),
-          hoverinfo = "text"
-        ) %>%
-        plotly::add_markers(
-          x = ~mittel_wert,
-          y = ~land,
-          name = "Mittlerer Status",
-          marker = list(
-            size = 12,
-            color = "#66cbaf"
-          ),
-          text = ~ifelse(is.na(mittel_wert), NA, paste0("Mittlerer Status: ", mittel_wert)),
-          hoverinfo = "text"
-        ) %>%
-        plotly::add_markers(
-          x = ~wert,
-          y = ~land,
-          name = "Hoher Status",
-          marker = list(
-            size = 12,
-            color = "#b16fab"
-          ),
-          text = ~ifelse(is.na(wert), NA, paste0("Hoher Status: ", wert)),
-          hoverinfo = "text"
-        ) %>%
-        # Layout anpassen
-        plotly::layout(
-          height = 550,
-          font = list(family = "Calibri Regular"),
-          title = list(
-              text = titel,
-              font = list(
-                family = "Calibri Regular",size = 20, color = "black")
-            ),
-          xaxis = list(title = ""),
-          yaxis = list(title = ""),
-          margin = list(l = 100, r = 50, t = 50, b = 100),
-          hoverlabel = list(bgcolor = "white", font = list(family = "Calibri", size = 15)),
-          legend = list(
-            orientation = "h",
-            x = 0.5,
-            y = -0.05,
-            xanchor = "center",
-            yanchor = "top"
-          ),
-          annotations = list(
-            list(
-              text = quelle,
-              x = 0,
-              y = -0.14,  # passt die vertikale Position (ggf. justieren!)
-              xref = "paper",
-              yref = "paper",
-              showarrow = FALSE,
-              xanchor = "left",
-              yanchor = "top",
-              font = list(size = 11, color = "gray", family = "Calibri Regular")
-            )
+      ),
+      xaxis = list(title = ""),
+      yaxis = list(
+        title = "",
+        categoryorder = "array",
+        categoryarray = land_reihenfolge,
+        range = c(0, length(land_reihenfolge) - 1),
+        automargin = TRUE
+      ),
+      margin = list(t = 80, b = 100),
+      shapes = highlight_shapes,
+      hoverlabel = list(
+        bgcolor = "white",
+        font = list(family = "Calibri", size = 12)
+      ),
+      legend = list(
+        orientation = "h",
+        x = 0.5,
+        y = -0.05,
+        xanchor = "center",
+        yanchor = "top"
+      ),
+      annotations = list(
+        list(
+          text = quelle,
+          x = 0,
+          y = -0.15,
+          xref = "paper",
+          yref = "paper",
+          showarrow = FALSE,
+          xanchor = "left",
+          yanchor = "top",
+          font = list(
+            size = 11,
+            color = "gray",
+            family = "Calibri Regular"
           )
         )
-
-    }
-  else if (label_m == "TIMSS" && leistungsindikator_m == "nach Geschlecht") {
-
-    titel <- stringr::str_wrap(
-      paste0( "Mittlere erreichte Punktezahlen im TIMSS-", fach_m,"-Test der 15-jährigen (ca. 9. Klassen) nach Geschlecht (", timerange,")" ),
-      width = 70)
-
-    quelle <- "Quelle der Daten: IEA, 2023, freier Download, eigene Berechnungen durch MINTvernetzt"
-
-
-
-    gruppen_info <- paste(
-      "basis_wert = Jungen",
-      "wert = Mädchen"
+      )
     )
 
 
-    plot_data <- plot_data %>%
-        dplyr::rename(
-          basis_wert = Jungen,
-          wert = Mädchen
-        )
-
-      plot_data <- plot_data %>%
-        dplyr::filter(!is.na(wert) | !is.na(basis_wert))
-
-      plot_data <- plot_data %>%
-        dplyr::filter(land %in% lander)
-
-      p <- plotly::plot_ly(data = plot_data, color = I("gray80")) %>%
-        plotly::add_segments(
-          x = ~basis_wert,
-          xend = ~wert,
-          y = ~land,
-          yend = ~land,
-          showlegend = FALSE,
-          text = ~ifelse(is.na(basis_wert) | is.na(wert), NA,
-                         paste0("Jungen: ", basis_wert, "<br>Mädchen: ", wert)),
-          hoverinfo = "text"
-        ) %>%
-        plotly::add_markers(
-          x = ~basis_wert,
-          y = ~land,
-          name = "Jungen",
-          marker = list(
-            size = 12,
-            color = "#D0A9CD"
-          ),
-          text = ~ifelse(is.na(basis_wert), NA, paste0("Jungen: ", basis_wert)),
-          hoverinfo = "text"
-        ) %>%
-        plotly::add_markers(
-          x = ~wert,
-          y = ~land,
-          name = "Mädchen",
-          marker = list(
-            size = 12,
-            color = "#b16fab"
-          ),
-          text = ~ifelse(is.na(wert), NA, paste0("Mädchen: ", wert)),
-          hoverinfo = "text"
-        ) %>%
-        plotly::layout(
-          height = 550,
-          font = list(family = "Calibri Regular"),
-          title = list(
-            text = titel,
-            font = list(
-              family = "Calibri Regular",size = 20, color = "black")
-          ),
-          xaxis = list(title = ""),
-          yaxis = list(title = ""),
-          margin = list(l = 100, r = 50, t = 50, b = 100),
-          hoverlabel = list(bgcolor = "white", font = list(family = "Calibri", size = 15)),
-          legend = list(
-            orientation = "h",
-            x = 0.5,
-            y = -0.05,
-            xanchor = "center",
-            yanchor = "top"
-          ),
-          annotations = list(
-            list(
-              text = quelle,
-              x = 0,
-              y = -0.14,  # passt die vertikale Position (ggf. justieren!)
-              xref = "paper",
-              yref = "paper",
-              showarrow = FALSE,
-              xanchor = "left",
-              yanchor = "top",
-              font = list(size = 11, color = "gray", family = "Calibri Regular")
-            )
-          )
-        )
-
-
-    }
-  else if (label_m == "PISA" && leistungsindikator_m == "nach Geschlecht") {
-
-
-    titel <- stringr::str_wrap(
-      paste0( "Mittlere erreichte Punktezahlen im PISA-", fach_m,"-Test der 15-jährigen (ca. 9. Klassen) nach Geschlecht (", timerange,")" ),
-      width = 70)
-
-    quelle <- "Quelle der Daten: OECD, 2023, freier Download, eigene Berechnungen durch MINTvernetzt"
-
-    gruppen_info <- paste(
-      "basis_wert = Jungen",
-      "wert = Mädchen"
-    )
-
-
-    plot_data <- plot_data %>%
-        dplyr::rename(
-          basis_wert = Jungen,
-          wert = Mädchen
-        )
-
-      plot_data <- plot_data %>%
-        dplyr::filter(!is.na(wert) | !is.na(basis_wert))
-
-      plot_data <- plot_data %>%
-        dplyr::filter(land %in% lander)
-
-      p <- plotly::plot_ly(data = plot_data, color = I("gray80")) %>%
-        plotly::add_segments(
-          x = ~basis_wert,
-          xend = ~wert,
-          y = ~land,
-          yend = ~land,
-          showlegend = FALSE,
-          text = ~ifelse(is.na(basis_wert) | is.na(wert), NA,
-                         paste0("Jungen: ", basis_wert, "<br>Mädchen: ", wert)),
-          hoverinfo = "text"
-        ) %>%
-        plotly::add_markers(
-          x = ~basis_wert,
-          y = ~land,
-          name = "Jungen",
-          marker = list(
-            size = 12,
-            color = "#D0A9CD"
-          ),
-          text = ~ifelse(is.na(basis_wert), NA, paste0("Jungen: ", basis_wert)),
-          hoverinfo = "text"
-        ) %>%
-        plotly::add_markers(
-          x = ~wert,
-          y = ~land,
-          name = "Mädchen",
-          marker = list(
-            size = 12,
-            color = "#b16fab"
-          ),
-          text = ~ifelse(is.na(wert), NA, paste0("Mädchen: ", wert)),
-          hoverinfo = "text"
-        ) %>%
-        # Layout anpassen
-        plotly::layout(
-          height = 550,
-          font = list(family = "Calibri Regular"),
-          title = list(
-            text = titel,
-            font = list(
-              family = "Calibri Regular",size = 20, color = "black")
-          ),
-          xaxis = list(title = ""),
-          yaxis = list(title = ""),
-          margin = list(l = 100, r = 50, t = 50, b = 100),
-          hoverlabel = list(bgcolor = "white", font = list(family = "Calibri", size = 15)),
-          legend = list(
-            orientation = "h",
-            x = 0.5,
-            y = -0.05,
-            xanchor = "center",
-            yanchor = "top"
-          ),
-          annotations = list(
-            list(
-              text = quelle,
-              x = 0,
-              y = -0.14,  # passt die vertikale Position (ggf. justieren!)
-              xref = "paper",
-              yref = "paper",
-              showarrow = FALSE,
-              xanchor = "left",
-              yanchor = "top",
-              font = list(size = 11, color = "gray", family = "Calibri Regular")
-            )
-          )
-        )
-
-    }
-  else if (label_m == "PISA" && leistungsindikator_m == "nach Zuwanderungsgeschichte") {
-
-
-    titel <- stringr::str_wrap(
-      paste0( "Mittlere erreichte Punktezahlen im PISA-", fach_m,"-Test der 15-jährigen (ca. 9. Klassen) nach Zuwanderungsgeschichte (", timerange,")" ),
-      width = 70)
-
-    quelle <- "Quelle der Daten: OECD, 2023, freier Download, eigene Berechnungen durch MINTvernetzt"
-
-
-   gruppen_info <- paste(
-    "basis_wert = ohne Zuwanderungsgeschichte",
-    "mittel_wert = nur Eltern zugewandert",
-    "wert = Kind selbst zugewandert"
-    )
-
-
-
-    plot_data <- plot_data %>%
-        dplyr::rename(
-          basis_wert = `ohne Zuwanderungsgeschichte`,
-          mittel_wert = `nur Eltern zugewandert`,
-          wert = `Kind selbst zugewandert`
-        )
-
-
-      plot_data <- plot_data %>%
-        dplyr::filter(!is.na(mittel_wert) | !is.na(wert) | !is.na(basis_wert))
-
-      plot_data <- plot_data %>%
-        dplyr::filter(land %in% lander)
-
-      p <- plotly::plot_ly(data = plot_data, color = I("gray80")) %>%
-        plotly::add_segments(
-          x = ~basis_wert,
-          xend = ~mittel_wert,
-          y = ~land,
-          yend = ~land,
-          showlegend = FALSE,
-          text = ~ifelse(is.na(basis_wert) | is.na(mittel_wert), NA,
-                         paste0("Ohne Zuwanderungsgeschichte: ", basis_wert, "<br>Erste Generation: ", mittel_wert)),
-          hoverinfo = "text"
-        ) %>%
-        plotly::add_segments(
-          x = ~mittel_wert,
-          xend = ~wert,
-          y = ~land,
-          yend = ~land,
-          showlegend = FALSE,
-          text = ~ifelse(is.na(mittel_wert) | is.na(wert), NA,
-                         paste0("Erste Generation: ", mittel_wert, "<br>Zweite Generation: ", wert)),
-          hoverinfo = "text"
-        ) %>%
-        plotly::add_markers(
-          x = ~basis_wert,
-          y = ~land,
-          name = "Ohne Zuwanderungsgeschichte",
-          marker = list(
-            size = 12,
-            color = "#D0A9CD"
-          ),
-          text = ~ifelse(is.na(basis_wert), NA, paste0("Ohne Zuwanderungsgeschichte: ", basis_wert)),
-          hoverinfo = "text"
-        ) %>%
-        plotly::add_markers(
-          x = ~mittel_wert,
-          y = ~land,
-          name = "Erste Generation",
-          marker = list(
-            size = 12,
-            color = "#66cbaf"
-          ),
-          text = ~ifelse(is.na(mittel_wert), NA, paste0("Erste Generation: ", mittel_wert)),
-          hoverinfo = "text"
-        ) %>%
-        plotly::add_markers(
-          x = ~wert,
-          y = ~land,
-          name = "Zweite Generation",
-          marker = list(
-            size = 12,
-            color = "#b16fab"
-          ),
-          text = ~ifelse(is.na(wert), NA, paste0("Zweite Generation: ", wert)),
-          hoverinfo = "text"
-        ) %>%
-        # Layout anpassen
-        plotly::layout(
-          height = 550,
-          font = list(family = "Calibri Regular"),
-          title = list(
-            text = titel,
-            font = list(
-              family = "Calibri Regular",size = 20, color = "black")
-          ),
-          xaxis = list(title = ""),
-          yaxis = list(title = ""),
-          margin = list(l = 100, r = 50, t = 50, b = 100),
-          hoverlabel = list(bgcolor = "white", font = list(family = "Calibri", size = 15)),
-          legend = list(
-            orientation = "h",
-            x = 0.5,
-            y = -0.05,
-            xanchor = "center",
-            yanchor = "top"
-          ),
-          annotations = list(
-            list(
-              text = quelle,
-              x = 0,
-              y = -0.14,  # passt die vertikale Position (ggf. justieren!)
-              xref = "paper",
-              yref = "paper",
-              showarrow = FALSE,
-              xanchor = "left",
-              yanchor = "top",
-              font = list(size = 11, color = "gray", family = "Calibri Regular")
-            )
-          )
-        )
-
-
-    }
-  else if (label_m == "PISA" && leistungsindikator_m == "nach Bildungskapital") {
-
-   titel <- stringr::str_wrap(
-      paste0( "Mittlere erreichte Punktezahlen im PISA-", fach_m,"-Test der 15-jährigen (ca. 9. Klassen) nach Bildungskapital (", timerange,")" ),
-      width = 70)
-
-    quelle <- "Quelle der Daten: OECD, 2023, freier Download, eigene Berechnungen durch MINTvernetzt"
-
-    gruppen_info <- paste(
-      "sehr_niedrig = sehr niedriges Bildungskapital (bis zu 10 Bücher zuhause)\n",
-      "niedrig = niedriges Bildungskapital (bis zu 100 Bücher zuhause)\n",
-      "hoch = hohes Bildungskapital (über 500 Bücher zuhause)"
-    )
-
-
-     plot_data <- plot_data %>%
-        dplyr::rename(
-          sehr_niedrig = `sehr niedriges Bildungskapital (bis zu 10 Bücher zuhause)`,
-          niedrig = `niedriges Bildungskapital (bis zu 100 Bücher zuhause)`,
-          hoch = `hohes Bildungskapital (über 500 Bücher zuhause)`
-        )
-
-      plot_data <- plot_data %>%
-        dplyr::filter(!is.na(niedrig) | !is.na(hoch) | !is.na(sehr_niedrig))
-
-      plot_data <- plot_data %>%
-        dplyr::filter(land %in% lander)
-
-      p <- plotly::plot_ly(data = plot_data, color = I("gray80")) %>%
-        plotly::add_segments(
-          x = ~sehr_niedrig,
-          xend = ~niedrig,
-          y = ~land,
-          yend = ~land,
-          showlegend = FALSE,
-          text = ~ifelse(is.na(sehr_niedrig) | is.na(niedrig), NA,
-                         paste0("Sehr niedriges Bildungskapital: ", sehr_niedrig, "<br>Sehr niedriges Bildungskapital: ", sehr_niedrig)),
-          hoverinfo = "text"
-        ) %>%
-        plotly::add_segments(
-          x = ~niedrig,
-          xend = ~hoch,
-          y = ~land,
-          yend = ~land,
-          showlegend = FALSE,
-          text = ~ifelse(is.na(niedrig) | is.na(hoch), NA,
-                         paste0("Niedriges Bildungskapital: ", niedrig, "<br>Hohes Bildungskapital: ", hoch)),
-          hoverinfo = "text"
-        ) %>%
-        plotly::add_markers(
-          x = ~sehr_niedrig,
-          y = ~land,
-          name = "Sehr niedriges Bildungskapital (bis zu 10 Bücher zuhause)",
-          marker = list(
-            size = 12,
-            color = "#D0A9CD"
-          ),
-          text = ~ifelse(is.na(sehr_niedrig), NA, paste0("Sehr niedriges Bildungskapital: ", sehr_niedrig)),
-          hoverinfo = "text"
-        ) %>%
-        plotly::add_markers(
-          x = ~niedrig,
-          y = ~land,
-          name = "Niedriges Bildungskapital (bis zu 100 Bücher zuhause)",
-          marker = list(
-            size = 12,
-            color = "#66cbaf"
-          ),
-          text = ~ifelse(is.na(niedrig), NA, paste0("Niedriges Bildungskapital: ", niedrig)),
-          hoverinfo = "text"
-        ) %>%
-        plotly::add_markers(
-          x = ~hoch,
-          y = ~land,
-          name = "Hohes Bildungskapital (über 500 Bücher zuhause)",
-          marker = list(
-            size = 12,
-            color = "#b16fab"
-          ),
-          text = ~ifelse(is.na(hoch), NA, paste0("Hohes Bildungskapital: ", hoch)),
-          hoverinfo = "text"
-        ) %>%
-        # Layout anpassen
-        plotly::layout(
-          height = 550,
-          font = list(family = "Calibri Regular"),
-          title = list(
-            text = titel,
-            font = list(
-              family = "Calibri Regular",size = 20, color = "black")
-          ),
-          xaxis = list(title = ""),
-          yaxis = list(title = ""),
-          margin = list(l = 100, r = 50, t = 50, b = 100),
-          hoverlabel = list(bgcolor = "white", font = list(family = "Calibri", size = 15)),
-          legend = list(
-            orientation = "h",
-            x = 0.5,
-            y = -0.05,
-            xanchor = "center",
-            yanchor = "top"
-          ),
-          annotations = list(
-            list(
-              text = quelle,
-              x = 0,
-              y = -0.14,  # passt die vertikale Position (ggf. justieren!)
-              xref = "paper",
-              yref = "paper",
-              showarrow = FALSE,
-              xanchor = "left",
-              yanchor = "top",
-              font = list(size = 11, color = "gray", family = "Calibri Regular")
-            )
-          )
-        )
-
-
-    } else {
-
-
-    }
 
   df_json <- jsonlite::toJSON( plot_data, dataframe = "rows",auto_unbox = TRUE, na = "null")
 
@@ -3173,7 +2911,7 @@ plot_international_map_arb <- function(r) {
       # plot
       titel <- paste0("Anteil von ", title_eu, " in Europa")
       map <-  "europe_choropleth.rds"
-      quell <- "Quelle: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt."
+      quell <- "Quelle: Eurostat, 2026; freier Download, eigene Berechnungen durch MINTvernetzt."
       out1 <- mapbuilder_plotly(data_map,
                                 value_col = "wert",
                                 regio_col = "land",
@@ -3498,7 +3236,7 @@ plot_international_map_arb_gender <- function(r) {
           )
         )
       titel <- paste0("Anteil von Frauen an allen ", title_eu, " in Europa")
-      quelle <- "Quelle der Daten: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt."
+      quelle <- "Quelle der Daten: Eurostat, 2026; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt."
 
       out1 <- mapbuilder_plotly(df,
                                 value_col = "wert",
@@ -4276,7 +4014,7 @@ title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von ", inpp, "n 
   y <- "wert"
 
   color <- c("#b16fab")
-  quelle <- paste0("Quelle der Daten: Eurostat, 2023; OECD, 2023, freier Download, eigene Berechnungen durch MINTvernetzt.")
+  quelle <- paste0("Quelle der Daten: Eurostat, 2026; freier Download, eigene Berechnungen durch MINTvernetzt.")
 
 
   plot_top <- balkenbuilder_plotly(df=df_top, x=x, y=y, titel=title_top, orientation = "h", wrap_width = 40,
@@ -4882,7 +4620,7 @@ plot_international_top10_mint_arb_gender <- function(r) {
 
 
 
-   quelle <- paste0("Quelle der Daten: Eurostat, 2023, OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.")
+   quelle <- paste0("Quelle der Daten: Eurostat, 2026; freier Download, eigene Berechnungen durch MINTvernetzt.")
 
 
 
@@ -4927,11 +4665,11 @@ plot_international_top10_mint_arb_gender <- function(r) {
 
 
   plot_top <- balkenbuilder_plotly(df=df_top, x=x, y=y, titel=title_top, orientation = "h", wrap_width = 40,
-                                   group=NULL, color = color,order = order_top, margin_t=100, titel_y=0.97,
+                                   group=NULL, color = color,order = order_top, margin_t=140, titel_y=0.97,
                                    stacking = FALSE, percent = TRUE, quelle=quelle)
 
   plot_bottom <- balkenbuilder_plotly(df=df_bottom, x=x, y=y, titel=title_bot, orientation = "h", wrap_width = 40,
-                                      group=NULL, color = color,order = order_bottom, margin_t=100, titel_y=0.97,
+                                      group=NULL, color = color,order = order_bottom, margin_t=140, titel_y=0.97,
                                       stacking = FALSE, percent = TRUE, quelle=quelle)
 
 

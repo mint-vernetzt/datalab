@@ -68,10 +68,10 @@ mod_international_start_ui <- function(id){
         title = "Datenquellen",
         width = 5,
         p(style = "text-align: left; font-size = 16px",
-          span(tags$b(span("Schüler:innen-Kompetenz-Daten: OECD, 2023, freier Download (PISA); IEA, 2024, freier Download (TIMSS)."))),
-               "Die Ergebnisse der PISA-Erhebung 2025 werden Ende 2026 erwartet, die Ergebnisse von TIMSS 2027 Ende 2028."),
-        p( span(tags$b(span("Vergleichszahlen europaweit: Eurostat, 2025, freier Download.")))),
-        p(span(tags$b(span("Vergleichszahlen der OECD-Staaten: OECD, 2025, freier Download.")))),
+          span(tags$b(span("Schüler:innen-Kompetenz-Daten: OECD, 2026, freier Download (PISA); IEA, 2024, freier Download (TIMSS)."))),
+               "Die Ergebnisse der PISA-Erhebung 2029 werden Ende 2030 erwartet, die Ergebnisse von TIMSS 2027 Ende 2028."),
+        p( span(tags$b(span("Vergleichszahlen europaweit: Eurostat, 2026, freier Download.")))),
+        #p(span(tags$b(span("Vergleichszahlen der OECD-Staaten: OECD, 2025, freier Download.")))),
         p(span(tags$b(span("Vergleichszahlen weltweit: UNESCO, 2025, freier Download.")))),
         p("Diese Themenseite wird demnächst überarbeitet, dabei werden die amtlichen
           Statistiken der internationalen Studierenden- und Beschäftigtenzahlen aktualisiert.")
@@ -182,7 +182,7 @@ mod_international_start_ui <- function(id){
                                     ),
                                     shiny::mainPanel(
                                       width = 9,
-                                      shinycssloaders::withSpinner(htmlOutput(ns("plot_international_schule_migration_1")),
+                                      shinycssloaders::withSpinner(plotly::plotlyOutput(ns("plot_international_schule_migration_1"), height = 1000),
                                                                    color = "#154194"),
 
 
@@ -330,7 +330,7 @@ mod_international_start_ui <- function(id){
                column(
                  width = 8,
                p("Diese Box zeigt eine Übersicht über MINT-Statistiken aus dem Bereich des Arbeitsmarkts für den internationalen Vergleich.
-                 Die Grafiken basieren auf öffentlichen Statistiken, die durch die EU und die OECD gesammelt wurden.
+                 Die Grafiken basieren auf öffentlichen Statistiken, die durch die EU gesammelt wurden.
                  Zum einen zeigen wir, wie groß der Anteil von MINT-Auszubildenden und Beschäftigten in verschiedenen Ländern ist.
                  Außerdem ist zu sehen, in welchen Ländern der Frauenanteil besonders groß oder klein ist.
                  Darüber hinaus werfen wir einen Blick auf Studiums- bzw. Ausbildungs-Anfänger:innen und Absolvent:innen in MINT
@@ -539,11 +539,8 @@ mod_international_start_server <- function(id, r){
 
     # tab 4
 
-    output$plot_international_schule_migration_1 <- renderUI({
-      plot_list <- plot_international_schule_migration(r)
-
-
-      plot_list
+    output$plot_international_schule_migration_1 <- plotly::renderPlotly({
+      plot_international_schule_migration(r)
     })
 
 

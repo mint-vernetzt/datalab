@@ -236,6 +236,14 @@ kurse_verlauf_single <- function(r) {
     quelle <- "Quelle der Daten: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
     out <- linebuilder_plotly(df, titel, x = "jahr", y = "prop", group = "indikator", color = color, quelle = quelle)
 
+    out <- plotly::layout(
+      out,
+      yaxis = list(
+        autorange = FALSE,
+        range = c(15, 30)
+      )
+    )
+
 
   } else if (absolut_selector=="Anzahl") {
 
@@ -2330,6 +2338,8 @@ iqb_standard_zeitverlauf <- function(r){
     quelle <- "Quelle der Daten: Institut zur Qualitätsentwicklung im Bildungswesen, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
   }
 
+
+
   out <- balkenbuilder_plotly(df=df, x=x, y=y, titel=fach_titel, orientation = "v", group=group, color=color,
                               percent = TRUE,stacking=FALSE, quelle=quelle)
 
@@ -2424,7 +2434,7 @@ iqb_linien <- function(r){
     y = "wert",
     group = "region",
     color = color,
-    quelle = quelle
+    quelle = quelle,
   ) %>%
     plotly::layout(
       xaxis = list(
