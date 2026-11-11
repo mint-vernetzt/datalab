@@ -1228,7 +1228,6 @@ plot_international_top10_gender <- function(r) {
 
 plot_international_mint_top_10 <- function(r){
 
-
 # ui inputs laden
 avg_line <- r$show_avg_ti
 inpy <- r$map_y_ti
@@ -1452,7 +1451,7 @@ plot_international_schule_map <- function(r) {
 
     dfs <- dfs %>%
       dplyr::mutate(
-        .tooltip = paste0(
+        tooltip = paste0(
           "<b>", land, "</b><br>",
           "Punktzahl: ",formatC(wert, format = "f", digits = 1, decimal.mark = ",")
         )
@@ -1463,7 +1462,7 @@ plot_international_schule_map <- function(r) {
 
     dfs <- dfs %>%
       dplyr::mutate(
-        .tooltip = paste0(
+        tooltip = paste0(
           "<b>", land, "</b><br>",
           "Anteil: ", display_wert, " %"
         )
@@ -1549,7 +1548,7 @@ plot_international_schule_map <- function(r) {
 
 
 plot_international_schule_verlauf <- function(r) {
-#browser()
+
 
   label_v <-r$verlauf_l_int_schule
   #fach_v <- r$verlauf_f_pisa_int_schule
@@ -1642,6 +1641,7 @@ plot_international_schule_verlauf <- function(r) {
     ")"
   )
 
+
   p <- linebuilder_plotly(
     df = dfs,
     titel = titel,
@@ -1658,13 +1658,8 @@ plot_international_schule_verlauf <- function(r) {
 
 
 
-
-
-
-
 plot_international_schule_item <- function(r) {
 
-  laender_labels <- r$label_laender_timss
   darstellung <- r$darstellung_timss_int_schule
   timerange <- r$item_y_int_schule
   label_m <- "TIMSS"
@@ -1739,6 +1734,7 @@ plot_international_schule_item <- function(r) {
     )) %>%
     dplyr::filter(!is.na(count))
 
+
   plot_data <- plot_data %>%
     dplyr::mutate(
       tooltip = paste0(
@@ -1750,9 +1746,6 @@ plot_international_schule_item <- function(r) {
       )
     )
 
-  plot_data <- plot_data %>%
-  dplyr::inner_join(countries_names, by = "land") %>%
-    dplyr::mutate(alpha2 = toupper(alpha2))
 
   plot_data <- plot_data %>%
     dplyr::mutate(wert = dplyr::case_when(
@@ -1785,12 +1778,12 @@ plot_international_schule_item <- function(r) {
 
   if (darstellung == "Scatterplot") {
 
+    laender_labels <- r$label_laender_timss
 
     plot_data <- plot_data %>%
       dplyr::mutate(
         mittelwert = (wert_Mädchen + wert_Jungen) / 2,
         differenz = wert_Jungen - wert_Mädchen,
-
         tooltip = paste0(
           "<span style='font-size:15px;'>",
           "<b>", land, "</b><br>",
@@ -1816,8 +1809,7 @@ plot_international_schule_item <- function(r) {
       # optional: Länder beschriften
       plot_data_labels <- plot_data %>%
         dplyr::filter(
-          land == "Deutschland" |
-            land %in% laender_labels
+          land %in% laender_labels
         )
 
 
@@ -1827,8 +1819,8 @@ plot_international_schule_item <- function(r) {
         y = ~differenz,
         type = "scatter",
         mode = "markers",
-        text = ~tooltip,
         hovertemplate = paste( "%{text}<extra></extra>" ),
+        text = ~tooltip,
         color = ~group,
         colors = c(
           "kein signifikanter Unterschied" = "#66cbaf",
@@ -1856,6 +1848,8 @@ plot_international_schule_item <- function(r) {
 
       p <- p %>%
         plotly::layout(
+          hoverlabel = list(bgcolor = "white",
+                            font = list(size = 12)),
           font = list(
             family = "Calibri, sans-serif"
           ),
@@ -1952,9 +1946,12 @@ plot_international_schule_item <- function(r) {
   } else if (darstellung == "Karte") {
 
 
-
   # Geodaten mit df verbinden
   geodata <- readRDS(paste0("data/", "world_choropleth.rds"))
+
+  plot_data <- plot_data %>%
+    dplyr::inner_join(countries_names, by = "land") %>%
+    dplyr::mutate(alpha2 = toupper(alpha2))
 
     map_data <-
       sf::st_as_sf(dplyr::left_join(
@@ -2165,10 +2162,8 @@ plot_international_schule_item <- function(r) {
       )
 
   return(p)
+  }
 }
-}
-
-
 
 
 
@@ -2429,15 +2424,21 @@ plot_international_schule_migration <- function(r) {
   shiny::validate(
     shiny::need(
       nrow(plot_data) > 0,
-      "Für diese Auswahl sind keine Daten verfügbar."
+      "Für diese Auswahl sind keine Daten verfügbar. Nutzen Sie eine andere Filter-Kombination,
+      z. B. ein anderes Fach oder einen anderen Indikator."
     )
   )
+
 
 # Nach der ersten Gruppe sortieren
   sortier_spalte <- if (label_m == "PISA" && leistungsindikator_m == "nach Zuwanderungsgeschichte") {
     "wert"  # Erste Generation
   } else {
-    spalten[1]
+    if(leistungsindikator_m == "nach Geschlecht"){
+      "wert" # für Mädchen als Sortier-Reverenz
+    } else{
+      spalten[1]
+    }
   }
 
   land_reihenfolge <- plot_data |>
@@ -2559,7 +2560,6 @@ plot_international_schule_migration <- function(r) {
 
   p <- p |>
     plotly::layout(
-      height = 1000,
       font = list(family = "Calibri Regular"),
       title = list( x = 0.5, y=0.98,
         text = titel,
@@ -2586,7 +2586,7 @@ plot_international_schule_migration <- function(r) {
       legend = list(
         orientation = "h",
         x = 0.5,
-        y = -0.02,
+        y = -0.05,
         xanchor = "center",
         yanchor = "top"
       ),
@@ -2594,7 +2594,7 @@ plot_international_schule_migration <- function(r) {
         list(
           text = quelle,
           x = 0,
-          y = -0.08,
+          y = -0.15,
           xref = "paper",
           yref = "paper",
           showarrow = FALSE,
@@ -2608,7 +2608,6 @@ plot_international_schule_migration <- function(r) {
         )
       )
     )
-
 
 
 
@@ -4554,11 +4553,11 @@ plot_international_top10_mint_arb_gender <- function(r) {
 
 
   plot_top <- balkenbuilder_plotly(df=df_top, x=x, y=y, titel=title_top, orientation = "h", wrap_width = 40,
-                                   group=NULL, color = color,order = order_top, margin_t=100, titel_y=0.97,
+                                   group=NULL, color = color,order = order_top, margin_t=140, titel_y=0.97,
                                    stacking = FALSE, percent = TRUE, quelle=quelle)
 
   plot_bottom <- balkenbuilder_plotly(df=df_bottom, x=x, y=y, titel=title_bot, orientation = "h", wrap_width = 40,
-                                      group=NULL, color = color,order = order_bottom, margin_t=100, titel_y=0.97,
+                                      group=NULL, color = color,order = order_bottom, margin_t=140, titel_y=0.97,
                                       stacking = FALSE, percent = TRUE, quelle=quelle)
 
 

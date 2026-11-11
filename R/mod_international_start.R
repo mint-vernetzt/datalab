@@ -182,7 +182,7 @@ mod_international_start_ui <- function(id){
                                     ),
                                     shiny::mainPanel(
                                       width = 9,
-                                      shinycssloaders::withSpinner(htmlOutput(ns("plot_international_schule_migration_1"), height = "1000px"),
+                                      shinycssloaders::withSpinner(plotly::plotlyOutput(ns("plot_international_schule_migration_1"), height = 1000),
                                                                    color = "#154194"),
 
 
@@ -539,11 +539,8 @@ mod_international_start_server <- function(id, r){
 
     # tab 4
 
-    output$plot_international_schule_migration_1 <- renderUI({
-      plot_list <- plot_international_schule_migration(r)
-
-
-      plot_list
+    output$plot_international_schule_migration_1 <- plotly::renderPlotly({
+      plot_international_schule_migration(r)
     })
 
 

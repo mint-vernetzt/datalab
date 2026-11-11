@@ -2180,6 +2180,14 @@ balkenbuilder_plotly <- function(df, titel, x, y, yaxis_size = 11, orientation =
     df[[x]] <- factor(df[[x]], levels = order)
   }
 
+  if (!(".tooltip" %in% colnames(df))) {
+    if("tooltip" %in% colnames(df)){
+      df <- df %>% dplyr::rename(".tooltip" = "tooltip")
+    }else{
+      df$`.tooltip` <- "kein Hover-Text verfügbar"
+    }
+  }
+
   if (orientation == "h") {
 
 
