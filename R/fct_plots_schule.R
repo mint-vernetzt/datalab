@@ -236,13 +236,6 @@ kurse_verlauf_single <- function(r) {
     quelle <- "Quelle der Daten: KMK, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
     out <- linebuilder_plotly(df, titel, x = "jahr", y = "prop", group = "indikator", color = color, quelle = quelle)
 
-    out <- plotly::layout(
-      out,
-      yaxis = list(
-        autorange = FALSE,
-        range = c(15, 30)
-      )
-    )
 
 
   } else if (absolut_selector=="Anzahl") {

@@ -300,8 +300,7 @@ studienzahl_verlauf_single <- function(r) {
       y = "proportion",
       group = "indikator",
       color = color,
-      quelle = quelle,
-      label = "label_prop"
+      quelle = quelle
     )
 
 
@@ -342,8 +341,7 @@ studienzahl_verlauf_single <- function(r) {
       group = "indikator",
       format = format,
       color = color,
-      quelle = quelle,
-      label = "label_wert"
+      quelle = quelle
     )
 
   }

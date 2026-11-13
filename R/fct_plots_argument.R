@@ -783,7 +783,7 @@ argument_verlauf_1 <- function(r){
 
     out <- linebuilder_plotly(df_beschäftigte, titel = titel, x = "jahr", y = "wert", group = "indikator",
                        format = format, color = color1, quelle = quelle, quelle_y = -0.17,
-                       label = TRUE) |>
+                       label = "label") |>
       plotly::layout(
         margin = list(t = 40, b = 100, r = 50)
       )
@@ -847,7 +847,7 @@ argument_verlauf_2 <- function(r){
   quelle <- "Destatis, 2025 und Bundesagentur für Arbeit, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt"
 
   out <- linebuilder_plotly(df_andere, titel = titel, x = "jahr", y = "wert", group = "indikator",
-                     format = format, color = color2, quelle = quelle, label =TRUE)
+                     format = format, color = color2, quelle = quelle, label = "label")
 
 
   return(out)
@@ -2108,7 +2108,7 @@ argument_nachwuchs <- function(r){
 
   out <- linebuilder_plotly(df_nachwuchs_agg, titel = titel, subtitel = "Studierenden- und Auszubildendenzahlen werden aggregiert betrachtet.",
                             x = "jahr", y = "wert", group = "fach", format = format, color = colors,
-                            quelle = quelle, label = TRUE)
+                            quelle = quelle, label = "label")
 
   return(out)
 
