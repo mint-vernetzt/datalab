@@ -146,7 +146,7 @@ plot_cp_orgas <- function(r){
     subtitel <- paste0("Angaben wurden von <b>", ges, "</b> Organisationen gemacht. Mehrfachangabe möglich.")
 
 
-    quelle <- "Quelle der Daten: MINTvernetzt Community Plattform, Stand 30. Juli 2025."
+    quelle <- "Quelle der Daten: MINTvernetzt Community Plattform, Stand 29. Juli 2026."
 
 
 
@@ -205,7 +205,7 @@ plot_cp_orgas <- function(r){
     subtitel <- paste0("Angaben wurden von <b>", ges, "</b> Organisationen gemacht. Mehrfachangabe möglich.")
 
 
-    quelle <- "Quelle der Daten: MINTvernetzt Community Plattform, Stand 30. Juli 2025."
+    quelle <- "Quelle der Daten: MINTvernetzt Community Plattform, Stand 29. Juli 2026."
 
 
 
@@ -390,7 +390,7 @@ plot_cp_projekte <- function(r){
 
 
 
-    quelle <- "Quelle der Daten: MINTvernetzt Community Plattform, Stand 30. Juli 2025."
+    quelle <- "Quelle der Daten: MINTvernetzt Community Plattform, Stand 29. Juli 2026."
     quelle_y <- -0.20
 
 
@@ -454,7 +454,7 @@ plot_cp_projekte <- function(r){
 
 
 
-    quelle <- "Quelle der Daten: MINTvernetzt Community Plattform, Stand 30. Juli 2025."
+    quelle <- "Quelle der Daten: MINTvernetzt Community Plattform, Stand 29. Juli 2026."
     quelle_y <- -0.20
 
 
@@ -626,7 +626,7 @@ plot_cp_profile <- function(r){
 
 
 
-      quelle <- "Quelle der Daten: MINTvernetzt Community Plattform, Stand 30. Juli 2025."
+      quelle <- "Quelle der Daten: MINTvernetzt Community Plattform, Stand 29. Juli 2026."
       quelle_y <- -0.35
 
 
@@ -676,7 +676,7 @@ plot_cp_profile <- function(r){
 
 
 
-      quelle <- "Quelle der Daten: MINTvernetzt Community Plattform, Stand 30. Juli 2025."
+      quelle <- "Quelle der Daten: MINTvernetzt Community Plattform, Stand 29. Juli 2026."
       quelle_y <- -0.22
 
 
@@ -743,7 +743,7 @@ plot_cp_profile <- function(r){
 
 
 
-      quelle <- "Quelle der Daten: MINTvernetzt Community Plattform, Stand 30. Juli 2025."
+      quelle <- "Quelle der Daten: MINTvernetzt Community Plattform, Stand 29. Juli 2026."
       quelle_y <- -0.30
 
 
@@ -798,7 +798,7 @@ plot_cp_profile <- function(r){
 
 
 
-      quelle <- "Quelle der Daten: MINTvernetzt Community Plattform, Stand 30. Juli 2025."
+      quelle <- "Quelle der Daten: MINTvernetzt Community Plattform, Stand 29. Juli 2026."
       quelle_y <- -0.22
 
 

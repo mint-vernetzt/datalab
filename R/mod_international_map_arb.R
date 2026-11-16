@@ -38,8 +38,8 @@ mod_international_map_arb_ui <- function(id) {
                        inputId = ns("map_y_eu_arb"),
                        label = NULL,
                        choices = c("2013", "2014", "2015", "2016", "2017",
-                                   "2018", "2019", "2020", "2021", "2022", "2023" ),
-                       selected = "2023"
+                                   "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025" ),
+                       selected = "2025"
                      )
                      # )
   ,

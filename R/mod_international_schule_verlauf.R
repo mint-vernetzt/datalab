@@ -36,21 +36,16 @@ mod_international_schule_verlauf_ui <- function(id){
     p("Länder:"),
     shinyWidgets::pickerInput(
       inputId = ns("verlauf_land_timss_int_schule"),
-      choices = sort(
-        DBI::dbGetQuery(
-          con,
-          "SELECT DISTINCT land FROM schule_timss"
-        )$land
-      ),
-      selected = c("Deutschland"),
+      choices = DBI::dbGetQuery(
+        con,
+        "SELECT DISTINCT land FROM schule_timss WHERE indikator = 'Insgesamt' ORDER BY land"
+      )$land,
+      selected = c("Deutschland", "Japan", "Frankreich"),
       multiple = TRUE,
       options = list(
-        `actions-box` = TRUE,
-        `max-options` = 5
+        `actions-box` = TRUE
       )
-    )
-
-    ),
+    )),
 
   conditionalPanel(
     condition = "input.verlauf_l_int_schule == 'PISA'",

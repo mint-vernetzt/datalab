@@ -16,7 +16,7 @@ mod_international_top10_mint_int_ui <- function(id){
                      shinyWidgets::sliderTextInput(
                        inputId = ns("map_y_ti"),
                        label = NULL,
-                       choices = international_ui_years(region = "EU"),
+                       choices = 2013:2023,
                        selected = "2023"
                      ),
 

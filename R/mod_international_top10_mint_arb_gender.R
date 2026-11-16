@@ -39,8 +39,8 @@ mod_international_top10_mint_arb_gender_ui <- function(id){
                        inputId = ns("map_y_eu_top10_mint_arb_gender"),
                        label = NULL,
                        choices = c("2013", "2014", "2015", "2016", "2017",
-                                   "2018", "2019", "2020", "2021", "2022", "2023"),
-                       selected = "2023"
+                                   "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"),
+                       selected = "2025"
                      )
                      # )
   ,

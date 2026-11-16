@@ -43,18 +43,25 @@ mod_international_schule_item_ui <- function(id){
       choices = international_ui_years(region = "TIMSS"),
       selected = "2023"
     ),
-    p("Länder beschriften:"),
-    shinyWidgets::pickerInput(
-      inputId = ns("label_laender_timss"),
-      choices = " ",
-      selected = "Deutschland",
-      multiple = TRUE,
-      options = list(
-        `actions-box` = TRUE,
-        `max-options` = 5,
-        `live-search` = TRUE
-      )
-    ),
+
+    conditionalPanel(condition = "input.darstellung_timss_int_schule == 'Scatterplot'",
+                     ns = ns,
+                     p("Länder beschriften:"),
+                     shinyWidgets::pickerInput(
+                       inputId = ns("label_laender_timss"),
+                       choices = DBI::dbGetQuery(
+                         con,
+                         "SELECT DISTINCT land FROM schule_timss WHERE indikator = 'Insgesamt' ORDER BY land"
+                       )$land,
+                       selected = "Deutschland",
+                       multiple = TRUE,
+                       options = list(
+                         `actions-box` = TRUE,
+                         `live-search` = TRUE
+                       )
+                     )
+                    ),
+
   br(),
   shinyBS::bsPopover(id="ih_international_schule_item", title="",
                      content = paste0("Deutschland wird farblich abgehoben dargestellt", "<br> <br>Die Darstellung zeigt Unterschiede von Mädchen und Jungen im Kompetenztest von TIMSS. Z. B. Schneiden in Deutschland und weiteren 25 Ländern Jungen im Mathematiktest signifikant besser ab als Mädchen."),
@@ -89,30 +96,6 @@ mod_international_schule_item_server <- function(id, r){
 
     observeEvent(input$label_laender_timss, {
       r$label_laender_timss <- input$label_laender_timss
-    })
-
-    observe({
-
-      req(input$item_y_timss_int_schule)
-      req(input$item_f_timss_int_schule)
-
-      df_query <- glue::glue_sql("
-    SELECT *
-    FROM schule_timss
-    WHERE jahr = {input$item_y_timss_int_schule}
-    AND fach = {input$item_f_timss_int_schule}
-    AND ordnung = 'Gender'
-  ", .con = con)
-
-      df <- DBI::dbGetQuery(con, df_query)
-
-      shinyWidgets::updatePickerInput(
-        session = session,
-        inputId = "label_laender_timss",
-        choices = sort(unique(df$land)),
-        selected = "Deutschland"
-      )
-
     })
 
 

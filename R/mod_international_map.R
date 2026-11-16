@@ -31,7 +31,7 @@ mod_international_map_ui <- function(id) {
                        inputId = ns("map_y_eu"),
                        label = NULL,
                        choices = international_ui_years(region = "EU"),
-                       selected = "2023"
+                       selected = "2025"
                      ),
 
                      p("Fachbereich:"),
