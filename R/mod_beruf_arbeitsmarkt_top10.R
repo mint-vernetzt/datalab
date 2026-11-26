@@ -15,8 +15,8 @@ mod_beruf_arbeitsmarkt_top10_ui <- function(id){
     shinyWidgets::sliderTextInput(
       inputId = ns("date_top_beruf"),
       label = NULL,
-      choices = c(2017, 2020, 2022, 2024),
-      selected = 2024
+      choices = c(2017, 2020, 2022, 2024, 2025),
+      selected = 2025
     ),
     # Region
     p("Region:"),
@@ -39,8 +39,8 @@ mod_beruf_arbeitsmarkt_top10_ui <- function(id){
                   "Sachsen-Anhalt",
                   "Schleswig-Holstein",
                   "Thüringen",
-                  "Westdeutschland (o. Berlin)",
-                  "Ostdeutschland (inkl. Berlin)"
+                  "Westdeutschland (ohne Berlin)",
+                  "Ostdeutschland (mit Berlin)"
       ),
       selected = "Deutschland"
     ),
