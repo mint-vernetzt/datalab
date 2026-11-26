@@ -2010,12 +2010,121 @@ data_naa_insgesamt <- data_naa %>% dplyr::group_by(ebene, fachrichtung, region, 
 # first create new data_frame (copy)
 data_naa_maennlich <- data_naa_insgesamt
 
-# data_naa_insgesamt$anzahl <- as.numeric(data_naa_insgesamt$anzahl)
-# data_naa_maennlich$anzahl <- as.numeric(data_naa_maennlich$anzahl)
-# data_naa_weiblich$anzahl  <- as.numeric(data_naa_weiblich$anzahl)
+data_naa_insgesamt$anzahl <- as.numeric(data_naa_insgesamt$anzahl)
+data_naa_maennlich$anzahl <- as.numeric(data_naa_maennlich$anzahl)
+data_naa_weiblich$anzahl  <- as.numeric(data_naa_weiblich$anzahl)
 
 
 # second subtract values##########################################################################################
+data_naa_maennlich$anzahl <- data_naa_maennlich$anzahl - data_naa_weiblich$anzahl
+# specify gender as "männlich"
+data_naa_maennlich$geschlecht_aggregat <- "Männer"
+
+# combine data_frames
+data_naa <- rbind(data_naa_insgesamt, data_naa_weiblich, data_naa_maennlich)
+
+# läuft nicht durch
+# insert zero if NA
+# data_naa <- data_naa %>%
+#   dplyr::mutate(anzahl = tidyr::replace_na(anzahl, 0))
+
+data_naa <- data_naa %>%
+  dplyr::rename(geschlecht = "geschlecht_aggregat",
+                wert = "anzahl",
+                fachbereich = "fachrichtung")
+
+data_naa[data_naa$geschlecht == "weiblich", "geschlecht"] <- "Frauen"
+data_naa[data_naa$geschlecht == "Männer", "geschlecht"] <- "Männer"
+data_naa[data_naa$geschlecht == "insgesamt", "geschlecht"] <- "Gesamt"
+
+data_naa <- data_naa %>%
+  mutate(region = if_else(region == "Ost", "Ostdeutschland (mit Berlin)", region)) %>%
+  mutate(region = if_else(region == "West", "Westdeutschland (ohne Berlin)", region))
+
+# sort data_naa
+data_naa <- data_naa[,c("ebene", "fachbereich", "beruf", "code", "region", "jahr", "geschlecht", "wert")]
+
+data_naa_24 <- data_naa
+
+rm(data_naa_a, data_naa_insgesamt, data_naa_maennlich, data_naa_weiblich)
+
+
+## Rohdaten 2025 einlesen --------------------------------------------------
+
+data_naa_a <- readxl::read_excel(paste0(pfad, "BA072_Azubis_Raking_Berufe.xlsx"),
+                               sheet  = "Verträge_Daten", range = "A4:D550", col_names = TRUE)
+data_naa <- readxl::read_excel(paste0(pfad, "BA072_Azubis_Raking_Berufe.xlsx"),
+                                 sheet  = "Verträge_Daten", range = "SI4:ALL550", col_names = TRUE)
+
+data_naa <- cbind(data_naa_a, data_naa)
+
+data_naa <- data_naa %>% subset(select = -c(Bezeichnung))
+
+# Fachrichtungen zuweisen und Aggregate löschen
+data_naa <- data_naa %>% dplyr::filter(!(code %in% c("-----", "M", "MI", "MM", "MT", "MTB", "MTG", "MTP", "MTV")))
+
+data_naa <- data_naa %>% dplyr::mutate(code = dplyr::case_when(
+  stringr::str_detect(data_naa$code, "MI") ~"Informatik",
+  stringr::str_detect(data_naa$code, "MM") ~"Mathematik/Naturwissenschaft",
+  stringr::str_detect(data_naa$code, "MTB") ~"Bau- und Gebäudetechnik",
+  stringr::str_detect(data_naa$code, "MTG") ~"Gesundheitstechnik - Fachkräfte",
+  stringr::str_detect(data_naa$code, "MTP") ~"Produktionstechnik",
+  stringr::str_detect(data_naa$code, "MTV") ~"Verkehrs-, Sicherheits- und Veranstaltungstechnik",
+  TRUE ~ code
+))
+
+
+# clean column with job titles
+# rename column
+data_naa <- data_naa %>% dplyr::rename(ebene = "Ebene",
+                                       beruf = "Bezeichnung BIBB modifiziert",
+                                       fachrichtung = "code")
+
+# remove all column which provide information about the "Frauenanteil"
+data_naa <- data_naa %>% dplyr::select(-contains("anteil"))
+
+# reshape data_naa in long format
+data_naa <- data_naa %>% tidyr::gather(region, anzahl, -ebene, -beruf, -fachrichtung)
+
+# extract the information of gender contained in the strings of the
+# column "region"
+data_naa <- data_naa %>% dplyr::mutate(geschlecht_aggregat = stringr::str_extract(region, "_w_"),
+                                       # replace "_w_" with "weiblich"
+                                       geschlecht_aggregat = gsub("^.*\\_","weiblich", geschlecht_aggregat),
+                                       # the remaining NA are replaced by the label "insgesamt"
+                                       geschlecht_aggregat = tidyr::replace_na(geschlecht_aggregat, 'insgesamt')) %>%
+  # extract the information of the year from the string in column "region"
+  tidyr::extract(region, c("region", "jahr"), "(.*)_([^_]+)") %>%
+  # clean the string so that only the names of the "region" are left
+  dplyr::mutate(region = sub(".NAA.*", "", region),
+                # replace dot with dash
+                region = gsub('\\.', '-', region)) %>%
+  # drop row if no label for the job title is given
+  dplyr::filter(fachrichtung != "")
+
+#Trennen von AA-code und region
+data_naa <- data_naa %>% tidyr::separate(region, into = c("code", "region"),
+                                         sep = "(?<=[0-9])(?=\\s?[A-Z])", remove = FALSE)
+data_naa$region <- ifelse(grepl("[A-Za-z]", data_naa$code), data_naa$code, data_naa$region)
+data_naa$code <- ifelse(grepl("[A-Za-z]", data_naa$code), NA, data_naa$code)
+
+# create a sub-data_naa frame split by gender
+data_naa_weiblich <- data_naa %>% dplyr::group_by(ebene, fachrichtung, region, jahr) %>%
+  dplyr::filter(geschlecht_aggregat == "weiblich")
+
+# same for "insgesamt"
+data_naa_insgesamt <- data_naa %>% dplyr::group_by(ebene, fachrichtung, region, jahr) %>%
+  dplyr::filter(geschlecht_aggregat == "insgesamt")
+
+
+# now subtract the values for "weiblich" from "insgesamt" to create "männnlich"
+# first create new data_frame (copy)
+data_naa_maennlich <- data_naa_insgesamt
+
+data_naa_insgesamt$anzahl <- as.numeric(data_naa_insgesamt$anzahl)
+data_naa_maennlich$anzahl <- as.numeric(data_naa_maennlich$anzahl)
+data_naa_weiblich$anzahl  <- as.numeric(data_naa_weiblich$anzahl)
+
 data_naa_maennlich$anzahl <- data_naa_maennlich$anzahl - data_naa_weiblich$anzahl
 # specify gender as "männlich"
 data_naa_maennlich$geschlecht_aggregat <- "Männer"
@@ -2047,16 +2156,14 @@ data_naa[data_naa$region == "West", "region"] <- "Westdeutschland (ohne Berlin)"
 # sort data_naa
 data_naa <- data_naa[,c("ebene", "fachbereich", "beruf", "code", "region", "jahr", "geschlecht", "wert")]
 
-
-
-data_naa_24 <- data_naa
+data_naa_25 <- data_naa
 
 rm(data_naa_a, data_naa_insgesamt, data_naa_maennlich, data_naa_weiblich)
 
 ## Zusammenfassen und speichern --------------------------------------------
 
 # Jahre kombinieren
-data_naa <- rbind(data_naa_17, data_naa_20, data_naa_22, data_naa_24)
+data_naa <- rbind(data_naa_17, data_naa_20, data_naa_22, data_naa_24, data_naa_25)
 
 # Ebene 2 = Berufsgruppen
 # Ebene 3 = Berufe
@@ -2072,9 +2179,16 @@ data_naa <- rbind(data_naa_17, data_naa_20, data_naa_22, data_naa_24)
 #setwd("C:/Users/tko/Documents/datalab/data/")
 # für shinyapp:
 
-usethis::use_data(data_naa, overwrite = T)
+# usethis::use_data(data_naa, overwrite = T)
 
+save(data_naa, file = "data_naa.rda")
 
+# Einspielen in Datenbank
+
+library(DBI)
+con <<- DBI::dbConnect(duckdb::duckdb(), "data/mint_db.duckdb")
+dbWriteTable(con, 'data_naa', data_naa, overwrite = TRUE, append = FALSE)
+dbDisconnect(con, shutdown = TRUE)
 
 
 # Erstellt arbeitsmarkt_entgelte ----

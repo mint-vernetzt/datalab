@@ -288,14 +288,14 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
         width = 12,
         column(
           width = 8,
-        p("Der Frauenanteil in MINT-Berufen liegt bei nur 17,6 %, in Ausbildungen sogar nur bei 13,5 %.
+        p("Der Frauenanteil in MINT-Berufen liegt bei nur 17,7 %, in Ausbildungen sogar nur bei 13,7 %.
         In \"Nicht-MINT\"-Berufen und -Ausbildungen sind Frauen dagegen die Mehrheit.
         In den letzten zehn Jahren ist der Frauenanteil nur leicht gestiegen.
         Blickt man auf die absolute Anzahl an weiblichen MINT-Beschäftigten, ist diese in den letzten zehn Jahren allerdings durchaus gewachsen
-        - um 265.000. Das spricht dafür, dass zwar mehr Frauen, aber auch mehr Menschen insgesamt in MINT-Berufen arbeiten."),
+        - um 244.000. Das spricht dafür, dass zwar mehr Frauen, aber auch mehr Menschen insgesamt in MINT-Berufen arbeiten."),
         p("Manche MINT-Ausbildungen sind bei Frauen besonders beliebt.
-          2024 waren die Top-Ausbildungsberufe mit den meisten neuen weiblichen Azubis
-          Augenoptiker:in,  Kfz-Mechatroniker:in und Mediengestalter:in.")
+          2025 waren die Top-Ausbildungsberufe mit den meisten neuen weiblichen Azubis
+          Augenoptiker:in,  Kfz-Mechatroniker:in und Bauzeichner:in.")
         ),
         column(
           width = 12,

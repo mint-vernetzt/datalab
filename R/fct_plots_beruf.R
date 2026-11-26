@@ -3098,7 +3098,7 @@ arbeitsmarkt_top10 <- function( r){
     y <- "prop"
 
     color <- c("#154194")
-    quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2026, freier Download, eigene Berechnungen durch MINTvernetzt."
     quelle_y <- -0.16
 
     plot_female <- balkenbuilder_plotly(df=berufe_frauen, x=x, y=y, titel=titel, orientation = "h", group=NULL, color = color,
@@ -3131,7 +3131,7 @@ arbeitsmarkt_top10 <- function( r){
     y <- "prop"
 
     color <- c("#66cbaf")
-    quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2026, freier Download, eigene Berechnungen durch MINTvernetzt."
     quelle_y <- -0.16
 
     plot_male <- balkenbuilder_plotly(df=berufe_maenner, x=x, y=y, titel=titel, orientation = "h", group=NULL, color = color,
@@ -3186,7 +3186,7 @@ arbeitsmarkt_top10 <- function( r){
     y <- "wert"
 
     color <- c("#154194")
-    quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2026, freier Download, eigene Berechnungen durch MINTvernetzt."
     quelle_y <- -0.16
 
     plot_female <- balkenbuilder_plotly(df=berufe_frauen, x=x, y=y, titel=titel, orientation = "h", group=NULL, color = color,
@@ -3222,7 +3222,7 @@ arbeitsmarkt_top10 <- function( r){
     y <- "wert"
 
     color <- c("#66cbaf")
-    quelle <- "Quelle der Daten: Destatis, 2025, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2026, freier Download, eigene Berechnungen durch MINTvernetzt."
     quelle_y <- -0.16
 
     plot_male <- balkenbuilder_plotly(df=berufe_maenner, x=x, y=y, titel=titel, orientation = "h", group=NULL, color = color,
